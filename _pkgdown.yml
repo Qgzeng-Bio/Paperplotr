@@ -33,14 +33,21 @@ reference:
     contents:
       - fig_specs
       - available_fig_specs
+      - register_fig_spec
       - panel_size
       - get_fig_size_cm
       - recommend_panel_spec
       - available_journal_presets
       - journal_preset
+      - register_journal_preset
       - available_output_presets
+      - register_output_preset
       - save_lab
       - save_lab_plot
+  - title: Extensibility
+    contents:
+      - register_palette
+      - register_group_dictionary
   - title: Layout and Comparison Plots
     contents:
       - layout_lab
