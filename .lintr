@@ -3,7 +3,6 @@ linters: lintr::linters_with_defaults(
   commented_code_linter = NULL,
   object_length_linter = NULL
   )
-
 exclusions: list(
   "PaperPlotR.Rcheck"
   )
