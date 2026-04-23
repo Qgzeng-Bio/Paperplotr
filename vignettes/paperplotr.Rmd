@@ -1,0 +1,143 @@
+---
+title: "PaperPlotR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PaperPlotR}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[UTF-8]{inputenc}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(ggplot2)
+library(PaperPlotR)
+```
+
+`PaperPlotR` is designed for scientific figure workflows that rely on
+`ggplot2`, but need additional structure around styling, figure sizing,
+semantic colors, layout, and export.
+
+The package aims to standardize repeated plotting decisions without hiding the
+underlying `ggplot2` workflow.
+
+## Inspect Available Presets
+
+```{r}
+available_fig_specs()
+available_journal_presets()
+available_output_presets()
+available_group_dictionaries()
+```
+
+## Figure Size Helpers
+
+`fig_specs` stores the built-in panel definitions used by `get_fig_size_cm()`
+and `panel_size()`.
+
+```{r}
+fig_specs
+get_fig_size_cm("4.9x2", ncol = 3, nrow = 1)
+journal_preset("cell")
+recommend_panel_spec(n_panels = 4)
+```
+
+For dense figures, `recommend_panel_spec()` can suggest a starting layout and
+indicate when splitting a figure is likely to be clearer.
+
+```{r}
+recommend_panel_spec(
+  n_panels = 8,
+  heatmap = TRUE,
+  rotated_x_labels = TRUE,
+  complex_legend = TRUE
+)
+```
+
+You can extend the defaults at runtime with custom registrations.
+
+```{r}
+register_fig_spec(
+  name = "6x4",
+  panel_w_cm = 6,
+  panel_h_cm = 4,
+  layout_hint = "Wide single-panel figures"
+)
+
+register_palette(
+  name = "study_palette",
+  values = c("#1B3A57", "#2E6F95", "#58A4B0")
+)
+
+tail(available_fig_specs(), 1)
+tail(available_lab_palettes(), 1)
+```
+
+## Theme and Color Scales
+
+```{r}
+p <- ggplot(mtcars, aes(wt, mpg, colour = factor(cyl))) +
+  geom_point(size = 2.2) +
+  scale_color_lab() +
+  theme_lab()
+
+p
+```
+
+Use semantic group mappings when category names should keep consistent colors
+across plots.
+
+```{r}
+group_colors("default")[1:4]
+```
+
+## Layout and Export
+
+```{r}
+p1 <- ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_lab()
+p2 <- ggplot(mtcars, aes(factor(cyl), mpg)) + geom_boxplot() + theme_lab()
+
+layout_lab(p1, p2, ncol = 2)
+```
+
+Use `save_lab()` when you want figure size to follow a named panel spec plus a
+journal preset.
+
+```r
+save_lab(
+  plot = p1,
+  filename = "figures/scatter_cell.png",
+  spec = "4.9x4.9",
+  journal = "cell"
+)
+```
+
+Use `save_lab_plot()` when you prefer named output presets or direct width and
+height control.
+
+## Comparison Plots
+
+`PaperPlotR` also provides lightweight wrappers for common grouped comparison
+plots.
+
+```{r}
+df <- data.frame(
+  condition = rep(c("Control", "Treatment"), each = 12),
+  value = c(rnorm(12, 5, 0.4), rnorm(12, 6.2, 0.5))
+)
+
+plot_box_paper(
+  df,
+  condition,
+  value,
+  dictionary = "default",
+  show_signif = TRUE,
+  comparisons = list(c("Control", "Treatment"))
+)
+```
+
+If you prefer lower-level control, the same workflow can be built from
+`layer_points_paper()`, `layer_summary_paper()`, and `layer_signif_paper()`.

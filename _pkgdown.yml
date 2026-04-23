@@ -1,0 +1,62 @@
+url: https://qgzeng-bio.github.io/Paperplotr/
+
+template:
+  bootstrap: 5
+  bootswatch: flatly
+
+home:
+  title: PaperPlotR
+  description: Publication-ready ggplot2 helpers for scientific figures.
+
+development:
+  mode: auto
+
+navbar:
+  structure:
+    left: [reference, articles, news]
+    right: [search, github]
+
+reference:
+  - title: Themes and Colors
+    contents:
+      - theme_lab
+      - available_lab_palettes
+      - lab_palette
+      - lab_gradient_palette
+      - available_group_dictionaries
+      - group_colors
+      - scale_color_lab
+      - scale_fill_lab
+      - scale_color_groupmap
+      - scale_fill_groupmap
+  - title: Figure Sizing and Export
+    contents:
+      - fig_specs
+      - available_fig_specs
+      - panel_size
+      - get_fig_size_cm
+      - recommend_panel_spec
+      - available_journal_presets
+      - journal_preset
+      - available_output_presets
+      - save_lab
+      - save_lab_plot
+  - title: Layout and Comparison Plots
+    contents:
+      - layout_lab
+      - position_paper_jitter
+      - layer_points_paper
+      - layer_summary_paper
+      - layer_signif_paper
+      - plot_box_paper
+      - plot_violin_paper
+      - plot_dot_paper
+  - title: Examples
+    contents:
+      - render_paperplotr_examples
+
+articles:
+  - title: Get Started
+    navbar: ~
+    contents:
+      - paperplotr

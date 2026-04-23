@@ -1,0 +1,36 @@
+Package: PaperPlotR
+Title: Publication-Ready ggplot2 Helpers for Scientific Figures
+Version: 0.1.0
+Authors@R:
+    person("Qingguo", "Zeng", email = "qingguo@example.com", role = c("aut", "cre"))
+Description: A companion package for scientific figure workflows built on
+    top of 'ggplot2'. It provides reusable themes, figure-size presets,
+    semantic color helpers, multi-panel layout tools, export helpers, and
+    lightweight wrappers for common comparison plots used in manuscripts
+    and reports.
+URL: https://github.com/Qgzeng-Bio/Paperplotr,
+    https://qgzeng-bio.github.io/Paperplotr/
+BugReports: https://github.com/Qgzeng-Bio/Paperplotr/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends:
+    R (>= 4.2)
+Imports:
+    cli,
+    ggplot2,
+    grDevices,
+    rlang,
+    scales
+Suggests:
+    knitr,
+    patchwork,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    vdiffr
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/Needs/coverage: covr
+Config/Needs/lint: lintr
+Config/Needs/website: pkgdown

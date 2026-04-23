@@ -1,0 +1,9 @@
+^.*\.Rcheck$
+^.*\.tar\.gz$
+^\.DS_Store$
+^\.gitignore$
+^\.github$
+^\.lintr$
+^_pkgdown\.yml$
+^PaperPlotR\.Rcheck$
+^LICENSE\.md$
