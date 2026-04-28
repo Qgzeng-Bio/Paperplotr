@@ -4,7 +4,17 @@
 \alias{layout_lab}
 \title{Compose multiple plots with a lab-standard patchwork layout}
 \usage{
-layout_lab(..., ncol = NULL, nrow = NULL, guides = "collect")
+layout_lab(
+  ...,
+  ncol = NULL,
+  nrow = NULL,
+  guides = "collect",
+  tag_levels = NULL,
+  tag_size = 10,
+  tag_face = "bold",
+  tag_family = NULL,
+  tag_position = c(0, 1)
+)
 }
 \arguments{
 \item{...}{ggplot objects or a single list of ggplot objects.}
@@ -14,6 +24,17 @@ layout_lab(..., ncol = NULL, nrow = NULL, guides = "collect")
 \item{nrow}{Number of rows in the composed layout.}
 
 \item{guides}{Guide collection strategy passed to \code{patchwork::wrap_plots()}.}
+
+\item{tag_levels}{Optional tag level passed to \code{patchwork::plot_annotation()},
+such as \code{"A"} or \code{"a"}.}
+
+\item{tag_size}{Panel tag text size in points.}
+
+\item{tag_face}{Panel tag font face.}
+
+\item{tag_family}{Panel tag font family. If \code{NULL}, uses the active theme.}
+
+\item{tag_position}{Two numeric values used for \code{plot.tag.position}.}
 }
 \value{
 A patchwork composition.

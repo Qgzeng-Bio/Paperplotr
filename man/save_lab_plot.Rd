@@ -14,6 +14,8 @@ save_lab_plot(
   units = "cm",
   device = NULL,
   validate_fonts = TRUE,
+  validate_output = TRUE,
+  min_output_size_bytes = NULL,
   create_dirs = TRUE,
   ...
 )
@@ -33,9 +35,17 @@ save_lab_plot(
 
 \item{units}{Units passed to \code{ggplot2::ggsave()}.}
 
-\item{device}{Optional graphics device. Defaults from file extension.}
+\item{device}{Optional graphics device. Defaults from file extension. Use
+\code{"auto"} to force extension-based detection or \code{"quartz_pdf"} for native
+macOS PDF output.}
 
 \item{validate_fonts}{Whether to enforce journal minimum text size.}
+
+\item{validate_output}{Whether to check that the output file exists and is
+not suspiciously small after saving.}
+
+\item{min_output_size_bytes}{Optional minimum output file size. If \code{NULL},
+a conservative default is chosen from the file extension.}
 
 \item{create_dirs}{Whether to create parent directories automatically.}
 

@@ -48,6 +48,25 @@ test_that("default semantic dictionary is available", {
   expect_true("default" %in% dicts)
 })
 
+test_that("domain example dictionaries are opt-in in public listings", {
+  public_dicts <- available_group_dictionaries()
+  all_dicts <- available_group_dictionaries(include_examples = TRUE)
+
+  expect_false("quinoa_samples" %in% public_dicts)
+  expect_false("trash_monomers" %in% public_dicts)
+  expect_true("quinoa_samples" %in% all_dicts)
+  expect_true("trash_monomers" %in% all_dicts)
+})
+
+test_that("legacy domain example dictionaries remain resolvable with a warning", {
+  expect_warning(
+    groups <- group_colors("quinoa_samples"),
+    "example dictionary"
+  )
+
+  expect_true("Cqu" %in% names(groups))
+})
+
 test_that("default semantic dictionary returns stable mappings", {
   groups <- group_colors("default")
 
@@ -82,6 +101,14 @@ test_that("discrete lab scales accept Prism palettes", {
 
   expect_s3_class(fill_scale, "ScaleDiscrete")
   expect_s3_class(color_scale, "ScaleDiscrete")
+})
+
+test_that("discrete lab scales allow guide overrides", {
+  fill_scale <- scale_fill_lab(guide = "none")
+  color_scale <- scale_color_lab(guide = "none")
+
+  expect_equal(fill_scale$guide, "none")
+  expect_equal(color_scale$guide, "none")
 })
 
 test_that("group scales can use the default semantic dictionary directly", {

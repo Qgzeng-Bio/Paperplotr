@@ -133,7 +133,7 @@ plots:
 
 ```r
 df <- data.frame(
-  condition = c("Control", "Treatment", "Rescue"),
+  condition = c("Control", "Treatment", "WT"),
   value = c(0.95, 1.32, 1.10)
 )
 
@@ -143,7 +143,8 @@ ggplot(df, aes(condition, value, fill = condition)) +
   theme_lab()
 ```
 
-You can register your own palettes and semantic dictionaries:
+The built-in default semantic dictionary is intentionally generic. Register your
+own palettes and semantic dictionaries for project-specific groups:
 
 ```r
 register_palette(
@@ -173,7 +174,8 @@ save_lab(
   filename = "figures/combo.png",
   spec = "4.9x2",
   ncol = 3,
-  journal = "cell"
+  journal = "cell",
+  device = "ragg_png"
 )
 ```
 
@@ -183,9 +185,14 @@ Or export by named output preset with `save_lab_plot()`:
 save_lab_plot(
   plot = combo,
   filename = "figures/combo_half.png",
-  preset = "nature_half"
+  preset = "nature_half",
+  device = "svglite"
 )
 ```
+
+For PDF output on macOS, `device = "quartz_pdf"` can be useful when native font
+handling is more reliable than Cairo-based PDF devices. Exports are checked by
+default so missing or suspiciously small files fail early.
 
 ### Comparison Plots
 
@@ -223,6 +230,10 @@ plot_box_paper(
 ```
 
 ## Example Gallery
+
+See `vignette("gallery", package = "PaperPlotR")` for a compact visual workflow
+covering semantic colors, tagged multi-panel layouts, and explicit export
+devices.
 
 To generate a small gallery of reusable example figures:
 

@@ -60,7 +60,10 @@
         Susceptible = "#E73F74",
         Root = "#3969AC",
         Shoot = "#80BA5A"
-    ),
+    )
+)
+
+.lab_example_group_dictionaries <- list(
     quinoa_samples = c(
         Cqu = "#1F77B4",
         LM134 = "#1F77B4",
@@ -124,10 +127,15 @@
 
 #' List available semantic color dictionaries
 #'
+#' @param include_examples Whether to include domain-specific example
+#'   dictionaries used in package demonstrations and backward compatibility.
+#'
 #' @return A character vector of available dictionary names.
 #' @export
-available_group_dictionaries <- function() {
-    names(.all_group_dictionaries())
+available_group_dictionaries <- function(include_examples = FALSE) {
+    include_examples <- .validate_flag(include_examples, "include_examples")
+
+    names(.all_group_dictionaries(include_examples = include_examples))
 }
 
 #' List available discrete palettes
@@ -216,9 +224,11 @@ lab_gradient_palette <- function(n = 256, palette = "blue_red", reverse = FALSE)
 
 #' Return semantic group color mappings
 #'
-#' @param dictionary A named dictionary such as `"default"` or `"quinoa_samples"`.
-#'   For backward compatibility, you may also pass a named override vector as the
-#'   first argument, which applies on top of the default dictionary.
+#' @param dictionary A named dictionary such as `"default"`. Domain-specific
+#'   example dictionaries are still available for backward compatibility but are
+#'   not listed unless `available_group_dictionaries(include_examples = TRUE)` is
+#'   used. You may also pass a named override vector as the first argument, which
+#'   applies on top of the default dictionary.
 #' @param overrides Optional named vector of color overrides.
 #'
 #' @return A named character vector.
@@ -229,17 +239,33 @@ group_colors <- function(dictionary = "default", overrides = NULL) {
         dictionary <- "default"
     }
 
-    if (!is.character(dictionary) || length(dictionary) != 1 || !dictionary %in% names(.all_group_dictionaries())) {
+    if (!is.character(dictionary) || length(dictionary) != 1 || is.na(dictionary)) {
+        cli::cli_abort("{.arg dictionary} must be a single dictionary name.")
+    }
+
+    public_values <- .all_group_dictionaries(include_examples = FALSE)
+    all_values <- .all_group_dictionaries(include_examples = TRUE)
+    if (!dictionary %in% names(all_values)) {
         cli::cli_abort(
             c(
                 "Unknown semantic color dictionary.",
                 "x" = "Unknown dictionary: {.val {dictionary}}",
-                "i" = "Available dictionaries: {.val {names(.all_group_dictionaries())}}"
+                "i" = "Available dictionaries: {.val {names(public_values)}}",
+                "i" = "Use {.code available_group_dictionaries(include_examples = TRUE)} to list domain-specific example dictionaries."
+            )
+        )
+    }
+    if (!dictionary %in% names(public_values)) {
+        cli::cli_warn(
+            c(
+                "Using a domain-specific example dictionary.",
+                "i" = "{.val {dictionary}} is kept for examples and backward compatibility.",
+                "i" = "For reusable workflows, prefer {.fn register_group_dictionary} with project-specific mappings."
             )
         )
     }
 
-    values <- .all_group_dictionaries()[[dictionary]]
+    values <- all_values[[dictionary]]
     if (!is.null(overrides)) {
         if (is.null(names(overrides)) || anyNA(names(overrides)) || any(names(overrides) == "")) {
             cli::cli_abort("{.arg overrides} must be a named vector.")
@@ -263,16 +289,17 @@ group_colors <- function(dictionary = "default", overrides = NULL) {
 #' @param reverse Whether to reverse the palette.
 #' @param alpha Opacity multiplier between `0` and `1`.
 #' @param na.value Fallback color for missing values.
+#' @param guide Legend guide. Use `"none"` to suppress the guide.
 #' @param ... Passed to `ggplot2::discrete_scale()`.
 #'
 #' @return A ggplot scale.
 #' @export
-scale_color_lab <- function(palette = "main", reverse = FALSE, alpha = 1, na.value = "#BFBFBF", ...) {
+scale_color_lab <- function(palette = "main", reverse = FALSE, alpha = 1, na.value = "#BFBFBF", guide = ggplot2::guide_legend(), ...) {
     ggplot2::discrete_scale(
         aesthetics = "colour",
         palette = function(n) lab_palette(n, palette = palette, reverse = reverse, alpha = alpha),
         na.value = na.value,
-        guide = ggplot2::guide_legend(),
+        guide = guide,
         ...
     )
 }
@@ -283,16 +310,17 @@ scale_color_lab <- function(palette = "main", reverse = FALSE, alpha = 1, na.val
 #' @param reverse Whether to reverse the palette.
 #' @param alpha Opacity multiplier between `0` and `1`.
 #' @param na.value Fallback color for missing values.
+#' @param guide Legend guide. Use `"none"` to suppress the guide.
 #' @param ... Passed to `ggplot2::discrete_scale()`.
 #'
 #' @return A ggplot scale.
 #' @export
-scale_fill_lab <- function(palette = "main", reverse = FALSE, alpha = 1, na.value = "#BFBFBF", ...) {
+scale_fill_lab <- function(palette = "main", reverse = FALSE, alpha = 1, na.value = "#BFBFBF", guide = ggplot2::guide_legend(), ...) {
     ggplot2::discrete_scale(
         aesthetics = "fill",
         palette = function(n) lab_palette(n, palette = palette, reverse = reverse, alpha = alpha),
         na.value = na.value,
-        guide = ggplot2::guide_legend(),
+        guide = guide,
         ...
     )
 }

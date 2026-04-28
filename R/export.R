@@ -22,8 +22,139 @@
         return(device)
     }
 
-    .validate_scalar_string(device, "device")
-    tolower(device)
+    device <- tolower(.validate_scalar_string(device, "device"))
+    if (identical(device, "auto")) {
+        return(.default_extension_device(filename))
+    }
+    if (identical(device, "quartz_pdf")) {
+        if (!identical(Sys.info()[["sysname"]], "Darwin")) {
+            cli::cli_abort("{.val quartz_pdf} is only available on macOS.")
+        }
+        return(.quartz_pdf_device)
+    }
+    if (identical(device, "ragg_png")) {
+        if (!requireNamespace("ragg", quietly = TRUE)) {
+            cli::cli_abort("Package {.pkg ragg} is required for {.val ragg_png}.")
+        }
+        return(.ragg_png_device)
+    }
+    if (identical(device, "ragg_tiff")) {
+        if (!requireNamespace("ragg", quietly = TRUE)) {
+            cli::cli_abort("Package {.pkg ragg} is required for {.val ragg_tiff}.")
+        }
+        return(.ragg_tiff_device)
+    }
+    if (identical(device, "svglite")) {
+        if (!requireNamespace("svglite", quietly = TRUE)) {
+            cli::cli_abort("Package {.pkg svglite} is required for {.val svglite}.")
+        }
+        return(.svglite_device)
+    }
+
+    supported_devices <- c("png", "jpeg", "pdf", "tiff", "svg", "eps", "ps", "tex", "bmp", "wmf")
+    if (!device %in% supported_devices) {
+        cli::cli_abort(
+            c(
+                "Unsupported graphics device.",
+                "x" = "Unknown device: {.val {device}}",
+                "i" = "Use one of {.val {supported_devices}}, {.val auto}, {.val ragg_png}, {.val ragg_tiff}, {.val svglite}, or {.val quartz_pdf} on macOS."
+            )
+        )
+    }
+
+    device
+}
+
+.quartz_pdf_device <- function(filename, width, height, bg = "white", family = "Arial", ...) {
+    grDevices::quartz(
+        type = "pdf",
+        file = filename,
+        width = width,
+        height = height,
+        bg = bg,
+        family = family,
+        ...
+    )
+}
+
+.ragg_png_device <- function(filename, width, height, units = "in", res = 72, bg = "white", ...) {
+    ragg::agg_png(
+        filename = filename,
+        width = width,
+        height = height,
+        units = units,
+        res = res,
+        background = bg,
+        ...
+    )
+}
+
+.ragg_tiff_device <- function(filename, width, height, units = "in", res = 72, bg = "white", ...) {
+    ragg::agg_tiff(
+        filename = filename,
+        width = width,
+        height = height,
+        units = units,
+        res = res,
+        background = bg,
+        ...
+    )
+}
+
+.svglite_device <- function(filename, width, height, bg = "white", ...) {
+    svglite::svglite(
+        file = filename,
+        width = width,
+        height = height,
+        bg = bg,
+        ...
+    )
+}
+
+.default_min_output_size_bytes <- function(filename) {
+    ext <- tolower(tools::file_ext(filename))
+    switch(
+        ext,
+        pdf = 5000,
+        png = 1000,
+        jpg = 1000,
+        jpeg = 1000,
+        tiff = 1000,
+        tif = 1000,
+        svg = 100,
+        100
+    )
+}
+
+.validate_output_file <- function(filename, min_output_size_bytes = NULL) {
+    min_output_size_bytes <- rlang::`%||%`(
+        min_output_size_bytes,
+        .default_min_output_size_bytes(filename)
+    )
+    min_output_size_bytes <- .validate_positive_number(min_output_size_bytes, "min_output_size_bytes")
+
+    if (!file.exists(filename)) {
+        cli::cli_abort(
+            c(
+                "Plot export did not create an output file.",
+                "x" = "Missing file: {.path {filename}}"
+            )
+        )
+    }
+
+    file_size <- file.info(filename)$size
+    if (is.na(file_size) || file_size < min_output_size_bytes) {
+        cli::cli_abort(
+            c(
+                "Plot export produced a suspiciously small output file.",
+                "x" = "File size: {file_size} bytes",
+                "i" = "Minimum expected size: {min_output_size_bytes} bytes",
+                "i" = "If this is expected for a tiny diagnostic graphic, lower {.arg min_output_size_bytes} or set {.arg validate_output = FALSE}."
+            )
+        )
+    }
+
+    invisible(TRUE)
 }
 
 .plot_text_sizes <- function(plot) {
@@ -95,8 +226,14 @@
 #' @param journal Journal preset used for dpi and minimum text validation.
 #' @param dpi Optional dpi override.
 #' @param bg Background color passed to `ggplot2::ggsave()`.
-#' @param device Optional graphics device. Defaults from file extension.
+#' @param device Optional graphics device. Defaults from file extension. Use
+#'   `"auto"` to force extension-based detection or `"quartz_pdf"` for native
+#'   macOS PDF output.
 #' @param validate_fonts Whether to enforce journal minimum text size.
+#' @param validate_output Whether to check that the output file exists and is
+#'   not suspiciously small after saving.
+#' @param min_output_size_bytes Optional minimum output file size. If `NULL`,
+#'   a conservative default is chosen from the file extension.
 #' @param create_dirs Whether to create parent directories automatically.
 #' @param ... Additional arguments passed to `ggplot2::ggsave()`.
 #'
@@ -113,10 +250,16 @@ save_lab <- function(
     bg = "white",
     device = NULL,
     validate_fonts = TRUE,
+    validate_output = TRUE,
+    min_output_size_bytes = NULL,
     create_dirs = TRUE,
     ...
 ) {
     .validate_flag(validate_fonts, "validate_fonts")
+    .validate_flag(validate_output, "validate_output")
+    if (!is.null(min_output_size_bytes)) {
+        .validate_positive_number(min_output_size_bytes, "min_output_size_bytes")
+    }
     .validate_plot_object(plot)
     journal <- .validate_scalar_string(journal, "journal")
 
@@ -142,6 +285,13 @@ save_lab <- function(
         ...
     )
 
+    if (isTRUE(validate_output)) {
+        .validate_output_file(
+            filename = filename,
+            min_output_size_bytes = min_output_size_bytes
+        )
+    }
+
     invisible(filename)
 }
 
@@ -154,8 +304,14 @@ save_lab <- function(
 #' @param height Optional override height in cm.
 #' @param dpi Optional override resolution.
 #' @param units Units passed to `ggplot2::ggsave()`.
-#' @param device Optional graphics device. Defaults from file extension.
+#' @param device Optional graphics device. Defaults from file extension. Use
+#'   `"auto"` to force extension-based detection or `"quartz_pdf"` for native
+#'   macOS PDF output.
 #' @param validate_fonts Whether to enforce journal minimum text size.
+#' @param validate_output Whether to check that the output file exists and is
+#'   not suspiciously small after saving.
+#' @param min_output_size_bytes Optional minimum output file size. If `NULL`,
+#'   a conservative default is chosen from the file extension.
 #' @param create_dirs Whether to create parent directories automatically.
 #' @param ... Additional arguments passed to `ggplot2::ggsave()`.
 #'
@@ -171,10 +327,16 @@ save_lab_plot <- function(
     units = "cm",
     device = NULL,
     validate_fonts = TRUE,
+    validate_output = TRUE,
+    min_output_size_bytes = NULL,
     create_dirs = TRUE,
     ...
 ) {
     .validate_flag(validate_fonts, "validate_fonts")
+    .validate_flag(validate_output, "validate_output")
+    if (!is.null(min_output_size_bytes)) {
+        .validate_positive_number(min_output_size_bytes, "min_output_size_bytes")
+    }
     .validate_plot_object(plot)
     preset <- .validate_scalar_string(preset, "preset")
     units <- .validate_output_units(units)
@@ -202,6 +364,13 @@ save_lab_plot <- function(
         bg = "white",
         ...
     )
+
+    if (isTRUE(validate_output)) {
+        .validate_output_file(
+            filename = filename,
+            min_output_size_bytes = min_output_size_bytes
+        )
+    }
 
     invisible(filename)
 }

@@ -31,6 +31,7 @@ available_fig_specs()
 available_journal_presets()
 available_output_presets()
 available_group_dictionaries()
+available_group_dictionaries(include_examples = TRUE)
 ```
 
 ## Figure Size Helpers
@@ -94,6 +95,19 @@ across plots.
 group_colors("default")[1:4]
 ```
 
+The default dictionary is intentionally generic. Domain-specific dictionaries
+used in examples remain available for backward compatibility, but production
+projects should usually register their own semantic mapping.
+
+```{r}
+register_group_dictionary(
+  name = "experiment_groups",
+  values = c(Control = "#4D4D4D", Treatment = "#D55E00", Rescue = "#009E73")
+)
+
+group_colors("experiment_groups")
+```
+
 ## Layout and Export
 
 ```{r}
@@ -111,12 +125,18 @@ save_lab(
   plot = p1,
   filename = "figures/scatter_cell.png",
   spec = "4.9x4.9",
-  journal = "cell"
+  journal = "cell",
+  device = "ragg_png"
 )
 ```
 
 Use `save_lab_plot()` when you prefer named output presets or direct width and
 height control.
+
+Optional devices include `"ragg_png"`, `"ragg_tiff"`, `"svglite"`, and
+`"quartz_pdf"` on macOS. Saved files are checked by default; tune
+`min_output_size_bytes` or use `validate_output = FALSE` for very small
+diagnostic graphics.
 
 ## Comparison Plots
 

@@ -7,3 +7,6 @@
 ^_pkgdown\.yml$
 ^PaperPlotR\.Rcheck$
 ^LICENSE\.md$
+^Rplots\.pdf$
+^visual-checks$
+^HANDOFF\.md$

@@ -4,7 +4,11 @@
 \alias{available_group_dictionaries}
 \title{List available semantic color dictionaries}
 \usage{
-available_group_dictionaries()
+available_group_dictionaries(include_examples = FALSE)
+}
+\arguments{
+\item{include_examples}{Whether to include domain-specific example
+dictionaries used in package demonstrations and backward compatibility.}
 }
 \value{
 A character vector of available dictionary names.

@@ -92,8 +92,13 @@
     .merge_named_lists(.lab_gradient_palettes, .paperplotr_registry$gradient_palettes)
 }
 
-.all_group_dictionaries <- function() {
-    .merge_named_lists(.lab_group_dictionaries, .paperplotr_registry$group_dictionaries)
+.all_group_dictionaries <- function(include_examples = FALSE) {
+    dictionaries <- .merge_named_lists(.lab_group_dictionaries, .paperplotr_registry$group_dictionaries)
+    if (isTRUE(include_examples)) {
+        dictionaries <- .merge_named_lists(dictionaries, .lab_example_group_dictionaries)
+    }
+
+    dictionaries
 }
 
 #' Register a custom figure specification
@@ -316,7 +321,8 @@ register_group_dictionary <- function(name, values, overwrite = FALSE) {
     values <- .validate_named_character_values(values, "values", require_names = TRUE)
     overwrite <- .validate_flag(overwrite, "overwrite")
 
-    if (name %in% names(.all_group_dictionaries()) && !(name %in% names(.paperplotr_registry$group_dictionaries) && isTRUE(overwrite))) {
+    if (name %in% names(.all_group_dictionaries(include_examples = TRUE)) &&
+        !(name %in% names(.paperplotr_registry$group_dictionaries) && isTRUE(overwrite))) {
         cli::cli_abort("Group dictionary {.val {name}} already exists. Use {.arg overwrite = TRUE} to replace a registered dictionary.")
     }
 

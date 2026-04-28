@@ -253,6 +253,122 @@
         )
 }
 
+.gallery_semantic_data <- function() {
+    data.frame(
+        Condition = factor(
+            c("Control", "Treatment", "Rescue"),
+            levels = c("Control", "Treatment", "Rescue")
+        ),
+        Mean = c(1.00, 1.42, 1.18),
+        SE = c(0.08, 0.11, 0.09)
+    )
+}
+
+.gallery_group_values <- function() {
+    c(Control = "#4D4D4D", Treatment = "#D55E00", Rescue = "#009E73")
+}
+
+.build_gallery_semantic_preview <- function() {
+    df <- .gallery_semantic_data()
+
+    ggplot2::ggplot(df, ggplot2::aes(Condition, Mean, fill = Condition)) +
+        ggplot2::geom_col(width = 0.54, colour = "white", linewidth = 0.18) +
+        ggplot2::geom_errorbar(
+            ggplot2::aes(ymin = Mean - SE, ymax = Mean + SE),
+            width = 0.12,
+            linewidth = 0.32,
+            colour = "#1F1F1F"
+        ) +
+        scale_fill_groupmap(values = .gallery_group_values(), groups = df$Condition) +
+        ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0, 0.08))) +
+        theme_lab() +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::labs(x = NULL, y = "Relative signal", title = "Semantic colors")
+}
+
+.build_gallery_scatter_preview <- function() {
+    df <- data.frame(
+        Condition = factor(
+            rep(c("Control", "Treatment", "Rescue"), each = 5),
+            levels = c("Control", "Treatment", "Rescue")
+        ),
+        PC1 = c(-2.0, -1.7, -1.3, -1.0, -0.7, -0.2, 0.1, 0.3, 0.6, 0.8, 1.1, 1.4, 1.7, 1.9, 2.2),
+        PC2 = c(0.8, 0.4, 0.6, 0.1, 0.3, -0.2, 0.1, -0.3, 0.2, -0.1, 0.6, 0.9, 0.5, 1.1, 0.8)
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(PC1, PC2, colour = Condition)) +
+        ggplot2::geom_hline(yintercept = 0, linewidth = 0.22, linetype = "dashed", colour = "#BFBFBF") +
+        ggplot2::geom_vline(xintercept = 0, linewidth = 0.22, linetype = "dashed", colour = "#BFBFBF") +
+        ggplot2::geom_point(size = 1.8, alpha = 0.86) +
+        scale_color_groupmap(values = .gallery_group_values(), groups = df$Condition) +
+        theme_lab() +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::labs(x = "PC1", y = "PC2", title = "Grouped scatter")
+}
+
+.build_gallery_heatmap_preview <- function() {
+    df <- expand.grid(
+        Feature = factor(paste0("F", 1:6), levels = paste0("F", 1:6)),
+        Sample = factor(paste0("S", 1:4), levels = rev(paste0("S", 1:4))),
+        KEEP.OUT.ATTRS = FALSE
+    )
+    df$Signal <- c(
+        -1.0, -0.6, -0.2, 0.2, 0.6, 1.0,
+        -0.7, -0.3, 0.1, 0.5, 0.9, 1.2,
+        -1.2, -0.8, -0.4, 0.0, 0.4, 0.8,
+        -0.4, 0.0, 0.4, 0.8, 1.1, 1.4
+    )
+
+    ggplot2::ggplot(df, ggplot2::aes(Feature, Sample, fill = Signal)) +
+        ggplot2::geom_tile(colour = "white", linewidth = 0.18) +
+        ggplot2::scale_fill_gradientn(colours = lab_gradient_palette(7, palette = "blue_red")) +
+        theme_lab() +
+        ggplot2::theme(
+            legend.position = "none",
+            axis.ticks = ggplot2::element_blank(),
+            axis.line = ggplot2::element_blank()
+        ) +
+        ggplot2::labs(x = NULL, y = NULL, title = "Gradient heatmap")
+}
+
+.build_gallery_comparison_preview <- function() {
+    df <- data.frame(
+        Condition = factor(
+            rep(c("Control", "Treatment", "Rescue"), each = 10),
+            levels = c("Control", "Treatment", "Rescue")
+        ),
+        Value = c(
+            4.2, 4.6, 4.8, 5.0, 4.9, 5.1, 4.7, 5.2, 4.5, 5.0,
+            5.3, 5.7, 6.0, 6.1, 5.9, 6.4, 6.2, 5.8, 6.3, 6.1,
+            4.9, 5.2, 5.4, 5.5, 5.3, 5.8, 5.7, 5.4, 5.6, 5.5
+        )
+    )
+
+    plot_box_paper(
+        df,
+        Condition,
+        Value,
+        dictionary = "default",
+        show_signif = FALSE,
+        show_summary = TRUE
+    ) +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::labs(title = "Comparison helper", y = "Value")
+}
+
+.build_gallery_overview_layout <- function() {
+    layout_lab(
+        .build_gallery_semantic_preview(),
+        .build_gallery_scatter_preview(),
+        .build_gallery_heatmap_preview(),
+        .build_gallery_comparison_preview(),
+        ncol = 2,
+        tag_levels = "A",
+        tag_size = 9,
+        tag_family = "sans"
+    )
+}
+
 #' Render a gallery of paper-style example figures
 #'
 #' Generates a reusable gallery of publication-style example figures,

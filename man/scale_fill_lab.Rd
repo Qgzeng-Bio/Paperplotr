@@ -9,6 +9,7 @@ scale_fill_lab(
   reverse = FALSE,
   alpha = 1,
   na.value = "#BFBFBF",
+  guide = ggplot2::guide_legend(),
   ...
 )
 }
@@ -20,6 +21,8 @@ scale_fill_lab(
 \item{alpha}{Opacity multiplier between \code{0} and \code{1}.}
 
 \item{na.value}{Fallback color for missing values.}
+
+\item{guide}{Legend guide. Use \code{"none"} to suppress the guide.}
 
 \item{...}{Passed to \code{ggplot2::discrete_scale()}.}
 }

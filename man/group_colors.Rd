@@ -7,9 +7,11 @@
 group_colors(dictionary = "default", overrides = NULL)
 }
 \arguments{
-\item{dictionary}{A named dictionary such as \code{"default"} or \code{"quinoa_samples"}.
-For backward compatibility, you may also pass a named override vector as the
-first argument, which applies on top of the default dictionary.}
+\item{dictionary}{A named dictionary such as \code{"default"}. Domain-specific
+example dictionaries are still available for backward compatibility but are
+not listed unless \code{available_group_dictionaries(include_examples = TRUE)} is
+used. You may also pass a named override vector as the first argument, which
+applies on top of the default dictionary.}
 
 \item{overrides}{Optional named vector of color overrides.}
 }

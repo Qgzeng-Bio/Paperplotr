@@ -82,6 +82,119 @@ test_that("save_lab supports explicit devices for grid grobs", {
   expect_true(file.exists(out))
 })
 
+test_that("save_lab supports named Quartz PDF devices on macOS", {
+  skip_on_os(c("windows", "linux", "solaris"))
+
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+  out <- tempfile(fileext = ".pdf")
+
+  returned <- save_lab(
+    plot = p,
+    filename = out,
+    spec = "2x2",
+    device = "quartz_pdf",
+    validate_fonts = FALSE
+  )
+
+  expect_equal(returned, out)
+  expect_true(file.exists(out))
+  expect_gt(file.info(out)$size, 5000)
+})
+
+test_that("save_lab supports ragg PNG output", {
+  skip_if_not_installed("ragg")
+
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+  out <- tempfile(fileext = ".png")
+
+  returned <- save_lab(
+    plot = p,
+    filename = out,
+    spec = "2x2",
+    device = "ragg_png"
+  )
+
+  expect_equal(returned, out)
+  expect_true(file.exists(out))
+  expect_gt(file.info(out)$size, 1000)
+})
+
+test_that("save_lab_plot supports ragg TIFF output", {
+  skip_if_not_installed("ragg")
+
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+  out <- tempfile(fileext = ".tiff")
+
+  returned <- save_lab_plot(
+    plot = p,
+    filename = out,
+    preset = "cell_half",
+    device = "ragg_tiff"
+  )
+
+  expect_equal(returned, out)
+  expect_true(file.exists(out))
+  expect_gt(file.info(out)$size, 1000)
+})
+
+test_that("save_lab supports svglite output", {
+  skip_if_not_installed("svglite")
+
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+  out <- tempfile(fileext = ".svg")
+
+  returned <- save_lab(
+    plot = p,
+    filename = out,
+    spec = "2x2",
+    device = "svglite"
+  )
+
+  expect_equal(returned, out)
+  expect_true(file.exists(out))
+  expect_true(any(grepl("<svg", readLines(out, n = 5), fixed = TRUE)))
+})
+
+test_that("save_lab reports suspiciously small output files", {
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+
+  expect_error(
+    save_lab(
+      plot = p,
+      filename = tempfile(fileext = ".png"),
+      spec = "2x2",
+      min_output_size_bytes = .Machine$integer.max
+    ),
+    "suspiciously small"
+  )
+})
+
+test_that("save_lab rejects unknown named devices", {
+  p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+    ggplot2::geom_point() +
+    theme_lab()
+
+  expect_error(
+    save_lab(
+      plot = p,
+      filename = tempfile(fileext = ".pdf"),
+      spec = "2x2",
+      device = "bad_device"
+    ),
+    "Unsupported graphics device"
+  )
+})
+
 test_that("save_lab_plot validates width and height overrides", {
   p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
     ggplot2::geom_point() +
