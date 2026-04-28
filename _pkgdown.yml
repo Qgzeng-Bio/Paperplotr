@@ -67,3 +67,4 @@ articles:
     navbar: ~
     contents:
       - paperplotr
+      - gallery

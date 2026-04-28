@@ -53,11 +53,12 @@
 
     supported_devices <- c("png", "jpeg", "pdf", "tiff", "svg", "eps", "ps", "tex", "bmp", "wmf")
     if (!device %in% supported_devices) {
+        optional_devices <- c("auto", "ragg_png", "ragg_tiff", "svglite", "quartz_pdf")
         cli::cli_abort(
             c(
                 "Unsupported graphics device.",
                 "x" = "Unknown device: {.val {device}}",
-                "i" = "Use one of {.val {supported_devices}}, {.val auto}, {.val ragg_png}, {.val ragg_tiff}, {.val svglite}, or {.val quartz_pdf} on macOS."
+                "i" = "Use one of {.val {supported_devices}} or {.val {optional_devices}}."
             )
         )
     }
@@ -149,7 +150,8 @@
                 "Plot export produced a suspiciously small output file.",
                 "x" = "File size: {file_size} bytes",
                 "i" = "Minimum expected size: {min_output_size_bytes} bytes",
-                "i" = "If this is expected for a tiny diagnostic graphic, lower {.arg min_output_size_bytes} or set {.arg validate_output = FALSE}."
+                "i" = "For tiny diagnostic graphics, lower {.arg min_output_size_bytes}.",
+                "i" = "Alternatively, set {.arg validate_output = FALSE}."
             )
         )
     }

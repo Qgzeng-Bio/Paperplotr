@@ -312,16 +312,26 @@
         Sample = factor(paste0("S", 1:4), levels = rev(paste0("S", 1:4))),
         KEEP.OUT.ATTRS = FALSE
     )
-    df$Signal <- c(
-        -1.0, -0.6, -0.2, 0.2, 0.6, 1.0,
-        -0.7, -0.3, 0.1, 0.5, 0.9, 1.2,
-        -1.2, -0.8, -0.4, 0.0, 0.4, 0.8,
-        -0.4, 0.0, 0.4, 0.8, 1.1, 1.4
+    df$Signal <- factor(
+        c(
+            "low", "low", "mid_low", "mid", "mid_high", "high",
+            "low", "mid_low", "mid", "mid_high", "high", "high",
+            "low", "low", "mid_low", "mid", "mid_high", "high",
+            "mid_low", "mid", "mid_high", "high", "high", "high"
+        ),
+        levels = c("low", "mid_low", "mid", "mid_high", "high")
+    )
+    heatmap_colours <- c(
+        low = "#2166AC",
+        mid_low = "#67A9CF",
+        mid = "#F7F7F7",
+        mid_high = "#EF8A62",
+        high = "#B2182B"
     )
 
     ggplot2::ggplot(df, ggplot2::aes(Feature, Sample, fill = Signal)) +
         ggplot2::geom_tile(colour = "white", linewidth = 0.18) +
-        ggplot2::scale_fill_gradientn(colours = lab_gradient_palette(7, palette = "blue_red")) +
+        ggplot2::scale_fill_manual(values = heatmap_colours) +
         theme_lab() +
         ggplot2::theme(
             legend.position = "none",
