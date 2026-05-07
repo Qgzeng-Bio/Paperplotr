@@ -3,6 +3,7 @@
 [![R-CMD-check](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/R-CMD-check.yaml)
 [![lint](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/lint.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/lint.yaml)
 [![test-coverage](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/test-coverage.yaml)
+[![paperplot-skills](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/paperplot-skills.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/paperplot-skills.yaml)
 [![codecov](https://codecov.io/gh/Qgzeng-Bio/Paperplotr/graph/badge.svg)](https://app.codecov.io/gh/Qgzeng-Bio/Paperplotr)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -48,6 +49,21 @@ The intended workflow has five steps:
 5. Export with `save_lab()` or `save_lab_plot()`
 
 The package focuses on standardization rather than automatic plotting.
+
+## AI Scientific Plotting Skill
+
+PaperPlotR also includes a repository-local AI skill wrapper:
+[`paperplot-skills/`](paperplot-skills/). It guides AI agents to use PaperPlotR
+as a reproducible scientific figure standardization workflow, including
+template selection, semantic colors, panel sizing, no-overwrite versioned
+exports, sidecar notes, and output QA.
+
+Validate the skill locally with:
+
+```bash
+Rscript paperplot-skills/scripts/validate-skill.R
+Rscript paperplot-skills/scripts/smoke-test-templates.R
+```
 
 ## Quick Start
 
