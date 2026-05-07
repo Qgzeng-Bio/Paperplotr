@@ -12,6 +12,8 @@ if (!dir.exists(root)) {
 rel <- function(...) file.path(root, ...)
 
 required_files <- c(
+  "AGENTS.md",
+  "INSTALL.md",
   "SKILL.md",
   "README.md",
   file.path("references", "paperplotr-workflow.md"),
