@@ -53,6 +53,18 @@ patch_template <- function(template_text, input_path, output_dir) {
   text <- replace_fixed(text, 'y_label <- "TODO y label with units"', 'y_label <- "Y value (a.u.)"')
   text <- replace_fixed(text, 'pc1_label <- "PC1 (TODO%)"', 'pc1_label <- "PC1 (42%)"')
   text <- replace_fixed(text, 'pc2_label <- "PC2 (18%)"', 'pc2_label <- "PC2 (18%)"')
+  if (identical(Sys.getenv("PAPERPLOTR_SMOKE_BASE_DEVICES"), "true")) {
+    text <- replace_fixed(
+      text,
+      'png_device <- if (requireNamespace("ragg", quietly = TRUE)) "ragg_png" else "png"',
+      'png_device <- "png"'
+    )
+    text <- replace_fixed(
+      text,
+      'if (requireNamespace("svglite", quietly = TRUE)) {',
+      'if (FALSE && requireNamespace("svglite", quietly = TRUE)) {'
+    )
+  }
   text
 }
 
@@ -137,6 +149,9 @@ run_template <- function(template_name, work_root) {
     if (!is.na(notes_problem)) {
       problems <- c(problems, notes_problem)
     }
+  }
+  if (length(problems) > 0 && length(output) > 0) {
+    problems <- c(problems, paste("Rscript output:", paste(tail(output, 8), collapse = " | ")))
   }
 
   data.frame(
