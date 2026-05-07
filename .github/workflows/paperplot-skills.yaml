@@ -34,12 +34,12 @@ jobs:
         with:
           extra-packages: |
             local::.
-            any::ragg
-            any::svglite
-          needs: check
+            any::patchwork
 
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
 
       - name: Smoke test R templates
         run: Rscript paperplot-skills/scripts/smoke-test-templates.R
+        env:
+          PAPERPLOTR_SMOKE_BASE_DEVICES: "true"
