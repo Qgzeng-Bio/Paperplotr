@@ -15,6 +15,9 @@ Rscript paperplot-skills/scripts/smoke-test-templates.R
 
 Use `SKILL.md` as the AI entrypoint. For implementation work, the agent should then read the relevant reference file and one template under `templates/`.
 
+For local agent installation and non-Codex agents, see `INSTALL.md` and
+`AGENTS.md`.
+
 ## Repository-Local Usage
 
 This skill is designed to stay inside the repository as `paperplot-skills/`. It can be copied or referenced by an AI agent without installing or modifying the PaperPlotR R package.
@@ -127,6 +130,8 @@ SVG output is optional and depends on `svglite`. PNG may use `ragg` when availab
 
 ```text
 paperplot-skills/
+  AGENTS.md
+  INSTALL.md
   SKILL.md
   README.md
   references/
@@ -135,7 +140,12 @@ paperplot-skills/
   scripts/
 ```
 
-`references/` contains workflow rules and QA guidance. `templates/` contains reusable R script skeletons. `examples/` contains example prompts, final report format, and a GitHub-ready review checklist. `scripts/` contains validation and smoke test utilities.
+`AGENTS.md` is the generic entrypoint for agents without native skill discovery.
+`INSTALL.md` explains local installation for Codex, Claude Code, OpenCode, and
+generic CLI agents. `references/` contains workflow rules and QA guidance.
+`templates/` contains reusable R script skeletons. `examples/` contains example
+prompts, final report format, and a GitHub-ready review checklist. `scripts/`
+contains validation and smoke test utilities.
 
 ## Adapting Templates
 
