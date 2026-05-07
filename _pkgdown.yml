@@ -13,8 +13,12 @@ development:
 
 navbar:
   structure:
-    left: [reference, articles, news]
+    left: [reference, articles, news, ai-skill]
     right: [search, github]
+  components:
+    ai-skill:
+      text: AI Skill
+      href: https://github.com/Qgzeng-Bio/Paperplotr/tree/main/paperplot-skills
 
 reference:
   - title: Themes and Colors
