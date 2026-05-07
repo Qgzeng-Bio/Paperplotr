@@ -53,6 +53,14 @@ patch_template <- function(template_text, input_path, output_dir) {
   text <- replace_fixed(text, 'y_label <- "TODO y label with units"', 'y_label <- "Y value (a.u.)"')
   text <- replace_fixed(text, 'pc1_label <- "PC1 (TODO%)"', 'pc1_label <- "PC1 (42%)"')
   text <- replace_fixed(text, 'pc2_label <- "PC2 (18%)"', 'pc2_label <- "PC2 (18%)"')
+  smoke_base_family <- Sys.getenv("PAPERPLOTR_SMOKE_BASE_FAMILY")
+  if (nzchar(smoke_base_family)) {
+    text <- replace_fixed(
+      text,
+      "theme_lab() +",
+      paste0("theme_lab(base_family = ", r_string(smoke_base_family), ") +")
+    )
+  }
   if (identical(Sys.getenv("PAPERPLOTR_SMOKE_BASE_DEVICES"), "true")) {
     text <- replace_fixed(
       text,

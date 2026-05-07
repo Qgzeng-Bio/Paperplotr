@@ -43,3 +43,4 @@ jobs:
         run: Rscript paperplot-skills/scripts/smoke-test-templates.R
         env:
           PAPERPLOTR_SMOKE_BASE_DEVICES: "true"
+          PAPERPLOTR_SMOKE_BASE_FAMILY: "sans"
