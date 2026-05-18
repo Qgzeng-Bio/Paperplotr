@@ -133,6 +133,7 @@ Choose and adapt one template:
 - `templates/volcano-plot-template.R`
 - `templates/ma-plot-template.R`
 - `templates/enrichment-dotplot-template.R`
+- `templates/model-validation-composite-template.R`
 
 All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG, and write notes, metadata, QA, and required sidecars.
 

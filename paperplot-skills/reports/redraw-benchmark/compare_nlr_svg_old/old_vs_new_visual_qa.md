@@ -3,6 +3,7 @@
 - old: `<redacted-project-path>/high_nlr_count_by_sample.svg`
 - new: `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png`
 - media: `svg` -> `raster`
+- threshold profiles: `global` -> `rank-lollipop`
 - verdict: `mixed`
 - status: `warn`
 
@@ -16,7 +17,7 @@
 | color_count_estimate | 0.0 | 8.0 | worse |
 | thumbnail_content_density | 0.0 | 0.1322 | worse |
 | line_burden_score | 0 | 0.0393 | worse |
-| manuscript_readiness_score | 5 | 9 | improved |
+| manuscript_readiness_score | 5 | 10 | improved |
 
 ## Remaining risks
 

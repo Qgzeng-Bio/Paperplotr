@@ -3,6 +3,7 @@
 - old: `<redacted-project-path>/fig4_quality_traits.png`
 - new: `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png`
 - media: `raster` -> `raster`
+- threshold profiles: `global` -> `model-validation`
 - verdict: `mixed`
 - status: `warn`
 

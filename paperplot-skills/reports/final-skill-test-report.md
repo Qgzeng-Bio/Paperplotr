@@ -18,7 +18,7 @@ No copyrighted figure was copied. Public guidance and public data structures wer
 ### Strengths
 
 - Standalone R/ggplot2 implementation.
-- 19 executable templates.
+- 20 executable templates.
 - PDF, PNG, notes, metadata JSON, QA sidecars.
 - No PaperPlotR dependency.
 - Design brief, design plan, visual budget, label strategy, statistical expression, and bioinformatics semantics are implemented.
@@ -43,6 +43,8 @@ No copyrighted figure was copied. Public guidance and public data structures wer
 - Added `cross-backend-workflows.md`.
 - Added `visual-qa-report.R` for rendered-output dimension checks and visual QA report scaffolding.
 - Updated `validate-skill.R` to require the final-version files.
+- Added family-specific visual QA threshold profiles for lollipop/rank, model-validation, heatmap, Manhattan, and phylogenetic annotation-ring figures.
+- Added `model-validation-composite-template.R`.
 
 ## Validation cases
 
@@ -54,7 +56,7 @@ Expected: pass.
 
 ### Template smoke tests
 
-Runs all 19 templates against reproducible synthetic scientific data covering:
+Runs all 20 templates against reproducible synthetic scientific data covering:
 
 - single panel,
 - multi-panel,
@@ -74,8 +76,9 @@ Runs all 19 templates against reproducible synthetic scientific data covering:
 - volcano,
 - MA,
 - enrichment dot plot.
+- model-validation composite.
 
-Expected: 19/19 pass.
+Expected: 20/20 pass.
 
 ### Pressure scenarios
 
@@ -127,17 +130,15 @@ Commands executed:
 Rscript paperplot-skills/scripts/validate-skill.R
 Rscript paperplot-skills/scripts/smoke-test-templates.R
 Rscript paperplot-skills/scripts/run-pressure-scenarios.R
-Rscript paperplot-skills/scripts/validate-figure-output.R /tmp/paperplot-skills-smoke-20260518-203110/bio-genome-quality-overview-template/outputs
-Rscript paperplot-skills/scripts/visual-qa-report.R /tmp/paperplot-skills-smoke-20260518-203110/bio-genome-quality-overview-template/outputs
+python3 paperplot-skills/scripts/run-visual-pressure-scenarios.py
 ```
 
 Results:
 
 - Static validation: passed.
-- Template smoke tests: 19/19 templates passed.
+- Template smoke tests: 20/20 templates passed.
 - Pressure scenarios: 5/5 scenarios passed.
-- Figure output validation for genome-quality output: passed.
-- Rendered visual QA scaffold generated at `/private/tmp/paperplot-skills-smoke-20260518-203110/bio-genome-quality-overview-template/outputs/visual_qa_report_20260518-203138.md`.
+- Visual pressure scenarios: passed, including `visual-family-lollipop-threshold` with `pass` status and readiness score 10.
 
 ## Iteration record
 

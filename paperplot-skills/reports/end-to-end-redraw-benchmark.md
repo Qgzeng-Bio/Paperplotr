@@ -7,7 +7,7 @@ This benchmark tests whether the upgraded pattern-library workflow can move real
 | case | reference pattern | old score | new score | old-vs-new verdict | manuscript candidate |
 |---|---|---:|---:|---|---|
 | Genomic selection quality traits | `multi-panel-manuscript-layout` + `model-validation-figures` | 6 | 10 | mixed | yes, after science/label review |
-| High-confidence NLR counts | `grouped-bar-errorbar` adapted to sorted lollipop | 5 SVG / 6 PNG | 9 | mixed | yes, especially supplement/single-column |
+| High-confidence NLR counts | `grouped-bar-errorbar` adapted to sorted lollipop | 5 SVG / 6 PNG | 10 | mixed | yes, especially supplement/single-column |
 
 ## Case 1: Genomic selection quality traits
 
@@ -25,7 +25,7 @@ Old visual QA:
 
 | metric | value |
 |---|---:|
-| status | warn |
+| status | pass |
 | image size | 2055 x 649 px |
 | aspect ratio | 3.1664 |
 | blank margin fraction | 0.0759 |
@@ -116,11 +116,11 @@ New visual QA:
 | text burden score | 35.37 |
 | line burden score | 0.0393 |
 | color count estimate | 8 |
-| manuscript-readiness score | 9 |
+| manuscript-readiness score | 10 |
 
 Old-vs-new comparison against old SVG:
 
-Verdict: `mixed`. The comparison now records a mixed-media limitation: SVG structural QA does not expose the same raster density, text, and color metrics as PNG QA. The readiness score improves from 5 to 9, but individual raster metrics are not directly comparable.
+Verdict: `mixed`. The comparison now records a mixed-media limitation: SVG structural QA does not expose the same raster density, text, and color metrics as PNG QA. The readiness score improves from 5 to 10 under the new lollipop/rank family profile, but individual raster metrics are not directly comparable.
 
 Old-vs-new comparison against comparable old PNG:
 
@@ -132,9 +132,9 @@ Old-vs-new comparison against comparable old PNG:
 | color count estimate | 11 | 8 | improved |
 | thumbnail content density | 0.4133 | 0.1322 | improved |
 | line burden score | 0.6188 | 0.0393 | improved |
-| manuscript-readiness score | 6 | 9 | improved |
+| manuscript-readiness score | 6 | 10 | improved |
 
-Verdict: `mixed`. The old PNG is dense because bars/grid structures fill the panel; the new lollipop reduces line burden and blank margin but increases label burden through readable sample labels.
+Verdict: `mixed`. The old PNG is dense because bars/grid structures fill the panel; the new lollipop reduces line burden and blank margin but increases label burden through readable sample labels. The new figure now uses the `rank-lollipop` threshold profile, so legitimate horizontal stems are not counted as gridline failure.
 
 Manual aesthetic review: improved. A sorted horizontal lollipop is the right grammar for one scalar count per sample. A trial iteration with horizontal bars increased deterministic line/content burden and was rejected; the lollipop version was kept because it better matches manuscript minimalism and ranking readability.
 

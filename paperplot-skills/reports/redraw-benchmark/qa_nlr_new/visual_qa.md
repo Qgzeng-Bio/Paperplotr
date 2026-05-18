@@ -2,8 +2,10 @@
 
 - input: `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png`
 - engine: `pillow`
-- status: `warn`
-- manuscript readiness score: `9/10`
+- figure family: `rank-lollipop`
+- threshold profile: `rank-lollipop`
+- status: `pass`
+- manuscript readiness score: `10/10`
 
 ## Key metrics
 
@@ -18,4 +20,4 @@
 
 ## Top risks
 
-- `warn` `gridline_or_long_line_burden`: Many long horizontal/vertical line structures detected. (0.0393)
+- `pass` `no_major_deterministic_risk`: No major deterministic visual QA risk detected.
