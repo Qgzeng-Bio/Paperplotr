@@ -62,10 +62,11 @@ Validation figures should expose failure modes. A polished accuracy plot that hi
 - `correlation-scatter-template.R`
 - `effect-size-forest-template.R`
 - `multi-metric-small-multiples-template.R`
+- `model-validation-composite-template.R`
 
 ## New Template Need
 
-`model-validation-composite-template.R` is high value if implemented with observed/predicted/residual schema checks.
+No immediate new template is required for the core fit/residual/performance workflow. Future variants could add fold-aware calibration curves, prediction-interval ribbons, or residual-density insets when the input data justify them.
 
 ## QA Checklist
 

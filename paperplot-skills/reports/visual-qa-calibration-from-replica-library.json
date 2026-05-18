@@ -5,6 +5,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "figure_family": "Manhattan plot",
+      "threshold_profile": "manhattan",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.6,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 650,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.04,
+        "thumbnail_density_warn": 0.42
+      },
       "image_size_px": [
         2400,
         2430
@@ -123,19 +141,17 @@
         "vertical_line_cols": 19,
         "line_burden_score": 0.024
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_001/grayscale_preview.png",
-      "manuscript_readiness_score": 9,
-      "status": "warn",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_001/grayscale_preview.png",
+      "manuscript_readiness_score": 10,
+      "status": "pass",
       "top_risks": [
         {
-          "status": "warn",
-          "code": "gridline_or_long_line_burden",
-          "message": "Many long horizontal/vertical line structures detected.",
-          "value": 0.024
+          "status": "pass",
+          "code": "no_major_deterministic_risk",
+          "message": "No major deterministic visual QA risk detected."
         }
       ],
       "case_dir": "69.SciAdv复现-差异OTU曼哈顿图",
-      "figure_family": "Manhattan plot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png"
     },
     {
@@ -143,6 +159,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         7200,
         5400
@@ -281,7 +315,7 @@
         "vertical_line_cols": 2,
         "line_burden_score": 0.0019
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_002/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_002/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -305,7 +339,6 @@
         }
       ],
       "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
-      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png"
     },
     {
@@ -313,6 +346,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         6000,
         5820
@@ -461,7 +512,7 @@
         "vertical_line_cols": 37,
         "line_burden_score": 0.0338
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_003/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_003/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -485,7 +536,6 @@
         }
       ],
       "case_dir": "53.Nature复现-PCoA+多分组边缘图",
-      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png"
     },
     {
@@ -493,6 +543,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         6000,
         4200
@@ -641,7 +709,7 @@
         "vertical_line_cols": 9,
         "line_burden_score": 0.0444
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_004/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_004/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -659,7 +727,6 @@
         }
       ],
       "case_dir": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
-      "figure_family": "boxplot / violin / raincloud / jitter",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png"
     },
     {
@@ -667,6 +734,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1950,
         1200
@@ -805,7 +890,7 @@
         "vertical_line_cols": 331,
         "line_burden_score": 0.3579
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_005/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_005/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -829,7 +914,6 @@
         }
       ],
       "case_dir": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
-      "figure_family": "boxplot / violin / raincloud / jitter",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png"
     },
     {
@@ -837,6 +921,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         4200,
         1800
@@ -975,7 +1077,7 @@
         "vertical_line_cols": 136,
         "line_burden_score": 0.1409
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_006/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_006/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -999,7 +1101,6 @@
         }
       ],
       "case_dir": "26.SCI复现-核密度图+箱线图+蜂群图-模型验证",
-      "figure_family": "boxplot / violin / raincloud / jitter",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png"
     },
     {
@@ -1007,6 +1108,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "figure_family": "dotplot / lollipop / dumbbell",
+      "threshold_profile": "rank-lollipop",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.38,
+        "content_density_min": 0.02,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.055,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         3300,
         1500
@@ -1145,8 +1264,8 @@
         "vertical_line_cols": 9,
         "line_burden_score": 0.0237
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_007/grayscale_preview.png",
-      "manuscript_readiness_score": 7,
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_007/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
@@ -1157,19 +1276,12 @@
         },
         {
           "status": "warn",
-          "code": "gridline_or_long_line_burden",
-          "message": "Many long horizontal/vertical line structures detected.",
-          "value": 0.0237
-        },
-        {
-          "status": "warn",
           "code": "thumbnail_readability_risk",
           "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
           "value": 0.231
         }
       ],
       "case_dir": "75.Nature-绝美点线图",
-      "figure_family": "dotplot / lollipop / dumbbell",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png"
     },
     {
@@ -1177,6 +1289,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1050,
         1200
@@ -1315,7 +1445,7 @@
         "vertical_line_cols": 24,
         "line_burden_score": 0.0231
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_008/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_008/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -1327,7 +1457,6 @@
         }
       ],
       "case_dir": "1.柱状图-散点图-误差线-p值显著性",
-      "figure_family": "grouped bar / stacked bar / errorbar",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png"
     },
     {
@@ -1335,6 +1464,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         4800,
         3000
@@ -1483,7 +1630,7 @@
         "vertical_line_cols": 30,
         "line_burden_score": 0.0226
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_009/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_009/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -1495,7 +1642,6 @@
         }
       ],
       "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
-      "figure_family": "grouped bar / stacked bar / errorbar",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png"
     },
     {
@@ -1503,6 +1649,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1500,
         2400
@@ -1631,7 +1795,7 @@
         "vertical_line_cols": 94,
         "line_burden_score": 0.1265
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_010/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_010/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -1649,7 +1813,6 @@
         }
       ],
       "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
-      "figure_family": "grouped bar / stacked bar / errorbar",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png"
     },
     {
@@ -1657,6 +1820,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "threshold_profile": "heatmap",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.025,
+        "text_density_warn": 780,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55
+      },
       "image_size_px": [
         2100,
         4200
@@ -1765,8 +1946,8 @@
         "vertical_line_cols": 79,
         "line_burden_score": 0.1444
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_011/grayscale_preview.png",
-      "manuscript_readiness_score": 7,
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_011/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
@@ -1780,16 +1961,9 @@
           "code": "gridline_or_long_line_burden",
           "message": "Many long horizontal/vertical line structures detected.",
           "value": 0.1444
-        },
-        {
-          "status": "warn",
-          "code": "thumbnail_readability_risk",
-          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
-          "value": 0.329
         }
       ],
       "case_dir": "10.Nature复现-添加显著性星号标记的热图",
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png"
     },
     {
@@ -1797,6 +1971,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "threshold_profile": "heatmap",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.025,
+        "text_density_warn": 780,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55
+      },
       "image_size_px": [
         783,
         783
@@ -1935,8 +2127,8 @@
         "vertical_line_cols": 408,
         "line_burden_score": 0.4891
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_012/grayscale_preview.png",
-      "manuscript_readiness_score": 7,
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_012/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
@@ -1953,16 +2145,9 @@
           "code": "gridline_or_long_line_burden",
           "message": "Many long horizontal/vertical line structures detected.",
           "value": 0.4891
-        },
-        {
-          "status": "warn",
-          "code": "thumbnail_readability_risk",
-          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
-          "value": 0.362
         }
       ],
       "case_dir": "20.Nature复现-表格形式的热图",
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png"
     },
     {
@@ -1970,6 +2155,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "threshold_profile": "heatmap",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.025,
+        "text_density_warn": 780,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55
+      },
       "image_size_px": [
         2100,
         1500
@@ -2118,8 +2321,8 @@
         "vertical_line_cols": 207,
         "line_burden_score": 0.2503
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_013/grayscale_preview.png",
-      "manuscript_readiness_score": 7,
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_013/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
@@ -2133,16 +2336,9 @@
           "code": "gridline_or_long_line_burden",
           "message": "Many long horizontal/vertical line structures detected.",
           "value": 0.2503
-        },
-        {
-          "status": "warn",
-          "code": "thumbnail_readability_risk",
-          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
-          "value": 0.302
         }
       ],
       "case_dir": "46.SCI复现-相关矩阵图",
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png"
     },
     {
@@ -2150,6 +2346,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "figure_family": "map / spatial plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         2400,
         1500
@@ -2298,7 +2512,7 @@
         "vertical_line_cols": 38,
         "line_burden_score": 0.093
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_014/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_014/grayscale_preview.png",
       "manuscript_readiness_score": 6,
       "status": "warn",
       "top_risks": [
@@ -2328,7 +2542,6 @@
         }
       ],
       "case_dir": "33.顶刊复现-样本地理分布图",
-      "figure_family": "map / spatial plot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png"
     },
     {
@@ -2336,6 +2549,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "figure_family": "map / spatial plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         3000,
         1800
@@ -2484,7 +2715,7 @@
         "vertical_line_cols": 416,
         "line_burden_score": 0.5021
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_015/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_015/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -2502,7 +2733,6 @@
         }
       ],
       "case_dir": "70.Nature-PNAS-中国地图",
-      "figure_family": "map / spatial plot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png"
     },
     {
@@ -2510,6 +2740,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "figure_family": "multi-panel manuscript figure",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         5100,
         1950
@@ -2638,7 +2886,7 @@
         "vertical_line_cols": 74,
         "line_burden_score": 0.0796
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_016/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_016/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -2662,7 +2910,6 @@
         }
       ],
       "case_dir": "30.Nature复现-分面散点饼图",
-      "figure_family": "multi-panel manuscript figure",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png"
     },
     {
@@ -2670,6 +2917,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "figure_family": "multi-panel manuscript figure",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         5200,
         2000
@@ -2808,7 +3073,7 @@
         "vertical_line_cols": 231,
         "line_burden_score": 0.2408
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_017/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_017/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -2832,7 +3097,6 @@
         }
       ],
       "case_dir": "41.顶刊复现-分面山脊图",
-      "figure_family": "multi-panel manuscript figure",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png"
     },
     {
@@ -2840,6 +3104,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+      "figure_family": "multi-panel manuscript figure",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1800,
         1800
@@ -2978,7 +3260,7 @@
         "vertical_line_cols": 286,
         "line_burden_score": 0.3083
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_018/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_018/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -3002,7 +3284,6 @@
         }
       ],
       "case_dir": "73.Cell-Nature-三元图",
-      "figure_family": "multi-panel manuscript figure",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png"
     },
     {
@@ -3010,6 +3291,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "figure_family": "phylogenetic tree with annotation rings",
+      "threshold_profile": "phylo-annotation-ring",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.02,
+        "text_density_warn": 900,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55
+      },
       "image_size_px": [
         6000,
         4800
@@ -3158,8 +3457,8 @@
         "vertical_line_cols": 384,
         "line_burden_score": 0.4123
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_019/grayscale_preview.png",
-      "manuscript_readiness_score": 7,
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_019/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
@@ -3173,16 +3472,9 @@
           "code": "gridline_or_long_line_burden",
           "message": "Many long horizontal/vertical line structures detected.",
           "value": 0.4123
-        },
-        {
-          "status": "warn",
-          "code": "thumbnail_readability_risk",
-          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
-          "value": 0.315
         }
       ],
       "case_dir": "8.顶刊复现-系统发育树+外圈热图-条形图",
-      "figure_family": "phylogenetic tree with annotation rings",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png"
     },
     {
@@ -3190,6 +3482,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "figure_family": "radar / polar / circular bar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1500,
         1500
@@ -3338,7 +3648,7 @@
         "vertical_line_cols": 3,
         "line_burden_score": 0.0039
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_020/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_020/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -3350,7 +3660,6 @@
         }
       ],
       "case_dir": "61.Nature复现-差异雷达图",
-      "figure_family": "radar / polar / circular bar",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png"
     },
     {
@@ -3358,6 +3667,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "figure_family": "ridgeline / density / contour",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         2100,
         1950
@@ -3496,7 +3823,7 @@
         "vertical_line_cols": 76,
         "line_burden_score": 0.0715
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_021/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_021/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -3514,7 +3841,6 @@
         }
       ],
       "case_dir": "21.Nature复现-渐变色山脊图+双向柱形图",
-      "figure_family": "ridgeline / density / contour",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png"
     },
     {
@@ -3522,6 +3848,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "figure_family": "ridgeline / density / contour",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         3600,
         1200
@@ -3640,7 +3984,7 @@
         "vertical_line_cols": 192,
         "line_burden_score": 0.2008
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_022/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_022/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -3652,7 +3996,6 @@
         }
       ],
       "case_dir": "63.Nature复现-填充型和渐变型等高线图",
-      "figure_family": "ridgeline / density / contour",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png"
     },
     {
@@ -3660,6 +4003,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "figure_family": "ridgeline / density / contour",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         3600,
         3900
@@ -3788,7 +4149,7 @@
         "vertical_line_cols": 1,
         "line_burden_score": 0.0202
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_023/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_023/grayscale_preview.png",
       "manuscript_readiness_score": 10,
       "status": "pass",
       "top_risks": [
@@ -3799,7 +4160,6 @@
         }
       ],
       "case_dir": "9.Nature复现-山脊图",
-      "figure_family": "ridgeline / density / contour",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png"
     },
     {
@@ -3807,6 +4167,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "figure_family": "scatter / regression / marginal histogram",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         4200,
         3600
@@ -3955,7 +4333,7 @@
         "vertical_line_cols": 4,
         "line_burden_score": 0.0036
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_024/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_024/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -3967,7 +4345,6 @@
         }
       ],
       "case_dir": "16.Nature复现-散点图+拟合曲线+均值+双向误差线",
-      "figure_family": "scatter / regression / marginal histogram",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png"
     },
     {
@@ -3975,6 +4352,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "figure_family": "scatter / regression / marginal histogram",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1800,
         1800
@@ -4123,7 +4518,7 @@
         "vertical_line_cols": 80,
         "line_burden_score": 0.0522
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_025/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_025/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -4147,7 +4542,6 @@
         }
       ],
       "case_dir": "25.Science+Cell复现-差异基因FC-FC散点图",
-      "figure_family": "scatter / regression / marginal histogram",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png"
     },
     {
@@ -4155,6 +4549,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
+      "figure_family": "scatter / regression / marginal histogram",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         2400,
         1650
@@ -4283,7 +4695,7 @@
         "vertical_line_cols": 101,
         "line_burden_score": 0.1199
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_026/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_026/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -4301,7 +4713,6 @@
         }
       ],
       "case_dir": "36.Nature复现-配对散点图",
-      "figure_family": "scatter / regression / marginal histogram",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png"
     },
     {
@@ -4309,6 +4720,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "figure_family": "upset / venn-like set plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         3600,
         1500
@@ -4447,7 +4876,7 @@
         "vertical_line_cols": 263,
         "line_burden_score": 0.2878
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_027/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_027/grayscale_preview.png",
       "manuscript_readiness_score": 6,
       "status": "warn",
       "top_risks": [
@@ -4477,7 +4906,6 @@
         }
       ],
       "case_dir": "68.顶刊复现-upset图",
-      "figure_family": "upset / venn-like set plot",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png"
     },
     {
@@ -4485,6 +4913,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         2250,
         1800
@@ -4613,7 +5059,7 @@
         "vertical_line_cols": 603,
         "line_burden_score": 0.6272
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_028/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_028/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -4631,7 +5077,6 @@
         }
       ],
       "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
-      "figure_family": "volcano / MA / enrichment / GSEA",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png"
     },
     {
@@ -4639,6 +5084,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         1800,
         2100
@@ -4787,7 +5250,7 @@
         "vertical_line_cols": 60,
         "line_burden_score": 0.0395
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_029/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_029/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -4805,7 +5268,6 @@
         }
       ],
       "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
-      "figure_family": "volcano / MA / enrichment / GSEA",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png"
     },
     {
@@ -4813,6 +5275,24 @@
       "engine": "pillow",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
       "image_size_px": [
         5400,
         4200
@@ -4961,7 +5441,7 @@
         "vertical_line_cols": 44,
         "line_burden_score": 0.0731
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-9tjh5065/sample_030/grayscale_preview.png",
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_030/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -4973,7 +5453,6 @@
         }
       ],
       "case_dir": "6.Cell复现-双Y轴+富集条形图",
-      "figure_family": "volcano / MA / enrichment / GSEA",
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png"
     }
   ],

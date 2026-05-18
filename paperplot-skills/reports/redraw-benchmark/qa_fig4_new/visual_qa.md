@@ -2,6 +2,8 @@
 
 - input: `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png`
 - engine: `pillow`
+- figure family: `model-validation`
+- threshold profile: `model-validation`
 - status: `pass`
 - manuscript readiness score: `10/10`
 

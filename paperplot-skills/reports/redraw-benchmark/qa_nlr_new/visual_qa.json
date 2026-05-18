@@ -4,6 +4,24 @@
     "engine": "pillow",
     "input_type": "raster",
     "input_path": "paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png",
+    "figure_family": "rank-lollipop",
+    "threshold_profile": "rank-lollipop",
+    "family_thresholds": {
+      "min_width_px": 900,
+      "min_height_px": 500,
+      "aspect_min": 0.45,
+      "aspect_max": 3.0,
+      "blank_margin_warn": 0.38,
+      "content_density_min": 0.02,
+      "text_density_warn": 420,
+      "label_overlap_medium_count": 4,
+      "label_overlap_content_density": 0.12,
+      "high_saturation_fraction_warn": 0.45,
+      "minimum_luminance_delta_warn": 18,
+      "grayscale_std_min": 28,
+      "line_burden_warn": 0.055,
+      "thumbnail_density_warn": 0.23
+    },
     "image_size_px": [
       2102,
       1937
@@ -123,14 +141,13 @@
       "line_burden_score": 0.0393
     },
     "grayscale_preview": "paperplot-skills/reports/redraw-benchmark/qa_nlr_new/grayscale_preview.png",
-    "manuscript_readiness_score": 9,
-    "status": "warn",
+    "manuscript_readiness_score": 10,
+    "status": "pass",
     "top_risks": [
       {
-        "status": "warn",
-        "code": "gridline_or_long_line_burden",
-        "message": "Many long horizontal/vertical line structures detected.",
-        "value": 0.0393
+        "status": "pass",
+        "code": "no_major_deterministic_risk",
+        "message": "No major deterministic visual QA risk detected."
       }
     ]
   }

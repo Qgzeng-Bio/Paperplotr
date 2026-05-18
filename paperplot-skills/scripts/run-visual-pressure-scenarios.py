@@ -53,6 +53,16 @@ FIXTURES = [
     },
 ]
 
+FAMILY_FIXTURES = [
+    {
+        "scenario": "visual-family-lollipop-threshold",
+        "path": ROOT / "reports" / "redraw-benchmark" / "high_nlr_count_by_sample_pattern_redraw.png",
+        "family": "lollipop",
+        "expect_status": {"pass", "warn"},
+        "forbid_risk": {"gridline_or_long_line_burden"},
+    },
+]
+
 
 def run(cmd: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(cmd, text=True, capture_output=True)
@@ -64,6 +74,13 @@ def risk_codes(result: dict[str, Any]) -> set[str]:
 
 def run_visual(path: Path, out: Path) -> dict[str, Any]:
     proc = run([sys.executable, str(VISUAL_QA), str(path), "--out", str(out)])
+    if proc.returncode != 0:
+        raise RuntimeError(proc.stderr or proc.stdout)
+    return json.loads((out / "visual_qa.json").read_text())["image_qa"]
+
+
+def run_visual_family(path: Path, out: Path, family: str) -> dict[str, Any]:
+    proc = run([sys.executable, str(VISUAL_QA), str(path), "--out", str(out), "--family", family])
     if proc.returncode != 0:
         raise RuntimeError(proc.stderr or proc.stdout)
     return json.loads((out / "visual_qa.json").read_text())["image_qa"]
@@ -137,6 +154,20 @@ def main() -> int:
             result = run_visual(path, out)
             codes = risk_codes(result)
             ok = result.get("status") in fixture["expect_status"] and bool(codes.intersection(fixture["expect_any_risk"]))
+            rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "output_dir": str(out)})
+        except Exception as exc:
+            rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+    for fixture in FAMILY_FIXTURES:
+        scenario = fixture["scenario"]
+        path = fixture["path"]
+        out = root / scenario
+        if not path.exists():
+            rows.append({"scenario": scenario, "input": str(path), "pass": True, "status": "fixture_missing", "score": "", "risk_codes": [], "detail": "fixture_missing"})
+            continue
+        try:
+            result = run_visual_family(path, out, fixture["family"])
+            codes = risk_codes(result)
+            ok = result.get("status") in fixture["expect_status"] and not bool(codes.intersection(fixture["forbid_risk"]))
             rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "output_dir": str(out)})
         except Exception as exc:
             rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})

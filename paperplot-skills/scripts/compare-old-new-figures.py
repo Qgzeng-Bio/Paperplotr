@@ -16,10 +16,12 @@ def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def run_visual_qa(image: Path, out_dir: Path) -> dict[str, Any]:
+def run_visual_qa(image: Path, out_dir: Path, family: str | None = None) -> dict[str, Any]:
     script = Path(__file__).with_name("visual-qa-rendered-image.py")
     ensure_dir(out_dir)
     cmd = [sys.executable, str(script), str(image), "--out", str(out_dir)]
+    if family:
+        cmd.extend(["--family", family])
     proc = subprocess.run(cmd, text=True, capture_output=True)
     if proc.returncode != 0:
         raise SystemExit(f"visual QA failed for {image}: {proc.stderr or proc.stdout}")
@@ -82,6 +84,7 @@ def write_md(payload: dict[str, Any], out_dir: Path) -> None:
         f"- old: `{payload['old_image']}`",
         f"- new: `{payload['new_image']}`",
         f"- media: `{payload.get('old_media', 'unknown')}` -> `{payload.get('new_media', 'unknown')}`",
+        f"- threshold profiles: `{payload.get('old_threshold_profile', 'global')}` -> `{payload.get('new_threshold_profile', 'global')}`",
         f"- verdict: `{payload['verdict']}`",
         f"- status: `{payload['status']}`",
         "",
@@ -106,6 +109,9 @@ def main() -> int:
     parser.add_argument("old_image")
     parser.add_argument("new_image")
     parser.add_argument("--out", required=True)
+    parser.add_argument("--family", default=None, help="Optional family profile applied to both old and new figures")
+    parser.add_argument("--old-family", default=None, help="Optional family profile for the old figure")
+    parser.add_argument("--new-family", default=None, help="Optional family profile for the new figure")
     args = parser.parse_args()
     old_path = Path(args.old_image).expanduser()
     new_path = Path(args.new_image).expanduser()
@@ -113,8 +119,8 @@ def main() -> int:
     ensure_dir(out_dir)
     with tempfile.TemporaryDirectory(prefix="paperplot-old-new-") as tmp:
         tmp_path = Path(tmp)
-        old = run_visual_qa(old_path, tmp_path / "old")
-        new = run_visual_qa(new_path, tmp_path / "new")
+        old = run_visual_qa(old_path, tmp_path / "old", args.old_family or args.family)
+        new = run_visual_qa(new_path, tmp_path / "new", args.new_family or args.family)
     metric_specs = [
         ("blank_margin_fraction", True),
         ("text_burden_score", True),
@@ -160,6 +166,10 @@ def main() -> int:
             "new_image": str(new_path),
             "old_media": old_media,
             "new_media": new_media,
+            "old_family": old.get("figure_family"),
+            "new_family": new.get("figure_family"),
+            "old_threshold_profile": old.get("threshold_profile"),
+            "new_threshold_profile": new.get("threshold_profile"),
             "comparison_limitation": comparison_limitation,
             "verdict": verdict,
             "status": status,

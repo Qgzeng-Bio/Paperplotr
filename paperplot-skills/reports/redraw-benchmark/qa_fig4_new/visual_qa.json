@@ -4,6 +4,24 @@
     "engine": "pillow",
     "input_type": "raster",
     "input_path": "paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png",
+    "figure_family": "model-validation",
+    "threshold_profile": "model-validation",
+    "family_thresholds": {
+      "min_width_px": 900,
+      "min_height_px": 500,
+      "aspect_min": 0.45,
+      "aspect_max": 3.0,
+      "blank_margin_warn": 0.32,
+      "content_density_min": 0.02,
+      "text_density_warn": 420,
+      "label_overlap_medium_count": 4,
+      "label_overlap_content_density": 0.12,
+      "high_saturation_fraction_warn": 0.45,
+      "minimum_luminance_delta_warn": 18,
+      "grayscale_std_min": 28,
+      "line_burden_warn": 0.035,
+      "thumbnail_density_warn": 0.28
+    },
     "image_size_px": [
       2881,
       1464

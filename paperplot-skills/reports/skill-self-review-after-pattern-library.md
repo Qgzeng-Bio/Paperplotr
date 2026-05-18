@@ -64,6 +64,12 @@
 - `compare-old-new-figures.py` now records `old_media`, `new_media`, and `comparison_limitation` for mixed SVG/raster comparisons. This prevents a structural SVG QA result from being interpreted as directly equivalent to raster density/text/color metrics.
 - `references/old-vs-new-visual-scoring.md` and `references/visual-qa-gates.md` now explicitly say that density and mixed-media comparisons require family-specific and human review.
 
+## Follow-Up Corrections Completed
+
+- Family-specific visual QA threshold profiles were added for `rank-lollipop`, `model-validation`, `heatmap`, `manhattan`, and `phylo-annotation-ring`.
+- `compare-old-new-figures.py` now accepts `--family`, `--old-family`, and `--new-family`, and records the applied threshold profiles.
+- `model-validation-composite-template.R` was added and smoke-tested as the first high-value template after the pattern-library upgrade.
+
 ## Remaining Risk
 
 The skill is now more design-system-like than rule-list-like, but it is not a fully learned visual model. The pattern library gives stronger defaults and QA discipline; final manuscript judgment still requires scientific context, caption semantics, and sometimes human visual review.

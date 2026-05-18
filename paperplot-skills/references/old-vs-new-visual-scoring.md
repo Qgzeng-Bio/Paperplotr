@@ -6,6 +6,12 @@ Use `scripts/compare-old-new-figures.py` when an original figure and a redesigne
 python3 scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir>
 ```
 
+When the new figure uses a known family-specific profile, pass it explicitly:
+
+```bash
+python3 scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir> --new-family lollipop
+```
+
 ## Compared metrics
 
 - blank margin fraction,

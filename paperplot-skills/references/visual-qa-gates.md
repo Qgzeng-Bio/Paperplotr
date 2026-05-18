@@ -35,6 +35,20 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Positive examples can still trigger `warn`; inspect the matching pattern document before failing a dense heatmap, tree, Manhattan, UpSet, lollipop, or model-validation panel.
 - Old-vs-new comparisons across SVG and raster formats require human review because structural and pixel metrics are not equivalent.
 
+## Family-Specific Threshold Profiles
+
+`scripts/visual-qa-rendered-image.py` accepts `--family <name>` for families where global thresholds over-warn on legitimate structure. The output records `figure_family`, `threshold_profile`, and `family_thresholds`.
+
+| profile | use for | main threshold change | keep reviewing |
+|---|---|---|---|
+| `rank-lollipop` | sorted lollipop, rank dotplot, dumbbell | allows legitimate horizontal stems and lower ink density | sample-label burden and whether labels belong in main figure |
+| `model-validation` | accuracy, calibration, residual, prediction-performance panels | allows sparse point-range evidence and moderate thumbnail density | interval semantics and metric units |
+| `heatmap` | heatmap, correlation heatmap, matrix dotplot | allows dense tiles, higher thumbnail density, and structural grid burden | color scale semantics and unreadable cell labels |
+| `manhattan` | genome-wide coordinate plots | allows wider aspect and dense point clouds | axis/chromosome labels and threshold-line meaning |
+| `phylo-annotation-ring` | trees with rings, clades, and tip annotations | allows dense circular/tree structure | whether annotation rings remain decipherable |
+
+Do not add a family profile to hide a real problem. If a warning disappears under a family profile, the notes should still explain why the structure is expected for that family.
+
 ## Completion Rule
 
 Do not report "ready for manuscript use" unless all hard gates pass and the manuscript readiness score meets the role threshold.

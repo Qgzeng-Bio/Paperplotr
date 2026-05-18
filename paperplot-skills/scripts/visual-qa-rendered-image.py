@@ -30,6 +30,99 @@ STATUS_PASS = "pass"
 STATUS_WARN = "warn"
 STATUS_FAIL = "fail"
 
+BASE_RASTER_THRESHOLDS = {
+    "min_width_px": 900,
+    "min_height_px": 500,
+    "aspect_min": 0.45,
+    "aspect_max": 3.0,
+    "blank_margin_warn": 0.32,
+    "content_density_min": 0.035,
+    "text_density_warn": 420,
+    "label_overlap_medium_count": 4,
+    "label_overlap_content_density": 0.12,
+    "high_saturation_fraction_warn": 0.45,
+    "minimum_luminance_delta_warn": 18,
+    "grayscale_std_min": 28,
+    "line_burden_warn": 0.022,
+    "thumbnail_density_warn": 0.23,
+}
+
+BASE_SVG_THRESHOLDS = {
+    "max_font_warn": 18,
+    "large_title_font_warn": 18,
+    "light_gridline_warn": 5,
+    "text_count_warn": 80,
+    "aspect_min": 0.45,
+    "aspect_max": 3.0,
+}
+
+FAMILY_ALIASES = {
+    "rank": "rank-lollipop",
+    "rank-plot": "rank-lollipop",
+    "lollipop": "rank-lollipop",
+    "dotplot": "rank-lollipop",
+    "dumbbell": "rank-lollipop",
+    "model-validation": "model-validation",
+    "validation": "model-validation",
+    "prediction": "model-validation",
+    "heatmap": "heatmap",
+    "correlation-heatmap": "heatmap",
+    "matrix-dotplot": "heatmap",
+    "manhattan": "manhattan",
+    "genomewide": "manhattan",
+    "genome-wide": "manhattan",
+    "phylo": "phylo-annotation-ring",
+    "phylogenetic": "phylo-annotation-ring",
+    "tree": "phylo-annotation-ring",
+    "phylo-annotation-ring": "phylo-annotation-ring",
+}
+
+FAMILY_RASTER_OVERRIDES = {
+    "rank-lollipop": {
+        "content_density_min": 0.02,
+        "line_burden_warn": 0.055,
+        "blank_margin_warn": 0.38,
+    },
+    "model-validation": {
+        "content_density_min": 0.02,
+        "line_burden_warn": 0.035,
+        "thumbnail_density_warn": 0.28,
+    },
+    "heatmap": {
+        "text_density_warn": 780,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55,
+        "content_density_min": 0.025,
+    },
+    "manhattan": {
+        "aspect_max": 3.6,
+        "text_density_warn": 650,
+        "line_burden_warn": 0.04,
+        "thumbnail_density_warn": 0.42,
+    },
+    "phylo-annotation-ring": {
+        "text_density_warn": 900,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55,
+        "content_density_min": 0.02,
+    },
+}
+
+FAMILY_SVG_OVERRIDES = {
+    "phylo-annotation-ring": {
+        "text_count_warn": 250,
+        "light_gridline_warn": 20,
+    },
+    "heatmap": {
+        "text_count_warn": 180,
+        "light_gridline_warn": 30,
+    },
+    "manhattan": {
+        "aspect_max": 3.6,
+        "light_gridline_warn": 15,
+    },
+}
+
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
@@ -48,6 +141,43 @@ def risk(status: str, code: str, message: str, value: Any = None) -> dict[str, A
     if value is not None:
         out["value"] = value
     return out
+
+
+def normalize_family(figure_family: str | None) -> str | None:
+    if not figure_family:
+        return None
+    cleaned = re.sub(r"[^a-z0-9]+", "-", figure_family.strip().lower()).strip("-")
+    if not cleaned:
+        return None
+    if "heatmap" in cleaned or "matrix-dotplot" in cleaned:
+        return "heatmap"
+    if "manhattan" in cleaned or "genomewide" in cleaned or "genome-wide" in cleaned:
+        return "manhattan"
+    if "phylo" in cleaned or "tree" in cleaned:
+        return "phylo-annotation-ring"
+    if "lollipop" in cleaned or "dumbbell" in cleaned:
+        return "rank-lollipop"
+    if "dotplot" in cleaned and "matrix-dotplot" not in cleaned:
+        return "rank-lollipop"
+    if "model-validation" in cleaned or "prediction" in cleaned or "validation" in cleaned:
+        return "model-validation"
+    for alias, canonical in FAMILY_ALIASES.items():
+        alias_clean = re.sub(r"[^a-z0-9]+", "-", alias).strip("-")
+        if cleaned == alias_clean or alias_clean in cleaned:
+            return canonical
+    return cleaned
+
+
+def threshold_profile(input_type: str, figure_family: str | None) -> tuple[str, dict[str, float]]:
+    canonical = normalize_family(figure_family)
+    base = dict(BASE_RASTER_THRESHOLDS if input_type == "raster" else BASE_SVG_THRESHOLDS)
+    if not canonical:
+        return "global", base
+    overrides = FAMILY_RASTER_OVERRIDES if input_type == "raster" else FAMILY_SVG_OVERRIDES
+    if canonical in overrides:
+        base.update(overrides[canonical])
+        return canonical, base
+    return "global", base
 
 
 def resolve_input(path: Path) -> Path:
@@ -150,7 +280,7 @@ def line_burden(mask: Image.Image) -> dict[str, Any]:
     return {"horizontal_line_rows": horizontal, "vertical_line_cols": vertical, "line_burden_score": round(burden, 4)}
 
 
-def analyze_raster(path: Path, out_dir: Path) -> dict[str, Any]:
+def analyze_raster(path: Path, out_dir: Path, figure_family: str | None = None) -> dict[str, Any]:
     if Image is None:
         raise SystemExit(f"Pillow is required for visual QA v1: {PIL_IMPORT_ERROR}")
     img0 = Image.open(path)
@@ -208,27 +338,28 @@ def analyze_raster(path: Path, out_dir: Path) -> dict[str, Any]:
     risks: list[dict[str, Any]] = []
     score = 10
     aspect = w / max(h, 1)
-    if w < 900 or h < 500:
+    profile, thresholds = threshold_profile("raster", figure_family)
+    if w < thresholds["min_width_px"] or h < thresholds["min_height_px"]:
         risks.append(risk(STATUS_WARN, "low_pixel_dimensions", "PNG preview is small for detailed manuscript QA.", [w, h])); score -= 1
-    if aspect > 3.0 or aspect < 0.45:
+    if aspect > thresholds["aspect_max"] or aspect < thresholds["aspect_min"]:
         risks.append(risk(STATUS_WARN, "extreme_aspect_ratio", "Aspect ratio is likely to create readability or layout problems.", round(aspect, 3))); score -= 1
-    if blank_margin_fraction > 0.32:
+    if blank_margin_fraction > thresholds["blank_margin_warn"]:
         risks.append(risk(STATUS_WARN, "excessive_blank_margin", "Large blank/unused margin detected.", round(blank_margin_fraction, 3))); score -= 1
-    if content_density < 0.035:
+    if content_density < thresholds["content_density_min"]:
         risks.append(risk(STATUS_WARN, "low_content_density", "Figure may be sparse or dominated by whitespace.", round(content_density, 3))); score -= 1
-    if text_density_score > 420:
+    if text_density_score > thresholds["text_density_warn"]:
         risks.append(risk(STATUS_WARN, "high_text_or_tick_density", "Many small dark components suggest dense labels, ticks, or annotations.", round(text_density_score, 1))); score -= 1
-    if comp["medium_component_count"] >= 4 and content_density > 0.12:
+    if comp["medium_component_count"] >= thresholds["label_overlap_medium_count"] and content_density > thresholds["label_overlap_content_density"]:
         risks.append(risk(STATUS_WARN, "label_overlap_or_large_annotation_risk", "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.", comp["medium_component_count"])); score -= 1
-    if high_sat_fraction > 0.45 and color_count_estimate <= 6:
+    if high_sat_fraction > thresholds["high_saturation_fraction_warn"] and color_count_estimate <= 6:
         risks.append(risk(STATUS_WARN, "saturated_presentation_palette", "Dominant colors are highly saturated and presentation-like.", round(high_sat_fraction, 3))); score -= 1
-    if min_lum_delta < 18:
+    if min_lum_delta < thresholds["minimum_luminance_delta_warn"]:
         risks.append(risk(STATUS_WARN, "grayscale_discrimination_risk", "Some colored classes may be hard to distinguish in grayscale.", round(min_lum_delta, 1))); score -= 1
-    if gray_std < 28:
+    if gray_std < thresholds["grayscale_std_min"]:
         risks.append(risk(STATUS_WARN, "low_grayscale_contrast", "Overall grayscale contrast is low.", round(gray_std, 1))); score -= 1
-    if lines["line_burden_score"] > 0.022:
+    if lines["line_burden_score"] > thresholds["line_burden_warn"]:
         risks.append(risk(STATUS_WARN, "gridline_or_long_line_burden", "Many long horizontal/vertical line structures detected.", lines["line_burden_score"])); score -= 1
-    if thumb_density > 0.23:
+    if thumb_density > thresholds["thumbnail_density_warn"]:
         risks.append(risk(STATUS_WARN, "thumbnail_readability_risk", "Thumbnail view is visually dense; labels may fail at reduced size.", round(thumb_density, 3))); score -= 1
     if not risks:
         risks.append(risk(STATUS_PASS, "no_major_deterministic_risk", "No major deterministic visual QA risk detected."))
@@ -241,6 +372,9 @@ def analyze_raster(path: Path, out_dir: Path) -> dict[str, Any]:
         "engine": "pillow",
         "input_type": "raster",
         "input_path": str(path),
+        "figure_family": normalize_family(figure_family),
+        "threshold_profile": profile,
+        "family_thresholds": thresholds,
         "image_size_px": [w, h],
         "file_size_bytes": path.stat().st_size,
         "aspect_ratio": round(aspect, 4),
@@ -276,7 +410,7 @@ def local_name(tag: str) -> str:
     return tag.rsplit("}", 1)[-1]
 
 
-def analyze_svg(path: Path, out_dir: Path) -> dict[str, Any]:
+def analyze_svg(path: Path, out_dir: Path, figure_family: str | None = None) -> dict[str, Any]:
     text = path.read_text(errors="ignore")
     try:
         root = ET.fromstring(text)
@@ -310,15 +444,16 @@ def analyze_svg(path: Path, out_dir: Path) -> dict[str, Any]:
     centered_large_titles = [t for t in texts if (t["font_size"] or 0) >= 18 and ("middle" in t["anchor"] or (width and t["x"] and abs(t["x"] - width / 2) < width * 0.12))]
     risks: list[dict[str, Any]] = []
     score = 10
-    if max_font and max_font >= 18:
+    profile, thresholds = threshold_profile("svg", figure_family)
+    if max_font and max_font >= thresholds["max_font_warn"]:
         risks.append(risk(STATUS_WARN, "oversized_svg_title_or_text", "SVG contains presentation-sized text.", max_font)); score -= 2
     if centered_large_titles:
         risks.append(risk(STATUS_WARN, "huge_centered_title", "Large centered title suggests presentation-style rather than manuscript panel style.", centered_large_titles[0].get("text", ""))); score -= 2
-    if light_gridlines >= 5:
+    if light_gridlines >= thresholds["light_gridline_warn"]:
         risks.append(risk(STATUS_WARN, "svg_gridline_burden", "Many light gridlines detected.", light_gridlines)); score -= 1
-    if len(texts) > 80:
+    if len(texts) > thresholds["text_count_warn"]:
         risks.append(risk(STATUS_WARN, "svg_text_burden", "Large number of text elements suggests dense labels/ticks.", len(texts))); score -= 1
-    if width and height and (width / max(height, 1) > 3.0 or width / max(height, 1) < 0.45):
+    if width and height and (width / max(height, 1) > thresholds["aspect_max"] or width / max(height, 1) < thresholds["aspect_min"]):
         risks.append(risk(STATUS_WARN, "svg_extreme_aspect_ratio", "SVG aspect ratio may be hard to place in manuscript layout.", round(width / max(height, 1), 3))); score -= 1
     if not risks:
         risks.append(risk(STATUS_PASS, "no_major_svg_structure_risk", "No major SVG structure risk detected."))
@@ -328,6 +463,9 @@ def analyze_svg(path: Path, out_dir: Path) -> dict[str, Any]:
         "engine": "svg-xml",
         "input_type": "svg",
         "input_path": str(path),
+        "figure_family": normalize_family(figure_family),
+        "threshold_profile": profile,
+        "family_thresholds": thresholds,
         "canvas_size": [width, height],
         "file_size_bytes": path.stat().st_size,
         "text_count": len(texts),
@@ -350,6 +488,8 @@ def write_markdown(result: dict[str, Any], out_dir: Path) -> None:
         "",
         f"- input: `{result.get('input_path')}`",
         f"- engine: `{result.get('engine')}`",
+        f"- figure family: `{result.get('figure_family') or 'global'}`",
+        f"- threshold profile: `{result.get('threshold_profile')}`",
         f"- status: `{result.get('status')}`",
         f"- manuscript readiness score: `{result.get('manuscript_readiness_score')}/10`",
         "",
@@ -369,15 +509,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Pillow-based rendered image visual QA for paperplot-skills.")
     parser.add_argument("input", help="PNG/JPG/JPEG/SVG file or output directory containing a rendered figure")
     parser.add_argument("--out", required=True, help="Output directory for visual_qa.json/md and grayscale preview when applicable")
+    parser.add_argument("--family", default=None, help="Optional figure family for family-specific visual QA thresholds")
     args = parser.parse_args()
     in_path = resolve_input(Path(args.input).expanduser())
     out_dir = Path(args.out).expanduser()
     ensure_dir(out_dir)
     ext = in_path.suffix.lower()
     if ext == ".svg":
-        result = analyze_svg(in_path, out_dir)
+        result = analyze_svg(in_path, out_dir, args.family)
     elif ext in {".png", ".jpg", ".jpeg"}:
-        result = analyze_raster(in_path, out_dir)
+        result = analyze_raster(in_path, out_dir, args.family)
     else:
         raise SystemExit(f"Unsupported visual QA input type: {in_path}")
     (out_dir / "visual_qa.json").write_text(json.dumps({"image_qa": result}, indent=2, ensure_ascii=False) + "\n")

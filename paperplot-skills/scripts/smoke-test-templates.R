@@ -33,7 +33,8 @@ template_files <- c(
   "bio-duplication-mode-comparison-template.R",
   "volcano-plot-template.R",
   "ma-plot-template.R",
-  "enrichment-dotplot-template.R"
+  "enrichment-dotplot-template.R",
+  "model-validation-composite-template.R"
 )
 
 missing_templates <- template_files[!file.exists(file.path(template_root, template_files))]

@@ -15,6 +15,7 @@ Choose a template before writing code. Adapt the selected template rather than s
 | 5-8 heterogeneous metrics | `templates/multi-metric-small-multiples-template.R` | sample, metric, value, unit | 2x3 or 2x4 facets |
 | Ranked samples plus key metrics | `templates/rank-plus-key-metrics-template.R` | sample, score, metric, value | rank view plus facets |
 | Four-panel manuscript figure | `templates/manuscript-four-panel-template.R` | x, y, panel, optional group | 2x2 manuscript grid |
+| Model validation composite | `templates/model-validation-composite-template.R` | observed x, predicted y, model/group | fit, residual, performance panels |
 
 ## Contract Rules
 

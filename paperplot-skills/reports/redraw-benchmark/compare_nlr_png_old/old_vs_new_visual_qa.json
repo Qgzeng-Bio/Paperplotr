@@ -5,6 +5,10 @@
     "new_image": "paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png",
     "old_media": "raster",
     "new_media": "raster",
+    "old_family": null,
+    "new_family": "rank-lollipop",
+    "old_threshold_profile": "global",
+    "new_threshold_profile": "rank-lollipop",
     "comparison_limitation": null,
     "verdict": "mixed",
     "status": "warn",
@@ -50,12 +54,12 @@
       {
         "metric": "manuscript_readiness_score",
         "old": 6,
-        "new": 9,
+        "new": 10,
         "delta": "improved"
       }
     ],
     "old_score": 6,
-    "new_score": 9,
+    "new_score": 10,
     "remaining_risks": [
       "text_burden_score worsened from 5.93 to 35.37",
       "content_density worsened from 0.3657 to 0.0736"

@@ -25,7 +25,8 @@ template_files <- c(
   "bio-duplication-mode-comparison-template.R",
   "volcano-plot-template.R",
   "ma-plot-template.R",
-  "enrichment-dotplot-template.R"
+  "enrichment-dotplot-template.R",
+  "model-validation-composite-template.R"
 )
 
 required_files <- c(

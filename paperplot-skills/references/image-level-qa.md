@@ -11,6 +11,14 @@ Inspect the actual PNG/PDF preview at:
 3. 50% zoom or thumbnail view,
 4. grayscale/black-white mental simulation when relevant.
 
+Run deterministic QA with the most specific family profile that is justified by the figure type:
+
+```bash
+python3 scripts/visual-qa-rendered-image.py <figure.png> --out <qa_dir> --family <family>
+```
+
+Use global thresholds when the family is unclear. Use family profiles only for expected scientific structure such as lollipop stems, model-validation sparsity, heatmap matrices, Manhattan point clouds, or phylogenetic annotation rings.
+
 ## Checklist
 
 | category | pass condition | fail condition |
