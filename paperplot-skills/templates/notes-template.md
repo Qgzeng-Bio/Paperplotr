@@ -1,48 +1,60 @@
 # Figure Notes
 
-## Figure ID
+## Scientific Message
 
 TODO
 
-## Input Data
+## Figure Role
+
+TODO: main, supplement, diagnostic, or exploratory.
+
+## Visible Design Choices
+
+TODO: chart family, panel hierarchy, layout, palette, and labels shown in the figure.
+
+## Information Moved Out Of The Visible Figure
+
+TODO: sample labels, sample order, label key, full statistics, or supporting metrics moved to metadata/sidecars.
+
+## Label Strategy
+
+TODO: direct labels, abbreviations, rank index, key sample labels, or label key sidecar.
+
+## Sample Order / Rank Index
 
 TODO
 
-## Script Used
+## Palette Semantics
 
 TODO
 
-## Output Files
+## Statistical Expression
 
 TODO
 
-## PaperPlotR Functions Used
+## Redraw Strategy
 
 TODO
 
-## Preset / Size
+## Variables and Metrics
+
+| metric | label | unit | direction | transform | role |
+|---|---|---|---|---|---|
+| TODO | TODO | TODO | neutral | none | primary |
+
+## QA Gate
+
+| gate | status | note |
+|---|---|---|
+| output | TODO | TODO |
+| design brief | TODO | TODO |
+| label strategy | TODO | TODO |
+| manuscript readiness | TODO | TODO |
+
+## Known Limitations
 
 TODO
 
-## Panel Mapping
-
-- panel a: TODO
-- panel b: TODO
-- panel c: TODO
-- panel d: TODO
-
-## QA Checklist
-
-- [ ] Output files exist
-- [ ] Output file sizes are non-trivial
-- [ ] Text is readable
-- [ ] Axes are not overcrowded
-- [ ] Legend is readable and not duplicated
-- [ ] Colors are consistent and colorblind-aware
-- [ ] Panel labels match notes/legend
-- [ ] No obvious text overlap
-- [ ] Figure message matches requested task
-
-## Remaining Issues
+## Files Generated
 
 TODO

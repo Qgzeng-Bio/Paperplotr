@@ -1,159 +1,415 @@
-# PaperPlotR Handoff
+# PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-05-07
+Last updated: 2026-05-18
 
 ## Repository
 
-- Local package path: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr`
-- GitHub repository: `https://github.com/Qgzeng-Bio/Paperplotr`
-- Package version: `0.1.0`
-- Package site: `https://qgzeng-bio.github.io/Paperplotr/`
-- Latest skill release: `paperplot-skills v1.0.0`
-- Release URL: `https://github.com/Qgzeng-Bio/Paperplotr/releases/tag/skill-v1.0.0`
-- Current public package direction: publication-ready `ggplot2` helpers for scientific figures plus a repo-local AI scientific plotting skill.
+- Workspace: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR`
+- R package root: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr`
+- Skill root: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr/paperplot-skills`
+- Replica R library: `/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集`
+- Replica Python library: `/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/Python科研绘图合集`
 
-## Current Git State
+## Current State
 
-- Branch: `main`
-- Current `HEAD`: `bd81d88 docs: add multi-agent skill installation guide`
-- Local working tree was clean after the last push.
-- `HEAD` and `origin/main` were synchronized after the last push.
-- Latest pushed commits:
-  - `bd81d88 docs: add multi-agent skill installation guide`
-  - `785045f ci: use portable fonts in skill smoke tests`
-  - `df204e8 ci: stabilize paperplot skills smoke tests`
-  - `bf71bbb docs: publish paperplot skills entrypoints`
-  - `7975936 docs: add PaperPlotR handoff notes`
-  - `33f8698 feat: add paperplot AI skill wrapper`
-  - `2da8d02 Fix CI for gallery workflow updates`
-  - `2873d9b Improve plot export and gallery workflows`
-- `HANDOFF.md` is tracked, but excluded from R package builds via `.Rbuildignore`.
+`paperplot-skills` has been upgraded from a rule-driven scientific plotting skill into a pattern-library-driven scientific figure design system.
 
-## Completed Package Work
+The skill remains standalone:
 
-- `scale_fill_lab()` and `scale_color_lab()` expose a `guide` argument, so `guide = "none"` no longer causes duplicate-argument errors.
-- `layout_lab()` supports panel tags directly:
-  `tag_levels`, `tag_size`, `tag_face`, `tag_family`, and `tag_position`.
-- `save_lab()` and `save_lab_plot()` validate named graphics devices before calling `ggplot2::ggsave()`.
-- Explicit export devices are supported:
-  `quartz_pdf`, `ragg_png`, `ragg_tiff`, and `svglite`.
-- Saved output files are checked by default for existence and suspiciously small size.
-- `ragg` and `svglite` are included in `Suggests`.
-- Domain-specific semantic color dictionaries are opt-in:
-  `available_group_dictionaries(include_examples = TRUE)`.
-- Legacy example dictionary names remain resolvable, with warnings encouraging project-specific `register_group_dictionary()`.
-- `vignettes/gallery.Rmd` was added.
-- Visual regression snapshots were added for semantic group mapping and tagged multi-panel layouts.
-- `visual-checks/`, `Rplots.pdf`, and `HANDOFF.md` are excluded from R package builds.
-- `visual-checks/` and `Rplots.pdf` are ignored by git.
+- Do not call `library(PaperPlotR)`.
+- Do not depend on `theme_lab()`, `save_lab_plot()`, or other PaperPlotR package APIs.
+- R templates should remain based on base R + ggplot2 unless a template explicitly documents an optional dependency.
+- Python is used for indexing, calibration, rendered-image QA, and old-vs-new comparison, not as the primary plotting backend for this round.
 
-## paperplot-skills Status
+The main workflow is now:
 
-- `paperplot-skills/` is tracked, pushed, and released as `skill-v1.0.0`.
-- It is a repo-local AI skill wrapper for PaperPlotR, not a separate R package.
-- It is generic scientific plotting infrastructure, not a project-specific workflow.
-- It guides AI agents to:
-  - choose scientific figure templates,
-  - generate complete runnable R scripts,
-  - use PaperPlotR theme, palette, semantic mapping, layout, and export helpers,
-  - default to no-overwrite versioned outputs,
-  - write sidecar notes,
-  - run output QA.
-- It now includes:
-  - `SKILL.md`
-  - `README.md`
-  - `AGENTS.md`
-  - `INSTALL.md`
-  - `references/`
-  - `templates/`
-  - `examples/`
-  - `scripts/validate-skill.R`
-  - `scripts/smoke-test-templates.R`
+```text
+input data/code/old figure
+-> detect data roles and figure family
+-> consult pattern library
+-> generate design brief
+-> generate pattern-based design plan
+-> select template or redraw strategy
+-> render PDF/PNG
+-> run rendered-image visual QA
+-> run old-vs-new comparison when an old figure exists
+-> iterate or report remaining risks
+-> write notes, metadata, QA, sidecars
+```
 
-## Multi-Agent Compatibility
+Important behavioral rule: detecting that a figure is bad is not enough. If data/code are available, the skill should attempt a better pattern-based redraw and verify it. If the new figure is not clearly better, it must say so and either iterate or explain the missing information.
 
-- Codex: install by symlink or copy into `~/.codex/skills/paperplot-skills`.
-- Claude Code: use repo-local mode by telling Claude to read `paperplot-skills/SKILL.md`, or copy/symlink into a Claude skill/instruction directory if configured.
-- OpenCode: point local instructions to `paperplot-skills/AGENTS.md`.
-- Generic CLI agents: use `paperplot-skills/AGENTS.md` as the entrypoint.
-- Native auto-discovery is agent-specific; the skill is intentionally usable as plain Markdown plus R templates even without auto-discovery.
+## Git / Working Tree Note
 
-## Release and CI
+The worktree was rechecked on 2026-05-18 and is not clean.
 
-- GitHub Release created:
-  `https://github.com/Qgzeng-Bio/Paperplotr/releases/tag/skill-v1.0.0`
-- Main README now links to `paperplot-skills/` and includes a skill workflow badge.
-- `_pkgdown.yml` includes an `AI Skill` navigation item linking to the GitHub skill directory.
-- Dedicated workflow added:
-  `.github/workflows/paperplot-skills.yaml`
-- The workflow runs:
+There are many modified and untracked files under `paperplot-skills/`, plus `HANDOFF.md`. Some `paperplot-skills` changes predate the final handoff update, so inspect `git status --short` and `git diff` before committing.
+
+Do not assume all modified files were touched in the final handoff step.
+
+## Major Deliverables Completed
+
+### Replica Pattern Index
+
+Generated:
+
+- `paperplot-skills/reports/nature-replica-pattern-index.md`
+- `paperplot-skills/reports/nature-replica-pattern-index.json`
+- script: `paperplot-skills/scripts/index-replica-patterns.py`
+
+Latest run:
+
+```text
+indexed 87 cases
+R=80, Python=7
+```
+
+The index records case directory, language, output file types, code files, data file types, likely figure family, application scenario, skill suitability, visual-QA suitability, template suitability, dependency complexity, and generalization risks.
+
+Observed family coverage includes heatmaps, grouped bars, scatter/regression, violin/raincloud/jitter, enrichment/volcano/MA, ridgeline/density, multi-panel layouts, polar/radar, circos/chord/synteny-like plots, ordination, network/Sankey, map/spatial, dot/lollipop/dumbbell, UpSet, Manhattan, and phylogenetic annotation-ring plots.
+
+### Pattern Library
+
+Created:
+
+- `paperplot-skills/references/pattern-library/grouped-bar-errorbar.md`
+- `paperplot-skills/references/pattern-library/raincloud-violin-jitter.md`
+- `paperplot-skills/references/pattern-library/scatter-regression-marginal.md`
+- `paperplot-skills/references/pattern-library/correlation-heatmap.md`
+- `paperplot-skills/references/pattern-library/pca-pcoa-ordination.md`
+- `paperplot-skills/references/pattern-library/volcano-ma-enrichment.md`
+- `paperplot-skills/references/pattern-library/manhattan-genomewide.md`
+- `paperplot-skills/references/pattern-library/phylo-annotation-ring.md`
+- `paperplot-skills/references/pattern-library/upset-set-plot.md`
+- `paperplot-skills/references/pattern-library/circos-chord-sankey.md`
+- `paperplot-skills/references/pattern-library/multi-panel-manuscript-layout.md`
+- `paperplot-skills/references/pattern-library/model-validation-figures.md`
+
+Each pattern doc includes:
+
+- applies / does not apply
+- input data structure
+- visual encoding
+- layout
+- typography, line width, point size, legend strategy
+- color strategy
+- common failure modes
+- Nature-like manuscript principles
+- existing template links
+- whether a new template is needed
+- QA checklist
+- visual QA focus
+- old-vs-new criteria
+
+### Visual QA Calibration
+
+Generated:
+
+- `paperplot-skills/reports/visual-qa-calibration-from-replica-library.md`
+- `paperplot-skills/reports/visual-qa-calibration-from-replica-library.json`
+- script: `paperplot-skills/scripts/calibrate-visual-qa.py`
+
+Latest run:
+
+```text
+calibrated 30 positive examples
+status counts: warn=29, pass=1, fail=0
+```
+
+Key conclusion: many high-quality positive examples still trigger deterministic `warn`. Treat `warn` as a review prompt, not an automatic failure. Dense families such as heatmaps, Manhattan plots, phylogenetic rings, UpSet matrices, and multi-panel figures need family-specific interpretation.
+
+### Figure Type Selector and Style System
+
+Updated / added:
+
+- `paperplot-skills/references/figure-type-selector.md`
+- `paperplot-skills/references/publication-visual-standards.md`
+- `paperplot-skills/references/manuscript-aesthetics-rules.md`
+- `paperplot-skills/references/nature-like-style-principles.md`
+- `paperplot-skills/references/color-and-style-policy.md`
+- `paperplot-skills/references/old-vs-new-visual-scoring.md`
+- `paperplot-skills/references/visual-qa-gates.md`
+
+The selector now emphasizes data-role detection:
+
+- sample
+- group
+- metric
+- value
+- feature
+- genomic coordinate
+- uncertainty/statistic
+- network edge/node
+- tree/tip/annotation
+
+It also documents when not to use a family, main-vs-supplement-vs-diagnostic strategy, dense labels, too many groups/metrics, small n, paired data, mixed units, and specialized data requirements for circos, synteny, genome tracks, phylogenetic trees, and networks.
+
+### SKILL.md Workflow
+
+Updated:
+
+- `paperplot-skills/SKILL.md`
+
+Current `SKILL.md` requires:
+
+1. diagnose user input
+2. detect roles and figure family
+3. consult pattern library
+4. create design brief
+5. create figure/metric spec
+6. create pattern-based design plan
+7. run visual burden checks
+8. render/export
+9. run image QA
+10. run old-vs-new comparison when applicable
+11. iterate or report blocker if new figure is not better
+12. output PDF/PNG/notes/metadata/QA/visual_qa/old_vs_new
+
+### Helper and Template Updates
+
+Important helper changes:
+
+- `paperplot-skills/scripts/paperplot_helpers.R`
+  - helper version now `standalone-0.3.0`
+  - added `pp_pattern_reference()`
+  - metadata and notes now include pattern-library references when available
+- `paperplot-skills/scripts/lib/design-brief.R`
+  - `pp_design_plan()` accepts and stores `pattern_reference`
+- `paperplot-skills/scripts/compare-old-new-figures.py`
+  - now records `old_media`, `new_media`, and `comparison_limitation`
+  - mixed SVG/raster comparisons are flagged as limited, not directly numeric-equivalent
+
+Selected templates were tightened with pattern-informed style defaults and output notes:
+
+- `grouped-boxplot-jitter-template.R`
+- `violin-dot-template.R`
+- `correlation-scatter-template.R`
+- `heatmap-template.R`
+- `pca-scatter-template.R`
+- `volcano-plot-template.R`
+
+All 19 templates passed smoke tests after the changes.
+
+## End-to-End Redraw Benchmark
+
+Generated:
+
+- `paperplot-skills/reports/end-to-end-redraw-benchmark.md`
+- script: `paperplot-skills/scripts/run-redraw-benchmark.R`
+- output directory: `paperplot-skills/reports/redraw-benchmark/`
+
+### Case 1: GS Quality Traits
+
+Old figure:
+
+- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
+
+Data:
+
+- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/tables/quality_nonlinear_summary.tsv`
+
+New outputs:
+
+- `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.pdf`
+- `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png`
+
+Result:
+
+- old manuscript-readiness score: 6
+- new manuscript-readiness score: 10
+- old-vs-new verdict: `mixed`
+
+Interpretation: visually and manuscript-style improved, but deterministic blank-margin and content-density metrics worsened. The report correctly does not claim unconditional success.
+
+### Case 2: High NLR Count by Sample
+
+Old SVG:
+
+- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg`
+
+Comparable old PNG:
+
+- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png`
+
+Data:
+
+- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv`
+
+New outputs:
+
+- `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.pdf`
+- `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png`
+
+Result:
+
+- old SVG manuscript-readiness score: 5
+- old PNG manuscript-readiness score: 6
+- new manuscript-readiness score: 9
+- old-vs-new verdict: `mixed`
+
+Interpretation: sorted lollipop is more manuscript-like for one count per sample. A horizontal-bar iteration was tried and rejected because it increased visual burden. Mixed SVG/raster comparison is explicitly flagged as limited.
+
+## Self Review
+
+Generated:
+
+- `paperplot-skills/reports/skill-self-review-after-pattern-library.md`
+
+Main conclusions:
+
+- The skill is now more professional because it has an indexed pattern corpus, pattern docs, a role-based selector, positive-example calibration, pattern-linked metadata, and real redraw benchmarks.
+- Remaining weak areas: family-specific QA thresholds, specialized templates for Manhattan/model-validation/UpSet, PDF rasterization for calibration, and stronger mixed-panel layout examples.
+- Visual QA can still over-warn on high-quality dense figures.
+- Old-vs-new comparison is useful but cannot prove scientific correctness or all aesthetic tradeoffs.
+
+Corrections applied after review:
+
+- `compare-old-new-figures.py` now records mixed-media comparison limitations.
+- `old-vs-new-visual-scoring.md` and `visual-qa-gates.md` now explicitly warn about density interpretation and SVG/raster comparability.
+
+## Validation Run
+
+All required verification commands were run successfully from:
+
+```text
+/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr
+```
+
+Commands and results:
+
+```bash
+python3 paperplot-skills/scripts/index-replica-patterns.py
+```
+
+```text
+indexed 87 cases
+```
+
+```bash
+python3 paperplot-skills/scripts/calibrate-visual-qa.py
+```
+
+```text
+calibrated 30 positive examples
+```
+
+```bash
+Rscript paperplot-skills/scripts/run-redraw-benchmark.R
+```
+
+```text
+redraw benchmark figures written to paperplot-skills/reports/redraw-benchmark
+```
+
+```bash
+Rscript paperplot-skills/scripts/validate-skill.R
+```
+
+```text
+paperplot-skills standalone validation passed
+```
+
+```bash
+Rscript paperplot-skills/scripts/smoke-test-templates.R
+```
+
+```text
+19/19 templates passed smoke tests
+temporary smoke root: /tmp/paperplot-skills-smoke-20260518-230936
+```
+
+```bash
+Rscript paperplot-skills/scripts/run-pressure-scenarios.R
+```
+
+```text
+5/5 pressure scenarios passed
+temporary pressure root: /tmp/paperplot-pressure-20260518-231001
+```
+
+```bash
+python3 paperplot-skills/scripts/run-visual-pressure-scenarios.py
+```
+
+```text
+all expected visual scenarios passed
+visual-old-vs-new-metric-delta: warn / mixed
+```
+
+Benchmark QA and comparisons rerun:
+
+```bash
+python3 paperplot-skills/scripts/visual-qa-rendered-image.py \
+  paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png \
+  --out paperplot-skills/reports/redraw-benchmark/qa_fig4_new
+
+python3 paperplot-skills/scripts/visual-qa-rendered-image.py \
+  paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png \
+  --out paperplot-skills/reports/redraw-benchmark/qa_nlr_new
+
+python3 paperplot-skills/scripts/compare-old-new-figures.py \
+  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png \
+  paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png \
+  --out paperplot-skills/reports/redraw-benchmark/compare_fig4
+
+python3 paperplot-skills/scripts/compare-old-new-figures.py \
+  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg \
+  paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png \
+  --out paperplot-skills/reports/redraw-benchmark/compare_nlr_svg_old
+
+python3 paperplot-skills/scripts/compare-old-new-figures.py \
+  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png \
+  paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png \
+  --out paperplot-skills/reports/redraw-benchmark/compare_nlr_png_old
+```
+
+## Important Reports
+
+- `paperplot-skills/reports/nature-replica-pattern-index.md`
+- `paperplot-skills/reports/visual-qa-calibration-from-replica-library.md`
+- `paperplot-skills/reports/end-to-end-redraw-benchmark.md`
+- `paperplot-skills/reports/skill-self-review-after-pattern-library.md`
+- `paperplot-skills/reports/visual-qa-real-figure-test-report.md`
+- `paperplot-skills/reports/final-skill-test-report.md`
+
+## Current Limitations
+
+- The skill is design-system-like, but not a learned visual model.
+- Visual QA remains heuristic and deterministic.
+- Positive examples show that many good figures can be `warn`, especially dense scientific panels.
+- SVG is structurally inspected; raster metrics are not directly comparable unless the SVG is rendered to pixels.
+- PDF-only replica cases were not directly calibrated because a PDF rasterization path is not yet wired into calibration.
+- CircOS/chord/tree/UpSet/Manhattan patterns are documented, but not all have stable standalone templates.
+- Scientific correctness still depends on data semantics, caption context, interval definitions, and human review.
+
+## Recommended Next Phase
+
+Highest-value next work:
+
+1. Add family-specific visual QA thresholds.
+2. Add `manhattan-plot-template.R`.
+3. Add `model-validation-composite-template.R`.
+4. Add `upset-summary-template.R`.
+5. Add PDF rasterization to visual QA calibration.
+6. Strengthen heatmap annotation-strip and dendrogram strategy.
+7. Improve benchmark iteration so old-vs-new can produce a clearer `improved` verdict when appropriate.
+8. Add more real redraw benchmarks across heatmap, scatter/regression, enrichment, and ordination families.
+
+## Practical Release Checklist
+
+Before committing or publishing:
+
+1. Recheck `git status --short`.
+2. Inspect `git diff -- paperplot-skills`.
+3. Confirm no generated temporary files should be excluded.
+4. Run:
 
 ```bash
 Rscript paperplot-skills/scripts/validate-skill.R
 Rscript paperplot-skills/scripts/smoke-test-templates.R
+Rscript paperplot-skills/scripts/run-pressure-scenarios.R
+python3 paperplot-skills/scripts/run-visual-pressure-scenarios.py
 ```
 
-- CI smoke mode uses base graphics devices and `base_family = "sans"` in temporary template copies to avoid Linux CI Arial font issues. This does not change the real templates.
-
-## Verification Already Run
-
-Package verification:
-
-```bash
-R_LIBS=/private/tmp/paperplotr-r-lib Rscript -e 'testthat::test_local()'
-R_LIBS=/private/tmp/paperplotr-r-lib R CMD build --no-build-vignettes /Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr
-R_LIBS=/private/tmp/paperplotr-r-lib R CMD check --no-manual --ignore-vignettes /private/tmp/PaperPlotR_0.1.0.tar.gz
-```
-
-Results:
-
-- `testthat::test_local()`: 153 passed, 0 failed.
-- `R CMD build --no-build-vignettes`: succeeded.
-- `R CMD check --no-manual --ignore-vignettes`: `Status: OK`.
-
-Skill verification:
-
-```bash
-Rscript paperplot-skills/scripts/validate-skill.R
-Rscript paperplot-skills/scripts/smoke-test-templates.R
-PAPERPLOTR_SMOKE_BASE_DEVICES=true PAPERPLOTR_SMOKE_BASE_FAMILY=sans Rscript paperplot-skills/scripts/smoke-test-templates.R
-```
-
-Results:
-
-- `paperplot-skills validation passed`
-- default smoke: `8/8 templates passed smoke tests`
-- CI-mode smoke: `8/8 templates passed smoke tests`
-
-Latest GitHub Actions after `bd81d88`:
-
-- `paperplot-skills`: success
-- `R-CMD-check`: success
-- `pkgdown`: success
-- `test-coverage`: success
-- `lint`: success
-
-## Local Artifacts
-
-- `visual-checks/` exists locally and contains generated visual inspection outputs.
-- `Rplots.pdf` exists locally and appears to be an accidental graphics-device artifact from testing.
-- These artifacts are ignored or build-excluded and should not be committed unless deliberately promoted into official examples.
-
-## Known Residual Risks
-
-- `devtools` was not installed in the active local R 4.6 system library. Some verification used a temporary R library at `/private/tmp/paperplotr-r-lib`.
-- Full vignette building was not part of the last local `R CMD check`; the check used `--ignore-vignettes`. GitHub `pkgdown` did build the site successfully after the latest push.
-- `paperplot-skills` is multi-agent readable, but automatic discovery depends on each agent's local skill mechanism.
-
-## Recommended Next Steps
-
-1. For local Codex use, install the skill by symlink:
-
-```bash
-mkdir -p ~/.codex/skills
-ln -sfn "/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr/paperplot-skills" ~/.codex/skills/paperplot-skills
-```
-
-2. Start a new session and ask the agent to use `paperplot-skills` on a real CSV or ggplot script.
-3. Optionally add agent-specific install notes for any exact Claude Code/OpenCode directory conventions once confirmed locally.
-4. Do not create a separate GitHub repository unless the skill is later generalized beyond PaperPlotR.
+5. Confirm `paperplot-skills` still has no hard dependency on the PaperPlotR R package.
+6. If publishing as a Codex skill, copy/install the updated `paperplot-skills` directory to the intended skills location.

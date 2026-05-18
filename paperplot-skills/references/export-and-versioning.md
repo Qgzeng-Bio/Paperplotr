@@ -1,79 +1,52 @@
 # Export And Versioning
 
-Default behavior is to preserve old figures. Never overwrite existing outputs unless the user explicitly requests it.
+Use versioned exports so figure iterations remain auditable.
 
-## Output Stem
+## Required Defaults
 
-Use a timestamped stem:
+- Timestamped output stem: `figure_id_YYYYMMDD-HHMMSS`.
+- PDF for vector editing.
+- PNG for preview.
+- 600 dpi for raster output.
+- Refuse to overwrite old outputs.
+- Write sidecar notes next to outputs.
+- Write machine-readable metadata JSON.
+- Write a QA report.
 
-```r
-timestamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
-output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
-notes_path <- paste0(output_stem, "_notes.md")
-```
+## Helper Functions
 
-Recommended output paths:
-
-```r
-output_files <- c(
-  pdf = paste0(output_stem, ".pdf"),
-  png = paste0(output_stem, ".png")
-)
-```
-
-Add SVG or TIFF when requested or when the target workflow benefits from them.
-
-## No-Overwrite Check
-
-Check all planned files before rendering:
+Use:
 
 ```r
-stop_if_outputs_exist <- function(paths) {
-  existing <- paths[file.exists(paths)]
-  if (length(existing) > 0) {
-    stop(
-      paste("Refusing to overwrite existing output files:", paste(existing, collapse = ", ")),
-      call. = FALSE
-    )
-  }
-}
+output_files <- pp_save_all(p, output_stem, preset = "nature_half")
+pp_write_notes(notes_path, figure_id, input_path, output_files, preset, figure_spec = figure_spec)
+pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout, palette = palette, ordering = ordering, qa = qa)
+pp_write_qa_report(qa_path, qa_results)
 ```
 
-Call this before any export:
+## Sidecar Contract
 
-```r
-stop_if_outputs_exist(c(output_files, notes_path))
+Each template should generate:
+
+```text
+*.pdf
+*.png
+*_notes.md
+*_metadata.json
+*_qa.md
 ```
 
-## Formats
+## Notes Must Record
 
-- PDF: preferred vector output for manuscript review.
-- SVG: useful for later vector editing when `svglite` is available.
-- PNG: quick preview and web/share output.
-- TIFF: submission system output when explicitly requested.
-
-Use 600 dpi for raster output unless user or journal instructions require another value.
-
-## PaperPlotR Export Helpers
-
-Prefer:
-
-```r
-save_lab_plot(plot, filename, preset = "nature_half", device = "ragg_png")
-save_lab(plot, filename, spec = "4.9x4.9", ncol = 2, nrow = 2, journal = "nature")
-```
-
-Use `device = "quartz_pdf"` for macOS PDF when native font handling is needed. Use `ragg_png` or `ragg_tiff` when `ragg` is installed. Use `svglite` for SVG when installed.
-
-## Notes
-
-Write a sidecar markdown file for every render batch. It should include:
-
-- Figure ID.
-- Input data.
-- Script path.
-- Output files.
-- PaperPlotR functions and presets.
-- Panel mapping.
-- QA checklist.
-- Remaining issues.
+- scientific purpose
+- input path
+- script/template used
+- output paths
+- file sizes
+- preset and layout
+- metric labels, units, directions, and transforms
+- sample/order rule
+- palette semantics
+- label strategy
+- QA gate results
+- remaining issues

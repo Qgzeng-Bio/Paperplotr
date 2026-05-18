@@ -1,0 +1,185 @@
+{
+  "image_qa": {
+    "checked": true,
+    "engine": "pillow",
+    "input_type": "raster",
+    "input_path": "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
+    "image_size_px": [
+      2055,
+      649
+    ],
+    "file_size_bytes": 44958,
+    "aspect_ratio": 3.1664,
+    "content_bbox_px": [
+      19,
+      17,
+      2023,
+      632
+    ],
+    "content_bbox_area_fraction": 0.9241,
+    "blank_margin_fraction": 0.0759,
+    "content_density": 0.2417,
+    "thumbnail_content_density": 0.299,
+    "grayscale_mean": 220.18,
+    "grayscale_std": 65.94,
+    "color_count_estimate": 11,
+    "dominant_colors": [
+      {
+        "rgb": [
+          76,
+          120,
+          168
+        ],
+        "fraction": 0.0255,
+        "saturation": 0.548,
+        "luminance": 114.1
+      },
+      {
+        "rgb": [
+          123,
+          124,
+          126
+        ],
+        "fraction": 0.0169,
+        "saturation": 0.024,
+        "luminance": 123.9
+      },
+      {
+        "rgb": [
+          74,
+          81,
+          83
+        ],
+        "fraction": 0.0138,
+        "saturation": 0.108,
+        "luminance": 79.7
+      },
+      {
+        "rgb": [
+          146,
+          77,
+          75
+        ],
+        "fraction": 0.0132,
+        "saturation": 0.486,
+        "luminance": 91.5
+      },
+      {
+        "rgb": [
+          89,
+          163,
+          79
+        ],
+        "fraction": 0.013,
+        "saturation": 0.515,
+        "luminance": 141.2
+      },
+      {
+        "rgb": [
+          183,
+          113,
+          43
+        ],
+        "fraction": 0.0123,
+        "saturation": 0.765,
+        "luminance": 122.8
+      },
+      {
+        "rgb": [
+          204,
+          80,
+          82
+        ],
+        "fraction": 0.0123,
+        "saturation": 0.608,
+        "luminance": 106.5
+      },
+      {
+        "rgb": [
+          229,
+          88,
+          89
+        ],
+        "fraction": 0.0118,
+        "saturation": 0.616,
+        "luminance": 118.0
+      },
+      {
+        "rgb": [
+          199,
+          199,
+          200
+        ],
+        "fraction": 0.0117,
+        "saturation": 0.005,
+        "luminance": 199.1
+      },
+      {
+        "rgb": [
+          182,
+          182,
+          182
+        ],
+        "fraction": 0.0116,
+        "saturation": 0.0,
+        "luminance": 182.0
+      },
+      {
+        "rgb": [
+          233,
+          236,
+          236
+        ],
+        "fraction": 0.0112,
+        "saturation": 0.013,
+        "luminance": 235.4
+      }
+    ],
+    "high_saturation_content_fraction": 0.2376,
+    "minimum_colored_luminance_delta": 3.9,
+    "component_summary": {
+      "component_count": 181,
+      "small_component_count": 100,
+      "medium_component_count": 1,
+      "analysis_size_px": [
+        720,
+        227
+      ]
+    },
+    "text_burden_score": 74.98,
+    "line_burden": {
+      "horizontal_line_rows": 83,
+      "vertical_line_cols": 293,
+      "line_burden_score": 0.3176
+    },
+    "grayscale_preview": "paperplot-skills/reports/redraw-benchmark/qa_fig4_old/grayscale_preview.png",
+    "manuscript_readiness_score": 6,
+    "status": "warn",
+    "top_risks": [
+      {
+        "status": "warn",
+        "code": "extreme_aspect_ratio",
+        "message": "Aspect ratio is likely to create readability or layout problems.",
+        "value": 3.166
+      },
+      {
+        "status": "warn",
+        "code": "grayscale_discrimination_risk",
+        "message": "Some colored classes may be hard to distinguish in grayscale.",
+        "value": 3.9
+      },
+      {
+        "status": "warn",
+        "code": "gridline_or_long_line_burden",
+        "message": "Many long horizontal/vertical line structures detected.",
+        "value": 0.3176
+      },
+      {
+        "status": "warn",
+        "code": "thumbnail_readability_risk",
+        "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
+        "value": 0.299
+      }
+    ]
+  }
+}

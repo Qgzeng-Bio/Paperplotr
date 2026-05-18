@@ -1,0 +1,64 @@
+{
+  "old_vs_new_visual_qa": {
+    "checked": true,
+    "old_image": "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
+    "new_image": "paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png",
+    "old_media": "raster",
+    "new_media": "raster",
+    "comparison_limitation": null,
+    "verdict": "mixed",
+    "status": "warn",
+    "message_clarity_delta": "unknown",
+    "visual_burden_delta": "mixed",
+    "metric_deltas": [
+      {
+        "metric": "blank_margin_fraction",
+        "old": 0.0759,
+        "new": 0.1139,
+        "delta": "worse"
+      },
+      {
+        "metric": "text_burden_score",
+        "old": 74.98,
+        "new": 32.48,
+        "delta": "improved"
+      },
+      {
+        "metric": "content_density",
+        "old": 0.2417,
+        "new": 0.0385,
+        "delta": "worse"
+      },
+      {
+        "metric": "color_count_estimate",
+        "old": 11.0,
+        "new": 10.0,
+        "delta": "improved"
+      },
+      {
+        "metric": "thumbnail_content_density",
+        "old": 0.299,
+        "new": 0.0757,
+        "delta": "improved"
+      },
+      {
+        "metric": "line_burden_score",
+        "old": 0.3176,
+        "new": 0.0029,
+        "delta": "improved"
+      },
+      {
+        "metric": "manuscript_readiness_score",
+        "old": 6,
+        "new": 10,
+        "delta": "improved"
+      }
+    ],
+    "old_score": 6,
+    "new_score": 10,
+    "remaining_risks": [
+      "blank_margin_fraction worsened from 0.0759 to 0.1139",
+      "content_density worsened from 0.2417 to 0.0385"
+    ]
+  }
+}

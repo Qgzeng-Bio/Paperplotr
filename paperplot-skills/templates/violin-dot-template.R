@@ -1,101 +1,76 @@
-# PaperPlotR violin plus dot template
+# Standalone violin plus dot template
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(PaperPlotR)
 })
+
+helper_path <- Sys.getenv("PAPERPLOT_HELPER")
+if (!nzchar(helper_path)) helper_path <- "paperplot-skills/scripts/paperplot_helpers.R"
+if (!file.exists(helper_path)) stop("Set PAPERPLOT_HELPER to scripts/paperplot_helpers.R.", call. = FALSE)
+source(helper_path)
 
 input_path <- "TODO-input.csv"
 output_dir <- "figures"
 figure_id <- "violin_dot_todo"
+preset <- "cell_half"
 
-# TODO: replace these column names with columns from your dataset.
 group_col <- "TODO_group"
 value_col <- "TODO_value"
-facet_col <- NULL
+y_label <- "TODO value with units"
+
+figure_spec <- pp_figure_spec(
+  figure_id = figure_id,
+  template_id = "violin-dot-template",
+  scientific_message = "Show group distributions with density shape and individual observations.",
+  plot_type = "violin_dot",
+  group_var = group_col,
+  output_preset = preset
+)
+metric_spec <- pp_metric_spec(metric = value_col, label = y_label, unit = "a.u.", direction = "neutral")
 
 timestamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
 output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
+metadata_path <- paste0(output_stem, "_metadata.json")
+qa_path <- paste0(output_stem, "_qa.md")
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
 
-dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-
-stop_if_outputs_exist <- function(paths) {
-  existing <- paths[file.exists(paths)]
-  if (length(existing) > 0) {
-    stop(
-      paste("Refusing to overwrite existing output files:", paste(existing, collapse = ", ")),
-      call. = FALSE
-    )
-  }
-}
-
-write_notes <- function(path, lines) {
-  writeLines(lines, con = path)
-}
-
-format_output_files <- function(paths) {
-  sizes <- file.info(unname(paths))[["size"]]
-  paste0("- ", names(paths), ": ", unname(paths), " (", sizes, " bytes)")
-}
-
-if (!file.exists(input_path)) {
-  stop("Set input_path to an existing CSV file before running this template.", call. = FALSE)
-}
-
+if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
-required_cols <- c(group_col, value_col, facet_col)
-required_cols <- required_cols[!is.na(required_cols) & nzchar(required_cols)]
-missing_cols <- setdiff(required_cols, names(df))
-if (length(missing_cols) > 0) {
-  stop(paste("Missing required columns:", paste(missing_cols, collapse = ", ")), call. = FALSE)
-}
+
+missing_cols <- setdiff(c(group_col, value_col), names(df))
+if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
+
+preset_values <- pp_output_preset(preset)
+label_strategy <- pp_label_strategy(unique(df[[group_col]]), available_width_cm = preset_values$width_cm)
+palette_check <- pp_validate_palette(df[[group_col]], "discrete")
+layout <- pp_estimate_canvas_size(1, preset = preset)
+layout_check <- pp_assess_layout_risk(1, plot_type = "distribution", label_strategy = label_strategy)
 
 p <- ggplot(df, aes(x = .data[[group_col]], y = .data[[value_col]], fill = .data[[group_col]])) +
-  geom_violin(width = 0.9, alpha = 0.65, colour = NA) +
-  geom_jitter(width = 0.12, size = 0.9, alpha = 0.55, colour = "#1F1F1F") +
-  stat_summary(fun = median, geom = "point", shape = 23, size = 2, fill = "white", colour = "#1F1F1F") +
-  scale_fill_lab(palette = "main", guide = "none") +
-  theme_lab() +
-  labs(x = NULL, y = value_col)
+  geom_violin(width = 0.72, linewidth = 0.28, alpha = 0.34, trim = FALSE) +
+  geom_jitter(aes(colour = .data[[group_col]]), width = 0.08, size = 0.95, alpha = 0.72, show.legend = FALSE) +
+  stat_summary(fun = median, geom = "point", shape = 95, size = 6, colour = "#1F1F1F") +
+  pp_scale_fill(groups = df[[group_col]], guide = "none") +
+  pp_scale_color(groups = df[[group_col]], guide = "none") +
+  pp_theme(show_grid = FALSE) +
+  labs(x = NULL, y = y_label)
+p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-if (!is.null(facet_col)) {
-  p <- p + facet_wrap(stats::as.formula(paste("~", facet_col)))
-}
+output_files <- pp_save_all(p, output_stem, preset = preset)
+invisible(lapply(output_files, pp_assert_output))
 
-pdf_device <- if (identical(Sys.info()[["sysname"]], "Darwin")) "quartz_pdf" else "pdf"
-png_device <- if (requireNamespace("ragg", quietly = TRUE)) "ragg_png" else "png"
-
-output_files <- c(
-  pdf = paste0(output_stem, ".pdf"),
-  png = paste0(output_stem, ".png")
-)
-if (requireNamespace("svglite", quietly = TRUE)) {
-  output_files <- c(output_files, svg = paste0(output_stem, ".svg"))
-}
-
-stop_if_outputs_exist(c(output_files, notes_path))
-
-save_lab_plot(p, output_files[["pdf"]], preset = "cell_half", device = pdf_device)
-save_lab_plot(p, output_files[["png"]], preset = "cell_half", device = png_device)
-if ("svg" %in% names(output_files)) {
-  save_lab_plot(p, output_files[["svg"]], preset = "cell_half", device = "svglite")
-}
-
-write_notes(
-  notes_path,
-  c(
-    "# Figure Notes",
-    "",
-    paste("- figure id:", figure_id),
-    paste("- input data:", input_path),
-    paste("- group column:", group_col),
-    paste("- value column:", value_col),
-    paste("- facet column:", ifelse(is.null(facet_col), "none", facet_col)),
-    "## Output Files",
-    format_output_files(output_files),
-    "- PaperPlotR functions: theme_lab(), scale_fill_lab(), save_lab_plot()",
-    "- preset: cell_half",
-    "- QA: check distribution readability, jitter density, facet spacing, and legend suppression"
-  )
-)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
+  design_decisions = c("pattern: raincloud-violin-jitter", "raw dots kept as primary evidence", "violin density kept light and secondary", "median marked by a horizontal point glyph", "gridlines disabled"),
+  qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
+  remaining_issues = "Consider boxplot template if n is too small for violin density",
+  figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
+  palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input group order"),
+  label_strategy = label_strategy, data_summary = pp_data_summary(df))
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
+pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
+  palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input group order"),
+  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
+pp_write_qa_report(qa_path, qa_results)

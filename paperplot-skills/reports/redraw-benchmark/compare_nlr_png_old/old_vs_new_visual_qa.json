@@ -1,0 +1,64 @@
+{
+  "old_vs_new_visual_qa": {
+    "checked": true,
+    "old_image": "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png",
+    "new_image": "paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png",
+    "old_media": "raster",
+    "new_media": "raster",
+    "comparison_limitation": null,
+    "verdict": "mixed",
+    "status": "warn",
+    "message_clarity_delta": "unknown",
+    "visual_burden_delta": "mixed",
+    "metric_deltas": [
+      {
+        "metric": "blank_margin_fraction",
+        "old": 0.2134,
+        "new": 0.0739,
+        "delta": "improved"
+      },
+      {
+        "metric": "text_burden_score",
+        "old": 5.93,
+        "new": 35.37,
+        "delta": "worse"
+      },
+      {
+        "metric": "content_density",
+        "old": 0.3657,
+        "new": 0.0736,
+        "delta": "worse"
+      },
+      {
+        "metric": "color_count_estimate",
+        "old": 11.0,
+        "new": 8.0,
+        "delta": "improved"
+      },
+      {
+        "metric": "thumbnail_content_density",
+        "old": 0.4133,
+        "new": 0.1322,
+        "delta": "improved"
+      },
+      {
+        "metric": "line_burden_score",
+        "old": 0.6188,
+        "new": 0.0393,
+        "delta": "improved"
+      },
+      {
+        "metric": "manuscript_readiness_score",
+        "old": 6,
+        "new": 9,
+        "delta": "improved"
+      }
+    ],
+    "old_score": 6,
+    "new_score": 9,
+    "remaining_risks": [
+      "text_burden_score worsened from 5.93 to 35.37",
+      "content_density worsened from 0.3657 to 0.0736"
+    ]
+  }
+}

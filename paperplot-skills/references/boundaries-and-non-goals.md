@@ -1,27 +1,21 @@
 # Boundaries And Non-Goals
 
-PaperPlotR is a ggplot2-based scientific figure standardization workflow. It is not a general visual design or illustration system.
+This skill is for data-driven scientific plotting in R with ggplot2.
 
-## Do Not Use PaperPlotR For
+## Do Not Use For
 
-- Mechanism diagrams.
-- Pathway cartoons.
-- Graphical abstracts.
-- Flowcharts.
-- Network architecture diagrams.
-- Complex SVG illustrations.
-- Interactive dashboards.
-- Image generation or AI art.
-- Python-only plotting workflows.
+- mechanism diagrams
+- pathway cartoons
+- graphical abstracts
+- flowcharts
+- interactive dashboards
+- geospatial maps unless the user explicitly wants ggplot2
+- Python-only plotting
+- AI image generation
+- figure panels that are mainly illustration rather than data
 
-## Recommended Handoffs
+## Use For
 
-- Use Mermaid or Graphviz for structured diagrams and flowcharts.
-- Use Illustrator, Inkscape, or an SVG workflow for mechanism figures and complex vector editing.
-- Use PowerPoint, Keynote, or presentation tooling for slide-like composites.
-- Use a web visualization workflow for interactive dashboards.
-- Use Python/matplotlib only when the user explicitly requires Python.
+Use this skill when the core task is plotting tabular data with clear scientific labels, units, groups, panels, and exports.
 
-## Borderline Cases
-
-Use PaperPlotR if the figure is fundamentally a statistical plot, even if it needs careful layout, labels, or export. Do not use PaperPlotR if the core task is drawing conceptual objects rather than plotting data.
+If the user asks for conceptual visual design, choose a diagram, presentation, or image skill instead.

@@ -1,0 +1,156 @@
+{
+  "image_qa": {
+    "checked": true,
+    "engine": "pillow",
+    "input_type": "raster",
+    "input_path": "paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png",
+    "image_size_px": [
+      2881,
+      1464
+    ],
+    "file_size_bytes": 116582,
+    "aspect_ratio": 1.9679,
+    "content_bbox_px": [
+      37,
+      91,
+      2826,
+      1431
+    ],
+    "content_bbox_area_fraction": 0.8861,
+    "blank_margin_fraction": 0.1139,
+    "content_density": 0.0385,
+    "thumbnail_content_density": 0.0757,
+    "grayscale_mean": 249.61,
+    "grayscale_std": 29.8,
+    "color_count_estimate": 10,
+    "dominant_colors": [
+      {
+        "rgb": [
+          148,
+          147,
+          147
+        ],
+        "fraction": 0.0052,
+        "saturation": 0.007,
+        "luminance": 147.2
+      },
+      {
+        "rgb": [
+          222,
+          227,
+          222
+        ],
+        "fraction": 0.0042,
+        "saturation": 0.022,
+        "luminance": 225.6
+      },
+      {
+        "rgb": [
+          233,
+          172,
+          107
+        ],
+        "fraction": 0.0035,
+        "saturation": 0.541,
+        "luminance": 180.3
+      },
+      {
+        "rgb": [
+          114,
+          160,
+          115
+        ],
+        "fraction": 0.003,
+        "saturation": 0.287,
+        "luminance": 147.0
+      },
+      {
+        "rgb": [
+          234,
+          187,
+          164
+        ],
+        "fraction": 0.0029,
+        "saturation": 0.299,
+        "luminance": 195.3
+      },
+      {
+        "rgb": [
+          32,
+          32,
+          32
+        ],
+        "fraction": 0.0026,
+        "saturation": 0.0,
+        "luminance": 32.0
+      },
+      {
+        "rgb": [
+          117,
+          105,
+          104
+        ],
+        "fraction": 0.0025,
+        "saturation": 0.111,
+        "luminance": 107.5
+      },
+      {
+        "rgb": [
+          210,
+          118,
+          107
+        ],
+        "fraction": 0.0024,
+        "saturation": 0.49,
+        "luminance": 136.8
+      },
+      {
+        "rgb": [
+          237,
+          206,
+          194
+        ],
+        "fraction": 0.0023,
+        "saturation": 0.181,
+        "luminance": 211.7
+      },
+      {
+        "rgb": [
+          55,
+          55,
+          55
+        ],
+        "fraction": 0.0023,
+        "saturation": 0.0,
+        "luminance": 55.0
+      }
+    ],
+    "high_saturation_content_fraction": 0.0,
+    "minimum_colored_luminance_delta": 43.5,
+    "component_summary": {
+      "component_count": 198,
+      "small_component_count": 137,
+      "medium_component_count": 12,
+      "analysis_size_px": [
+        720,
+        365
+      ]
+    },
+    "text_burden_score": 32.48,
+    "line_burden": {
+      "horizontal_line_rows": 2,
+      "vertical_line_cols": 2,
+      "line_burden_score": 0.0029
+    },
+    "grayscale_preview": "paperplot-skills/reports/redraw-benchmark/qa_fig4_new/grayscale_preview.png",
+    "manuscript_readiness_score": 10,
+    "status": "pass",
+    "top_risks": [
+      {
+        "status": "pass",
+        "code": "no_major_deterministic_risk",
+        "message": "No major deterministic visual QA risk detected."
+      }
+    ]
+  }
+}

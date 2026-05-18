@@ -1,43 +1,40 @@
-# PaperPlotR Figure Report
+# Standalone Figure Report
 
 ## Generated
 
-Created a publication-ready multi-panel scientific figure using PaperPlotR and ggplot2. The original inputs and previous outputs were preserved.
+Created a publication-ready scientific figure using ggplot2 plus the standalone helper script in `scripts/paperplot_helpers.R`.
 
-## Input Data
+## Inputs
 
-- Data file: `data/analysis_input.csv`
-- Required columns used: `condition`, `response`, `feature`, `sample`
-- Script: `scripts/render_figure_1.R`
+- Data: `data.csv`
+- Script: `figure_script.R`
 
-## Output Files
+## Outputs
 
-- `figures/figure_1_20260506-153022.pdf`
-- `figures/figure_1_20260506-153022.png`
-- `figures/figure_1_20260506-153022.svg`
-- `figures/figure_1_20260506-153022_notes.md`
+- PDF: `figures/example_YYYYMMDD-HHMMSS.pdf`
+- PNG: `figures/example_YYYYMMDD-HHMMSS.png`
+- Notes: `figures/example_YYYYMMDD-HHMMSS_notes.md`
 
-## PaperPlotR Preset
+## Template / Preset
 
-- Layout: `layout_lab(..., tag_levels = "a")`
-- Export: `save_lab()` with `spec = "4.9x4.9"`, `ncol = 2`, `nrow = 2`, `journal = "nature"`
-- Theme: `theme_lab()`
-- Color: `scale_fill_groupmap()` with user-provided semantic colors
+- Template: `multi-metric-small-multiples-template.R`
+- Preset: `nature`
+- Helpers: `pp_theme()`, `pp_scale_color()`, `pp_save_plot()`, `pp_write_notes()`
 
-## Quality Checks
+## Design Decisions
 
-- Output files exist.
-- Output file sizes are non-trivial.
-- Text is readable at manuscript scale.
-- Panel labels do not collide with titles or legends.
-- Legend is not duplicated across panels.
-- Colors are consistent across panels.
-- Panel order matches the provided figure legend.
+- Used small multiples because the metrics have different units.
+- Kept sample order shared across panels.
+- Removed unnecessary gridlines.
+- Used GraphPad-like color defaults.
+
+## QA Checks
+
+- PDF and PNG exist and have non-trivial file sizes.
+- Panel sizes are consistent.
+- No visible label/title/legend overlaps remain.
+- Legend semantics are explicit.
 
 ## Remaining Issues
 
-The x-axis labels in panel c are dense. They are readable in the PDF, but a wider panel or label abbreviation would improve the final submission version.
-
-## Manuscript Readiness
-
-Ready for manuscript draft use. One additional refinement pass is recommended before final submission if panel c remains central to the figure.
+- Confirm final sample order with the manuscript text.
