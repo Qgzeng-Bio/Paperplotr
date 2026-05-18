@@ -1,108 +1,118 @@
 ---
 name: paperplot-skills
-description: Use this skill when creating, refining, or QA-checking publication-ready scientific figures with PaperPlotR and ggplot2 in R. It guides AI agents to choose scientific plot templates, write complete reproducible R scripts, apply theme_lab(), scale_*_lab()/scale_*_groupmap(), layout_lab(), save_lab()/save_lab_plot(), version outputs, export vector and raster formats, and record quality notes. Do not use for mechanism diagrams, graphical abstracts, interactive web charts, image generation, or Python-only plotting.
+description: Use for publication-ready scientific figure diagnosis, redesign, R/ggplot2 plotting, manuscript QA, old-vs-new comparison, and bioinformatics figure workflows.
 ---
 
 # PaperPlot Skills
 
-## Overview
+## Purpose
 
-This is a general scientific plotting AI skill with PaperPlotR as the R execution backend. Use it as a figure standardizer: choose an appropriate scientific plot template, write a complete runnable R script, apply PaperPlotR styling/sizing/export helpers, render new versioned files, and record QA notes.
+This is a standalone professional scientific plotting skill. It helps researchers diagnose, optimize, redraw, and QA manuscript figures across life sciences, genomics, omics, statistics, machine learning, medicine, and bioinformatics. It does not depend on the PaperPlotR R package.
 
-This is not a PaperPlotR API manual. It is a workflow for producing reproducible, publication-ready ggplot2 figures.
+The target is not decorative plotting. The target is a manuscript-credible figure: clear scientific message, controlled information hierarchy, readable typography, functional color, reproducible export, and documented scientific assumptions.
 
-## When to Use
+## Independence Rule
 
-Use this skill for:
+- Do not ask the user to install PaperPlotR.
+- Do not call `library(PaperPlotR)` or PaperPlotR APIs such as `theme_lab()`, `save_lab()`, `save_lab_plot()`, `layout_lab()`, or `scale_*_lab()`.
+- Default implementation uses base R + `ggplot2` + `scripts/paperplot_helpers.R`.
+- Optional packages are allowed only when already installed and must have fallback behavior.
+- Python/matplotlib, seaborn, Illustrator, SVG, and PDF workflows may be advised, but the core skill remains standalone and reproducible.
 
-- R or ggplot2 scientific plotting tasks.
-- Publication-ready manuscript, journal, report, or grant figures.
-- Nature, Cell, Nature Communications, or similar style figure export.
-- Multi-panel scientific figures.
-- Statistical comparison plots.
-- Bioinformatics-style statistical plots.
-- Figure style standardization.
-- Legend, color, panel size, and export control.
+## Required Operating Mode
 
-## Do Not Use For
+1. Diagnose before drawing.
+2. Detect data roles and choose a figure family with `references/figure-type-selector.md`.
+3. Consult the matching `references/pattern-library/*.md` document.
+4. Write a design brief.
+5. Define `figure_spec` and `metric_spec`.
+6. Create a pattern-based design plan.
+7. Apply visual budget and label/legend/panel burden checks.
+8. Render/export PDF and PNG.
+9. Perform image-level QA when an image is available.
+10. If old and new figures exist, perform old-vs-new comparison.
+11. If the new figure is not objectively better, iterate or state the blocker.
+12. Write notes, metadata JSON, QA report, and conditional sidecars.
+13. Report remaining scientific and manuscript-readiness risks.
 
-Do not use this skill for:
+## Input Handling
 
-- Mechanism diagrams, pathway cartoons, graphical abstracts, or complex SVG illustrations.
-- Flowcharts, network architecture diagrams, or Mermaid/Graphviz-style diagrams.
-- Interactive web charts or dashboards.
-- Python/matplotlib-only workflows.
-- Map/geospatial plots unless the user explicitly wants an R/ggplot2 route.
-- Image generation, AI art, or decorative illustration.
+- If the user gives only an image: diagnose visual design, infer likely data roles cautiously, request data before claiming a faithful redraw.
+- If the user gives only code: review code and propose a safer redesign; run only if the user asks or the task requires implementation.
+- If the user gives only data: profile data, select figure type, define specs, then plot.
+- If the user gives image plus data/code: compare the old figure to the data-backed redraw and preserve useful visual rhythm.
+- If critical scientific metadata are missing, ask for the minimum missing fields: units, sample size, group meaning, statistical test, normalization, or paired status.
 
-For boundary decisions, read `references/boundaries-and-non-goals.md`.
+## Manuscript Figure Tiers
 
-## Core Philosophy
+Classify every figure before finalizing:
 
-- Clarity > logic > consistency > aesthetics.
-- Scientific message first.
-- No software-default look.
-- No unnecessary decoration.
-- Reproducibility first.
+- `analysis sketch`: useful for exploration; not suitable for manuscript.
+- `presentation figure`: readable for slides; may be too large, decorative, or under-documented.
+- `manuscript candidate`: clear and exportable; minor risks remain.
+- `manuscript-ready`: no hard QA failures, readable at target size, scientific semantics documented, and old-vs-new risks addressed when applicable.
 
-## Mandatory AI Behavior Rules
+Do not call a figure manuscript-ready just because the code runs.
 
-- For implementation tasks, generate a complete runnable R script; do not provide snippets only.
-- Inspect available PaperPlotR functions before inventing APIs.
-- Use PaperPlotR functions when applicable: `theme_lab()`, `scale_*_lab()`, `scale_*_groupmap()`, `layout_lab()`, `save_lab()`, and `save_lab_plot()`.
-- Do not overwrite previous outputs by default.
-- Use a timestamped or versioned output stem.
-- Export at least one vector format for publication-grade work.
-- Record output paths, file sizes, presets, and QA notes.
-- When refining an existing plot or script, preserve the original and create new output files.
+## Default Visual Standards
 
-For strict agent rules, read `references/ai-behavior-rules.md`.
+Use `references/publication-visual-standards.md` as the baseline. Key defaults:
 
-## Standard PaperPlotR Workflow
+- Width: 89 mm single column, 180-183 mm double column, max height about 170 mm for Nature-like layouts.
+- Font: Arial or Helvetica-equivalent sans serif; keep text editable in vector output.
+- Text: 5-7 pt for most figure text; panel labels about 8 pt bold lowercase or journal-specific equivalent.
+- Lines: 0.25-0.6 pt for axes, intervals, and borders; avoid thick strokes.
+- Points: usually 1.2-2.2 mm depending on density; use alpha for overplotting.
+- Bars: avoid over-wide bars; show raw points or intervals when statistical evidence matters.
+- Gridlines: off by default; use only when they materially improve quantitative reading.
+- Color: accessible, functional, consistent across panels; avoid rainbow and red/green dependence.
+- Export: PDF as editable vector plus PNG preview; RGB; no flattened text for vector figures.
 
-1. Read and validate input data.
-2. Construct a `ggplot2` object.
-3. Apply `theme_lab()`.
-4. Apply `scale_*_lab()` for palette-driven colors or `scale_*_groupmap()` for semantic group colors.
-5. Compose panels with `layout_lab()` when needed.
-6. Export with `save_lab()` or `save_lab_plot()`.
-7. Validate output files.
-8. Write sidecar notes.
+## Scientific Hard Gates
 
-For details and code skeletons, read `references/paperplotr-workflow.md`.
+Stop and revise when:
 
-## Preserve PaperPlotR Strengths
+- Axis labels or legends omit units, denominators, transforms, or normalization.
+- Percentages lack denominator or scale meaning.
+- Error bars do not say SD, SE, CI, IQR, or range.
+- Boxplots are used as primary evidence for very small groups.
+- Paired/repeated data are plotted as independent samples, or connecting lines lack pairing/order semantics.
+- P-value stars are the main statistical message without effect size or uncertainty.
+- Heterogeneous metrics are silently z-scored, ranked, or mixed on one axis.
+- Heatmaps mix incompatible units without explicit transformation and annotation.
+- A color scale encodes quality/significance but the legend is ambiguous.
 
-Use PaperPlotR to preserve:
+## Visual Hard Gates
 
-- Panel size and figure size presets.
-- Journal presets.
-- Semantic color mapping.
-- Palette consistency.
-- Legend control.
-- Minimum text size validation.
-- Export validation.
-- Multi-panel composition.
-- Reproducible R scripts.
+Stop and revise when:
 
-## Figure Quality Rules
+- Text overlaps or becomes unreadable at target width.
+- Dense lookup labels dominate the figure instead of moving to rank index, key labels, metadata, or sidecars.
+- The figure is QA-compliant but looks like a diagnostic dump rather than a manuscript figure.
+- Legends are repeated or larger than the data region without a reason.
+- Panels are misaligned, unordered, or lack visual hierarchy.
+- Decorative icons, shadows, saturated colors, unnecessary frames, or background gridlines reduce clarity.
+- Old-figure redesign destroys useful visual rhythm without justification.
 
-Check fonts, line widths, axis design, tick density, legend placement, color palette, colorblind safety, panel labels, multi-panel alignment, and caption/figure legend consistency. Read `references/figure-quality-checklist.md` before final QA.
+## Figure Type Rules
 
-## Export and Versioning Rules
+Use `references/figure-type-selector.md`, `references/figure-type-quality-rubric.md`, `references/template-selection-guide.md`, and the matching pattern-library document before choosing a template. Important defaults:
 
-- Never overwrite old outputs by default.
-- Use a timestamped output stem.
-- Export PDF or SVG for vector output.
-- Export PNG or TIFF when previews or submission systems need raster output.
-- Use 600 dpi for raster output unless a journal/user requirement says otherwise.
-- Write a sidecar notes file.
+- 5-8 heterogeneous metrics: small multiples, not compressed dot/bubble heatmaps unless justified.
+- Dense sample labels in main figures: rank index + key labels + label-key sidecar.
+- Group comparison: raw points first; box/violin summaries depend on n.
+- Paired comparison: require paired ID before drawing connecting lines.
+- Effect summaries: prefer effect size + CI over p-value-only displays.
+- Volcano/MA/enrichment: keep effect, significance, count, and label roles separate.
+- Multi-panel figures: define primary, secondary, and supporting panels.
+- Unsupported specialized plots such as circos, synteny, genome tracks, phylogenetic trees, networks, schematics, and model diagrams: provide diagnosis and implementation plan; do not fake specialized layout without the required data structure.
+- If there is no data, only diagnose and propose redraw strategy; do not claim a faithful data-backed redraw.
+- If data and code exist, redraw and verify instead of stopping at critique.
+- Every redesign should record the selected pattern document in metadata.
 
-Read `references/export-and-versioning.md` when building export code.
+## Templates
 
-## Template Selection
-
-Choose one template first, then adapt it:
+Choose and adapt one template:
 
 - `templates/single-panel-template.R`
 - `templates/multi-panel-template.R`
@@ -112,30 +122,70 @@ Choose one template first, then adapt it:
 - `templates/heatmap-template.R`
 - `templates/pca-scatter-template.R`
 - `templates/barplot-template.R`
+- `templates/multi-metric-small-multiples-template.R`
+- `templates/rank-plus-key-metrics-template.R`
+- `templates/manuscript-four-panel-template.R`
+- `templates/grouped-boxplot-jitter-template.R`
+- `templates/paired-comparison-template.R`
+- `templates/effect-size-forest-template.R`
+- `templates/bio-genome-quality-overview-template.R`
+- `templates/bio-duplication-mode-comparison-template.R`
+- `templates/volcano-plot-template.R`
+- `templates/ma-plot-template.R`
+- `templates/enrichment-dotplot-template.R`
 
-For template choice, read `references/template-selection-guide.md`.
+All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG, and write notes, metadata, QA, and required sidecars.
 
-## Iterative QA Loop
+## Image-Level QA
 
-1. Render the figure.
-2. Inspect the output.
-3. Detect hard issues: overlaps, crowded axes, legend collisions, colorbar crowding, unreadable text, panel label collisions, wrong panel order, or figure legend mismatch.
-4. Patch one targeted issue at a time.
-5. Re-render.
-6. Stop when hard issues are resolved or report remaining issues clearly.
+Rendered-image QA is mandatory after generating or modifying a figure. Do not claim manuscript readiness from code, notes, or metadata alone.
 
-## Optional Domain Extensions
+Use `references/visual-perception-qa.md` and run:
 
-Domain-specific color dictionaries are optional. Do not use project-specific mappings by default. Use them only when the user explicitly requests that domain or provides a semantic color mapping.
+```bash
+python3 scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
+```
 
-## Final Response Format
+Visual QA v1 requires Pillow for raster images. SVG files are inspected structurally without rasterization. OpenCV, OCR, Tesseract, and vision models are future optional enhancements, not hard requirements.
 
-When a plotting task is complete, report:
+The visual QA layer must report image size, blank margin, content density, color burden, grayscale risk, gridline/line burden, approximate text/mark burden, manuscript-readiness score, and top risks. If visual QA returns `warn` or `fail`, either revise the plot or report why the risk remains accepted.
 
-1. What was generated.
-2. Input data used.
-3. Output files.
-4. PaperPlotR preset used.
-5. Quality checks performed.
-6. Remaining issues, if any.
-7. Whether the figure is ready for manuscript use or needs another refinement pass.
+Positive calibration examples in `reports/visual-qa-calibration-from-replica-library.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
+
+## Old-vs-New Comparison
+
+When redesigning an existing figure, use `references/old-vs-new-comparison.md`, `references/old-vs-new-visual-scoring.md`, and record:
+
+- What was preserved.
+- What was removed.
+- What became clearer.
+- What became worse or riskier.
+- Whether the new figure is actually better than the old one.
+
+If the old figure has good rhythm but poor labels, refine rather than rebuild.
+
+When old and new rendered images both exist, run:
+
+```bash
+python3 scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir>
+```
+
+If the new figure has worse visual burden or a lower manuscript-readiness score, do not present it as final.
+
+Only identifying that a figure is bad is not enough. With data/code, produce a better pattern-based candidate, run QA, compare old-vs-new, and continue iterating until the tradeoff is explicit.
+
+## Output Contract
+
+Default outputs:
+
+- PDF vector figure.
+- PNG preview.
+- R script or reproducible plotting code.
+- `*_notes.md`.
+- `*_metadata.json`.
+- `*_qa.md`.
+- Conditional `*_label_key.csv`, `*_sample_order.csv`, or design sidecars.
+
+## Final Response
+
+Report generated files, template, preset, design decisions, visible simplifications, scientific assumptions, QA status, old-vs-new verdict if applicable, and remaining manuscript-readiness risks.

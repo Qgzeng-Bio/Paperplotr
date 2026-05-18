@@ -1,103 +1,79 @@
-# PaperPlotR heatmap template
+# Standalone heatmap template
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(PaperPlotR)
 })
+
+helper_path <- Sys.getenv("PAPERPLOT_HELPER")
+if (!nzchar(helper_path)) helper_path <- "paperplot-skills/scripts/paperplot_helpers.R"
+if (!file.exists(helper_path)) stop("Set PAPERPLOT_HELPER to scripts/paperplot_helpers.R.", call. = FALSE)
+source(helper_path)
 
 input_path <- "TODO-input.csv"
 output_dir <- "figures"
 figure_id <- "heatmap_todo"
+preset <- "nature"
 
-# TODO: replace these column names with columns from your long-form dataset.
 x_col <- "TODO_x"
 y_col <- "TODO_y"
 value_col <- "TODO_value"
+value_label <- "TODO value"
+
+figure_spec <- pp_figure_spec(
+  figure_id = figure_id,
+  template_id = "heatmap-template",
+  scientific_message = "Show matrix-like relative patterns with one explicit continuous value scale.",
+  plot_type = "heatmap",
+  sample_id = x_col,
+  output_preset = preset
+)
+metric_spec <- pp_metric_spec(metric = value_col, label = value_label, unit = "%", direction = "neutral")
 
 timestamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
 output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
+metadata_path <- paste0(output_stem, "_metadata.json")
+qa_path <- paste0(output_stem, "_qa.md")
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
 
-dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-
-stop_if_outputs_exist <- function(paths) {
-  existing <- paths[file.exists(paths)]
-  if (length(existing) > 0) {
-    stop(
-      paste("Refusing to overwrite existing output files:", paste(existing, collapse = ", ")),
-      call. = FALSE
-    )
-  }
-}
-
-write_notes <- function(path, lines) {
-  writeLines(lines, con = path)
-}
-
-format_output_files <- function(paths) {
-  sizes <- file.info(unname(paths))[["size"]]
-  paste0("- ", names(paths), ": ", unname(paths), " (", sizes, " bytes)")
-}
-
-if (!file.exists(input_path)) {
-  stop("Set input_path to an existing CSV file before running this template.", call. = FALSE)
-}
-
+if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
-required_cols <- c(x_col, y_col, value_col)
-missing_cols <- setdiff(required_cols, names(df))
-if (length(missing_cols) > 0) {
-  stop(paste("Missing required columns:", paste(missing_cols, collapse = ", ")), call. = FALSE)
-}
+
+missing_cols <- setdiff(c(x_col, y_col, value_col), names(df))
+if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
+
+preset_values <- pp_output_preset(preset)
+label_strategy <- pp_label_strategy(unique(df[[x_col]]), available_width_cm = preset_values$width_cm)
+palette_check <- pp_validate_palette(variable_type = "continuous", palette = "graphpad_heatmap")
+layout <- pp_estimate_canvas_size(1, plot_type = "heatmap", complex = TRUE, preset = preset)
+layout_check <- pp_assess_layout_risk(1, plot_type = "heatmap", label_strategy = label_strategy)
 
 p <- ggplot(df, aes(x = .data[[x_col]], y = .data[[y_col]], fill = .data[[value_col]])) +
-  geom_tile(colour = "white", linewidth = 0.15) +
+  geom_tile(colour = NA, linewidth = 0) +
   scale_fill_gradientn(
-    colours = lab_gradient_palette(7, palette = "blue_red"),
+    colours = pp_gradient_palette(256, palette = "graphpad_heatmap"),
+    name = value_label,
     guide = guide_colorbar(barheight = grid::unit(28, "mm"), barwidth = grid::unit(3.5, "mm"))
   ) +
-  theme_lab() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
-    axis.ticks = element_blank(),
-    axis.line = element_blank(),
-    panel.grid = element_blank()
-  ) +
-  labs(x = NULL, y = NULL, fill = value_col)
+  pp_theme(show_grid = FALSE) +
+  theme(axis.ticks = element_blank(), axis.line = element_blank()) +
+  labs(x = NULL, y = NULL)
+p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-pdf_device <- if (identical(Sys.info()[["sysname"]], "Darwin")) "quartz_pdf" else "pdf"
-png_device <- if (requireNamespace("ragg", quietly = TRUE)) "ragg_png" else "png"
+output_files <- pp_save_all(p, output_stem, preset = preset)
+invisible(lapply(output_files, pp_assert_output))
 
-output_files <- c(
-  pdf = paste0(output_stem, ".pdf"),
-  png = paste0(output_stem, ".png")
-)
-if (requireNamespace("svglite", quietly = TRUE)) {
-  output_files <- c(output_files, svg = paste0(output_stem, ".svg"))
-}
-
-stop_if_outputs_exist(c(output_files, notes_path))
-
-save_lab_plot(p, output_files[["pdf"]], preset = "nature", device = pdf_device)
-save_lab_plot(p, output_files[["png"]], preset = "nature", device = png_device)
-if ("svg" %in% names(output_files)) {
-  save_lab_plot(p, output_files[["svg"]], preset = "nature", device = "svglite")
-}
-
-write_notes(
-  notes_path,
-  c(
-    "# Figure Notes",
-    "",
-    paste("- figure id:", figure_id),
-    paste("- input data:", input_path),
-    paste("- x column:", x_col),
-    paste("- y column:", y_col),
-    paste("- value column:", value_col),
-    "## Output Files",
-    format_output_files(output_files),
-    "- PaperPlotR functions: theme_lab(), lab_gradient_palette(), save_lab_plot()",
-    "- preset: nature",
-    "- QA: check colorbar size, x label angle, tile readability, and absence of rainbow palette"
-  )
-)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
+  design_decisions = c("pattern: correlation-heatmap", "GraphPad-like continuous heatmap palette", "single color scale", "cell borders suppressed to avoid gridline burden", "no per-cell labels by default"),
+  qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
+  remaining_issues = "Use small multiples if original metric units matter more than relative pattern",
+  figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
+  palette = list(type = "continuous", name = "graphpad_heatmap"), ordering = list(rule = "input order"),
+  label_strategy = label_strategy, data_summary = pp_data_summary(df))
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
+pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
+  palette = list(type = "continuous", name = "graphpad_heatmap"), ordering = list(rule = "input order"),
+  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
+pp_write_qa_report(qa_path, qa_results)

@@ -1,0 +1,137 @@
+{
+  "image_qa": {
+    "checked": true,
+    "engine": "pillow",
+    "input_type": "raster",
+    "input_path": "paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png",
+    "image_size_px": [
+      2102,
+      1937
+    ],
+    "file_size_bytes": 124240,
+    "aspect_ratio": 1.0852,
+    "content_bbox_px": [
+      35,
+      30,
+      2047,
+      1904
+    ],
+    "content_bbox_area_fraction": 0.9261,
+    "blank_margin_fraction": 0.0739,
+    "content_density": 0.0736,
+    "thumbnail_content_density": 0.1322,
+    "grayscale_mean": 246.84,
+    "grayscale_std": 33.32,
+    "color_count_estimate": 8,
+    "dominant_colors": [
+      {
+        "rgb": [
+          166,
+          179,
+          194
+        ],
+        "fraction": 0.0086,
+        "saturation": 0.144,
+        "luminance": 177.3
+      },
+      {
+        "rgb": [
+          187,
+          195,
+          205
+        ],
+        "fraction": 0.0062,
+        "saturation": 0.088,
+        "luminance": 194.0
+      },
+      {
+        "rgb": [
+          76,
+          120,
+          166
+        ],
+        "fraction": 0.0062,
+        "saturation": 0.542,
+        "luminance": 114.0
+      },
+      {
+        "rgb": [
+          232,
+          236,
+          238
+        ],
+        "fraction": 0.0061,
+        "saturation": 0.025,
+        "luminance": 235.3
+      },
+      {
+        "rgb": [
+          226,
+          229,
+          233
+        ],
+        "fraction": 0.0059,
+        "saturation": 0.03,
+        "luminance": 228.7
+      },
+      {
+        "rgb": [
+          218,
+          221,
+          224
+        ],
+        "fraction": 0.0057,
+        "saturation": 0.027,
+        "luminance": 220.6
+      },
+      {
+        "rgb": [
+          87,
+          87,
+          87
+        ],
+        "fraction": 0.0055,
+        "saturation": 0.0,
+        "luminance": 87.0
+      },
+      {
+        "rgb": [
+          240,
+          241,
+          242
+        ],
+        "fraction": 0.0052,
+        "saturation": 0.008,
+        "luminance": 240.9
+      }
+    ],
+    "high_saturation_content_fraction": 0.0,
+    "minimum_colored_luminance_delta": null,
+    "component_summary": {
+      "component_count": 150,
+      "small_component_count": 144,
+      "medium_component_count": 0,
+      "analysis_size_px": [
+        720,
+        663
+      ]
+    },
+    "text_burden_score": 35.37,
+    "line_burden": {
+      "horizontal_line_rows": 65,
+      "vertical_line_cols": 3,
+      "line_burden_score": 0.0393
+    },
+    "grayscale_preview": "paperplot-skills/reports/redraw-benchmark/qa_nlr_new/grayscale_preview.png",
+    "manuscript_readiness_score": 9,
+    "status": "warn",
+    "top_risks": [
+      {
+        "status": "warn",
+        "code": "gridline_or_long_line_burden",
+        "message": "Many long horizontal/vertical line structures detected.",
+        "value": 0.0393
+      }
+    ]
+  }
+}

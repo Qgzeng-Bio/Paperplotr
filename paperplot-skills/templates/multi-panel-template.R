@@ -1,135 +1,86 @@
-# PaperPlotR multi-panel figure template
+# Standalone multi-panel faceted figure template
 
 suppressPackageStartupMessages({
   library(ggplot2)
-  library(PaperPlotR)
 })
+
+helper_path <- Sys.getenv("PAPERPLOT_HELPER")
+if (!nzchar(helper_path)) helper_path <- "paperplot-skills/scripts/paperplot_helpers.R"
+if (!file.exists(helper_path)) stop("Set PAPERPLOT_HELPER to scripts/paperplot_helpers.R.", call. = FALSE)
+source(helper_path)
 
 input_path <- "TODO-input.csv"
 output_dir <- "figures"
 figure_id <- "multi_panel_todo"
+preset <- "nature"
 
-# TODO: replace these column names and panel definitions with your dataset.
 x_col <- "TODO_x"
 y_col <- "TODO_y"
+panel_col <- "TODO_panel"
 group_col <- NULL
+x_label <- "TODO x label with units"
+y_label <- "TODO y label with units"
+
+figure_spec <- pp_figure_spec(
+  figure_id = figure_id,
+  template_id = "multi-panel-template",
+  scientific_message = "Compare related panels with a consistent faceted encoding.",
+  plot_type = "faceted_scatter",
+  sample_id = x_col,
+  group_var = group_col,
+  output_preset = preset
+)
+metric_spec <- pp_metric_spec(metric = y_col, label = y_label, unit = "a.u.", direction = "neutral")
 
 timestamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
 output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
+metadata_path <- paste0(output_stem, "_metadata.json")
+qa_path <- paste0(output_stem, "_qa.md")
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
 
-dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-
-stop_if_outputs_exist <- function(paths) {
-  existing <- paths[file.exists(paths)]
-  if (length(existing) > 0) {
-    stop(
-      paste("Refusing to overwrite existing output files:", paste(existing, collapse = ", ")),
-      call. = FALSE
-    )
-  }
-}
-
-write_notes <- function(path, lines) {
-  writeLines(lines, con = path)
-}
-
-format_output_files <- function(paths) {
-  sizes <- file.info(unname(paths))[["size"]]
-  paste0("- ", names(paths), ": ", unname(paths), " (", sizes, " bytes)")
-}
-
-if (!file.exists(input_path)) {
-  stop("Set input_path to an existing CSV file before running this template.", call. = FALSE)
-}
-
+if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
-required_cols <- c(x_col, y_col, group_col)
+
+required_cols <- c(x_col, y_col, panel_col, group_col)
 required_cols <- required_cols[!is.na(required_cols) & nzchar(required_cols)]
 missing_cols <- setdiff(required_cols, names(df))
-if (length(missing_cols) > 0) {
-  stop(paste("Missing required columns:", paste(missing_cols, collapse = ", ")), call. = FALSE)
-}
+if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
+
+n_panels <- length(unique(df[[panel_col]]))
+layout <- pp_recommend_facet_grid(n_panels, plot_type = "small_multiples", complex = TRUE)
+label_strategy <- pp_label_strategy(unique(df[[x_col]]), available_width_cm = layout$width_cm / max(1, layout$ncol))
+palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")
+layout_check <- pp_assess_layout_risk(n_panels, plot_type = "small_multiples", label_strategy = label_strategy)
 
 mapping <- aes(x = .data[[x_col]], y = .data[[y_col]])
-if (!is.null(group_col)) {
-  mapping <- aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[group_col]])
-}
+if (!is.null(group_col)) mapping <- aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[group_col]])
 
-p1 <- ggplot(df, mapping) +
-  geom_point(size = 1.5, alpha = 0.85) +
-  theme_lab() +
-  labs(title = "Panel a", x = x_col, y = y_col)
+p <- ggplot(df, mapping) +
+  geom_point(size = 1.4, alpha = 0.82) +
+  facet_wrap(stats::as.formula(paste("~", panel_col)), ncol = layout$ncol, scales = "free_y") +
+  pp_theme(show_grid = FALSE) +
+  labs(x = x_label, y = y_label, colour = group_col)
 
-p2 <- ggplot(df, mapping) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 0.4, colour = "#4D4D4D") +
-  geom_point(size = 1.2, alpha = 0.65) +
-  theme_lab() +
-  labs(title = "Panel b", x = x_col, y = y_col)
+if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]])
+p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-p3 <- ggplot(df, aes(x = .data[[x_col]])) +
-  geom_histogram(bins = 30, fill = "#1F77B4", colour = "white", linewidth = 0.15) +
-  theme_lab() +
-  labs(title = "Panel c", x = x_col, y = "Count")
+output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
+invisible(lapply(output_files, pp_assert_output))
 
-p4 <- ggplot(df, aes(x = .data[[y_col]])) +
-  geom_histogram(bins = 30, fill = "#D55E00", colour = "white", linewidth = 0.15) +
-  theme_lab() +
-  labs(title = "Panel d", x = y_col, y = "Count")
-
-if (!is.null(group_col)) {
-  p1 <- p1 + scale_color_lab(palette = "main")
-  p2 <- p2 + scale_color_lab(palette = "main", guide = "none")
-}
-
-combo <- layout_lab(
-  p1, p2, p3, p4,
-  ncol = 2,
-  guides = "collect",
-  tag_levels = "a",
-  tag_size = 9,
-  tag_face = "bold",
-  tag_position = c(0, 1)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+pp_write_notes(
+  notes_path, figure_id, input_path, output_files, preset,
+  design_decisions = c(paste("faceted multi-panel layout:", layout$ncol, "x", layout$nrow), "standalone ggplot2 facets instead of external composition packages", "panel sizes chosen with pp_recommend_layout()"),
+  qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
+  remaining_issues = "For unrelated geoms per panel, create separate scripts or use a custom grid workflow",
+  figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
+  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"),
+  ordering = list(rule = "input order"), label_strategy = label_strategy, data_summary = pp_data_summary(df)
 )
-
-pdf_device <- if (identical(Sys.info()[["sysname"]], "Darwin")) "quartz_pdf" else "pdf"
-png_device <- if (requireNamespace("ragg", quietly = TRUE)) "ragg_png" else "png"
-
-output_files <- c(
-  pdf = paste0(output_stem, ".pdf"),
-  png = paste0(output_stem, ".png")
-)
-if (requireNamespace("svglite", quietly = TRUE)) {
-  output_files <- c(output_files, svg = paste0(output_stem, ".svg"))
-}
-
-stop_if_outputs_exist(c(output_files, notes_path))
-
-save_lab(combo, output_files[["pdf"]], spec = "4.9x4.9", ncol = 2, nrow = 2, journal = "nature", device = pdf_device)
-save_lab(combo, output_files[["png"]], spec = "4.9x4.9", ncol = 2, nrow = 2, journal = "nature", device = png_device)
-if ("svg" %in% names(output_files)) {
-  save_lab(combo, output_files[["svg"]], spec = "4.9x4.9", ncol = 2, nrow = 2, journal = "nature", device = "svglite")
-}
-
-write_notes(
-  notes_path,
-  c(
-    "# Figure Notes",
-    "",
-    paste("- figure id:", figure_id),
-    paste("- input data:", input_path),
-    "## Output Files",
-    format_output_files(output_files),
-    "- PaperPlotR functions: theme_lab(), scale_color_lab(), layout_lab(), save_lab()",
-    "- preset: spec 4.9x4.9, 2x2, journal nature",
-    "",
-    "## Panel Mapping",
-    "- panel a: TODO describe panel a",
-    "- panel b: TODO describe panel b",
-    "- panel c: TODO describe panel c",
-    "- panel d: TODO describe panel d",
-    "",
-    "## QA",
-    "- Check panel labels, legend collection, spacing, axis density, and caption consistency."
-  )
-)
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
+pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
+  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"),
+  ordering = list(rule = "input order"), qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
+pp_write_qa_report(qa_path, qa_results)
