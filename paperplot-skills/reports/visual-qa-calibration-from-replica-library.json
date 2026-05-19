@@ -2,9 +2,20 @@
   "samples": [
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "Manhattan plot",
       "threshold_profile": "manhattan",
       "family_thresholds": {
@@ -141,7 +152,47 @@
         "vertical_line_cols": 19,
         "line_burden_score": 0.024
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_001/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              65,
+              36,
+              2339,
+              2258
+            ],
+            "content_bbox_px": [
+              65,
+              36,
+              2339,
+              2258
+            ],
+            "panel_area_fraction": 0.8664,
+            "content_area_fraction": 0.8664,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_001/grayscale_preview.png",
       "manuscript_readiness_score": 10,
       "status": "pass",
       "top_risks": [
@@ -156,9 +207,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -315,7 +377,47 @@
         "vertical_line_cols": 2,
         "line_burden_score": 0.0019
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_002/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              48,
+              48,
+              7104,
+              5328
+            ],
+            "content_bbox_px": [
+              48,
+              48,
+              7104,
+              5328
+            ],
+            "panel_area_fraction": 0.9582,
+            "content_area_fraction": 0.9582,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_002/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -343,9 +445,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -512,7 +625,47 @@
         "vertical_line_cols": 37,
         "line_burden_score": 0.0338
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_003/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              125,
+              170,
+              5905,
+              5705
+            ],
+            "content_bbox_px": [
+              125,
+              170,
+              5905,
+              5705
+            ],
+            "panel_area_fraction": 0.9162,
+            "content_area_fraction": 0.9162,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_003/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -540,9 +693,265 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_004/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_004/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_004/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        3000,
+        3000
+      ],
+      "file_size_bytes": 1786790,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        170,
+        417,
+        2988,
+        2587
+      ],
+      "content_bbox_area_fraction": 0.6795,
+      "blank_margin_fraction": 0.3205,
+      "content_density": 0.0968,
+      "thumbnail_content_density": 0.1514,
+      "grayscale_mean": 244.4,
+      "grayscale_std": 38.39,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            235,
+            241,
+            243
+          ],
+          "fraction": 0.0078,
+          "saturation": 0.033,
+          "luminance": 239.9
+        },
+        {
+          "rgb": [
+            31,
+            32,
+            38
+          ],
+          "fraction": 0.0072,
+          "saturation": 0.184,
+          "luminance": 32.2
+        },
+        {
+          "rgb": [
+            196,
+            222,
+            209
+          ],
+          "fraction": 0.0064,
+          "saturation": 0.117,
+          "luminance": 215.5
+        },
+        {
+          "rgb": [
+            247,
+            201,
+            198
+          ],
+          "fraction": 0.0062,
+          "saturation": 0.198,
+          "luminance": 210.6
+        },
+        {
+          "rgb": [
+            248,
+            195,
+            117
+          ],
+          "fraction": 0.0056,
+          "saturation": 0.528,
+          "luminance": 200.6
+        },
+        {
+          "rgb": [
+            251,
+            224,
+            223
+          ],
+          "fraction": 0.0056,
+          "saturation": 0.112,
+          "luminance": 229.7
+        },
+        {
+          "rgb": [
+            234,
+            170,
+            54
+          ],
+          "fraction": 0.0053,
+          "saturation": 0.769,
+          "luminance": 175.2
+        },
+        {
+          "rgb": [
+            239,
+            156,
+            154
+          ],
+          "fraction": 0.0052,
+          "saturation": 0.356,
+          "luminance": 173.5
+        },
+        {
+          "rgb": [
+            240,
+            154,
+            17
+          ],
+          "fraction": 0.0051,
+          "saturation": 0.929,
+          "luminance": 162.4
+        },
+        {
+          "rgb": [
+            194,
+            195,
+            201
+          ],
+          "fraction": 0.0051,
+          "saturation": 0.035,
+          "luminance": 195.2
+        }
+      ],
+      "high_saturation_content_fraction": 0.1755,
+      "minimum_colored_luminance_delta": 1.7,
+      "component_summary": {
+        "component_count": 836,
+        "small_component_count": 392,
+        "medium_component_count": 31,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 43.56,
+      "line_burden": {
+        "horizontal_line_rows": 0,
+        "vertical_line_cols": 13,
+        "line_burden_score": 0.0072
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              170,
+              418,
+              2988,
+              2588
+            ],
+            "content_bbox_px": [
+              170,
+              418,
+              2988,
+              2588
+            ],
+            "panel_area_fraction": 0.6795,
+            "content_area_fraction": 0.6795,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_004/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "excessive_blank_margin",
+          "message": "Large blank/unused margin detected.",
+          "value": 0.321
+        },
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 1.7
+        }
+      ],
+      "case_dir": "78.Cell-umap+环形分组信息",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "boxplot / violin / raincloud / jitter",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -709,7 +1118,47 @@
         "vertical_line_cols": 9,
         "line_burden_score": 0.0444
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_004/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              85,
+              95,
+              5960,
+              4115
+            ],
+            "content_bbox_px": [
+              85,
+              95,
+              5960,
+              4115
+            ],
+            "panel_area_fraction": 0.9372,
+            "content_area_fraction": 0.9372,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_005/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -731,9 +1180,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "boxplot / violin / raincloud / jitter",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -890,7 +1350,47 @@
         "vertical_line_cols": 331,
         "line_burden_score": 0.3579
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_005/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              63,
+              106,
+              1937,
+              1126
+            ],
+            "content_bbox_px": [
+              63,
+              106,
+              1937,
+              1126
+            ],
+            "panel_area_fraction": 0.8169,
+            "content_area_fraction": 0.8169,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_006/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -918,9 +1418,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "boxplot / violin / raincloud / jitter",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -1077,7 +1588,47 @@
         "vertical_line_cols": 136,
         "line_burden_score": 0.1409
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_006/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              228,
+              21,
+              4074,
+              1694
+            ],
+            "content_bbox_px": [
+              228,
+              21,
+              4074,
+              1694
+            ],
+            "panel_area_fraction": 0.8511,
+            "content_area_fraction": 0.8511,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_007/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -1105,9 +1656,773 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_008/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_008/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_008/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "circos / chord / synteny-like plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        3300,
+        3300
+      ],
+      "file_size_bytes": 256101,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        46,
+        26,
+        3252,
+        3288
+      ],
+      "content_bbox_area_fraction": 0.9603,
+      "blank_margin_fraction": 0.0397,
+      "content_density": 0.316,
+      "thumbnail_content_density": 0.5008,
+      "grayscale_mean": 216.01,
+      "grayscale_std": 72.04,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            82,
+            82,
+            82
+          ],
+          "fraction": 0.0353,
+          "saturation": 0.0,
+          "luminance": 82.0
+        },
+        {
+          "rgb": [
+            244,
+            220,
+            158
+          ],
+          "fraction": 0.0247,
+          "saturation": 0.352,
+          "luminance": 220.6
+        },
+        {
+          "rgb": [
+            137,
+            203,
+            183
+          ],
+          "fraction": 0.0232,
+          "saturation": 0.325,
+          "luminance": 187.5
+        },
+        {
+          "rgb": [
+            137,
+            231,
+            200
+          ],
+          "fraction": 0.0228,
+          "saturation": 0.407,
+          "luminance": 208.8
+        },
+        {
+          "rgb": [
+            200,
+            205,
+            208
+          ],
+          "fraction": 0.0228,
+          "saturation": 0.038,
+          "luminance": 204.2
+        },
+        {
+          "rgb": [
+            184,
+            232,
+            242
+          ],
+          "fraction": 0.0207,
+          "saturation": 0.24,
+          "luminance": 222.5
+        },
+        {
+          "rgb": [
+            31,
+            30,
+            31
+          ],
+          "fraction": 0.0199,
+          "saturation": 0.032,
+          "luminance": 30.3
+        },
+        {
+          "rgb": [
+            36,
+            118,
+            164
+          ],
+          "fraction": 0.0187,
+          "saturation": 0.78,
+          "luminance": 103.9
+        },
+        {
+          "rgb": [
+            128,
+            1,
+            130
+          ],
+          "fraction": 0.0181,
+          "saturation": 0.992,
+          "luminance": 37.3
+        },
+        {
+          "rgb": [
+            234,
+            244,
+            243
+          ],
+          "fraction": 0.0162,
+          "saturation": 0.041,
+          "luminance": 241.8
+        }
+      ],
+      "high_saturation_content_fraction": 0.1656,
+      "minimum_colored_luminance_delta": 11.8,
+      "component_summary": {
+        "component_count": 9632,
+        "small_component_count": 2242,
+        "medium_component_count": 29,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 205.88,
+      "line_burden": {
+        "horizontal_line_rows": 429,
+        "vertical_line_cols": 422,
+        "line_burden_score": 0.4733
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              47,
+              25,
+              3253,
+              3289
+            ],
+            "content_bbox_px": [
+              47,
+              25,
+              3253,
+              3289
+            ],
+            "panel_area_fraction": 0.9609,
+            "content_area_fraction": 0.9609,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_008/grayscale_preview.png",
+      "manuscript_readiness_score": 6,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 29
+        },
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 11.8
+        },
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.4733
+        },
+        {
+          "status": "warn",
+          "code": "thumbnail_readability_risk",
+          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
+          "value": 0.501
+        }
+      ],
+      "case_dir": "17.Nature复现-分组和弦图+外围条形图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_009/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_009/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_009/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "circos / chord / synteny-like plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        1800,
+        1800
+      ],
+      "file_size_bytes": 25975,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        220,
+        127,
+        1732,
+        1595
+      ],
+      "content_bbox_area_fraction": 0.6851,
+      "blank_margin_fraction": 0.3149,
+      "content_density": 0.1351,
+      "thumbnail_content_density": 0.2175,
+      "grayscale_mean": 235.33,
+      "grayscale_std": 56.59,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            75,
+            122,
+            182
+          ],
+          "fraction": 0.0145,
+          "saturation": 0.588,
+          "luminance": 116.3
+        },
+        {
+          "rgb": [
+            66,
+            66,
+            70
+          ],
+          "fraction": 0.0116,
+          "saturation": 0.057,
+          "luminance": 66.3
+        },
+        {
+          "rgb": [
+            213,
+            222,
+            226
+          ],
+          "fraction": 0.0105,
+          "saturation": 0.058,
+          "luminance": 220.4
+        },
+        {
+          "rgb": [
+            118,
+            118,
+            119
+          ],
+          "fraction": 0.0101,
+          "saturation": 0.008,
+          "luminance": 118.1
+        },
+        {
+          "rgb": [
+            40,
+            41,
+            59
+          ],
+          "fraction": 0.01,
+          "saturation": 0.322,
+          "luminance": 42.1
+        },
+        {
+          "rgb": [
+            234,
+            237,
+            236
+          ],
+          "fraction": 0.0098,
+          "saturation": 0.013,
+          "luminance": 236.3
+        },
+        {
+          "rgb": [
+            240,
+            133,
+            84
+          ],
+          "fraction": 0.0095,
+          "saturation": 0.65,
+          "luminance": 152.2
+        },
+        {
+          "rgb": [
+            83,
+            86,
+            98
+          ],
+          "fraction": 0.0095,
+          "saturation": 0.153,
+          "luminance": 86.2
+        },
+        {
+          "rgb": [
+            248,
+            182,
+            117
+          ],
+          "fraction": 0.0089,
+          "saturation": 0.528,
+          "luminance": 191.3
+        },
+        {
+          "rgb": [
+            200,
+            202,
+            205
+          ],
+          "fraction": 0.0086,
+          "saturation": 0.024,
+          "luminance": 201.8
+        }
+      ],
+      "high_saturation_content_fraction": 0.2333,
+      "minimum_colored_luminance_delta": 35.9,
+      "component_summary": {
+        "component_count": 666,
+        "small_component_count": 569,
+        "medium_component_count": 45,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 175.62,
+      "line_burden": {
+        "horizontal_line_rows": 35,
+        "vertical_line_cols": 29,
+        "line_burden_score": 0.0356
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              220,
+              128,
+              1732,
+              1594
+            ],
+            "content_bbox_px": [
+              220,
+              128,
+              1732,
+              1594
+            ],
+            "panel_area_fraction": 0.6841,
+            "content_area_fraction": 0.6841,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_009/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 45
+        },
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.0356
+        }
+      ],
+      "case_dir": "62.Nature复现-分组型和单组型环状条形图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_010/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_010/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_010/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "circos / chord / synteny-like plot",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        3000,
+        3000
+      ],
+      "file_size_bytes": 17920,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        627,
+        59,
+        2427,
+        2359
+      ],
+      "content_bbox_area_fraction": 0.46,
+      "blank_margin_fraction": 0.54,
+      "content_density": 0.1116,
+      "thumbnail_content_density": 0.1586,
+      "grayscale_mean": 241.08,
+      "grayscale_std": 44.89,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            194,
+            176,
+            227
+          ],
+          "fraction": 0.029,
+          "saturation": 0.225,
+          "luminance": 183.5
+        },
+        {
+          "rgb": [
+            123,
+            79,
+            168
+          ],
+          "fraction": 0.0154,
+          "saturation": 0.53,
+          "luminance": 94.8
+        },
+        {
+          "rgb": [
+            163,
+            140,
+            214
+          ],
+          "fraction": 0.0106,
+          "saturation": 0.346,
+          "luminance": 150.2
+        },
+        {
+          "rgb": [
+            224,
+            212,
+            240
+          ],
+          "fraction": 0.0101,
+          "saturation": 0.117,
+          "luminance": 216.6
+        },
+        {
+          "rgb": [
+            133,
+            105,
+            201
+          ],
+          "fraction": 0.0098,
+          "saturation": 0.478,
+          "luminance": 117.9
+        },
+        {
+          "rgb": [
+            33,
+            29,
+            41
+          ],
+          "fraction": 0.006,
+          "saturation": 0.293,
+          "luminance": 30.7
+        },
+        {
+          "rgb": [
+            69,
+            47,
+            124
+          ],
+          "fraction": 0.0052,
+          "saturation": 0.621,
+          "luminance": 57.2
+        },
+        {
+          "rgb": [
+            65,
+            63,
+            70
+          ],
+          "fraction": 0.0052,
+          "saturation": 0.1,
+          "luminance": 63.9
+        },
+        {
+          "rgb": [
+            229,
+            226,
+            232
+          ],
+          "fraction": 0.0044,
+          "saturation": 0.026,
+          "luminance": 227.1
+        },
+        {
+          "rgb": [
+            117,
+            74,
+            168
+          ],
+          "fraction": 0.0043,
+          "saturation": 0.56,
+          "luminance": 89.9
+        }
+      ],
+      "high_saturation_content_fraction": 0.0947,
+      "minimum_colored_luminance_delta": 4.9,
+      "component_summary": {
+        "component_count": 1364,
+        "small_component_count": 717,
+        "medium_component_count": 12,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 79.67,
+      "line_burden": {
+        "horizontal_line_rows": 27,
+        "vertical_line_cols": 64,
+        "line_burden_score": 0.0506
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              628,
+              60,
+              2428,
+              2360
+            ],
+            "content_bbox_px": [
+              628,
+              60,
+              2428,
+              2360
+            ],
+            "panel_area_fraction": 0.46,
+            "content_area_fraction": 0.46,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_010/grayscale_preview.png",
+      "manuscript_readiness_score": 7,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "excessive_blank_margin",
+          "message": "Large blank/unused margin detected.",
+          "value": 0.54
+        },
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 4.9
+        },
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.0506
+        }
+      ],
+      "case_dir": "79.Nature-环状条形图+饼图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "dotplot / lollipop / dumbbell",
       "threshold_profile": "rank-lollipop",
       "family_thresholds": {
@@ -1264,7 +2579,47 @@
         "vertical_line_cols": 9,
         "line_burden_score": 0.0237
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_007/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              41,
+              38,
+              3193,
+              1458
+            ],
+            "content_bbox_px": [
+              41,
+              38,
+              3193,
+              1458
+            ],
+            "panel_area_fraction": 0.9042,
+            "content_area_fraction": 0.9042,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_011/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -1286,9 +2641,275 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_012/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_012/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_012/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "dotplot / lollipop / dumbbell",
+      "threshold_profile": "rank-lollipop",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.38,
+        "content_density_min": 0.02,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.055,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        3000,
+        3000
+      ],
+      "file_size_bytes": 76865,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        92,
+        227,
+        2766,
+        2785
+      ],
+      "content_bbox_area_fraction": 0.76,
+      "blank_margin_fraction": 0.24,
+      "content_density": 0.1283,
+      "thumbnail_content_density": 0.241,
+      "grayscale_mean": 242.84,
+      "grayscale_std": 42.96,
+      "color_count_estimate": 11,
+      "dominant_colors": [
+        {
+          "rgb": [
+            229,
+            229,
+            229
+          ],
+          "fraction": 0.0464,
+          "saturation": 0.0,
+          "luminance": 229.0
+        },
+        {
+          "rgb": [
+            248,
+            173,
+            151
+          ],
+          "fraction": 0.0097,
+          "saturation": 0.391,
+          "luminance": 187.4
+        },
+        {
+          "rgb": [
+            120,
+            136,
+            142
+          ],
+          "fraction": 0.009,
+          "saturation": 0.155,
+          "luminance": 133.0
+        },
+        {
+          "rgb": [
+            152,
+            161,
+            164
+          ],
+          "fraction": 0.0088,
+          "saturation": 0.073,
+          "luminance": 159.3
+        },
+        {
+          "rgb": [
+            189,
+            202,
+            212
+          ],
+          "fraction": 0.0084,
+          "saturation": 0.108,
+          "luminance": 200.0
+        },
+        {
+          "rgb": [
+            234,
+            235,
+            236
+          ],
+          "fraction": 0.0079,
+          "saturation": 0.008,
+          "luminance": 234.9
+        },
+        {
+          "rgb": [
+            207,
+            219,
+            229
+          ],
+          "fraction": 0.0069,
+          "saturation": 0.096,
+          "luminance": 217.2
+        },
+        {
+          "rgb": [
+            81,
+            88,
+            91
+          ],
+          "fraction": 0.0064,
+          "saturation": 0.11,
+          "luminance": 86.7
+        },
+        {
+          "rgb": [
+            108,
+            107,
+            107
+          ],
+          "fraction": 0.0064,
+          "saturation": 0.009,
+          "luminance": 107.2
+        },
+        {
+          "rgb": [
+            73,
+            128,
+            177
+          ],
+          "fraction": 0.0062,
+          "saturation": 0.588,
+          "luminance": 119.8
+        },
+        {
+          "rgb": [
+            55,
+            56,
+            57
+          ],
+          "fraction": 0.0061,
+          "saturation": 0.035,
+          "luminance": 55.9
+        }
+      ],
+      "high_saturation_content_fraction": 0.0509,
+      "minimum_colored_luminance_delta": 67.6,
+      "component_summary": {
+        "component_count": 6274,
+        "small_component_count": 992,
+        "medium_component_count": 19,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 110.22,
+      "line_burden": {
+        "horizontal_line_rows": 0,
+        "vertical_line_cols": 1,
+        "line_burden_score": 0.0006
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              92,
+              228,
+              2765,
+              2785
+            ],
+            "content_bbox_px": [
+              92,
+              228,
+              2765,
+              2785
+            ],
+            "panel_area_fraction": 0.7594,
+            "content_area_fraction": 0.7594,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_012/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 19
+        },
+        {
+          "status": "warn",
+          "code": "thumbnail_readability_risk",
+          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
+          "value": 0.241
+        }
+      ],
+      "case_dir": "34.Lancet复现-绝美极坐标棒棒糖图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "grouped bar / stacked bar / errorbar",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -1445,7 +3066,47 @@
         "vertical_line_cols": 24,
         "line_burden_score": 0.0231
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_008/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              82,
+              101,
+              971,
+              1113
+            ],
+            "content_bbox_px": [
+              82,
+              101,
+              971,
+              1113
+            ],
+            "panel_area_fraction": 0.714,
+            "content_area_fraction": 0.714,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_013/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -1461,9 +3122,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "grouped bar / stacked bar / errorbar",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -1630,7 +3302,47 @@
         "vertical_line_cols": 30,
         "line_burden_score": 0.0226
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_009/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              60,
+              176,
+              4744,
+              2948
+            ],
+            "content_bbox_px": [
+              60,
+              176,
+              4744,
+              2948
+            ],
+            "panel_area_fraction": 0.9017,
+            "content_area_fraction": 0.9017,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_014/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -1646,9 +3358,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "grouped bar / stacked bar / errorbar",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -1795,7 +3518,47 @@
         "vertical_line_cols": 94,
         "line_burden_score": 0.1265
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_010/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              48,
+              56,
+              1430,
+              2368
+            ],
+            "content_bbox_px": [
+              48,
+              56,
+              1430,
+              2368
+            ],
+            "panel_area_fraction": 0.8876,
+            "content_area_fraction": 0.8876,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_015/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -1817,9 +3580,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "heatmap / correlation heatmap / matrix dotplot",
       "threshold_profile": "heatmap",
       "family_thresholds": {
@@ -1946,7 +3720,47 @@
         "vertical_line_cols": 79,
         "line_burden_score": 0.1444
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_011/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              46,
+              158,
+              1992,
+              4067
+            ],
+            "content_bbox_px": [
+              46,
+              158,
+              1992,
+              4067
+            ],
+            "panel_area_fraction": 0.8625,
+            "content_area_fraction": 0.8625,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_016/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -1968,9 +3782,33 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
-      "input_type": "raster",
-      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_017/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_017/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_017/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
       "figure_family": "heatmap / correlation heatmap / matrix dotplot",
       "threshold_profile": "heatmap",
       "family_thresholds": {
@@ -1990,362 +3828,470 @@
         "thumbnail_density_warn": 0.55
       },
       "image_size_px": [
-        783,
-        783
+        3600,
+        2400
       ],
-      "file_size_bytes": 31279,
-      "aspect_ratio": 1.0,
+      "file_size_bytes": 66043,
+      "aspect_ratio": 1.5,
       "content_bbox_px": [
-        0,
-        0,
-        783,
-        783
+        251,
+        459,
+        3414,
+        2285
       ],
-      "content_bbox_area_fraction": 1.0,
-      "blank_margin_fraction": 0.0,
-      "content_density": 0.347,
-      "thumbnail_content_density": 0.3617,
-      "grayscale_mean": 167.71,
-      "grayscale_std": 120.48,
+      "content_bbox_area_fraction": 0.6685,
+      "blank_margin_fraction": 0.3315,
+      "content_density": 0.1236,
+      "thumbnail_content_density": 0.212,
+      "grayscale_mean": 238.05,
+      "grayscale_std": 51.35,
       "color_count_estimate": 10,
       "dominant_colors": [
         {
           "rgb": [
-            0,
-            0,
-            0
+            212,
+            214,
+            214
           ],
-          "fraction": 0.3058,
-          "saturation": 0.0,
-          "luminance": 0.0
+          "fraction": 0.016,
+          "saturation": 0.009,
+          "luminance": 213.6
         },
         {
           "rgb": [
-            59,
-            59,
-            59
+            221,
+            221,
+            220
           ],
-          "fraction": 0.0051,
-          "saturation": 0.0,
-          "luminance": 59.0
+          "fraction": 0.0142,
+          "saturation": 0.005,
+          "luminance": 220.9
         },
         {
           "rgb": [
-            16,
-            16,
-            16
+            235,
+            235,
+            235
           ],
-          "fraction": 0.0048,
+          "fraction": 0.0124,
           "saturation": 0.0,
-          "luminance": 16.0
+          "luminance": 235.0
         },
         {
           "rgb": [
-            82,
-            82,
-            82
+            7,
+            163,
+            121
           ],
-          "fraction": 0.0045,
-          "saturation": 0.0,
-          "luminance": 82.0
+          "fraction": 0.0103,
+          "saturation": 0.957,
+          "luminance": 126.8
         },
         {
           "rgb": [
-            231,
-            231,
-            231
+            62,
+            22,
+            72
           ],
-          "fraction": 0.0044,
-          "saturation": 0.0,
-          "luminance": 231.0
+          "fraction": 0.0093,
+          "saturation": 0.694,
+          "luminance": 34.1
         },
         {
           "rgb": [
-            182,
-            182,
+            142,
+            142,
+            144
+          ],
+          "fraction": 0.0092,
+          "saturation": 0.014,
+          "luminance": 142.1
+        },
+        {
+          "rgb": [
+            220,
+            144,
+            128
+          ],
+          "fraction": 0.0088,
+          "saturation": 0.418,
+          "luminance": 159.0
+        },
+        {
+          "rgb": [
+            247,
+            220,
+            207
+          ],
+          "fraction": 0.0085,
+          "saturation": 0.162,
+          "luminance": 224.8
+        },
+        {
+          "rgb": [
+            109,
+            107,
+            109
+          ],
+          "fraction": 0.0083,
+          "saturation": 0.018,
+          "luminance": 107.6
+        },
+        {
+          "rgb": [
+            198,
+            90,
+            83
+          ],
+          "fraction": 0.008,
+          "saturation": 0.581,
+          "luminance": 112.5
+        }
+      ],
+      "high_saturation_content_fraction": 0.2637,
+      "minimum_colored_luminance_delta": 14.3,
+      "component_summary": {
+        "component_count": 4113,
+        "small_component_count": 1004,
+        "medium_component_count": 5,
+        "analysis_size_px": [
+          720,
+          480
+        ]
+      },
+      "text_burden_score": 116.2,
+      "line_burden": {
+        "horizontal_line_rows": 30,
+        "vertical_line_cols": 61,
+        "line_burden_score": 0.0607
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              252,
+              459,
+              3414,
+              2286
+            ],
+            "content_bbox_px": [
+              252,
+              459,
+              3414,
+              2286
+            ],
+            "panel_area_fraction": 0.6686,
+            "content_area_fraction": 0.6686,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_017/grayscale_preview.png",
+      "manuscript_readiness_score": 7,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "excessive_blank_margin",
+          "message": "Large blank/unused margin detected.",
+          "value": 0.332
+        },
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 5
+        },
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 14.3
+        }
+      ],
+      "case_dir": "12.Nature复现-相关性热图+边缘条形图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_018/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_018/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_018/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "threshold_profile": "heatmap",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.025,
+        "text_density_warn": 780,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.08,
+        "thumbnail_density_warn": 0.55
+      },
+      "image_size_px": [
+        4200,
+        2400
+      ],
+      "file_size_bytes": 23606,
+      "aspect_ratio": 1.75,
+      "content_bbox_px": [
+        337,
+        333,
+        3507,
+        2299
+      ],
+      "content_bbox_area_fraction": 0.6183,
+      "blank_margin_fraction": 0.3817,
+      "content_density": 0.1653,
+      "thumbnail_content_density": 0.2553,
+      "grayscale_mean": 234.98,
+      "grayscale_std": 54.04,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            55,
+            55,
+            55
+          ],
+          "fraction": 0.0132,
+          "saturation": 0.0,
+          "luminance": 55.0
+        },
+        {
+          "rgb": [
+            210,
+            165,
+            158
+          ],
+          "fraction": 0.0116,
+          "saturation": 0.248,
+          "luminance": 174.1
+        },
+        {
+          "rgb": [
+            228,
+            228,
+            228
+          ],
+          "fraction": 0.0111,
+          "saturation": 0.0,
+          "luminance": 228.0
+        },
+        {
+          "rgb": [
+            223,
+            188,
             182
           ],
-          "fraction": 0.0038,
-          "saturation": 0.0,
-          "luminance": 182.0
+          "fraction": 0.0108,
+          "saturation": 0.184,
+          "luminance": 195.0
         },
         {
           "rgb": [
-            11,
-            11,
-            11
+            168,
+            96,
+            86
           ],
-          "fraction": 0.0028,
-          "saturation": 0.0,
-          "luminance": 11.0
+          "fraction": 0.0106,
+          "saturation": 0.488,
+          "luminance": 110.6
         },
         {
           "rgb": [
-            43,
-            43,
-            43
+            203,
+            202,
+            201
           ],
-          "fraction": 0.0028,
-          "saturation": 0.0,
-          "luminance": 43.0
+          "fraction": 0.0102,
+          "saturation": 0.01,
+          "luminance": 202.1
         },
         {
           "rgb": [
-            29,
-            29,
-            29
+            203,
+            176,
+            171
           ],
-          "fraction": 0.0027,
-          "saturation": 0.0,
-          "luminance": 29.0
+          "fraction": 0.0101,
+          "saturation": 0.158,
+          "luminance": 181.4
         },
         {
           "rgb": [
-            3,
-            3,
-            3
+            206,
+            157,
+            149
           ],
-          "fraction": 0.0026,
-          "saturation": 0.0,
-          "luminance": 3.0
+          "fraction": 0.0097,
+          "saturation": 0.277,
+          "luminance": 166.8
+        },
+        {
+          "rgb": [
+            190,
+            138,
+            128
+          ],
+          "fraction": 0.0097,
+          "saturation": 0.326,
+          "luminance": 148.3
+        },
+        {
+          "rgb": [
+            199,
+            145,
+            136
+          ],
+          "fraction": 0.0095,
+          "saturation": 0.317,
+          "luminance": 155.8
         }
       ],
       "high_saturation_content_fraction": 0.0,
       "minimum_colored_luminance_delta": null,
       "component_summary": {
-        "component_count": 16,
-        "small_component_count": 0,
-        "medium_component_count": 0,
+        "component_count": 5939,
+        "small_component_count": 699,
+        "medium_component_count": 1,
         "analysis_size_px": [
           720,
-          720
+          411
         ]
       },
-      "text_burden_score": 0.0,
+      "text_burden_score": 69.35,
       "line_burden": {
-        "horizontal_line_rows": 358,
-        "vertical_line_cols": 408,
-        "line_burden_score": 0.4891
+        "horizontal_line_rows": 86,
+        "vertical_line_cols": 130,
+        "line_burden_score": 0.1528
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_012/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              336,
+              332,
+              3507,
+              2300
+            ],
+            "content_bbox_px": [
+              336,
+              332,
+              3507,
+              2300
+            ],
+            "panel_area_fraction": 0.6191,
+            "content_area_fraction": 0.6191,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_018/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
         {
           "status": "warn",
-          "code": "low_pixel_dimensions",
-          "message": "PNG preview is small for detailed manuscript QA.",
-          "value": [
-            783,
-            783
-          ]
+          "code": "excessive_blank_margin",
+          "message": "Large blank/unused margin detected.",
+          "value": 0.382
         },
         {
           "status": "warn",
           "code": "gridline_or_long_line_burden",
           "message": "Many long horizontal/vertical line structures detected.",
-          "value": 0.4891
+          "value": 0.1528
         }
       ],
-      "case_dir": "20.Nature复现-表格形式的热图",
-      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png"
+      "case_dir": "13.Nature复现-倒三角相关性热图+层次聚类树",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf"
     },
     {
       "checked": true,
-      "engine": "pillow",
-      "input_type": "raster",
-      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "threshold_profile": "heatmap",
-      "family_thresholds": {
-        "min_width_px": 900,
-        "min_height_px": 500,
-        "aspect_min": 0.45,
-        "aspect_max": 3.0,
-        "blank_margin_warn": 0.32,
-        "content_density_min": 0.025,
-        "text_density_warn": 780,
-        "label_overlap_medium_count": 4,
-        "label_overlap_content_density": 0.12,
-        "high_saturation_fraction_warn": 0.45,
-        "minimum_luminance_delta_warn": 18,
-        "grayscale_std_min": 28,
-        "line_burden_warn": 0.08,
-        "thumbnail_density_warn": 0.55
-      },
-      "image_size_px": [
-        2100,
-        1500
-      ],
-      "file_size_bytes": 314733,
-      "aspect_ratio": 1.4,
-      "content_bbox_px": [
-        47,
-        22,
-        2080,
-        1480
-      ],
-      "content_bbox_area_fraction": 0.941,
-      "blank_margin_fraction": 0.059,
-      "content_density": 0.2142,
-      "thumbnail_content_density": 0.3021,
-      "grayscale_mean": 234.16,
-      "grayscale_std": 51.62,
-      "color_count_estimate": 11,
-      "dominant_colors": [
-        {
-          "rgb": [
-            238,
-            238,
-            238
-          ],
-          "fraction": 0.0839,
-          "saturation": 0.0,
-          "luminance": 238.0
-        },
-        {
-          "rgb": [
-            255,
-            221,
-            221
-          ],
-          "fraction": 0.0816,
-          "saturation": 0.133,
-          "luminance": 228.2
-        },
-        {
-          "rgb": [
-            167,
-            160,
-            163
-          ],
-          "fraction": 0.0172,
-          "saturation": 0.042,
-          "luminance": 161.7
-        },
-        {
-          "rgb": [
-            190,
-            191,
-            191
-          ],
-          "fraction": 0.0166,
-          "saturation": 0.005,
-          "luminance": 190.8
-        },
-        {
-          "rgb": [
-            145,
-            142,
-            144
-          ],
-          "fraction": 0.0157,
-          "saturation": 0.021,
-          "luminance": 142.8
-        },
-        {
-          "rgb": [
-            223,
-            227,
-            224
-          ],
-          "fraction": 0.0115,
-          "saturation": 0.018,
-          "luminance": 225.9
-        },
-        {
-          "rgb": [
-            219,
-            20,
-            33
-          ],
-          "fraction": 0.0114,
-          "saturation": 0.909,
-          "luminance": 63.2
-        },
-        {
-          "rgb": [
-            204,
-            192,
-            197
-          ],
-          "fraction": 0.0114,
-          "saturation": 0.059,
-          "luminance": 194.9
-        },
-        {
-          "rgb": [
-            241,
-            241,
-            241
-          ],
-          "fraction": 0.0111,
-          "saturation": 0.0,
-          "luminance": 241.0
-        },
-        {
-          "rgb": [
-            186,
-            182,
-            184
-          ],
-          "fraction": 0.011,
-          "saturation": 0.022,
-          "luminance": 183.0
-        },
-        {
-          "rgb": [
-            42,
-            170,
-            87
-          ],
-          "fraction": 0.0108,
-          "saturation": 0.753,
-          "luminance": 136.8
-        }
-      ],
-      "high_saturation_content_fraction": 0.0787,
-      "minimum_colored_luminance_delta": 73.6,
-      "component_summary": {
-        "component_count": 542,
-        "small_component_count": 318,
-        "medium_component_count": 34,
-        "analysis_size_px": [
-          720,
-          514
-        ]
-      },
-      "text_burden_score": 100.95,
-      "line_burden": {
-        "horizontal_line_rows": 179,
-        "vertical_line_cols": 207,
-        "line_burden_score": 0.2503
-      },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_013/grayscale_preview.png",
-      "manuscript_readiness_score": 8,
-      "status": "warn",
-      "top_risks": [
-        {
-          "status": "warn",
-          "code": "label_overlap_or_large_annotation_risk",
-          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
-          "value": 34
-        },
-        {
-          "status": "warn",
-          "code": "gridline_or_long_line_burden",
-          "message": "Many long horizontal/vertical line structures detected.",
-          "value": 0.2503
-        }
-      ],
-      "case_dir": "46.SCI复现-相关矩阵图",
-      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png"
-    },
-    {
-      "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "map / spatial plot",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -2512,7 +4458,47 @@
         "vertical_line_cols": 38,
         "line_burden_score": 0.093
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_014/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              164,
+              268,
+              2286,
+              1276
+            ],
+            "content_bbox_px": [
+              178,
+              268,
+              2286,
+              1276
+            ],
+            "panel_area_fraction": 0.5942,
+            "content_area_fraction": 0.5902,
+            "blank_fraction": 0.0066
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_019/grayscale_preview.png",
       "manuscript_readiness_score": 6,
       "status": "warn",
       "top_risks": [
@@ -2546,9 +4532,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "map / spatial plot",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -2715,7 +4712,47 @@
         "vertical_line_cols": 416,
         "line_burden_score": 0.5021
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_015/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              22,
+              48,
+              2955,
+              1745
+            ],
+            "content_bbox_px": [
+              22,
+              48,
+              2955,
+              1745
+            ],
+            "panel_area_fraction": 0.9217,
+            "content_area_fraction": 0.9217,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_020/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -2737,9 +4774,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "multi-panel manuscript figure",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -2886,7 +4934,47 @@
         "vertical_line_cols": 74,
         "line_burden_score": 0.0796
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_016/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              76,
+              21,
+              5058,
+              1870
+            ],
+            "content_bbox_px": [
+              76,
+              21,
+              5058,
+              1870
+            ],
+            "panel_area_fraction": 0.9263,
+            "content_area_fraction": 0.9263,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_021/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -2914,9 +5002,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "multi-panel manuscript figure",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -3073,7 +5172,47 @@
         "vertical_line_cols": 231,
         "line_burden_score": 0.2408
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_017/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              43,
+              39,
+              5165,
+              1959
+            ],
+            "content_bbox_px": [
+              43,
+              39,
+              5165,
+              1959
+            ],
+            "panel_area_fraction": 0.9456,
+            "content_area_fraction": 0.9456,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_022/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -3101,9 +5240,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "multi-panel manuscript figure",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -3260,7 +5410,47 @@
         "vertical_line_cols": 286,
         "line_burden_score": 0.3083
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_018/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              76,
+              52,
+              1730,
+              1706
+            ],
+            "content_bbox_px": [
+              76,
+              52,
+              1730,
+              1706
+            ],
+            "panel_area_fraction": 0.8444,
+            "content_area_fraction": 0.8444,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_023/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -3288,9 +5478,498 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_024/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_024/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_024/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "network / chord / Sankey",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        4663,
+        2455
+      ],
+      "file_size_bytes": 68821,
+      "aspect_ratio": 1.8994,
+      "content_bbox_px": [
+        70,
+        85,
+        4500,
+        2313
+      ],
+      "content_bbox_area_fraction": 0.8622,
+      "blank_margin_fraction": 0.1378,
+      "content_density": 0.1442,
+      "thumbnail_content_density": 0.2058,
+      "grayscale_mean": 239.67,
+      "grayscale_std": 45.17,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            43,
+            140,
+            190
+          ],
+          "fraction": 0.0205,
+          "saturation": 0.774,
+          "luminance": 123.0
+        },
+        {
+          "rgb": [
+            210,
+            210,
+            210
+          ],
+          "fraction": 0.0115,
+          "saturation": 0.0,
+          "luminance": 210.0
+        },
+        {
+          "rgb": [
+            191,
+            190,
+            190
+          ],
+          "fraction": 0.0102,
+          "saturation": 0.005,
+          "luminance": 190.2
+        },
+        {
+          "rgb": [
+            14,
+            14,
+            15
+          ],
+          "fraction": 0.0099,
+          "saturation": 0.067,
+          "luminance": 14.1
+        },
+        {
+          "rgb": [
+            158,
+            158,
+            158
+          ],
+          "fraction": 0.0093,
+          "saturation": 0.0,
+          "luminance": 158.0
+        },
+        {
+          "rgb": [
+            173,
+            172,
+            172
+          ],
+          "fraction": 0.0086,
+          "saturation": 0.006,
+          "luminance": 172.2
+        },
+        {
+          "rgb": [
+            182,
+            183,
+            183
+          ],
+          "fraction": 0.0082,
+          "saturation": 0.005,
+          "luminance": 182.8
+        },
+        {
+          "rgb": [
+            194,
+            203,
+            204
+          ],
+          "fraction": 0.0082,
+          "saturation": 0.049,
+          "luminance": 201.2
+        },
+        {
+          "rgb": [
+            215,
+            215,
+            215
+          ],
+          "fraction": 0.0077,
+          "saturation": 0.0,
+          "luminance": 215.0
+        },
+        {
+          "rgb": [
+            227,
+            225,
+            225
+          ],
+          "fraction": 0.0076,
+          "saturation": 0.009,
+          "luminance": 225.4
+        }
+      ],
+      "high_saturation_content_fraction": 0.2019,
+      "minimum_colored_luminance_delta": null,
+      "component_summary": {
+        "component_count": 1326,
+        "small_component_count": 360,
+        "medium_component_count": 10,
+        "analysis_size_px": [
+          720,
+          379
+        ]
+      },
+      "text_burden_score": 31.45,
+      "line_burden": {
+        "horizontal_line_rows": 2,
+        "vertical_line_cols": 13,
+        "line_burden_score": 0.0109
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              70,
+              85,
+              4500,
+              2312
+            ],
+            "content_bbox_px": [
+              70,
+              85,
+              4500,
+              2312
+            ],
+            "panel_area_fraction": 0.8618,
+            "content_area_fraction": 0.8618,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_024/grayscale_preview.png",
+      "manuscript_readiness_score": 9,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 10
+        }
+      ],
+      "case_dir": "24.Nature复现-Circos+EnrichNetwork",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_025/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_025/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_025/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "network / chord / Sankey",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        3000,
+        3000
+      ],
+      "file_size_bytes": 57603,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        20,
+        197,
+        2956,
+        2857
+      ],
+      "content_bbox_area_fraction": 0.8678,
+      "blank_margin_fraction": 0.1322,
+      "content_density": 0.0993,
+      "thumbnail_content_density": 0.187,
+      "grayscale_mean": 241.75,
+      "grayscale_std": 43.04,
+      "color_count_estimate": 10,
+      "dominant_colors": [
+        {
+          "rgb": [
+            94,
+            83,
+            85
+          ],
+          "fraction": 0.0093,
+          "saturation": 0.117,
+          "luminance": 85.5
+        },
+        {
+          "rgb": [
+            136,
+            105,
+            173
+          ],
+          "fraction": 0.0086,
+          "saturation": 0.393,
+          "luminance": 116.5
+        },
+        {
+          "rgb": [
+            71,
+            37,
+            72
+          ],
+          "fraction": 0.0078,
+          "saturation": 0.486,
+          "luminance": 46.8
+        },
+        {
+          "rgb": [
+            225,
+            229,
+            234
+          ],
+          "fraction": 0.0075,
+          "saturation": 0.038,
+          "luminance": 228.5
+        },
+        {
+          "rgb": [
+            247,
+            89,
+            100
+          ],
+          "fraction": 0.0073,
+          "saturation": 0.64,
+          "luminance": 123.4
+        },
+        {
+          "rgb": [
+            195,
+            99,
+            95
+          ],
+          "fraction": 0.0065,
+          "saturation": 0.513,
+          "luminance": 119.1
+        },
+        {
+          "rgb": [
+            193,
+            174,
+            196
+          ],
+          "fraction": 0.0063,
+          "saturation": 0.112,
+          "luminance": 179.6
+        },
+        {
+          "rgb": [
+            249,
+            146,
+            96
+          ],
+          "fraction": 0.0063,
+          "saturation": 0.614,
+          "luminance": 164.3
+        },
+        {
+          "rgb": [
+            206,
+            203,
+            211
+          ],
+          "fraction": 0.0062,
+          "saturation": 0.038,
+          "luminance": 204.2
+        },
+        {
+          "rgb": [
+            242,
+            211,
+            198
+          ],
+          "fraction": 0.0057,
+          "saturation": 0.182,
+          "luminance": 216.7
+        }
+      ],
+      "high_saturation_content_fraction": 0.1902,
+      "minimum_colored_luminance_delta": 2.6,
+      "component_summary": {
+        "component_count": 1840,
+        "small_component_count": 1158,
+        "medium_component_count": 38,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 128.67,
+      "line_burden": {
+        "horizontal_line_rows": 0,
+        "vertical_line_cols": 0,
+        "line_burden_score": 0.0
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              20,
+              198,
+              2955,
+              2858
+            ],
+            "content_bbox_px": [
+              20,
+              198,
+              2955,
+              2858
+            ],
+            "panel_area_fraction": 0.8675,
+            "content_area_fraction": 0.8675,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_025/grayscale_preview.png",
+      "manuscript_readiness_score": 9,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 2.6
+        }
+      ],
+      "case_dir": "37.Nature复现-网络条形图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "phylogenetic tree with annotation rings",
       "threshold_profile": "phylo-annotation-ring",
       "family_thresholds": {
@@ -3457,7 +6136,47 @@
         "vertical_line_cols": 384,
         "line_burden_score": 0.4123
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_019/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              60,
+              215,
+              5900,
+              4565
+            ],
+            "content_bbox_px": [
+              60,
+              215,
+              5900,
+              4565
+            ],
+            "panel_area_fraction": 0.8821,
+            "content_area_fraction": 0.8821,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_026/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -3479,9 +6198,275 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_027/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_027/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_027/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "radar / polar / circular bar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        2250,
+        1109
+      ],
+      "file_size_bytes": 5250,
+      "aspect_ratio": 2.0289,
+      "content_bbox_px": [
+        343,
+        3,
+        2204,
+        1109
+      ],
+      "content_bbox_area_fraction": 0.8249,
+      "blank_margin_fraction": 0.1751,
+      "content_density": 0.2059,
+      "thumbnail_content_density": 0.2432,
+      "grayscale_mean": 235.88,
+      "grayscale_std": 47.84,
+      "color_count_estimate": 11,
+      "dominant_colors": [
+        {
+          "rgb": [
+            247,
+            187,
+            187
+          ],
+          "fraction": 0.0875,
+          "saturation": 0.243,
+          "luminance": 199.8
+        },
+        {
+          "rgb": [
+            177,
+            145,
+            184
+          ],
+          "fraction": 0.057,
+          "saturation": 0.212,
+          "luminance": 154.6
+        },
+        {
+          "rgb": [
+            249,
+            188,
+            188
+          ],
+          "fraction": 0.0052,
+          "saturation": 0.245,
+          "luminance": 201.0
+        },
+        {
+          "rgb": [
+            59,
+            58,
+            58
+          ],
+          "fraction": 0.0052,
+          "saturation": 0.017,
+          "luminance": 58.2
+        },
+        {
+          "rgb": [
+            36,
+            36,
+            36
+          ],
+          "fraction": 0.005,
+          "saturation": 0.0,
+          "luminance": 36.0
+        },
+        {
+          "rgb": [
+            5,
+            5,
+            5
+          ],
+          "fraction": 0.005,
+          "saturation": 0.0,
+          "luminance": 5.0
+        },
+        {
+          "rgb": [
+            243,
+            236,
+            236
+          ],
+          "fraction": 0.0048,
+          "saturation": 0.029,
+          "luminance": 237.5
+        },
+        {
+          "rgb": [
+            20,
+            19,
+            19
+          ],
+          "fraction": 0.0048,
+          "saturation": 0.05,
+          "luminance": 19.2
+        },
+        {
+          "rgb": [
+            110,
+            107,
+            120
+          ],
+          "fraction": 0.0047,
+          "saturation": 0.108,
+          "luminance": 108.6
+        },
+        {
+          "rgb": [
+            228,
+            228,
+            229
+          ],
+          "fraction": 0.0047,
+          "saturation": 0.004,
+          "luminance": 228.1
+        },
+        {
+          "rgb": [
+            214,
+            212,
+            214
+          ],
+          "fraction": 0.0046,
+          "saturation": 0.009,
+          "luminance": 212.6
+        }
+      ],
+      "high_saturation_content_fraction": 0.0,
+      "minimum_colored_luminance_delta": null,
+      "component_summary": {
+        "component_count": 202,
+        "small_component_count": 179,
+        "medium_component_count": 0,
+        "analysis_size_px": [
+          720,
+          354
+        ]
+      },
+      "text_burden_score": 71.74,
+      "line_burden": {
+        "horizontal_line_rows": 43,
+        "vertical_line_cols": 254,
+        "line_burden_score": 0.2211
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              343,
+              4,
+              2203,
+              1108
+            ],
+            "content_bbox_px": [
+              343,
+              4,
+              2203,
+              1108
+            ],
+            "panel_area_fraction": 0.8229,
+            "content_area_fraction": 0.8229,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_027/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.2211
+        },
+        {
+          "status": "warn",
+          "code": "thumbnail_readability_risk",
+          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
+          "value": 0.243
+        }
+      ],
+      "case_dir": "47.Nature复现-绝美雷达图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "radar / polar / circular bar",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -3648,7 +6633,47 @@
         "vertical_line_cols": 3,
         "line_burden_score": 0.0039
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_020/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              226,
+              81,
+              1318,
+              1244
+            ],
+            "content_bbox_px": [
+              226,
+              81,
+              1318,
+              1244
+            ],
+            "panel_area_fraction": 0.5644,
+            "content_area_fraction": 0.5644,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_028/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -3664,9 +6689,281 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_029/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_029/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_029/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "radar / polar / circular bar",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        900,
+        3000
+      ],
+      "file_size_bytes": 9088,
+      "aspect_ratio": 0.3,
+      "content_bbox_px": [
+        78,
+        22,
+        878,
+        2912
+      ],
+      "content_bbox_area_fraction": 0.8563,
+      "blank_margin_fraction": 0.1437,
+      "content_density": 0.1123,
+      "thumbnail_content_density": 0.1874,
+      "grayscale_mean": 233.44,
+      "grayscale_std": 61.4,
+      "color_count_estimate": 11,
+      "dominant_colors": [
+        {
+          "rgb": [
+            99,
+            24,
+            121
+          ],
+          "fraction": 0.061,
+          "saturation": 0.802,
+          "luminance": 46.9
+        },
+        {
+          "rgb": [
+            197,
+            197,
+            198
+          ],
+          "fraction": 0.0054,
+          "saturation": 0.005,
+          "luminance": 197.1
+        },
+        {
+          "rgb": [
+            192,
+            192,
+            192
+          ],
+          "fraction": 0.0054,
+          "saturation": 0.0,
+          "luminance": 192.0
+        },
+        {
+          "rgb": [
+            147,
+            147,
+            147
+          ],
+          "fraction": 0.0053,
+          "saturation": 0.0,
+          "luminance": 147.0
+        },
+        {
+          "rgb": [
+            98,
+            91,
+            100
+          ],
+          "fraction": 0.0046,
+          "saturation": 0.09,
+          "luminance": 93.1
+        },
+        {
+          "rgb": [
+            162,
+            162,
+            162
+          ],
+          "fraction": 0.0045,
+          "saturation": 0.0,
+          "luminance": 162.0
+        },
+        {
+          "rgb": [
+            217,
+            217,
+            217
+          ],
+          "fraction": 0.0044,
+          "saturation": 0.0,
+          "luminance": 217.0
+        },
+        {
+          "rgb": [
+            98,
+            23,
+            120
+          ],
+          "fraction": 0.0041,
+          "saturation": 0.808,
+          "luminance": 45.9
+        },
+        {
+          "rgb": [
+            94,
+            17,
+            117
+          ],
+          "fraction": 0.004,
+          "saturation": 0.855,
+          "luminance": 40.6
+        },
+        {
+          "rgb": [
+            97,
+            20,
+            119
+          ],
+          "fraction": 0.0038,
+          "saturation": 0.832,
+          "luminance": 43.5
+        },
+        {
+          "rgb": [
+            115,
+            48,
+            135
+          ],
+          "fraction": 0.0038,
+          "saturation": 0.644,
+          "luminance": 68.5
+        }
+      ],
+      "high_saturation_content_fraction": 0.7215,
+      "minimum_colored_luminance_delta": 1.0,
+      "component_summary": {
+        "component_count": 30,
+        "small_component_count": 10,
+        "medium_component_count": 5,
+        "analysis_size_px": [
+          216,
+          720
+        ]
+      },
+      "text_burden_score": 3.7,
+      "line_burden": {
+        "horizontal_line_rows": 60,
+        "vertical_line_cols": 31,
+        "line_burden_score": 0.0778
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              78,
+              22,
+              878,
+              2912
+            ],
+            "content_bbox_px": [
+              78,
+              22,
+              878,
+              2912
+            ],
+            "panel_area_fraction": 0.8563,
+            "content_area_fraction": 0.8563,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_029/grayscale_preview.png",
+      "manuscript_readiness_score": 7,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "extreme_aspect_ratio",
+          "message": "Aspect ratio is likely to create readability or layout problems.",
+          "value": 0.3
+        },
+        {
+          "status": "warn",
+          "code": "grayscale_discrimination_risk",
+          "message": "Some colored classes may be hard to distinguish in grayscale.",
+          "value": 1.0
+        },
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.0778
+        }
+      ],
+      "case_dir": "31.Nature复现-绝美环形图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "ridgeline / density / contour",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -3823,7 +7120,47 @@
         "vertical_line_cols": 76,
         "line_burden_score": 0.0715
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_021/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              63,
+              60,
+              2040,
+              1880
+            ],
+            "content_bbox_px": [
+              63,
+              60,
+              2040,
+              1880
+            ],
+            "panel_area_fraction": 0.8787,
+            "content_area_fraction": 0.8787,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_030/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -3845,9 +7182,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "ridgeline / density / contour",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -3984,7 +7332,47 @@
         "vertical_line_cols": 192,
         "line_burden_score": 0.2008
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_022/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              15,
+              60,
+              3594,
+              1185
+            ],
+            "content_bbox_px": [
+              15,
+              60,
+              3594,
+              1185
+            ],
+            "panel_area_fraction": 0.932,
+            "content_area_fraction": 0.932,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_031/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -4000,9 +7388,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "ridgeline / density / contour",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -4149,7 +7548,47 @@
         "vertical_line_cols": 1,
         "line_burden_score": 0.0202
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_023/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              283,
+              46,
+              3478,
+              3802
+            ],
+            "content_bbox_px": [
+              283,
+              46,
+              3478,
+              3802
+            ],
+            "panel_area_fraction": 0.8547,
+            "content_area_fraction": 0.8547,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_032/grayscale_preview.png",
       "manuscript_readiness_score": 10,
       "status": "pass",
       "top_risks": [
@@ -4164,9 +7603,275 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
+      "input_type": "pdf",
+      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+      "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_033/rasterized_input.png",
+      "rasterization": {
+        "performed": true,
+        "engine": "pdftoppm",
+        "source_type": "pdf",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+        "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_033/rasterized_input.png",
+        "dpi": 300,
+        "page": 1,
+        "command": [
+          "/opt/homebrew/bin/pdftoppm",
+          "-singlefile",
+          "-f",
+          "1",
+          "-l",
+          "1",
+          "-r",
+          "300",
+          "-png",
+          "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+          "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_033/rasterized_input"
+        ]
+      },
+      "svg_structure": null,
+      "figure_family": "scatter / regression / marginal histogram",
+      "threshold_profile": "global",
+      "family_thresholds": {
+        "min_width_px": 900,
+        "min_height_px": 500,
+        "aspect_min": 0.45,
+        "aspect_max": 3.0,
+        "blank_margin_warn": 0.32,
+        "content_density_min": 0.035,
+        "text_density_warn": 420,
+        "label_overlap_medium_count": 4,
+        "label_overlap_content_density": 0.12,
+        "high_saturation_fraction_warn": 0.45,
+        "minimum_luminance_delta_warn": 18,
+        "grayscale_std_min": 28,
+        "line_burden_warn": 0.022,
+        "thumbnail_density_warn": 0.23
+      },
+      "image_size_px": [
+        2400,
+        2400
+      ],
+      "file_size_bytes": 350519,
+      "aspect_ratio": 1.0,
+      "content_bbox_px": [
+        27,
+        14,
+        2386,
+        2372
+      ],
+      "content_bbox_area_fraction": 0.9657,
+      "blank_margin_fraction": 0.0343,
+      "content_density": 0.1492,
+      "thumbnail_content_density": 0.1968,
+      "grayscale_mean": 237.29,
+      "grayscale_std": 51.56,
+      "color_count_estimate": 11,
+      "dominant_colors": [
+        {
+          "rgb": [
+            217,
+            217,
+            217
+          ],
+          "fraction": 0.0145,
+          "saturation": 0.0,
+          "luminance": 217.0
+        },
+        {
+          "rgb": [
+            194,
+            194,
+            194
+          ],
+          "fraction": 0.0107,
+          "saturation": 0.0,
+          "luminance": 194.0
+        },
+        {
+          "rgb": [
+            244,
+            123,
+            17
+          ],
+          "fraction": 0.0104,
+          "saturation": 0.93,
+          "luminance": 141.1
+        },
+        {
+          "rgb": [
+            253,
+            171,
+            99
+          ],
+          "fraction": 0.0103,
+          "saturation": 0.609,
+          "luminance": 183.2
+        },
+        {
+          "rgb": [
+            141,
+            141,
+            140
+          ],
+          "fraction": 0.0094,
+          "saturation": 0.007,
+          "luminance": 140.9
+        },
+        {
+          "rgb": [
+            255,
+            229,
+            207
+          ],
+          "fraction": 0.0088,
+          "saturation": 0.188,
+          "luminance": 232.9
+        },
+        {
+          "rgb": [
+            220,
+            220,
+            220
+          ],
+          "fraction": 0.0087,
+          "saturation": 0.0,
+          "luminance": 220.0
+        },
+        {
+          "rgb": [
+            63,
+            66,
+            67
+          ],
+          "fraction": 0.008,
+          "saturation": 0.06,
+          "luminance": 65.4
+        },
+        {
+          "rgb": [
+            73,
+            70,
+            68
+          ],
+          "fraction": 0.0079,
+          "saturation": 0.068,
+          "luminance": 70.5
+        },
+        {
+          "rgb": [
+            91,
+            89,
+            87
+          ],
+          "fraction": 0.0073,
+          "saturation": 0.044,
+          "luminance": 89.3
+        },
+        {
+          "rgb": [
+            0,
+            0,
+            0
+          ],
+          "fraction": 0.0073,
+          "saturation": 0.0,
+          "luminance": 0.0
+        }
+      ],
+      "high_saturation_content_fraction": 0.2004,
+      "minimum_colored_luminance_delta": 42.1,
+      "component_summary": {
+        "component_count": 257,
+        "small_component_count": 219,
+        "medium_component_count": 6,
+        "analysis_size_px": [
+          720,
+          720
+        ]
+      },
+      "text_burden_score": 38.02,
+      "line_burden": {
+        "horizontal_line_rows": 28,
+        "vertical_line_cols": 32,
+        "line_burden_score": 0.0333
+      },
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              28,
+              14,
+              2386,
+              2372
+            ],
+            "content_bbox_px": [
+              28,
+              14,
+              2386,
+              2372
+            ],
+            "panel_area_fraction": 0.9653,
+            "content_area_fraction": 0.9653,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_033/grayscale_preview.png",
+      "manuscript_readiness_score": 8,
+      "status": "warn",
+      "top_risks": [
+        {
+          "status": "warn",
+          "code": "label_overlap_or_large_annotation_risk",
+          "message": "Several medium-sized text/annotation components suggest direct-label burden or overlap risk.",
+          "value": 6
+        },
+        {
+          "status": "warn",
+          "code": "gridline_or_long_line_burden",
+          "message": "Many long horizontal/vertical line structures detected.",
+          "value": 0.0333
+        }
+      ],
+      "case_dir": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf"
+    },
+    {
+      "checked": true,
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "scatter / regression / marginal histogram",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -4333,7 +8038,47 @@
         "vertical_line_cols": 4,
         "line_burden_score": 0.0036
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_024/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              74,
+              144,
+              4056,
+              3524
+            ],
+            "content_bbox_px": [
+              74,
+              144,
+              4056,
+              3524
+            ],
+            "panel_area_fraction": 0.8902,
+            "content_area_fraction": 0.8902,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_034/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -4349,9 +8094,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "scatter / regression / marginal histogram",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -4518,7 +8274,47 @@
         "vertical_line_cols": 80,
         "line_burden_score": 0.0522
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_025/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              22,
+              22,
+              1778,
+              1778
+            ],
+            "content_bbox_px": [
+              22,
+              22,
+              1778,
+              1778
+            ],
+            "panel_area_fraction": 0.9517,
+            "content_area_fraction": 0.9517,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_035/grayscale_preview.png",
       "manuscript_readiness_score": 7,
       "status": "warn",
       "top_risks": [
@@ -4546,180 +8342,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
-      "input_type": "raster",
-      "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
-      "figure_family": "scatter / regression / marginal histogram",
-      "threshold_profile": "global",
-      "family_thresholds": {
-        "min_width_px": 900,
-        "min_height_px": 500,
-        "aspect_min": 0.45,
-        "aspect_max": 3.0,
-        "blank_margin_warn": 0.32,
-        "content_density_min": 0.035,
-        "text_density_warn": 420,
-        "label_overlap_medium_count": 4,
-        "label_overlap_content_density": 0.12,
-        "high_saturation_fraction_warn": 0.45,
-        "minimum_luminance_delta_warn": 18,
-        "grayscale_std_min": 28,
-        "line_burden_warn": 0.022,
-        "thumbnail_density_warn": 0.23
-      },
-      "image_size_px": [
-        2400,
-        1650
-      ],
-      "file_size_bytes": 429102,
-      "aspect_ratio": 1.4545,
-      "content_bbox_px": [
-        45,
-        45,
-        2347,
-        1585
-      ],
-      "content_bbox_area_fraction": 0.8952,
-      "blank_margin_fraction": 0.1048,
-      "content_density": 0.1522,
-      "thumbnail_content_density": 0.2484,
-      "grayscale_mean": 236.26,
-      "grayscale_std": 54.75,
-      "color_count_estimate": 9,
-      "dominant_colors": [
-        {
-          "rgb": [
-            142,
-            144,
-            148
-          ],
-          "fraction": 0.0119,
-          "saturation": 0.041,
-          "luminance": 143.9
-        },
-        {
-          "rgb": [
-            120,
-            121,
-            124
-          ],
-          "fraction": 0.0114,
-          "saturation": 0.032,
-          "luminance": 121.0
-        },
-        {
-          "rgb": [
-            209,
-            209,
-            209
-          ],
-          "fraction": 0.0109,
-          "saturation": 0.0,
-          "luminance": 209.0
-        },
-        {
-          "rgb": [
-            228,
-            228,
-            229
-          ],
-          "fraction": 0.0109,
-          "saturation": 0.004,
-          "luminance": 228.1
-        },
-        {
-          "rgb": [
-            0,
-            0,
-            0
-          ],
-          "fraction": 0.0105,
-          "saturation": 0.0,
-          "luminance": 0.0
-        },
-        {
-          "rgb": [
-            39,
-            64,
-            144
-          ],
-          "fraction": 0.0101,
-          "saturation": 0.729,
-          "luminance": 64.5
-        },
-        {
-          "rgb": [
-            216,
-            216,
-            216
-          ],
-          "fraction": 0.0095,
-          "saturation": 0.0,
-          "luminance": 216.0
-        },
-        {
-          "rgb": [
-            180,
-            184,
-            196
-          ],
-          "fraction": 0.0093,
-          "saturation": 0.082,
-          "luminance": 184.0
-        },
-        {
-          "rgb": [
-            206,
-            207,
-            207
-          ],
-          "fraction": 0.0091,
-          "saturation": 0.005,
-          "luminance": 206.8
-        }
-      ],
-      "high_saturation_content_fraction": 0.1079,
-      "minimum_colored_luminance_delta": null,
-      "component_summary": {
-        "component_count": 142,
-        "small_component_count": 127,
-        "medium_component_count": 3,
-        "analysis_size_px": [
-          720,
-          495
-        ]
-      },
-      "text_burden_score": 32.07,
-      "line_burden": {
-        "horizontal_line_rows": 81,
-        "vertical_line_cols": 101,
-        "line_burden_score": 0.1199
-      },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_026/grayscale_preview.png",
-      "manuscript_readiness_score": 8,
-      "status": "warn",
-      "top_risks": [
-        {
-          "status": "warn",
-          "code": "gridline_or_long_line_burden",
-          "message": "Many long horizontal/vertical line structures detected.",
-          "value": 0.1199
-        },
-        {
-          "status": "warn",
-          "code": "thumbnail_readability_risk",
-          "message": "Thumbnail view is visually dense; labels may fail at reduced size.",
-          "value": 0.248
-        }
-      ],
-      "case_dir": "36.Nature复现-配对散点图",
-      "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png"
-    },
-    {
-      "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "upset / venn-like set plot",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -4876,7 +8512,47 @@
         "vertical_line_cols": 263,
         "line_burden_score": 0.2878
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_027/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              45,
+              33,
+              3555,
+              1446
+            ],
+            "content_bbox_px": [
+              45,
+              33,
+              3555,
+              1446
+            ],
+            "panel_area_fraction": 0.9184,
+            "content_area_fraction": 0.9184,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_036/grayscale_preview.png",
       "manuscript_readiness_score": 6,
       "status": "warn",
       "top_risks": [
@@ -4910,9 +8586,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "volcano / MA / enrichment / GSEA",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -5059,7 +8746,47 @@
         "vertical_line_cols": 603,
         "line_burden_score": 0.6272
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_028/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              30,
+              32,
+              2218,
+              1768
+            ],
+            "content_bbox_px": [
+              30,
+              32,
+              2218,
+              1768
+            ],
+            "panel_area_fraction": 0.9379,
+            "content_area_fraction": 0.9379,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_037/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -5081,9 +8808,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "volcano / MA / enrichment / GSEA",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -5250,7 +8988,47 @@
         "vertical_line_cols": 60,
         "line_burden_score": 0.0395
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_029/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              30,
+              32,
+              1769,
+              2068
+            ],
+            "content_bbox_px": [
+              30,
+              32,
+              1769,
+              2068
+            ],
+            "panel_area_fraction": 0.9367,
+            "content_area_fraction": 0.9367,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_038/grayscale_preview.png",
       "manuscript_readiness_score": 8,
       "status": "warn",
       "top_risks": [
@@ -5272,9 +9050,20 @@
     },
     {
       "checked": true,
-      "engine": "pillow",
+      "engine": "pillow-raster",
       "input_type": "raster",
       "input_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "analysis_image_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "rasterization": {
+        "performed": false,
+        "engine": "native",
+        "source_type": "raster",
+        "source_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+        "raster_path": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+        "dpi": null,
+        "page": null
+      },
+      "svg_structure": null,
       "figure_family": "volcano / MA / enrichment / GSEA",
       "threshold_profile": "global",
       "family_thresholds": {
@@ -5441,7 +9230,47 @@
         "vertical_line_cols": 44,
         "line_burden_score": 0.0731
       },
-      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-uuu5ydep/sample_030/grayscale_preview.png",
+      "panel_geometry": {
+        "checked": true,
+        "method": "projection-gutter-v1",
+        "expected_panels": null,
+        "layout_profile": "auto",
+        "panel_count_detected": 1,
+        "panel_area_ratio_max_min": 1.0,
+        "panel_area_cv": 0,
+        "content_area_ratio_max_min": 1.0,
+        "content_area_cv": 0,
+        "blank_fraction_range": 0.0,
+        "panels": [
+          {
+            "panel_id": 1,
+            "panel_box_px": [
+              256,
+              238,
+              5283,
+              4064
+            ],
+            "content_bbox_px": [
+              256,
+              238,
+              5283,
+              4064
+            ],
+            "panel_area_fraction": 0.848,
+            "content_area_fraction": 0.848,
+            "blank_fraction": 0.0
+          }
+        ],
+        "risks": []
+      },
+      "ocr": {
+        "checked": true,
+        "available": false,
+        "enabled": false,
+        "mode": "auto",
+        "risks": []
+      },
+      "grayscale_preview": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-calibration-jxut579q/sample_039/grayscale_preview.png",
       "manuscript_readiness_score": 9,
       "status": "warn",
       "top_risks": [
@@ -5456,1062 +9285,5 @@
       "image": "/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png"
     }
   ],
-  "pdf_only_cases": [
-    {
-      "case_dir": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
-      "relative_path": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "comprehensive_correlation.R"
-      ],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "data.csv"
-      ],
-      "figure_family": "scatter / regression / marginal histogram",
-      "secondary_families": [
-        "boxplot / violin / raincloud / jitter",
-        "grouped bar / stacked bar / errorbar",
-        "heatmap / correlation heatmap / matrix dotplot"
-      ],
-      "application_scene": "relationship testing, calibration, regression, residual diagnostics",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggsignif"
-      ],
-      "risks": [],
-      "output_examples": [
-        "comprehensive_correlation.pdf"
-      ]
-    },
-    {
-      "case_dir": "12.Nature复现-相关性热图+边缘条形图",
-      "relative_path": "12.Nature复现-相关性热图+边缘条形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "correlation_heatmap.R"
-      ],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "data/data.csv",
-        "data/group.csv"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "scatter / regression / marginal histogram",
-        "grouped bar / stacked bar / errorbar",
-        "map / spatial plot"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "corrplot"
-      ],
-      "risks": [],
-      "output_examples": [
-        "correlation_heatmap.pdf"
-      ]
-    },
-    {
-      "case_dir": "13.Nature复现-倒三角相关性热图+层次聚类树",
-      "relative_path": "13.Nature复现-倒三角相关性热图+层次聚类树",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "correlation_heatmap_hcluster.R"
-      ],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "data/data.csv",
-        "data/group.csv"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "map / spatial plot",
-        "multi-panel manuscript figure",
-        "phylogenetic tree with annotation rings"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "cowplot",
-        "factoextra"
-      ],
-      "risks": [],
-      "output_examples": [
-        "correlation_heatmap_hcluster.pdf"
-      ]
-    },
-    {
-      "case_dir": "17.Nature复现-分组和弦图+外围条形图",
-      "relative_path": "17.Nature复现-分组和弦图+外围条形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "group_chord_bar.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data1.xlsx",
-        "data2.xlsx"
-      ],
-      "figure_family": "circos / chord / synteny-like plot",
-      "secondary_families": [
-        "heatmap / correlation heatmap / matrix dotplot",
-        "grouped bar / stacked bar / errorbar",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "many-to-many links, circular genomic/network summaries",
-      "skill_fit": "specialized reference: useful for boundaries and data requirements, not a default template",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "circlize"
-      ],
-      "risks": [],
-      "output_examples": [
-        "group_chord_bar.pdf"
-      ]
-    },
-    {
-      "case_dir": "24.Nature复现-Circos+EnrichNetwork",
-      "relative_path": "24.Nature复现-Circos+EnrichNetwork",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "multiple_list_id.csv"
-      ],
-      "figure_family": "network / chord / Sankey",
-      "secondary_families": [
-        "circos / chord / synteny-like plot",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "relationship topology, pathway networks, flow or transition summaries",
-      "skill_fit": "specialized reference: useful for boundaries and data requirements, not a default template",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "network / chord / Sankey"
-      ],
-      "risks": [],
-      "output_examples": [
-        "result_network.pdf"
-      ]
-    },
-    {
-      "case_dir": "3.Nature复现-折线图+柱状图+误差线+多重比较",
-      "relative_path": "3.Nature复现-折线图+柱状图+误差线+多重比较",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "line_bar_errorbar_significant.R"
-      ],
-      "data_types": [
-        "csv",
-        "txt"
-      ],
-      "data_files": [
-        "iAUC_cessation.csv",
-        "iAUC_exposure.csv",
-        "Readme.txt",
-        "WeightChange_Smoking.csv"
-      ],
-      "figure_family": "grouped bar / stacked bar / errorbar",
-      "secondary_families": [
-        "boxplot / violin / raincloud / jitter",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "group comparison, treatment-response summaries, repeated-category composition",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "low",
-      "dependency_hints": [
-        "reshape2",
-        "tidyverse"
-      ],
-      "risks": [],
-      "output_examples": [
-        "line_bar_errorbar_significant.pdf"
-      ]
-    },
-    {
-      "case_dir": "31.Nature复现-绝美环形图",
-      "relative_path": "31.Nature复现-绝美环形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "demongarphic_info_circos.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "radar / polar / circular bar",
-      "secondary_families": [
-        "boxplot / violin / raincloud / jitter",
-        "circos / chord / synteny-like plot",
-        "map / spatial plot"
-      ],
-      "application_scene": "compact multivariate profile when circular form is justified",
-      "skill_fit": "caution: use only when the scientific structure truly requires this encoding",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "circlize"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "plot_age.pdf",
-        "plot_bmi.pdf",
-        "plot_circos.pdf",
-        "plot_ethnicity.pdf",
-        "plot_iris.pdf",
-        "plot_sex.pdf"
-      ]
-    },
-    {
-      "case_dir": "32.SCI复现-绝美极坐标条形图",
-      "relative_path": "32.SCI复现-绝美极坐标条形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_bar_with_errorbar.R",
-        "circlize_bar_with_errorbar_11variant-4treat.R",
-        "circlize_bar_without_errorbar.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "circlize_bar_with_errorbar.xlsx",
-        "circlize_bar_with_errorbar_11variant-4treat.xlsx",
-        "data_without_errorbar.xlsx"
-      ],
-      "figure_family": "radar / polar / circular bar",
-      "secondary_families": [
-        "grouped bar / stacked bar / errorbar",
-        "circos / chord / synteny-like plot",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "compact multivariate profile when circular form is justified",
-      "skill_fit": "caution: use only when the scientific structure truly requires this encoding",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "circlize"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "circlize_bar_with_errorbar.pdf",
-        "circlize_bar_with_errorbar_11variant-4treat.pdf",
-        "circlize_bar_without_errorbar.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "34.Lancet复现-绝美极坐标棒棒糖图",
-      "relative_path": "34.Lancet复现-绝美极坐标棒棒糖图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_ploar_Lollipop.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "dotplot / lollipop / dumbbell",
-      "secondary_families": [
-        "radar / polar / circular bar",
-        "circos / chord / synteny-like plot",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "ranked comparisons, before-after deltas, compact categorical contrasts",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "circlize"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "plot_circos.pdf"
-      ]
-    },
-    {
-      "case_dir": "35.Cell复现-环形热图",
-      "relative_path": "35.Cell复现-环形热图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_heatmap.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "radar / polar / circular bar",
-        "circos / chord / synteny-like plot",
-        "scatter / regression / marginal histogram"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "ComplexHeatmap",
-        "circlize"
-      ],
-      "risks": [],
-      "output_examples": [
-        "circos_heatmap.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "37.Nature复现-网络条形图",
-      "relative_path": "37.Nature复现-网络条形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "network_bar.R",
-        "network_bubble.R"
-      ],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "data.csv"
-      ],
-      "figure_family": "network / chord / Sankey",
-      "secondary_families": [
-        "radar / polar / circular bar",
-        "grouped bar / stacked bar / errorbar",
-        "map / spatial plot"
-      ],
-      "application_scene": "relationship topology, pathway networks, flow or transition summaries",
-      "skill_fit": "specialized reference: useful for boundaries and data requirements, not a default template",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "network / chord / Sankey"
-      ],
-      "risks": [],
-      "output_examples": [
-        "network_bar.pdf",
-        "network_bubble.pdf"
-      ]
-    },
-    {
-      "case_dir": "38.顶刊复现-相关性热图",
-      "relative_path": "38.顶刊复现-相关性热图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "corrplot/corrplot.R",
-        "mantel_test/mantel_test.R",
-        "pheatmap/pheatmap.R"
-      ],
-      "data_types": [
-        "csv",
-        "txt"
-      ],
-      "data_files": [
-        "corrplot/data/data.csv",
-        "corrplot/data/group.csv",
-        "mantel_test/data/distance.csv",
-        "mantel_test/data/Environment.csv",
-        "mantel_test/data/host.txt",
-        "mantel_test/data/mOTUs.txt",
-        "mantel_test/data/virus.txt",
-        "mantel_test/data/vOTUs.txt",
-        "...(+2 more)"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "map / spatial plot",
-        "grouped bar / stacked bar / errorbar",
-        "network / chord / Sankey"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "corrplot",
-        "pheatmap"
-      ],
-      "risks": [],
-      "output_examples": [
-        "corrplot/corrplot.correlation_heatmap.pdf",
-        "mantel_test/mantel_test.corr_heatmap.pdf",
-        "pheatmap/pheatmap.correlation_heatmap.pdf"
-      ]
-    },
-    {
-      "case_dir": "42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图",
-      "relative_path": "42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "butterfly_bar.R",
-        "butterfly_violin.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_bar.xlsx",
-        "data_violin_M1_Feature.xlsx",
-        "data_violin_M2_Feature.xlsx"
-      ],
-      "figure_family": "grouped bar / stacked bar / errorbar",
-      "secondary_families": [
-        "boxplot / violin / raincloud / jitter",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "group comparison, treatment-response summaries, repeated-category composition",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "cowplot",
-        "patchwork"
-      ],
-      "risks": [],
-      "output_examples": [
-        "butterfly_bar.pdf",
-        "butterfly_violin.pdf"
-      ]
-    },
-    {
-      "case_dir": "43.顶刊复现-散点图+线性回归",
-      "relative_path": "43.顶刊复现-散点图+线性回归",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "scatter_plot1.R",
-        "scatter_plot2.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data1.xlsx",
-        "data2.xlsx"
-      ],
-      "figure_family": "scatter / regression / marginal histogram",
-      "secondary_families": [
-        "model validation / prediction accuracy / residual diagnostics",
-        "volcano / MA / enrichment / GSEA"
-      ],
-      "application_scene": "relationship testing, calibration, regression, residual diagnostics",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggpubr",
-        "ggrepel",
-        "patchwork"
-      ],
-      "risks": [],
-      "output_examples": [
-        "scatter1.pdf",
-        "scatter2.pdf"
-      ]
-    },
-    {
-      "case_dir": "44.Nature复现-RCS",
-      "relative_path": "44.Nature复现-RCS",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "RCS_merge.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "scatter / regression / marginal histogram",
-      "secondary_families": [
-        "grouped bar / stacked bar / errorbar",
-        "model validation / prediction accuracy / residual diagnostics",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "relationship testing, calibration, regression, residual diagnostics",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "patchwork"
-      ],
-      "risks": [],
-      "output_examples": [
-        "RCS.pdf"
-      ]
-    },
-    {
-      "case_dir": "47.Nature复现-绝美雷达图",
-      "relative_path": "47.Nature复现-绝美雷达图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "1_radar_fmsb.R",
-        "2_radar_fmsb.R",
-        "3_radar_facet.R",
-        "4_radar_facet.R"
-      ],
-      "data_types": [
-        "csv",
-        "xlsx"
-      ],
-      "data_files": [
-        "data_1.csv",
-        "data_2.csv",
-        "data_3.xlsx",
-        "data_4.xlsx"
-      ],
-      "figure_family": "radar / polar / circular bar",
-      "secondary_families": [
-        "multi-panel manuscript figure",
-        "grouped bar / stacked bar / errorbar",
-        "phylogenetic tree with annotation rings"
-      ],
-      "application_scene": "compact multivariate profile when circular form is justified",
-      "skill_fit": "caution: use only when the scientific structure truly requires this encoding",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "partial: extract layout and QA rules before adding templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "cowplot",
-        "patchwork"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "1_radar_fmsb.pdf",
-        "2_radar_fmsb.pdf",
-        "3_radar_facet.pdf",
-        "4_radar_facet.pdf"
-      ]
-    },
-    {
-      "case_dir": "48.Nature复现-差异云雨图",
-      "relative_path": "48.Nature复现-差异云雨图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "diff_raincloud_1.R",
-        "diff_raincloud_2.R",
-        "diff_raincloud_3.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_1.xlsx",
-        "data_2.xlsx",
-        "data_3.xlsx"
-      ],
-      "figure_family": "boxplot / violin / raincloud / jitter",
-      "secondary_families": [
-        "map / spatial plot",
-        "multi-panel manuscript figure",
-        "network / chord / Sankey"
-      ],
-      "application_scene": "distribution comparison with raw-sample evidence",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "cowplot",
-        "ggpubr"
-      ],
-      "risks": [],
-      "output_examples": [
-        "diff_raincloud_1.pdf",
-        "diff_raincloud_2.pdf",
-        "diff_raincloud_3.pdf"
-      ]
-    },
-    {
-      "case_dir": "50.Nature复现-绝美时序图",
-      "relative_path": "50.Nature复现-绝美时序图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "time_series_1.R",
-        "time_series_2.R",
-        "time_series_3.R",
-        "time_series_4.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_1.xlsx",
-        "data_2.xlsx",
-        "data_3.xlsx",
-        "data_4.xlsx"
-      ],
-      "figure_family": "grouped bar / stacked bar / errorbar",
-      "secondary_families": [
-        "map / spatial plot",
-        "dotplot / lollipop / dumbbell",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "group comparison, treatment-response summaries, repeated-category composition",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggpubr",
-        "patchwork"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "time_series_1.pdf",
-        "time_series_2.pdf",
-        "time_series_3.pdf",
-        "time_series_4.pdf"
-      ]
-    },
-    {
-      "case_dir": "51.Nature复现-小提琴图+NMDS分析",
-      "relative_path": "51.Nature复现-小提琴图+NMDS分析",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "violin_NMDS.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_M.cardinalis.xlsx",
-        "data_M.verbenaceus.xlsx"
-      ],
-      "figure_family": "boxplot / violin / raincloud / jitter",
-      "secondary_families": [
-        "PCA / PCoA / NMDS / UMAP / t-SNE",
-        "heatmap / correlation heatmap / matrix dotplot",
-        "model validation / prediction accuracy / residual diagnostics"
-      ],
-      "application_scene": "distribution comparison with raw-sample evidence",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggpubr",
-        "patchwork",
-        "vegan"
-      ],
-      "risks": [],
-      "output_examples": [
-        "violin_NMDS.pdf"
-      ]
-    },
-    {
-      "case_dir": "52.Nature复现-FC-FC散点+象限图",
-      "relative_path": "52.Nature复现-FC-FC散点+象限图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "FC-FC_grid_1.R",
-        "FC-FC_grid_2.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "scatter / regression / marginal histogram",
-      "secondary_families": [],
-      "application_scene": "relationship testing, calibration, regression, residual diagnostics",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggrepel"
-      ],
-      "risks": [],
-      "output_examples": [
-        "FC-FC_grid_1.pdf",
-        "FC-FC_grid_2.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "54.SCI复现-分组散点矩阵图+相关性网络图",
-      "relative_path": "54.SCI复现-分组散点矩阵图+相关性网络图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "corr-link_ggpair.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "scatter / regression / marginal histogram",
-        "network / chord / Sankey",
-        "map / spatial plot"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "cowplot",
-        "patchwork"
-      ],
-      "risks": [],
-      "output_examples": [
-        "p1_ggpair.pdf",
-        "p2_corr_link.pdf",
-        "readme.pdf",
-        "合并_p1_p2.pdf"
-      ]
-    },
-    {
-      "case_dir": "62.Nature复现-分组型和单组型环状条形图",
-      "relative_path": "62.Nature复现-分组型和单组型环状条形图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_gradient_bar.R",
-        "circlize_group_bar.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_with_group.xlsx",
-        "data_without_group.xlsx"
-      ],
-      "figure_family": "circos / chord / synteny-like plot",
-      "secondary_families": [
-        "grouped bar / stacked bar / errorbar",
-        "heatmap / correlation heatmap / matrix dotplot",
-        "map / spatial plot"
-      ],
-      "application_scene": "many-to-many links, circular genomic/network summaries",
-      "skill_fit": "specialized reference: useful for boundaries and data requirements, not a default template",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "ComplexHeatmap",
-        "circlize"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "circlize_gradient_bar.pdf",
-        "circlize_group_bar.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "64.Nature复现-深度美化散点气泡图",
-      "relative_path": "64.Nature复现-深度美化散点气泡图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "group_bubble.R",
-        "group_point.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data1.xlsx",
-        "data2.xlsx"
-      ],
-      "figure_family": "scatter / regression / marginal histogram",
-      "secondary_families": [
-        "map / spatial plot",
-        "multi-panel manuscript figure"
-      ],
-      "application_scene": "relationship testing, calibration, regression, residual diagnostics",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "yes: should influence existing templates",
-      "dependency_complexity": "medium",
-      "dependency_hints": [
-        "ggpubr"
-      ],
-      "risks": [],
-      "output_examples": [
-        "group_bubble.pdf",
-        "group_point.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "71.Cell-上下三角双热图",
-      "relative_path": "71.Cell-上下三角双热图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "double_heatmap_1color.R",
-        "double_heatmap_2colors.R"
-      ],
-      "data_types": [
-        "csv"
-      ],
-      "data_files": [
-        "group.csv",
-        "M0_p.csv",
-        "M0_r.csv",
-        "M1_p.csv",
-        "M1_r.csv"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "Manhattan plot",
-        "circos / chord / synteny-like plot",
-        "map / spatial plot"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "ComplexHeatmap",
-        "circlize"
-      ],
-      "risks": [],
-      "output_examples": [
-        "double_heatmap_1color.pdf",
-        "double_heatmap_2color.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "76.Cell-环形热图+upset图",
-      "relative_path": "76.Cell-环形热图+upset图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_heatmap_upset.R",
-        "circlize_heatmap_venn.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data_for_upset.xlsx",
-        "data_for_venn.xlsx"
-      ],
-      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
-      "secondary_families": [
-        "radar / polar / circular bar",
-        "upset / venn-like set plot",
-        "circos / chord / synteny-like plot"
-      ],
-      "application_scene": "matrix relationships, multi-feature signatures, correlation or abundance grids",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "ComplexHeatmap",
-        "circlize"
-      ],
-      "risks": [],
-      "output_examples": [
-        "circos_heatmap_upset.pdf",
-        "circos_heatmap_venn.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "78.Cell-umap+环形分组信息",
-      "relative_path": "78.Cell-umap+环形分组信息",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circ_umap.R"
-      ],
-      "data_types": [],
-      "data_files": [],
-      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
-      "secondary_families": [
-        "radar / polar / circular bar",
-        "map / spatial plot",
-        "circos / chord / synteny-like plot"
-      ],
-      "application_scene": "ordination, sample clustering, community/omics structure",
-      "skill_fit": "high: suitable for reusable design principles",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "ComplexHeatmap",
-        "circlize"
-      ],
-      "risks": [],
-      "output_examples": [
-        "Circos_UMAP.pdf",
-        "readme.pdf"
-      ]
-    },
-    {
-      "case_dir": "79.Nature-环状条形图+饼图",
-      "relative_path": "79.Nature-环状条形图+饼图",
-      "language": "R",
-      "output_types": [
-        "pdf"
-      ],
-      "code_files": [
-        "circlize_bar_pie.R"
-      ],
-      "data_types": [
-        "xlsx"
-      ],
-      "data_files": [
-        "data.xlsx"
-      ],
-      "figure_family": "circos / chord / synteny-like plot",
-      "secondary_families": [
-        "grouped bar / stacked bar / errorbar",
-        "multi-panel manuscript figure",
-        "radar / polar / circular bar"
-      ],
-      "application_scene": "many-to-many links, circular genomic/network summaries",
-      "skill_fit": "specialized reference: useful for boundaries and data requirements, not a default template",
-      "visual_qa_positive_sample": "no direct raster/SVG sample",
-      "template_reference": "reference only unless a dedicated data structure and optional backend are provided",
-      "dependency_complexity": "high",
-      "dependency_hints": [
-        "circlize"
-      ],
-      "risks": [
-        "may contain decorative or presentation-heavy styling; extract structure, not ornament"
-      ],
-      "output_examples": [
-        "circos_bar_pie.pdf",
-        "readme.pdf"
-      ]
-    }
-  ]
+  "pdf_only_cases": []
 }

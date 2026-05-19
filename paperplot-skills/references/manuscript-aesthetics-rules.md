@@ -16,6 +16,8 @@ These rules translate the replica-library review into stable figure-design decis
 - Multi-panel layouts must define primary, secondary, and supporting panels before plotting.
 - Panel spacing should be tight but not cramped; align data regions, not only outer plot boxes.
 - Show a hint of repeated structure through alignment, not through repeated legends and titles.
+- Proportional balance is a hard manuscript requirement. Panels with equal scientific weight should use equal panel boxes and comparable data-region sizes; panels with different weights may be unequal only when the hierarchy is deliberate and documented.
+- Do not stitch plots that were exported at different aspect ratios as if they were equal panels. Re-export each panel to the target panel box, reserve legend space deliberately, and check the composite preview at final size.
 
 ## Text
 
@@ -66,4 +68,5 @@ These rules translate the replica-library review into stable figure-design decis
 - High text burden means revise labels before shrinking text.
 - High color burden means reduce classes or move to facets/supplement.
 - High density is acceptable for heatmaps/Manhattan plots only with family-specific justification.
+- Multi-panel size mismatch is not a minor aesthetic issue; it means the layout has failed unless unequal panel sizes encode a deliberate evidence hierarchy.
 - A visually cleaner redraw is not better if it removes required scientific semantics.

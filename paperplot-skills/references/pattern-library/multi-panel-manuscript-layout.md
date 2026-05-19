@@ -32,6 +32,8 @@ Derived from replica cases combining scatter, heatmap, ridge, tile, bar, ternary
 - Align plot regions, not just outer boxes.
 - Put panel labels outside or at upper-left consistently.
 - Keep legend shared unless panel semantics differ.
+- Equal-role panels must be exported into equal panel boxes with comparable data-region sizes. If panels are intentionally unequal, state the primary/supporting hierarchy before plotting.
+- Composite previews must not be made by naively stitching plots with different source aspect ratios; re-render each panel to its assigned box and reserve legend/margin space deliberately.
 
 ## Typography And Marks
 
@@ -49,6 +51,8 @@ Derived from replica cases combining scatter, heatmap, ridge, tile, bar, ternary
 ## Common Failure Modes
 
 - Equal-size panels despite unequal importance.
+- Unequal-looking panels despite equal scientific importance.
+- Apparent panel-size mismatch caused by inconsistent export dimensions, legend placement, axis-label length, or different data-region margins.
 - Repeated legends consume data space.
 - Panel titles become a table of contents.
 - Mixed units are compressed into one visual scale.
@@ -72,6 +76,8 @@ No immediate new template. Existing multi-panel templates need stronger panel hi
 
 - Each panel has a one-sentence message.
 - Primary/secondary/supporting roles are assigned.
+- Equal-role panels have equal panel boxes and visually comparable data regions.
+- Unequal panel sizes are justified by evidence hierarchy, not by accidental export or stitching.
 - Shared color/legend semantics are documented.
 - Panel labels are consistent.
 - Any information removed from panels is preserved in notes/sidecars.
@@ -81,7 +87,10 @@ No immediate new template. Existing multi-panel templates need stronger panel hi
 - `thumbnail_content_density` for small-panel readability.
 - `blank_margin_fraction` for layout imbalance.
 - `text_burden_score` for repeated legends/titles.
+- Relative panel-box and data-region balance in the composite preview.
+- `panel_geometry.panel_area_ratio_max_min` and `panel_geometry.content_area_ratio_max_min` when `--expected-panels` is known.
+- `panel_size_imbalance` and `panel_data_region_imbalance` as hard review triggers for equal-role panels.
 
 ## Old-vs-New Criteria
 
-Improvement means the figure story is clearer, repeated legends/titles are reduced, primary evidence gains space, and all panels remain readable at target width.
+Improvement means the figure story is clearer, repeated legends/titles are reduced, primary evidence gains space, equal-role panels remain proportionally balanced, and all panels remain readable at target width.

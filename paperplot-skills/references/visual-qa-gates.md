@@ -23,6 +23,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Same group uses consistent color across panels.
 - Connecting lines encode real paired, repeated, ordered, or trajectory semantics.
 - Main figure does not look like a diagnostic table of labels.
+- Equal-role multi-panel figures pass panel geometry QA or have an explicit reason for unequal panel hierarchy.
 
 ## Soft Warnings
 
@@ -34,6 +35,8 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - The new figure is valid but visually weaker than the source figure.
 - Positive examples can still trigger `warn`; inspect the matching pattern document before failing a dense heatmap, tree, Manhattan, UpSet, lollipop, or model-validation panel.
 - Old-vs-new comparisons across SVG and raster formats require human review because structural and pixel metrics are not equivalent.
+- Old-vs-new comparisons without completed review rubric cannot claim final improvement.
+- Panel geometry warnings are layout risks that require revision or explicit hierarchy justification.
 
 ## Family-Specific Threshold Profiles
 

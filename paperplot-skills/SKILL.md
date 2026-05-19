@@ -27,7 +27,7 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 4. Write a design brief.
 5. Define `figure_spec` and `metric_spec`.
 6. Create a pattern-based design plan.
-7. Apply visual budget and label/legend/panel burden checks.
+7. Apply visual budget, proportional layout, and label/legend/panel burden checks.
 8. Render/export PDF and PNG.
 9. Perform image-level QA when an image is available.
 10. If old and new figures exist, perform old-vs-new comparison.
@@ -66,6 +66,7 @@ Use `references/publication-visual-standards.md` as the baseline. Key defaults:
 - Bars: avoid over-wide bars; show raw points or intervals when statistical evidence matters.
 - Gridlines: off by default; use only when they materially improve quantitative reading.
 - Color: accessible, functional, consistent across panels; avoid rainbow and red/green dependence.
+- Multi-panel proportion: panel boxes, data regions, legends, typography, and blank space must look intentionally balanced at final export size. Equal scientific roles usually require equal panel boxes; unequal roles require an explicit hierarchy and proportional justification.
 - Export: PDF as editable vector plus PNG preview; RGB; no flattened text for vector figures.
 
 ## Scientific Hard Gates
@@ -91,6 +92,7 @@ Stop and revise when:
 - The figure is QA-compliant but looks like a diagnostic dump rather than a manuscript figure.
 - Legends are repeated or larger than the data region without a reason.
 - Panels are misaligned, unordered, or lack visual hierarchy.
+- Multi-panel figures have accidental size/aspect mismatch: one panel appears visually enlarged or shrunken because source plots were exported at different dimensions, legends consume unequal space, or outer image stitching ignores data-region size.
 - Decorative icons, shadows, saturated colors, unnecessary frames, or background gridlines reduce clarity.
 - Old-figure redesign destroys useful visual rhythm without justification.
 
@@ -147,9 +149,17 @@ Use `references/visual-perception-qa.md` and run:
 python3 scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
 ```
 
-Visual QA v1 requires Pillow for raster images. SVG files are inspected structurally without rasterization. OpenCV, OCR, Tesseract, and vision models are future optional enhancements, not hard requirements.
+Visual QA requires Pillow for raster images. PDF and SVG inputs are rasterized before pixel QA when `pdftoppm` or ImageMagick are available; SVG structural checks are retained as supplemental signals. OCR is optional: `--ocr auto` uses Tesseract if available and otherwise records an unavailable OCR engine without failing.
 
-The visual QA layer must report image size, blank margin, content density, color burden, grayscale risk, gridline/line burden, approximate text/mark burden, manuscript-readiness score, and top risks. If visual QA returns `warn` or `fail`, either revise the plot or report why the risk remains accepted.
+The visual QA layer must report image size, blank margin, content density, color burden, grayscale risk, gridline/line burden, approximate text/mark burden, panel geometry, OCR availability, manuscript-readiness score, and top risks. If visual QA returns `warn` or `fail`, either revise the plot or report why the risk remains accepted.
+
+For multi-panel figures, pass explicit layout expectations whenever possible:
+
+```bash
+python3 scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --expected-panels 2 --layout-profile equal
+```
+
+Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbalance`, and `unjustified_panel_hierarchy_risk` are manuscript layout risks, not cosmetic nits.
 
 Positive calibration examples in `reports/visual-qa-calibration-from-replica-library.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
 
@@ -171,7 +181,7 @@ When old and new rendered images both exist, run:
 python3 scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir>
 ```
 
-If the new figure has worse visual burden or a lower manuscript-readiness score, do not present it as final.
+The comparison writes `old_vs_new_review_template.json`. Without a completed review JSON, the final verdict must remain `human-review-required`; deterministic visual metrics alone cannot prove that the scientific message is clearer. If the new figure has worse visual burden, severe panel geometry risk, or a lower manuscript-readiness score, do not present it as final.
 
 Only identifying that a figure is bad is not enough. With data/code, produce a better pattern-based candidate, run QA, compare old-vs-new, and continue iterating until the tradeoff is explicit.
 
