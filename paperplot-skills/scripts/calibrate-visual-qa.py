@@ -13,7 +13,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-SUPPORTED_EXT = {".png", ".jpg", ".jpeg", ".svg"}
+SUPPORTED_EXT = {".png", ".jpg", ".jpeg", ".svg", ".pdf"}
 MAX_PER_FAMILY = 3
 
 
@@ -33,12 +33,17 @@ def candidate_outputs(case: dict[str, Any], roots: dict[str, str]) -> list[Path]
         path = case_root / rel
         if path.suffix.lower() in SUPPORTED_EXT and path.exists():
             out.append(path)
-    return out
+    priority = {".png": 0, ".jpg": 0, ".jpeg": 0, ".svg": 1, ".pdf": 2}
+    return sorted(out, key=lambda p: (priority.get(p.suffix.lower(), 9), str(p)))
 
 
-def run_visual_qa(script: Path, image: Path, out_dir: Path, family: str) -> dict[str, Any]:
+def run_visual_qa(script: Path, image: Path, out_dir: Path, family: str, dpi: int) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
-    proc = subprocess.run([sys.executable, str(script), str(image), "--out", str(out_dir), "--family", family], text=True, capture_output=True)
+    proc = subprocess.run(
+        [sys.executable, str(script), str(image), "--out", str(out_dir), "--family", family, "--dpi", str(dpi), "--ocr", "auto"],
+        text=True,
+        capture_output=True,
+    )
     if proc.returncode != 0:
         return {"error": proc.stderr or proc.stdout, "status": "error", "image": str(image)}
     return json.loads((out_dir / "visual_qa.json").read_text())["image_qa"]
@@ -126,9 +131,22 @@ def write_report(results: list[dict[str, Any]], pdf_only: list[dict[str, Any]], 
         "",
         "## Scope",
         "",
-        f"- Raster/SVG positive samples analyzed: {len(results)}",
-        f"- PDF-only cases not directly analyzed by v1 QA: {len(pdf_only)}",
-        "- PDF limitation: current `visual-qa-rendered-image.py` analyzes PNG/JPG and structurally inspects SVG; PDF-only examples require a rasterization step before deterministic image QA.",
+        f"- Raster/SVG/PDF positive samples analyzed: {len(results)}",
+        f"- Cases with no analyzable raster/SVG/PDF output example: {len(pdf_only)}",
+        "- PDF/SVG handling: current `visual-qa-rendered-image.py` rasterizes PDF/SVG before pixel QA; SVG structural checks are retained as supplemental signals.",
+        "",
+        "## Source Types",
+        "",
+        "| source type | n |",
+        "|---|---:|",
+    ]
+    source_counts: dict[str, int] = defaultdict(int)
+    for row in results:
+        raster = row.get("rasterization", {})
+        source_counts[raster.get("source_type") or row.get("input_type") or "unknown"] += 1
+    for source, count in sorted(source_counts.items()):
+        lines.append(f"| {source} | {count} |")
+    lines += [
         "",
         "## Family Ranges",
         "",
@@ -152,8 +170,8 @@ def write_report(results: list[dict[str, Any]], pdf_only: list[dict[str, Any]], 
         "",
         "## Sample-Level Results",
         "",
-        "| case | family | image | size | aspect | status | readiness | density | blank | text burden | line burden | color count | top risks |",
-        "|---|---|---|---|---:|---|---:|---:|---:|---:|---:|---:|---|",
+        "| case | family | source | image | size | aspect | status | readiness | density | blank | text burden | line burden | color count | top risks |",
+        "|---|---|---|---|---|---:|---|---:|---:|---:|---:|---:|---:|---|",
     ]
     for r in results:
         risks = [risk.get("code", "") for risk in r.get("top_risks", []) if risk.get("status") != "pass"]
@@ -163,6 +181,7 @@ def write_report(results: list[dict[str, Any]], pdf_only: list[dict[str, Any]], 
             + " | ".join([
                 r["case_dir"].replace("|", "/"),
                 r["figure_family"],
+                str((r.get("rasterization") or {}).get("source_type") or r.get("input_type") or "-"),
                 f"`{r['image']}`",
                 "x".join(str(x) for x in r.get("image_size_px", [])),
                 str(round(float(r.get("aspect_ratio", 0)), 3)) if r.get("aspect_ratio") is not None else "-",
@@ -185,17 +204,17 @@ def write_report(results: list[dict[str, Any]], pdf_only: list[dict[str, Any]], 
         "- Distribution and grouped-comparison figures should have low-to-moderate text burden; high burden in these families usually indicates annotation or label overload.",
         "- Grayscale discrimination warnings should remain active. Positive examples can still use colors that are risky for grayscale printing.",
         "- Saturation warnings should not be globally disabled; decorative replica cases confirm why family/style context matters.",
-        "- PDF-only examples are a coverage gap for v1. Calibration should prefer sibling PNGs or add a controlled PDF rasterization step in a later version.",
+        "- PDF and SVG examples now enter the same pixel QA path after controlled rasterization, but source type should still be reported because rasterization can affect fine text and antialiasing.",
         "",
         "## Threshold Guidance",
         "",
         "- Keep global text-burden warnings conservative for group/distribution/scatter figures.",
         "- Add family-specific interpretation in reports for heatmap, Manhattan, tree-ring, and set-matrix figures before lowering global thresholds.",
         "- Treat `warn` as a review trigger, not automatic failure, when the selected pattern document expects dense structure.",
-        "- Do not claim manuscript-ready from deterministic metrics alone; use human or vision-model review for aesthetics, label meaning, and scientific hierarchy.",
+        "- Do not claim manuscript-ready from deterministic metrics alone; use structured human review for aesthetics, label meaning, and scientific hierarchy.",
     ]
     if pdf_only:
-        lines += ["", "## PDF-Only Cases Needing Raster QA", ""]
+        lines += ["", "## Cases Without Analyzable Output Examples", ""]
         for c in pdf_only[:40]:
             lines.append(f"- `{c['case_dir']}` ({c['figure_family']})")
         if len(pdf_only) > 40:
@@ -209,6 +228,7 @@ def main() -> int:
     parser.add_argument("--out-md", default="paperplot-skills/reports/visual-qa-calibration-from-replica-library.md")
     parser.add_argument("--out-json", default="paperplot-skills/reports/visual-qa-calibration-from-replica-library.json")
     parser.add_argument("--qa-root", default="/tmp/paperplot-replica-visual-calibration")
+    parser.add_argument("--dpi", type=int, default=300)
     args = parser.parse_args()
 
     index = load_index(Path(args.index_json))
@@ -219,7 +239,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="paperplot-calibration-") as tmp:
         tmp_path = Path(tmp)
         for i, (case, image) in enumerate(samples, start=1):
-            qa = run_visual_qa(script, image, tmp_path / f"sample_{i:03d}", case["figure_family"])
+            qa = run_visual_qa(script, image, tmp_path / f"sample_{i:03d}", case["figure_family"], args.dpi)
             row = dict(qa)
             row["case_dir"] = case["case_dir"]
             row["figure_family"] = case["figure_family"]

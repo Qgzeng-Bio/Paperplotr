@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Run real visual pressure scenarios for paperplot-skills."""
+"""Run real and synthetic visual pressure scenarios for paperplot-skills."""
 
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -11,14 +12,18 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from PIL import Image, ImageEnhance, ImageOps
+    from PIL import Image, ImageDraw, ImageEnhance
 except Exception:
     Image = None
+    ImageDraw = None
+    ImageEnhance = None
 
 ROOT = Path(__file__).resolve().parents[1]
 VISUAL_QA = ROOT / "scripts" / "visual-qa-rendered-image.py"
 COMPARE = ROOT / "scripts" / "compare-old-new-figures.py"
 REPORT = ROOT / "reports" / "visual-qa-real-figure-test-report.md"
+PANEL_REPORT = ROOT / "reports" / "panel-geometry-qa-validation.md"
+RUBRIC_REPORT = ROOT / "reports" / "old-vs-new-rubric-validation.md"
 
 FIXTURES = [
     {
@@ -72,22 +77,18 @@ def risk_codes(result: dict[str, Any]) -> set[str]:
     return {item.get("code", "") for item in result.get("top_risks", [])}
 
 
-def run_visual(path: Path, out: Path) -> dict[str, Any]:
-    proc = run([sys.executable, str(VISUAL_QA), str(path), "--out", str(out)])
-    if proc.returncode != 0:
-        raise RuntimeError(proc.stderr or proc.stdout)
-    return json.loads((out / "visual_qa.json").read_text())["image_qa"]
-
-
-def run_visual_family(path: Path, out: Path, family: str) -> dict[str, Any]:
-    proc = run([sys.executable, str(VISUAL_QA), str(path), "--out", str(out), "--family", family])
+def run_visual(path: Path, out: Path, extra: list[str] | None = None) -> dict[str, Any]:
+    cmd = [sys.executable, str(VISUAL_QA), str(path), "--out", str(out)]
+    if extra:
+        cmd.extend(extra)
+    proc = run(cmd)
     if proc.returncode != 0:
         raise RuntimeError(proc.stderr or proc.stdout)
     return json.loads((out / "visual_qa.json").read_text())["image_qa"]
 
 
 def make_degraded(src: Path, dst: Path) -> bool:
-    if Image is None or not src.exists() or src.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
+    if Image is None or ImageEnhance is None or not src.exists() or src.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
         return False
     img = Image.open(src).convert("RGB")
     low = ImageEnhance.Contrast(img).enhance(0.45)
@@ -98,12 +99,75 @@ def make_degraded(src: Path, dst: Path) -> bool:
     return True
 
 
-def write_report(rows: list[dict[str, Any]], compare_row: dict[str, Any] | None) -> None:
+def draw_panel(draw: Any, box: tuple[int, int, int, int], color: str) -> None:
+    x0, y0, x1, y1 = box
+    draw.rectangle(box, outline="#333333", width=3)
+    draw.line((x0 + 38, y1 - 42, x1 - 36, y1 - 42), fill="#333333", width=3)
+    draw.line((x0 + 38, y0 + 36, x0 + 38, y1 - 42), fill="#333333", width=3)
+    width = max(x1 - x0 - 110, 1)
+    height = max(y1 - y0 - 120, 1)
+    for i in range(10):
+        px = x0 + 55 + int(width * i / 9)
+        py = y1 - 62 - int(height * ((i % 5) + 1) / 6)
+        draw.ellipse((px - 7, py - 7, px + 7, py + 7), fill=color, outline="#333333")
+
+
+def make_panel_fixture(dst: Path, unequal: bool = False) -> None:
+    if Image is None or ImageDraw is None:
+        raise RuntimeError("Pillow is required for synthetic panel fixtures.")
+    canvas = Image.new("RGB", (1200, 620), "white")
+    draw = ImageDraw.Draw(canvas)
+    if unequal:
+        boxes = [(60, 55, 760, 555), (850, 185, 1110, 425)]
+    else:
+        boxes = [(70, 80, 540, 520), (660, 80, 1130, 520)]
+    draw_panel(draw, boxes[0], "#4C78A8")
+    draw_panel(draw, boxes[1], "#E15759")
+    canvas.save(dst)
+
+
+def make_svg_fixture(dst: Path) -> None:
+    dst.write_text(
+        """<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+<rect width="1200" height="620" fill="white"/>
+<text x="600" y="52" text-anchor="middle" font-size="30">Presentation style SVG title</text>
+<line x1="90" y1="140" x2="1110" y2="140" stroke="#eeeeee"/>
+<line x1="90" y1="240" x2="1110" y2="240" stroke="#eeeeee"/>
+<line x1="90" y1="340" x2="1110" y2="340" stroke="#eeeeee"/>
+<line x1="90" y1="440" x2="1110" y2="440" stroke="#eeeeee"/>
+<rect x="120" y="180" width="820" height="280" fill="none" stroke="#333333"/>
+<circle cx="220" cy="385" r="15" fill="#4C78A8"/>
+<circle cx="390" cy="315" r="15" fill="#E15759"/>
+<circle cx="560" cy="250" r="15" fill="#59A14F"/>
+</svg>
+""",
+        encoding="utf-8",
+    )
+
+
+def write_review_json(path: Path) -> None:
+    dims = {
+        key: {"old_score": 2, "new_score": 4, "notes": "Synthetic regression review marks the cleaner candidate as better."}
+        for key in [
+            "message_clarity",
+            "scientific_completeness",
+            "visual_hierarchy",
+            "proportional_balance",
+            "readability_at_target_size",
+            "statistical_expression",
+            "color_legend_discipline",
+            "data_preservation",
+        ]
+    }
+    path.write_text(json.dumps({"rubric_version": "1.0", "dimensions": dims}, indent=2) + "\n")
+
+
+def write_report(rows: list[dict[str, Any]], compare_rows: list[dict[str, Any]]) -> None:
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     lines = [
         "# Visual QA real figure test report",
         "",
-        "This report is generated by `scripts/run-visual-pressure-scenarios.py`. It uses user-provided real GS PNG figures and NLR SVG figures as regression fixtures. The test diagnoses figures only; it does not redraw them.",
+        "This report is generated by `scripts/run-visual-pressure-scenarios.py`. It uses user-provided real GS PNG figures, NLR SVG figures, and synthetic regression fixtures.",
         "",
         "## Scenario results",
         "",
@@ -113,15 +177,10 @@ def write_report(rows: list[dict[str, Any]], compare_row: dict[str, Any] | None)
     for row in rows:
         risks = ", ".join(row.get("risk_codes", [])) or row.get("detail", "")
         lines.append(f"| {row['scenario']} | `{row['input']}` | {row.get('status','')} | {row.get('score','')} | {row['pass']} | {risks} |")
-    if compare_row:
-        lines += [
-            "",
-            "## Old-vs-new synthetic comparison",
-            "",
-            f"- verdict: `{compare_row.get('verdict')}`",
-            f"- status: `{compare_row.get('status')}`",
-            f"- pass: `{compare_row.get('pass')}`",
-        ]
+    if compare_rows:
+        lines += ["", "## Old-vs-new comparisons", ""]
+        for row in compare_rows:
+            lines.append(f"- {row['scenario']}: final=`{row.get('final_verdict')}`, deterministic=`{row.get('deterministic_verdict')}`, status=`{row.get('status')}`, pass=`{row.get('pass')}`")
     lines += [
         "",
         "## What automatic visual QA caught",
@@ -130,14 +189,43 @@ def write_report(rows: list[dict[str, Any]], compare_row: dict[str, Any] | None)
         "- Gridline/long-line burden in SVG and raster plots.",
         "- Saturated color or grayscale discrimination risks in raster plots.",
         "- Blank margin/content density and thumbnail readability risks.",
+        "- Equal-role panel geometry imbalance.",
         "",
         "## Remaining limits",
         "",
-        "- No OCR/Tesseract in v1, so exact text overlap is approximated by component density and SVG text structure.",
-        "- SVG is structurally inspected but not rasterized.",
+        "- OCR is optional and may be unavailable in the local environment.",
+        "- Panel geometry QA is deterministic and catches obvious imbalance; complex nested layouts still need review.",
         "- Scientific correctness still requires data, metadata, and user confirmation.",
     ]
     REPORT.write_text("\n".join(lines) + "\n")
+
+
+def write_panel_report(rows: list[dict[str, Any]]) -> None:
+    panel_rows = [r for r in rows if r["scenario"].startswith("visual-panel-")]
+    lines = [
+        "# Panel geometry QA validation",
+        "",
+        "| scenario | pass | detected panels | panel ratio | content ratio | risks |",
+        "|---|---|---:|---:|---:|---|",
+    ]
+    for row in panel_rows:
+        panel = row.get("panel_geometry", {})
+        lines.append(
+            f"| {row['scenario']} | {row['pass']} | {panel.get('panel_count_detected')} | {panel.get('panel_area_ratio_max_min')} | {panel.get('content_area_ratio_max_min')} | {', '.join(row.get('risk_codes', [])) or '-'} |"
+        )
+    PANEL_REPORT.write_text("\n".join(lines) + "\n")
+
+
+def write_rubric_report(compare_rows: list[dict[str, Any]]) -> None:
+    lines = [
+        "# Old-vs-new rubric validation",
+        "",
+        "| scenario | pass | deterministic | review status | final verdict | status |",
+        "|---|---|---|---|---|---|",
+    ]
+    for row in compare_rows:
+        lines.append(f"| {row['scenario']} | {row.get('pass')} | {row.get('deterministic_verdict')} | {row.get('review_rubric_status')} | {row.get('final_verdict')} | {row.get('status')} |")
+    RUBRIC_REPORT.write_text("\n".join(lines) + "\n")
 
 
 def main() -> int:
@@ -154,9 +242,10 @@ def main() -> int:
             result = run_visual(path, out)
             codes = risk_codes(result)
             ok = result.get("status") in fixture["expect_status"] and bool(codes.intersection(fixture["expect_any_risk"]))
-            rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "output_dir": str(out)})
+            rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(out)})
         except Exception as exc:
             rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
     for fixture in FAMILY_FIXTURES:
         scenario = fixture["scenario"]
         path = fixture["path"]
@@ -165,33 +254,96 @@ def main() -> int:
             rows.append({"scenario": scenario, "input": str(path), "pass": True, "status": "fixture_missing", "score": "", "risk_codes": [], "detail": "fixture_missing"})
             continue
         try:
-            result = run_visual_family(path, out, fixture["family"])
+            result = run_visual(path, out, ["--family", fixture["family"]])
             codes = risk_codes(result)
             ok = result.get("status") in fixture["expect_status"] and not bool(codes.intersection(fixture["forbid_risk"]))
-            rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "output_dir": str(out)})
+            rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(out)})
         except Exception as exc:
             rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
-    compare_row = None
-    base = FIXTURES[0]["path"]
+
+    if Image is not None:
+        equal_png = root / "equal_panels.png"
+        unequal_png = root / "unequal_panels.png"
+        make_panel_fixture(equal_png, unequal=False)
+        make_panel_fixture(unequal_png, unequal=True)
+        for scenario, path, should_have_risk in [
+            ("visual-panel-equal-balance", equal_png, False),
+            ("visual-panel-unequal-imbalance", unequal_png, True),
+        ]:
+            out = root / scenario
+            try:
+                result = run_visual(path, out, ["--expected-panels", "2", "--layout-profile", "equal", "--ocr", "off"])
+                codes = risk_codes(result)
+                has_panel_risk = bool(codes.intersection({"panel_size_imbalance", "panel_data_region_imbalance"}))
+                rows.append({"scenario": scenario, "input": str(path), "pass": has_panel_risk == should_have_risk, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(codes), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(out)})
+            except Exception as exc:
+                rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
+        pdf_path = root / "equal_panels.pdf"
+        Image.open(equal_png).save(pdf_path, "PDF")
+        try:
+            result = run_visual(pdf_path, root / "visual-pdf-rasterization", ["--expected-panels", "2", "--layout-profile", "equal", "--ocr", "off"])
+            raster = result.get("rasterization", {})
+            rows.append({"scenario": "visual-pdf-rasterization", "input": str(pdf_path), "pass": raster.get("engine") == "pdftoppm" and result.get("input_type") == "pdf", "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(risk_codes(result)), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(root / "visual-pdf-rasterization")})
+        except Exception as exc:
+            rows.append({"scenario": "visual-pdf-rasterization", "input": str(pdf_path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
+        svg_path = root / "synthetic.svg"
+        make_svg_fixture(svg_path)
+        try:
+            result = run_visual(svg_path, root / "visual-svg-rasterization", ["--ocr", "off"])
+            raster = result.get("rasterization", {})
+            rows.append({"scenario": "visual-svg-rasterization", "input": str(svg_path), "pass": raster.get("source_type") == "svg" and bool(result.get("svg_structure")), "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(risk_codes(result)), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(root / "visual-svg-rasterization")})
+        except Exception as exc:
+            rows.append({"scenario": "visual-svg-rasterization", "input": str(svg_path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
+        try:
+            result = run_visual(equal_png, root / "visual-ocr-auto", ["--ocr", "auto"])
+            ocr = result.get("ocr", {})
+            rows.append({"scenario": "visual-ocr-auto", "input": str(equal_png), "pass": ocr.get("checked") is True and result.get("status") in {"pass", "warn", "fail"}, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(risk_codes(result)), "panel_geometry": result.get("panel_geometry", {}), "detail": f"ocr_available={ocr.get('available')}", "output_dir": str(root / "visual-ocr-auto")})
+        except Exception as exc:
+            rows.append({"scenario": "visual-ocr-auto", "input": str(equal_png), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
+        proc = run([sys.executable, str(VISUAL_QA), str(equal_png), "--out", str(root / "visual-ocr-required"), "--ocr", "required"])
+        tesseract_exists = shutil.which("tesseract") is not None
+        rows.append({"scenario": "visual-ocr-required", "input": str(equal_png), "pass": (proc.returncode == 0) == tesseract_exists, "status": "ok" if proc.returncode == 0 else "expected_error", "score": "", "risk_codes": [], "detail": "required OCR behavior matches local Tesseract availability"})
+
+    compare_rows = []
+    base = FAMILY_FIXTURES[0]["path"]
     if base.exists() and Image is not None:
-        degraded = root / "degraded_fig4.png"
+        degraded = root / "degraded_lollipop.png"
         if make_degraded(base, degraded):
-            out = root / "visual-old-vs-new-metric-delta"
-            proc = run([sys.executable, str(COMPARE), str(base), str(degraded), "--out", str(out)])
+            out_no_review = root / "visual-old-vs-new-without-review"
+            proc = run([sys.executable, str(COMPARE), str(degraded), str(base), "--out", str(out_no_review), "--family", "lollipop", "--ocr", "off"])
             if proc.returncode == 0:
-                payload = json.loads((out / "old_vs_new_visual_qa.json").read_text())["old_vs_new_visual_qa"]
-                compare_row = {"pass": payload.get("verdict") in {"worse", "mixed"} and payload.get("status") in {"warn", "fail"}, "verdict": payload.get("verdict"), "status": payload.get("status"), "output_dir": str(out)}
+                payload = json.loads((out_no_review / "old_vs_new_visual_qa.json").read_text())["old_vs_new_visual_qa"]
+                compare_rows.append({"scenario": "visual-old-vs-new-without-review", "pass": payload.get("final_verdict") == "human-review-required", **payload})
             else:
-                compare_row = {"pass": False, "verdict": "error", "status": "error", "detail": proc.stderr or proc.stdout}
-    write_report(rows, compare_row)
+                compare_rows.append({"scenario": "visual-old-vs-new-without-review", "pass": False, "status": "error", "detail": proc.stderr or proc.stdout})
+
+            review_json = root / "improved_review.json"
+            write_review_json(review_json)
+            out_with_review = root / "visual-old-vs-new-with-review"
+            proc = run([sys.executable, str(COMPARE), str(degraded), str(base), "--out", str(out_with_review), "--family", "lollipop", "--ocr", "off", "--review-json", str(review_json)])
+            if proc.returncode == 0:
+                payload = json.loads((out_with_review / "old_vs_new_visual_qa.json").read_text())["old_vs_new_visual_qa"]
+                compare_rows.append({"scenario": "visual-old-vs-new-with-review", "pass": payload.get("final_verdict") == "improved", **payload})
+            else:
+                compare_rows.append({"scenario": "visual-old-vs-new-with-review", "pass": False, "status": "error", "detail": proc.stderr or proc.stdout})
+
+    write_report(rows, compare_rows)
+    write_panel_report(rows)
+    write_rubric_report(compare_rows)
     print("scenario pass status")
     for row in rows:
         print(f"{row['scenario']}\t{row['pass']}\t{row.get('status')}\t{row.get('score')}\t{','.join(row.get('risk_codes', []))}")
-    if compare_row:
-        print(f"visual-old-vs-new-metric-delta\t{compare_row['pass']}\t{compare_row.get('status')}\t{compare_row.get('verdict')}")
+    for row in compare_rows:
+        print(f"{row['scenario']}\t{row.get('pass')}\t{row.get('status')}\t{row.get('final_verdict')}")
     print(f"temporary visual pressure root: {root}")
     print(f"visual QA real figure test report: {REPORT}")
-    all_ok = all(row["pass"] for row in rows) and (compare_row is None or compare_row.get("pass"))
+    print(f"panel geometry QA validation report: {PANEL_REPORT}")
+    print(f"old-vs-new rubric validation report: {RUBRIC_REPORT}")
+    all_ok = all(row["pass"] for row in rows) and all(row.get("pass") for row in compare_rows)
     return 0 if all_ok else 1
 
 

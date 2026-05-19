@@ -1,6 +1,6 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-05-18
+Last updated: 2026-05-19
 
 ## Repository
 
@@ -38,6 +38,10 @@ input data/code/old figure
 ```
 
 Important behavioral rule: detecting that a figure is bad is not enough. If data/code are available, the skill should attempt a better pattern-based redraw and verify it. If the new figure is not clearly better, it must say so and either iterate or explain the missing information.
+
+Important layout rule from the latest GS-quality demo review: proportional balance is a hard manuscript requirement. Multi-panel previews must not stitch plots with different source aspect ratios as if they were equal panels. Equal-role panels need equal panel boxes and visually comparable data regions; unequal panel sizes must encode a deliberate evidence hierarchy, not accidental export dimensions, legend placement, or margin differences.
+
+Current QA upgrade in progress/completed after that review: `visual-qa-rendered-image.py` now supports PDF/SVG rasterized QA, panel geometry metrics, and optional OCR status; `compare-old-new-figures.py` now writes an old-vs-new review rubric and does not claim final improvement without completed human review. Use `--expected-panels` and `--layout-profile equal` for equal-role multi-panel figures.
 
 ## Git / Working Tree Note
 
