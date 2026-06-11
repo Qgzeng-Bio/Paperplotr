@@ -7,6 +7,8 @@ template_root <- file.path(skill_root, "templates")
 helper_path <- file.path(skill_root, "scripts", "paperplot_helpers.R")
 score_script <- file.path(skill_root, "scripts", "score-pressure-scenario.R")
 scenario_file <- file.path(skill_root, "pressure-scenarios", "scenario-specs.R")
+rscript_bin <- Sys.getenv("PAPERPLOT_RSCRIPT", unset = file.path(R.home("bin"), "Rscript"))
+if (!nzchar(rscript_bin)) rscript_bin <- file.path(R.home("bin"), "Rscript")
 if (!file.exists(helper_path)) fail("Missing helper: ", helper_path)
 if (!file.exists(score_script)) fail("Missing scorer: ", score_script)
 source(scenario_file)
@@ -78,10 +80,10 @@ run_one <- function(spec, root) {
   make_pressure_data(input_path)
   patched <- patch_template(readLines(file.path(template_root, template), warn = FALSE), input_path, output_dir)
   writeLines(patched, script_path)
-  output <- system2("Rscript", script_path, stdout = TRUE, stderr = TRUE, env = paste0("PAPERPLOT_HELPER=", helper_path))
+  output <- system2(rscript_bin, script_path, stdout = TRUE, stderr = TRUE, env = paste0("PAPERPLOT_HELPER=", helper_path))
   status <- attr(output, "status"); if (is.null(status)) status <- 0L
   if (!identical(status, 0L)) return(data.frame(scenario = scenario, pass = FALSE, detail = paste(tail(output, 8), collapse = " | "), output_dir = output_dir, stringsAsFactors = FALSE))
-  score <- system2("Rscript", c(score_script, scenario, output_dir), stdout = TRUE, stderr = TRUE)
+  score <- system2(rscript_bin, c(score_script, scenario, output_dir), stdout = TRUE, stderr = TRUE)
   score_status <- attr(score, "status"); if (is.null(score_status)) score_status <- 0L
   data.frame(scenario = scenario, pass = identical(score_status, 0L), detail = if (identical(score_status, 0L)) "ok" else paste(score, collapse = " | "), output_dir = output_dir, stringsAsFactors = FALSE)
 }

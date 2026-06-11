@@ -15,7 +15,8 @@ The visual QA layer is designed to catch common low-quality scientific-figure pa
 | gridline burden | many long line structures | remove or lighten gridlines |
 | diagnostic-looking layout | high burden, large title, weak hierarchy | redesign as manuscript panel |
 | old rhythm destroyed | new plot has worse burden/readiness than old | refine rather than rebuild |
+| strict Nature failure | `nature_guardrails.status=fail` under `--strict-nature` | revise before reporting manuscript readiness |
 
 ## Limits
 
-V1 does not perform OCR, exact text bounding-box overlap detection, or semantic understanding of the science. It provides stable quantitative signals that must be combined with metadata QA and human/agent visual review.
+OCR is optional and may be unavailable, so exact text bounding-box overlap detection is environment-dependent. The QA layer provides stable quantitative signals that must be combined with metadata QA and human/agent visual review.

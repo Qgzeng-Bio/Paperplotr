@@ -210,7 +210,19 @@ pp_format_percent <- function(x, digits = 1, input_scale = c("fraction", "percen
   paste0(formatC(value, format = "f", digits = digits), "%")
 }
 
-pp_theme <- function(base_size = 7, base_family = "Arial", line_width = 0.35,
+pp_resolve_family <- function(preferred = "Arial") {
+  # Resolve a manuscript sans-serif that actually exists on this machine.
+  # Avoids hard "invalid font type" failures when Arial is absent (e.g. Linux).
+  fallbacks <- c(preferred, "Helvetica", "Liberation Sans", "DejaVu Sans", "sans")
+  if (requireNamespace("systemfonts", quietly = TRUE)) {
+    families <- tryCatch(unique(systemfonts::system_fonts()$family), error = function(e) character(0))
+    hit <- fallbacks[fallbacks %in% families]
+    if (length(hit)) return(hit[[1]])
+  }
+  "sans"
+}
+
+pp_theme <- function(base_size = 7, base_family = pp_resolve_family(), line_width = 0.35,
                      axis_title_margin = 4, show_grid = FALSE) {
   grid_major <- if (isTRUE(show_grid)) {
     ggplot2::element_line(linewidth = 0.25, colour = "#D9D9D9")
@@ -568,10 +580,28 @@ pp_assert_output <- function(filename, min_output_size_bytes = NULL) {
 
 pp_default_device <- function(filename) {
   ext <- tolower(tools::file_ext(filename))
-  if (identical(ext, "pdf") && identical(Sys.info()[["sysname"]], "Darwin")) {
-    return(function(filename, width, height, bg = "white", ...) {
-      grDevices::quartz(type = "pdf", file = filename, width = width, height = height, bg = bg, ...)
-    })
+  if (identical(ext, "pdf")) {
+    if (identical(Sys.info()[["sysname"]], "Darwin")) {
+      return(function(filename, width, height, bg = "white", ...) {
+        grDevices::quartz(type = "pdf", file = filename, width = width, height = height, bg = bg, ...)
+      })
+    }
+    # Non-macOS: prefer cairo_pdf so PDF text honors fontconfig (real Arial when
+    # installed) instead of the PostScript font DB that errors on "Arial".
+    if (isTRUE(capabilities("cairo"))) {
+      return(grDevices::cairo_pdf)
+    }
+  }
+  # Raster: prefer ragg when available; it resolves fonts via fontconfig and is
+  # more robust/consistent across platforms than the default bitmap device.
+  if (ext %in% c("png", "jpg", "jpeg", "tiff", "tif") && requireNamespace("ragg", quietly = TRUE)) {
+    return(switch(ext,
+      png = ragg::agg_png,
+      jpg = ragg::agg_jpeg,
+      jpeg = ragg::agg_jpeg,
+      tiff = ragg::agg_tiff,
+      tif = ragg::agg_tiff
+    ))
   }
   NULL
 }

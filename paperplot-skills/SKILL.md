@@ -29,10 +29,10 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 6. Create a pattern-based design plan.
 7. Apply visual budget, proportional layout, and label/legend/panel burden checks.
 8. Render/export PDF and PNG.
-9. Perform image-level QA when an image is available.
+9. Perform image-level QA and Nature guardrail review when an image is available.
 10. If old and new figures exist, perform old-vs-new comparison.
 11. If the new figure is not objectively better, iterate or state the blocker.
-12. Write notes, metadata JSON, QA report, and conditional sidecars.
+12. Write notes, metadata JSON, QA report, visual QA, and conditional sidecars.
 13. Report remaining scientific and manuscript-readiness risks.
 
 ## Input Handling
@@ -93,6 +93,7 @@ Stop and revise when:
 - Legends are repeated or larger than the data region without a reason.
 - Panels are misaligned, unordered, or lack visual hierarchy.
 - Multi-panel figures have accidental size/aspect mismatch: one panel appears visually enlarged or shrunken because source plots were exported at different dimensions, legends consume unequal space, or outer image stitching ignores data-region size.
+- Strict Nature guardrails fail for exported size, text overlap, blank margin, thumbnail readability, or multi-panel balance.
 - Decorative icons, shadows, saturated colors, unnecessary frames, or background gridlines reduce clarity.
 - Old-figure redesign destroys useful visual rhythm without justification.
 
@@ -143,10 +144,16 @@ All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, expo
 
 Rendered-image QA is mandatory after generating or modifying a figure. Do not claim manuscript readiness from code, notes, or metadata alone.
 
-Use `references/visual-perception-qa.md` and run:
+Use `references/visual-perception-qa.md` and `references/nature-figure-guardrails.md`, then run:
 
 ```bash
-python3 scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
+${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
+```
+
+For final manuscript candidates, use strict Nature mode:
+
+```bash
+${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --strict-nature
 ```
 
 Visual QA requires Pillow for raster images. PDF and SVG inputs are rasterized before pixel QA when `pdftoppm` or ImageMagick are available; SVG structural checks are retained as supplemental signals. OCR is optional: `--ocr auto` uses Tesseract if available and otherwise records an unavailable OCR engine without failing.
@@ -156,10 +163,12 @@ The visual QA layer must report image size, blank margin, content density, color
 For multi-panel figures, pass explicit layout expectations whenever possible:
 
 ```bash
-python3 scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --expected-panels 2 --layout-profile equal
+${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --expected-panels 2 --layout-profile equal
 ```
 
 Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbalance`, and `unjustified_panel_hierarchy_risk` are manuscript layout risks, not cosmetic nits.
+
+Strict Nature failures are revision blockers unless the accepted hierarchy or dense family-specific structure is explicitly justified in notes and metadata.
 
 Positive calibration examples in `reports/visual-qa-calibration-from-replica-library.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
 
@@ -178,7 +187,7 @@ If the old figure has good rhythm but poor labels, refine rather than rebuild.
 When old and new rendered images both exist, run:
 
 ```bash
-python3 scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir>
+${PAPERPLOT_PYTHON:-python3} scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir> --new-strict-nature
 ```
 
 The comparison writes `old_vs_new_review_template.json`. Without a completed review JSON, the final verdict must remain `human-review-required`; deterministic visual metrics alone cannot prove that the scientific message is clearer. If the new figure has worse visual burden, severe panel geometry risk, or a lower manuscript-readiness score, do not present it as final.

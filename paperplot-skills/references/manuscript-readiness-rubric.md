@@ -21,6 +21,8 @@ A manuscript-ready figure needs no hard failures and enough design quality to su
 | Supplement | no hard fail and score >= 7 |
 | Diagnostic | no hard fail; role must be explicit |
 
+Final manuscript candidates must also pass rendered-image QA with `nature_guardrails.status` equal to `pass`, or `warn` only when the accepted risk is justified in notes and metadata. A `--strict-nature` failure is not manuscript-ready.
+
 ## Hard Failure Examples
 
 - Missing design brief.
@@ -29,3 +31,4 @@ A manuscript-ready figure needs no hard failures and enough design quality to su
 - Visible figure is dominated by lookup labels.
 - Paired or connecting lines used without pairing/order semantics.
 - Palette semantics are inconsistent across panels.
+- Strict Nature guardrails fail for text/element overlap, excessive blank space, unreadable thumbnail structure, or multi-panel imbalance.

@@ -49,6 +49,7 @@ def run_visual_qa(
     ocr: str = "auto",
     expected_panels: int | None = None,
     layout_profile: str = "auto",
+    strict_nature: bool = False,
 ) -> dict[str, Any]:
     script = Path(__file__).with_name("visual-qa-rendered-image.py")
     ensure_dir(out_dir)
@@ -71,11 +72,16 @@ def run_visual_qa(
         cmd.extend(["--family", family])
     if expected_panels:
         cmd.extend(["--expected-panels", str(expected_panels)])
+    if strict_nature:
+        cmd.append("--strict-nature")
     proc = subprocess.run(cmd, text=True, capture_output=True)
-    if proc.returncode != 0:
+    qa_path = out_dir / "visual_qa.json"
+    if proc.returncode != 0 and not (strict_nature and qa_path.exists()):
         raise SystemExit(f"visual QA failed for {image}: {proc.stderr or proc.stdout}")
-    payload = json.loads((out_dir / "visual_qa.json").read_text())
-    return payload["image_qa"]
+    payload = json.loads(qa_path.read_text())
+    qa = payload["image_qa"]
+    qa["_returncode"] = proc.returncode
+    return qa
 
 
 def num(x: Any, default: float = 0.0) -> float:
@@ -214,10 +220,11 @@ def final_verdict(
     old_score: int,
     new_score: int,
     new_status: str,
+    new_nature_failed: bool,
     severe_panel_risk: bool,
     review: dict[str, Any],
 ) -> tuple[str, str]:
-    if new_status == "fail" or new_score < old_score or deterministic_verdict == "worse":
+    if new_nature_failed or new_status == "fail" or new_score < old_score or deterministic_verdict == "worse":
         return "worse", "fail"
     if severe_panel_risk:
         return "human-review-required", "warn"
@@ -294,6 +301,9 @@ def main() -> int:
     parser.add_argument("--layout-profile", choices=["auto", "equal", "hierarchical"], default="auto")
     parser.add_argument("--old-layout-profile", choices=["auto", "equal", "hierarchical"], default=None)
     parser.add_argument("--new-layout-profile", choices=["auto", "equal", "hierarchical"], default=None)
+    parser.add_argument("--strict-nature", action="store_true", help="Apply strict Nature guardrails to both figures")
+    parser.add_argument("--old-strict-nature", action="store_true", help="Apply strict Nature guardrails to the old figure")
+    parser.add_argument("--new-strict-nature", action="store_true", help="Apply strict Nature guardrails to the new figure")
     parser.add_argument("--review-json", default=None)
     args = parser.parse_args()
 
@@ -313,6 +323,7 @@ def main() -> int:
             ocr=args.ocr,
             expected_panels=args.old_expected_panels or args.expected_panels,
             layout_profile=args.old_layout_profile or args.layout_profile,
+            strict_nature=args.strict_nature or args.old_strict_nature,
         )
         new = run_visual_qa(
             new_path,
@@ -323,6 +334,7 @@ def main() -> int:
             ocr=args.ocr,
             expected_panels=args.new_expected_panels or args.expected_panels,
             layout_profile=args.new_layout_profile or args.layout_profile,
+            strict_nature=args.strict_nature or args.new_strict_nature,
         )
 
     metric_specs = [
@@ -368,12 +380,15 @@ def main() -> int:
 
     new_risks = risk_codes(new)
     severe_panel_risk = bool(new_risks.intersection(SEVERE_PANEL_RISKS))
+    new_nature_failed = (new.get("nature_guardrails") or {}).get("status") == "fail"
     review = load_review(Path(args.review_json).expanduser() if args.review_json else None)
-    final, status = final_verdict(deterministic_verdict, old_score, new_score, new.get("status", ""), severe_panel_risk, review)
+    final, status = final_verdict(deterministic_verdict, old_score, new_score, new.get("status", ""), new_nature_failed, severe_panel_risk, review)
     if final == "human-review-required":
         remaining.append("Final improvement requires completed old_vs_new_review_template.json or --review-json.")
     if severe_panel_risk:
         remaining.append("New figure has severe panel geometry risk; do not claim manuscript improvement before fixing layout.")
+    if new_nature_failed:
+        remaining.append("New figure failed strict Nature guardrails; revise before claiming final manuscript readiness.")
 
     payload = {
         "old_vs_new_visual_qa": {
@@ -399,17 +414,20 @@ def main() -> int:
             "old_score": old_score,
             "new_score": new_score,
             "severe_new_panel_risk": severe_panel_risk,
+            "new_nature_guardrails_failed": new_nature_failed,
             "review_template": str(review_template),
             "review_rubric": review,
             "old_qa_summary": {
                 "input_type": old.get("input_type"),
                 "rasterization": old.get("rasterization"),
                 "panel_geometry": old.get("panel_geometry"),
+                "nature_guardrails": old.get("nature_guardrails"),
             },
             "new_qa_summary": {
                 "input_type": new.get("input_type"),
                 "rasterization": new.get("rasterization"),
                 "panel_geometry": new.get("panel_geometry"),
+                "nature_guardrails": new.get("nature_guardrails"),
             },
             "remaining_risks": remaining,
         }
