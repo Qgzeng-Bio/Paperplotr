@@ -21,8 +21,8 @@ wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-li
 Restart Codex after installation.
 
 The one-line installer defaults to the runtime profile: `SKILL.md`, `agents/`,
-`scripts/`, `references/`, and `templates/`. Use `PAPERPLOT_PROFILE=full` for
-development reports, examples, and pressure scenarios.
+`references/`, `templates/`, and core scripts. Use `PAPERPLOT_PROFILE=full` for
+development reports, examples, pressure scenarios, and dev scripts.
 
 If the skill already exists, replace it explicitly:
 

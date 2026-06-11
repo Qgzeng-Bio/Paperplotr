@@ -76,11 +76,20 @@ mkdir -p "$DEST_ROOT"
 case "$PROFILE" in
   runtime)
     mkdir -p "$DEST"
-    for item in SKILL.md agents scripts references templates; do
+    for item in SKILL.md agents references templates; do
       if [ -e "${skill_dir}/${item}" ]; then
         cp -R "${skill_dir}/${item}" "$DEST/"
       fi
     done
+    mkdir -p "$DEST/scripts"
+    for script in paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py; do
+      if [ -e "${skill_dir}/scripts/${script}" ]; then
+        cp "${skill_dir}/scripts/${script}" "$DEST/scripts/"
+      fi
+    done
+    if [ -d "${skill_dir}/scripts/lib" ]; then
+      cp -R "${skill_dir}/scripts/lib" "$DEST/scripts/"
+    fi
     ;;
   full)
     cp -R "$skill_dir" "$DEST"

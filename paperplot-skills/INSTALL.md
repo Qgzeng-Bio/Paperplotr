@@ -16,8 +16,9 @@ wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-li
 
 Restart Codex after installation.
 
-By default this installs the runtime profile: `SKILL.md`, `agents/`, `scripts/`,
-`references/`, and `templates/`. It omits development reports and examples.
+By default this installs the runtime profile: `SKILL.md`, `agents/`,
+`references/`, `templates/`, and core scripts. It omits development reports,
+examples, pressure scenarios, and dev scripts.
 
 To replace an existing install:
 
