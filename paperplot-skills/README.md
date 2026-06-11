@@ -12,6 +12,12 @@ One-line install into Codex:
 curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
 ```
 
+If `curl` is unavailable or broken:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
 Restart Codex after installation.
 
 The one-line installer defaults to the runtime profile: `SKILL.md`, `agents/`,

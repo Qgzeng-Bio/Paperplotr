@@ -8,6 +8,12 @@ This skill is standalone. It does not require the PaperPlotR R package.
 curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
 ```
 
+If `curl` is unavailable or broken:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
 Restart Codex after installation.
 
 By default this installs the runtime profile: `SKILL.md`, `agents/`, `scripts/`,

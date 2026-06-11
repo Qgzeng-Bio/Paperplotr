@@ -10,14 +10,26 @@ PROFILE="${PAPERPLOT_PROFILE:-runtime}"
 DEST_ROOT="${PAPERPLOT_DEST:-${CODEX_HOME:-$HOME/.codex}/skills}"
 DEST="${DEST_ROOT}/${SKILL_NAME}"
 
-need_cmd() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    echo "Missing required command: $1" >&2
-    exit 1
-  fi
-}
+download_url() {
+  url="$1"
+  out="$2"
 
-need_cmd curl
+  if command -v curl >/dev/null 2>&1; then
+    if curl -fsSL "$url" -o "$out"; then
+      return 0
+    fi
+    echo "curl download failed; trying wget..." >&2
+  fi
+
+  if command -v wget >/dev/null 2>&1; then
+    if wget -q -O "$out" "$url"; then
+      return 0
+    fi
+  fi
+
+  echo "Could not download $url. Install curl or wget and try again." >&2
+  exit 1
+}
 
 tmp="${TMPDIR:-/tmp}/paperplot-skill-install.$$"
 archive="${tmp}/repo.zip"
@@ -36,7 +48,7 @@ fi
 
 url="https://codeload.github.com/${OWNER}/${REPO}/zip/${REF}"
 echo "Downloading ${OWNER}/${REPO}@${REF}..."
-curl -fsSL "$url" -o "$archive"
+download_url "$url" "$archive"
 
 if command -v unzip >/dev/null 2>&1; then
   unzip -q "$archive" -d "$tmp"

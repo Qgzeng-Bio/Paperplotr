@@ -64,6 +64,12 @@ Install the skill into Codex with one command:
 curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
 ```
 
+If your `curl` is broken or unavailable, use:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
 This installs the runtime skill profile (`SKILL.md`, `agents/`, `scripts/`,
 `references/`, and `templates/`). Use `PAPERPLOT_PROFILE=full` to install
 development reports, examples, and pressure scenarios as well.
