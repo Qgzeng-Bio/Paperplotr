@@ -1,12 +1,145 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-06-11 (remote-install readiness fixes)
+Last updated: 2026-06-11 (v0.1.0 public release + local Codex install)
 Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
 Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
 
 ---
 
+## 2026-06-11 — v0.1.0 Public Release + Current Codex Install
+
+Final public-distribution step is complete.
+
+### GitHub release state
+
+- `main` has been fast-forwarded and pushed.
+- `v0.1.0` annotated tag has been created and pushed.
+- Release commit:
+
+```text
+9b2478a Add remote skill install workflow
+```
+
+- `HEAD`, `origin/main`, `origin/portability-linux-fixes`, and `v0.1.0` all point at `9b2478a` at handoff time.
+- Local repo state after release: `main...origin/main` with no uncommitted changes.
+
+### Public install commands
+
+Latest `main` runtime install:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+```
+
+Pinned `v0.1.0` runtime install:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
+```
+
+Full development/validation bundle:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 PAPERPLOT_PROFILE=full sh
+```
+
+Note: this server's conda `curl` reports `curl: (48) An unknown option was passed in to libcurl`; the installer falls back to `wget`. Prefer the `wget` command on this host.
+
+### GitHub Actions status
+
+New workflow:
+
+- `.github/workflows/skill-remote-install.yaml`
+
+Verified successful runs for commit `9b2478a`:
+
+```text
+skill-remote-install  main    completed success
+skill-remote-install  v0.1.0  completed success
+R-CMD-check           main    completed success
+test-coverage         main    completed success
+lint                  main    completed success
+pkgdown               main    completed success
+paperplot-skills      main    completed success
+```
+
+The remote-install workflow tests both:
+
+- runtime profile: installs only `SKILL.md`, `agents/`, `references/`, `templates/`, and core scripts; confirms `reports/` and dev benchmark scripts are absent.
+- full profile: confirms committed reports, examples, and validation scripts are present.
+
+### Current local Codex install
+
+Installed into the active Codex skills directory from the `v0.1.0` release:
+
+```text
+/data9/home/qgzeng/.codex/skills/paperplot-skills
+```
+
+Important: this path is now a real runtime directory, not the previous symlink to the development checkout.
+
+The previous backup remains untouched:
+
+```text
+/data9/home/qgzeng/.codex/skills/paperplot-skills.bak-20260610
+```
+
+Installed runtime contents:
+
+```text
+SKILL.md
+agents/
+references/
+scripts/
+templates/
+```
+
+Core runtime script set:
+
+```text
+scripts/compare-old-new-figures.py
+scripts/lib/bioinformatics-semantics.R
+scripts/lib/design-brief.R
+scripts/lib/design-qa.R
+scripts/lib/label-strategy.R
+scripts/lib/layout-planner.R
+scripts/lib/redraw-strategy.R
+scripts/lib/statistical-expression.R
+scripts/paperplot_helpers.R
+scripts/validate-figure-output.R
+scripts/visual-qa-rendered-image.py
+scripts/visual-qa-report.R
+```
+
+Local install validation:
+
+```text
+quick_validate.py /data9/home/qgzeng/.codex/skills/paperplot-skills -> Skill is valid!
+installed runtime size on this host -> 450K
+```
+
+Codex must be restarted to load the newly installed `v0.1.0` skill in a fresh session.
+
+### Final quality score after release hardening
+
+Current assessment for the skill, in its intended positioning as a publication-ready scientific figure skill:
+
+```text
+9.3 / 10
+```
+
+Rationale:
+
+- Core plotting/QA ability retained: `smoke-test-templates.R` passed 20/20 templates.
+- Public distribution is now real: `main` install, pinned `v0.1.0` install, and GitHub Actions remote install all pass.
+- Runtime profile is lightweight and stable; full profile preserves development reports and validation assets.
+- Remaining gap to 9.5+: broader cross-environment user testing beyond GitHub Actions/Linux and more external user examples.
+
+---
+
 ## 2026-06-11 — Remote-Install Readiness Fixes
+
+Superseded by the `v0.1.0` public release section above. Keep this section as historical implementation detail.
 
 - R smoke/pressure validation now reuses the invoking R binary by default (`file.path(R.home("bin"), "Rscript")`) and still supports `PAPERPLOT_RSCRIPT`; child template/scorer calls no longer require bare `Rscript` on `PATH`.
 - `validate-skill.R` now requires `scripts/validate-qa-coverage.py`, so the risk-code remediation self-audit cannot be accidentally omitted from a release.
@@ -14,7 +147,7 @@ Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
 - `compare-old-new-figures.py` now supports `--strict-nature`, `--old-strict-nature`, and `--new-strict-nature`; a new figure that fails strict Nature guardrails is a final-verdict failure.
 - Validation commands should use `PAPERPLOT_RSCRIPT` / `PAPERPLOT_PYTHON` when the default shell environment is not the intended R/Python environment.
 
-Current release status: suitable for remote skill installation after commit/push, with documented external dependencies (R plotting packages, Python Pillow stack, optional Poppler/ImageMagick/Tesseract for PDF/SVG/OCR QA).
+Current release status: superseded. The final state is `main` + `v0.1.0` release with remote-install CI passing.
 
 ---
 
