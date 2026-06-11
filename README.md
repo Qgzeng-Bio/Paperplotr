@@ -4,6 +4,7 @@
 [![lint](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/lint.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/lint.yaml)
 [![test-coverage](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/test-coverage.yaml)
 [![paperplot-skills](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/paperplot-skills.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/paperplot-skills.yaml)
+[![skill-remote-install](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/skill-remote-install.yaml/badge.svg)](https://github.com/Qgzeng-Bio/Paperplotr/actions/workflows/skill-remote-install.yaml)
 [![codecov](https://codecov.io/gh/Qgzeng-Bio/Paperplotr/graph/badge.svg)](https://app.codecov.io/gh/Qgzeng-Bio/Paperplotr)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -61,18 +62,24 @@ exports, sidecar notes, and output QA.
 Install the skill into Codex with one command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
 ```
 
 If your `curl` is broken or unavailable, use:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
 ```
 
 This installs the runtime skill profile (`SKILL.md`, `agents/`, `references/`,
 `templates/`, and core scripts). Use `PAPERPLOT_PROFILE=full` to install
 development reports, examples, pressure scenarios, and dev scripts as well.
+
+For the pinned `v0.1.0` release:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
+```
 
 Validate the skill locally from the source checkout or a `PAPERPLOT_PROFILE=full`
 install with:

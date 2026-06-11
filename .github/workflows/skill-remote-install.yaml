@@ -1,0 +1,76 @@
+name: skill-remote-install
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+    paths:
+      - "install-paperplot-skill.sh"
+      - "paperplot-skills/**"
+      - ".github/workflows/skill-remote-install.yaml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "install-paperplot-skill.sh"
+      - "paperplot-skills/**"
+      - ".github/workflows/skill-remote-install.yaml"
+  workflow_dispatch:
+
+jobs:
+  remote-install:
+    runs-on: ubuntu-latest
+
+    env:
+      SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+      SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Install runtime profile from remote script
+        run: |
+          set -eux
+          owner="${SOURCE_REPOSITORY%%/*}"
+          repo="${SOURCE_REPOSITORY#*/}"
+          script_url="https://raw.githubusercontent.com/${SOURCE_REPOSITORY}/${SOURCE_REF}/install-paperplot-skill.sh"
+          dest="${RUNNER_TEMP}/paperplot-runtime"
+
+          wget -qO- "${script_url}" | \
+            PAPERPLOT_OWNER="${owner}" \
+            PAPERPLOT_REPO="${repo}" \
+            PAPERPLOT_REF="${SOURCE_REF}" \
+            PAPERPLOT_DEST="${dest}" \
+            sh
+
+          skill="${dest}/paperplot-skills"
+          test -f "${skill}/SKILL.md"
+          test -f "${skill}/agents/openai.yaml"
+          test -f "${skill}/scripts/paperplot_helpers.R"
+          test -f "${skill}/scripts/visual-qa-rendered-image.py"
+          test -f "${skill}/scripts/compare-old-new-figures.py"
+          test -f "${skill}/scripts/lib/design-brief.R"
+          test -d "${skill}/references"
+          test -d "${skill}/templates"
+          test ! -d "${skill}/reports"
+          test ! -f "${skill}/scripts/run-redraw-benchmark.R"
+          test ! -f "${skill}/scripts/run-pressure-scenarios.R"
+
+      - name: Install full profile from remote script
+        run: |
+          set -eux
+          owner="${SOURCE_REPOSITORY%%/*}"
+          repo="${SOURCE_REPOSITORY#*/}"
+          script_url="https://raw.githubusercontent.com/${SOURCE_REPOSITORY}/${SOURCE_REF}/install-paperplot-skill.sh"
+          dest="${RUNNER_TEMP}/paperplot-full"
+
+          curl -fsSL "${script_url}" | \
+            PAPERPLOT_OWNER="${owner}" \
+            PAPERPLOT_REPO="${repo}" \
+            PAPERPLOT_REF="${SOURCE_REF}" \
+            PAPERPLOT_DEST="${dest}" \
+            PAPERPLOT_PROFILE=full \
+            sh
+
+          skill="${dest}/paperplot-skills"
+          test -f "${skill}/SKILL.md"
+          test -f "${skill}/reports/final-skill-test-report.md"
+          test -f "${skill}/scripts/validate-skill.R"
+          test -f "${skill}/examples/pressure-scenarios.md"

@@ -5,13 +5,19 @@ This skill is standalone. It does not require the PaperPlotR R package.
 ## One-line Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
 ```
 
 If `curl` is unavailable or broken:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+```
+
+Pinned release install:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
 ```
 
 Restart Codex after installation.
@@ -23,13 +29,13 @@ examples, pressure scenarios, and dev scripts.
 To replace an existing install:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
 ```
 
 To install the full development/validation bundle:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_PROFILE=full sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_PROFILE=full sh
 ```
 
 Run full validation from a source checkout or a `PAPERPLOT_PROFILE=full`
