@@ -58,6 +58,12 @@ as a reproducible scientific figure standardization workflow, including
 template selection, semantic colors, panel sizing, no-overwrite versioned
 exports, sidecar notes, and output QA.
 
+Install the skill into Codex with one command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
 Validate the skill locally with:
 
 ```bash

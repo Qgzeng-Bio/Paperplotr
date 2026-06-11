@@ -2,6 +2,20 @@
 
 This skill is standalone. It does not require the PaperPlotR R package.
 
+## One-line Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
+Restart Codex after installation.
+
+To replace an existing install:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
+```
+
 ## Skill Links (Codex + Claude Code)
 
 Link this directory into the agent skill directories. Run from inside the

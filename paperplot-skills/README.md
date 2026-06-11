@@ -4,6 +4,22 @@
 
 It does not depend on the PaperPlotR R package. The reusable plotting standards live in `scripts/paperplot_helpers.R`.
 
+## Install
+
+One-line install into Codex:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+```
+
+Restart Codex after installation.
+
+If the skill already exists, replace it explicitly:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
+```
+
 ## What It Provides
 
 - ggplot2 templates for common scientific plots
