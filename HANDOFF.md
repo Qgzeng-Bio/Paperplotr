@@ -1,6 +1,67 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-05-19
+Last updated: 2026-06-11 (remote-install readiness fixes)
+Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
+Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
+
+---
+
+## 2026-06-11 — Remote-Install Readiness Fixes
+
+- R smoke/pressure validation now reuses the invoking R binary by default (`file.path(R.home("bin"), "Rscript")`) and still supports `PAPERPLOT_RSCRIPT`; child template/scorer calls no longer require bare `Rscript` on `PATH`.
+- `validate-skill.R` now requires `scripts/validate-qa-coverage.py`, so the risk-code remediation self-audit cannot be accidentally omitted from a release.
+- `run-visual-pressure-scenarios.py` now writes generated reports to its temporary run directory by default. Set `PAPERPLOT_REPORT_DIR=paperplot-skills/reports` only when intentionally refreshing committed reports. Missing private fixtures are reported as `skipped`, not pass.
+- `compare-old-new-figures.py` now supports `--strict-nature`, `--old-strict-nature`, and `--new-strict-nature`; a new figure that fails strict Nature guardrails is a final-verdict failure.
+- Validation commands should use `PAPERPLOT_RSCRIPT` / `PAPERPLOT_PYTHON` when the default shell environment is not the intended R/Python environment.
+
+Current release status: suitable for remote skill installation after commit/push, with documented external dependencies (R plotting packages, Python Pillow stack, optional Poppler/ImageMagick/Tesseract for PDF/SVG/OCR QA).
+
+---
+
+## 2026-06-10 — Linux Server Deployment + Portability & QA Enhancements
+
+### Deployment (Linux server, env `claude`)
+
+- Repo clone: `/data9/home/qgzeng/projects/3-Biotools_create/Paperplot/PaperPlotR` (origin `https://github.com/Qgzeng-Bio/Paperplotr.git`, branch `main`).
+- Skill root: `…/PaperPlotR/paperplot-skills` (repo root IS the R package; there is no nested `paperplotr/` layer — note the older Mac paths below say `paperplotr/`, that layer does not exist in this repo).
+- Skill symlinked into `~/.codex/skills/paperplot-skills` and `~/.claude/skills/paperplot-skills`.
+- Replica R library uploaded to `…/Paperplot/reference/R科研绘图合集` (80 cases). Python replica library not present on server.
+- Deps installed via micromamba/conda-forge (base conda/mamba solver is broken on this host): R ggplot2/dplyr/tidyr/readr/scales/patchwork/cowplot/ggrepel + ragg/systemfonts/textshaping, imagemagick; pip pypdf. tesseract not installed (optional).
+- Generated artifacts (pattern index, calibration) are written OUTSIDE the repo to `…/Paperplot/artifacts/paperplot-skills-reports/` so generated reports never enter git.
+
+### Branch `portability-linux-fixes` (NOT yet committed/pushed)
+
+Two themes, candidate for two commits:
+
+**(a) Portability — make it run unchanged off the author's Mac**
+- `scripts/paperplot_helpers.R`: added `pp_resolve_family()` (Arial→Liberation/DejaVu/sans fallback); `pp_theme` no longer hardcodes `base_family="Arial"`; `pp_default_device()` uses `cairo_pdf` on non-macOS (fixes `font family 'Arial' not found in PostScript font database -> invalid font type`) and prefers `ragg` for raster.
+- `scripts/index-replica-patterns.py`: removed hardcoded `/Users/qingguozeng/...` defaults → `PAPERPLOT_R_ROOT`/`PAPERPLOT_PY_ROOT` env + `--r-root` required; `write_report` no longer assumes a Python root.
+- `scripts/visual-qa-rendered-image.py`: SVG QA falls back to the built-in Pillow rasterizer when ImageMagick is absent (was a hard crash).
+- `scripts/run-visual-pressure-scenarios.py` + `scripts/run-redraw-benchmark.R`: author-private fixture paths now driven by `PAPERPLOT_FIXTURE_DIR` (skip gracefully when unset).
+- `INSTALL.md`: relative symlink command, corrected layout, full dependency list.
+
+**(b) QA review→fix enhancements**
+- **Family auto-detection** (`visual-qa-rendered-image.py`): when `--family` is omitted, family is inferred from a sibling `*_metadata.json` (`figure_spec.plot_type`/`chart_family`), then from filename keywords. Previously family-specific thresholds only fired if the caller manually passed `--family`; now they fire automatically. Output records `figure_family_source`.
+- **Risk→remediation binding**: every visual-QA `risk_code` carries a `remediation` (one-line fix + reference doc) in both `visual_qa.json` and `.md`. Makes the "audit" output also say how to fix.
+- **Self-audit**: new `scripts/validate-qa-coverage.py` fails if any emitted risk code lacks a remediation/exemption or points at a missing doc. (Caught and fixed a real gap: `svg_extreme_aspect_ratio`.)
+- **Nature guardrails**: new `references/nature-figure-guardrails.md` defines 10 final rendered-figure checks. `visual-qa-rendered-image.py --strict-nature` now writes `nature_guardrails` to JSON/Markdown and returns non-zero on hard failures such as excessive blank space, text/annotation overlap, unreadable thumbnail structure, or equal-role panel imbalance.
+
+### Verification (all run on Linux, no `.Rprofile` workaround, no regressions)
+
+`validate-skill ✅ | smoke 20/20 ✅ | run-pressure 5/5 ✅ | run-visual-pressure all pass ✅ | validate-qa-coverage ✅ (28 codes, 24 remediation entries, all docs present)`
+
+Indexer re-run on the uploaded library: `indexed 80 cases` (R only). Calibration re-run: `calibrated 39 positive examples` (only 39 of 80 cases have an analyzable raster/SVG/PDF sample).
+
+### Open TODOs / Deferred
+
+1. **Commit & push branch `portability-linux-fixes`** — recommended as two commits (portability / QA). Push + PR pending owner decision.
+2. **Data-driven QA thresholds — intentionally NOT auto-adopted.** Per-family calibration has only **1–3 positive samples** each (39 total). Auto-deriving thresholds from so few good samples can only *loosen* them, which for a review tool risks false negatives (missing real problems). Decision left to a human. The refreshed per-family metric distributions are in `artifacts/.../visual-qa-calibration-fulllib.json` for manual tuning of gap families.
+3. **Hand-tuned family overrides still cover only** `rank-lollipop, model-validation, heatmap, manhattan, phylo-annotation-ring`. The other ~7 pattern families fall back to global thresholds. Grow the replica/sample set, then hand-tune from data.
+4. **P2 leftover (doc-only):** `reports/visual-qa-calibration-from-replica-library.md` (committed) still embeds absolute `/Users/qingguozeng/...` paths in its table. Regenerate with relative/sanitized paths.
+5. Carry-over from 2026-05-19 next phase (still open): `manhattan-plot-template.R`, `upset-summary-template.R`, PDF rasterization in calibration, heatmap annotation-strip/dendrogram strategy, more real redraw benchmarks, clearer `improved` old-vs-new verdicts.
+6. **Portability invariant:** keep the repo free of machine-specific absolute paths and `Arial`-hardcoding. A future lint/test could assert no `/Users/` or `/home/<user>/` literals in `scripts/`.
+
+---
 
 ## Repository
 

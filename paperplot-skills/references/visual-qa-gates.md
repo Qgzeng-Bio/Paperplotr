@@ -24,6 +24,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Connecting lines encode real paired, repeated, ordered, or trajectory semantics.
 - Main figure does not look like a diagnostic table of labels.
 - Equal-role multi-panel figures pass panel geometry QA or have an explicit reason for unequal panel hierarchy.
+- Final manuscript candidates pass `nature_guardrails.status` or document why a `warn` is accepted.
 
 ## Soft Warnings
 
@@ -37,6 +38,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Old-vs-new comparisons across SVG and raster formats require human review because structural and pixel metrics are not equivalent.
 - Old-vs-new comparisons without completed review rubric cannot claim final improvement.
 - Panel geometry warnings are layout risks that require revision or explicit hierarchy justification.
+- `--strict-nature` failures are revision blockers for final figures.
 
 ## Family-Specific Threshold Profiles
 
@@ -55,3 +57,5 @@ Do not add a family profile to hide a real problem. If a warning disappears unde
 ## Completion Rule
 
 Do not report "ready for manuscript use" unless all hard gates pass and the manuscript readiness score meets the role threshold.
+
+For final rendered figures, also require the ten checks in `nature-figure-guardrails.md`.

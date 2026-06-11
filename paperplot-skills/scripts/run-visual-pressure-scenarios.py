@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -21,38 +22,50 @@ except Exception:
 ROOT = Path(__file__).resolve().parents[1]
 VISUAL_QA = ROOT / "scripts" / "visual-qa-rendered-image.py"
 COMPARE = ROOT / "scripts" / "compare-old-new-figures.py"
-REPORT = ROOT / "reports" / "visual-qa-real-figure-test-report.md"
-PANEL_REPORT = ROOT / "reports" / "panel-geometry-qa-validation.md"
-RUBRIC_REPORT = ROOT / "reports" / "old-vs-new-rubric-validation.md"
+
+# Author-private real-figure regression fixtures live outside the repo. Point
+# PAPERPLOT_FIXTURE_DIR at the base directory holding them to enable these
+# scenarios; when it is unset the paths simply do not exist and the scenarios
+# are skipped as `fixture_missing` (no hardcoded machine-specific path).
+FIXTURE_BASE = os.environ.get("PAPERPLOT_FIXTURE_DIR")
+
+
+def fixture_path(rel: str) -> Path:
+    base = FIXTURE_BASE if FIXTURE_BASE else "__paperplot_fixture_dir_unset__"
+    return Path(base) / rel
+DEFAULT_REPORT_DIR = ROOT / "reports"
+REPORT = DEFAULT_REPORT_DIR / "visual-qa-real-figure-test-report.md"
+PANEL_REPORT = DEFAULT_REPORT_DIR / "panel-geometry-qa-validation.md"
+RUBRIC_REPORT = DEFAULT_REPORT_DIR / "old-vs-new-rubric-validation.md"
 
 FIXTURES = [
     {
         "scenario": "visual-gs-barplot-burden",
-        "path": Path("/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png"),
+        "path": fixture_path("10-GS/final_results/figures/fig4_quality_traits.png"),
         "expect_status": {"warn", "fail"},
         "expect_any_risk": {"saturated_presentation_palette", "gridline_or_long_line_burden", "excessive_blank_margin", "thumbnail_readability_risk", "high_text_or_tick_density"},
     },
     {
         "scenario": "visual-gs-label-overlap-risk",
-        "path": Path("/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/figS1_gxe_vs_prediction.png"),
+        "path": fixture_path("10-GS/final_results/figures/figS1_gxe_vs_prediction.png"),
         "expect_status": {"warn", "fail"},
         "expect_any_risk": {"high_text_or_tick_density", "label_overlap_or_large_annotation_risk", "thumbnail_readability_risk", "low_content_density", "excessive_blank_margin", "gridline_or_long_line_burden"},
     },
     {
         "scenario": "visual-gs-quality-trait-accuracy",
-        "path": Path("/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/figS1_quality_trait_accuracy.png"),
+        "path": fixture_path("10-GS/final_results/figures/figS1_quality_trait_accuracy.png"),
         "expect_status": {"warn", "fail"},
         "expect_any_risk": {"high_text_or_tick_density", "gridline_or_long_line_burden", "thumbnail_readability_risk", "saturated_presentation_palette"},
     },
     {
         "scenario": "visual-nlr-svg-presentation-style-count",
-        "path": Path("/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg"),
+        "path": fixture_path("7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg"),
         "expect_status": {"warn", "fail"},
         "expect_any_risk": {"oversized_svg_title_or_text", "huge_centered_title", "svg_gridline_burden"},
     },
     {
         "scenario": "visual-nlr-svg-presentation-style-panclass",
-        "path": Path("/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_panclass_summary.svg"),
+        "path": fixture_path("7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_panclass_summary.svg"),
         "expect_status": {"warn", "fail"},
         "expect_any_risk": {"oversized_svg_title_or_text", "huge_centered_title", "svg_gridline_burden"},
     },
@@ -77,14 +90,16 @@ def risk_codes(result: dict[str, Any]) -> set[str]:
     return {item.get("code", "") for item in result.get("top_risks", [])}
 
 
-def run_visual(path: Path, out: Path, extra: list[str] | None = None) -> dict[str, Any]:
+def run_visual(path: Path, out: Path, extra: list[str] | None = None, allow_nonzero: bool = False) -> dict[str, Any]:
     cmd = [sys.executable, str(VISUAL_QA), str(path), "--out", str(out)]
     if extra:
         cmd.extend(extra)
     proc = run(cmd)
-    if proc.returncode != 0:
+    if proc.returncode != 0 and not allow_nonzero:
         raise RuntimeError(proc.stderr or proc.stdout)
-    return json.loads((out / "visual_qa.json").read_text())["image_qa"]
+    payload = json.loads((out / "visual_qa.json").read_text())["image_qa"]
+    payload["_returncode"] = proc.returncode
+    return payload
 
 
 def make_degraded(src: Path, dst: Path) -> bool:
@@ -126,6 +141,20 @@ def make_panel_fixture(dst: Path, unequal: bool = False) -> None:
     canvas.save(dst)
 
 
+def make_blank_margin_fixture(dst: Path) -> None:
+    if Image is None or ImageDraw is None:
+        raise RuntimeError("Pillow is required for synthetic blank-margin fixture.")
+    canvas = Image.new("RGB", (1200, 800), "white")
+    draw = ImageDraw.Draw(canvas)
+    box = (510, 335, 690, 465)
+    draw.rectangle(box, outline="#333333", width=3)
+    draw.line((525, 445, 675, 445), fill="#333333", width=2)
+    draw.line((525, 350, 525, 445), fill="#333333", width=2)
+    for x, y in [(545, 420), (575, 390), (615, 405), (650, 365)]:
+        draw.ellipse((x - 5, y - 5, x + 5, y + 5), fill="#4C78A8", outline="#333333")
+    canvas.save(dst)
+
+
 def make_svg_fixture(dst: Path) -> None:
     dst.write_text(
         """<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
@@ -162,6 +191,34 @@ def write_review_json(path: Path) -> None:
     path.write_text(json.dumps({"rubric_version": "1.0", "dimensions": dims}, indent=2) + "\n")
 
 
+def skipped_fixture_row(scenario: str, path: Path) -> dict[str, Any]:
+    return {
+        "scenario": scenario,
+        "input": str(path),
+        "pass": "skipped",
+        "status": "fixture_missing",
+        "score": "",
+        "risk_codes": [],
+        "detail": "fixture_missing",
+    }
+
+
+def report_input_label(value: Any) -> str:
+    text = str(value)
+    fixture_prefix = "__paperplot_fixture_dir_unset__/"
+    if text.startswith(fixture_prefix):
+        return "$PAPERPLOT_FIXTURE_DIR/" + text[len(fixture_prefix):]
+    if "/paperplot-visual-pressure-" in text:
+        return f"synthetic/{Path(text).name}"
+    try:
+        path = Path(text)
+        if path.is_absolute():
+            return str(path.relative_to(ROOT))
+    except Exception:
+        pass
+    return text
+
+
 def write_report(rows: list[dict[str, Any]], compare_rows: list[dict[str, Any]]) -> None:
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     lines = [
@@ -176,7 +233,7 @@ def write_report(rows: list[dict[str, Any]], compare_rows: list[dict[str, Any]])
     ]
     for row in rows:
         risks = ", ".join(row.get("risk_codes", [])) or row.get("detail", "")
-        lines.append(f"| {row['scenario']} | `{row['input']}` | {row.get('status','')} | {row.get('score','')} | {row['pass']} | {risks} |")
+        lines.append(f"| {row['scenario']} | `{report_input_label(row['input'])}` | {row.get('status','')} | {row.get('score','')} | {row['pass']} | {risks} |")
     if compare_rows:
         lines += ["", "## Old-vs-new comparisons", ""]
         for row in compare_rows:
@@ -229,14 +286,20 @@ def write_rubric_report(compare_rows: list[dict[str, Any]]) -> None:
 
 
 def main() -> int:
+    global REPORT, PANEL_REPORT, RUBRIC_REPORT
     root = Path(tempfile.mkdtemp(prefix="paperplot-visual-pressure-"))
+    report_dir_env = os.environ.get("PAPERPLOT_REPORT_DIR")
+    report_dir = Path(report_dir_env).expanduser() if report_dir_env else root / "reports"
+    REPORT = report_dir / "visual-qa-real-figure-test-report.md"
+    PANEL_REPORT = report_dir / "panel-geometry-qa-validation.md"
+    RUBRIC_REPORT = report_dir / "old-vs-new-rubric-validation.md"
     rows = []
     for fixture in FIXTURES:
         scenario = fixture["scenario"]
         path = fixture["path"]
         out = root / scenario
         if not path.exists():
-            rows.append({"scenario": scenario, "input": str(path), "pass": True, "status": "fixture_missing", "score": "", "risk_codes": [], "detail": "fixture_missing"})
+            rows.append(skipped_fixture_row(scenario, path))
             continue
         try:
             result = run_visual(path, out)
@@ -251,7 +314,7 @@ def main() -> int:
         path = fixture["path"]
         out = root / scenario
         if not path.exists():
-            rows.append({"scenario": scenario, "input": str(path), "pass": True, "status": "fixture_missing", "score": "", "risk_codes": [], "detail": "fixture_missing"})
+            rows.append(skipped_fixture_row(scenario, path))
             continue
         try:
             result = run_visual(path, out, ["--family", fixture["family"]])
@@ -304,6 +367,22 @@ def main() -> int:
         except Exception as exc:
             rows.append({"scenario": "visual-ocr-auto", "input": str(equal_png), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
 
+        blank_png = root / "blank_margin.png"
+        make_blank_margin_fixture(blank_png)
+        for scenario, path, extra, expected_gate in [
+            ("visual-strict-nature-blank-margin", blank_png, ["--ocr", "off", "--strict-nature"], "controlled_whitespace"),
+            ("visual-strict-nature-panel-imbalance", unequal_png, ["--expected-panels", "2", "--layout-profile", "equal", "--ocr", "off", "--strict-nature"], "panel_balance"),
+        ]:
+            out = root / scenario
+            try:
+                result = run_visual(path, out, extra, allow_nonzero=True)
+                nature = result.get("nature_guardrails", {})
+                failed_gates = {item.get("id") for item in nature.get("checks", []) if item.get("status") == "fail"}
+                ok = result.get("_returncode") != 0 and nature.get("status") == "fail" and expected_gate in failed_gates
+                rows.append({"scenario": scenario, "input": str(path), "pass": ok, "status": result.get("status"), "score": result.get("manuscript_readiness_score"), "risk_codes": sorted(risk_codes(result)), "nature_status": nature.get("status"), "panel_geometry": result.get("panel_geometry", {}), "output_dir": str(out)})
+            except Exception as exc:
+                rows.append({"scenario": scenario, "input": str(path), "pass": False, "status": "error", "score": "", "risk_codes": [], "detail": str(exc)})
+
         proc = run([sys.executable, str(VISUAL_QA), str(equal_png), "--out", str(root / "visual-ocr-required"), "--ocr", "required"])
         tesseract_exists = shutil.which("tesseract") is not None
         rows.append({"scenario": "visual-ocr-required", "input": str(equal_png), "pass": (proc.returncode == 0) == tesseract_exists, "status": "ok" if proc.returncode == 0 else "expected_error", "score": "", "risk_codes": [], "detail": "required OCR behavior matches local Tesseract availability"})
@@ -343,7 +422,7 @@ def main() -> int:
     print(f"visual QA real figure test report: {REPORT}")
     print(f"panel geometry QA validation report: {PANEL_REPORT}")
     print(f"old-vs-new rubric validation report: {RUBRIC_REPORT}")
-    all_ok = all(row["pass"] for row in rows) and all(row.get("pass") for row in compare_rows)
+    all_ok = all(row.get("pass") is not False for row in rows) and all(row.get("pass") is not False for row in compare_rows)
     return 0 if all_ok else 1
 
 

@@ -9,6 +9,8 @@ skill_root <- file.path(repo_root, "paperplot-skills")
 template_root <- file.path(skill_root, "templates")
 helper_path <- file.path(skill_root, "scripts", "paperplot_helpers.R")
 validator_path <- file.path(skill_root, "scripts", "validate-figure-output.R")
+rscript_bin <- Sys.getenv("PAPERPLOT_RSCRIPT", unset = file.path(R.home("bin"), "Rscript"))
+if (!nzchar(rscript_bin)) rscript_bin <- file.path(R.home("bin"), "Rscript")
 
 if (!dir.exists(skill_root)) fail("paperplot-skills directory not found from working directory: ", repo_root)
 if (!file.exists(helper_path)) fail("Missing helper: ", helper_path)
@@ -143,7 +145,7 @@ run_template <- function(template_name, work_root) {
   patched <- patch_template(readLines(template_path, warn = FALSE), input_path, output_dir)
   writeLines(patched, script_path)
 
-  output <- system2("Rscript", script_path, stdout = TRUE, stderr = TRUE, env = paste0("PAPERPLOT_HELPER=", helper_path))
+  output <- system2(rscript_bin, script_path, stdout = TRUE, stderr = TRUE, env = paste0("PAPERPLOT_HELPER=", helper_path))
   status <- attr(output, "status")
   if (is.null(status)) status <- 0L
 
@@ -173,7 +175,7 @@ run_template <- function(template_name, work_root) {
     if (!is.na(metadata_problem)) problems <- c(problems, metadata_problem)
   }
   if (length(problems) == 0) {
-    validation <- system2("Rscript", c(validator_path, output_dir), stdout = TRUE, stderr = TRUE)
+    validation <- system2(rscript_bin, c(validator_path, output_dir), stdout = TRUE, stderr = TRUE)
     validation_status <- attr(validation, "status")
     if (is.null(validation_status)) validation_status <- 0L
     if (!identical(validation_status, 0L)) problems <- c(problems, paste("output validator status", validation_status), paste(validation, collapse = " | "))

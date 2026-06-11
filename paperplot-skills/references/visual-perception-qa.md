@@ -18,6 +18,7 @@ Useful options:
 python3 scripts/visual-qa-rendered-image.py figure.pdf --out qa --dpi 300 --page 1
 python3 scripts/visual-qa-rendered-image.py figure.svg --out qa --ocr auto
 python3 scripts/visual-qa-rendered-image.py figure.png --out qa --expected-panels 2 --layout-profile equal
+python3 scripts/visual-qa-rendered-image.py figure.pdf --out qa --strict-nature
 ```
 
 OCR is optional. `--ocr auto` uses Tesseract if present and records `ocr.available=false` if not. `--ocr required` is for strict testing only.
@@ -50,6 +51,12 @@ When `--expected-panels` is provided, the engine estimates panel boxes from whit
 - blank-space range across panels.
 
 For `--layout-profile equal`, unequal panel boxes or data regions trigger `panel_size_imbalance` or `panel_data_region_imbalance`. For `--layout-profile hierarchical`, very strong size hierarchy triggers `unjustified_panel_hierarchy_risk` unless the layout is explicitly justified in notes.
+
+## Nature Guardrails
+
+Use `references/nature-figure-guardrails.md` for the ten final rendered-figure checks. With `--strict-nature`, hard guardrail hits return a non-zero exit status and set `nature_guardrails.status=fail` in `visual_qa.json`.
+
+Strict mode is for final candidates, not early sketches. It catches exported-size problems, text overlap, excess whitespace, unreadable thumbnails, and multi-panel imbalance before the agent reports a figure as manuscript-ready.
 
 ## SVG checks
 

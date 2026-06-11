@@ -11,14 +11,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import Iterable
 
-DEFAULT_R_ROOT = Path("/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集")
-DEFAULT_PY_ROOT = Path("/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/Python科研绘图合集")
+# No hardcoded machine-specific paths. Point the indexer at your replica
+# libraries via --r-root/--python-root or the PAPERPLOT_R_ROOT/PAPERPLOT_PY_ROOT
+# environment variables.
+DEFAULT_R_ROOT = os.environ.get("PAPERPLOT_R_ROOT")
+DEFAULT_PY_ROOT = os.environ.get("PAPERPLOT_PY_ROOT")
 
 CODE_EXT = {".r", ".rmd", ".qmd", ".py", ".ipynb"}
 OUTPUT_EXT = {".png", ".jpg", ".jpeg", ".pdf", ".svg", ".ai", ".eps", ".tif", ".tiff"}
@@ -267,8 +271,7 @@ def write_report(cases: list[CaseIndex], out_md: Path, out_json: Path, roots: di
         "",
         "## Source Libraries",
         "",
-        f"- R library: `{roots['R']}`",
-        f"- Python library: `{roots['Python']}`",
+        *[f"- {label} library: `{path}`" for label, path in roots.items()],
         "",
         "## Summary",
         "",
@@ -340,13 +343,21 @@ def write_report(cases: list[CaseIndex], out_md: Path, out_json: Path, roots: di
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Index local high-quality scientific plotting replica libraries.")
-    parser.add_argument("--r-root", default=str(DEFAULT_R_ROOT))
-    parser.add_argument("--python-root", default=str(DEFAULT_PY_ROOT))
+    parser.add_argument("--r-root", default=DEFAULT_R_ROOT, required=DEFAULT_R_ROOT is None,
+                        help="Root of the R replica library (or set PAPERPLOT_R_ROOT).")
+    parser.add_argument("--python-root", default=DEFAULT_PY_ROOT,
+                        help="Root of the Python replica library (or set PAPERPLOT_PY_ROOT). Optional.")
     parser.add_argument("--out-md", default="paperplot-skills/reports/nature-replica-pattern-index.md")
     parser.add_argument("--out-json", default="paperplot-skills/reports/nature-replica-pattern-index.json")
     args = parser.parse_args()
 
-    roots = {"R": str(Path(args.r_root).expanduser()), "Python": str(Path(args.python_root).expanduser())}
+    roots = {}
+    if args.r_root:
+        roots["R"] = str(Path(args.r_root).expanduser())
+    if args.python_root:
+        roots["Python"] = str(Path(args.python_root).expanduser())
+    if not roots:
+        raise SystemExit("No replica library root given. Use --r-root/--python-root or set PAPERPLOT_R_ROOT/PAPERPLOT_PY_ROOT.")
     cases: list[CaseIndex] = []
     for label, root_text in roots.items():
         root = Path(root_text)

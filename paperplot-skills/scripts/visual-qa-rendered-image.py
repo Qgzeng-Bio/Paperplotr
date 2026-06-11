@@ -129,6 +129,146 @@ FAMILY_SVG_OVERRIDES = {
     },
 }
 
+# Canonical families we actually have tuned behavior for. Used to guard
+# filename-based family inference so a random filename slug is not treated as a
+# real family.
+KNOWN_FAMILIES = (
+    set(FAMILY_ALIASES.values())
+    | set(FAMILY_RASTER_OVERRIDES)
+    | set(FAMILY_SVG_OVERRIDES)
+)
+
+# Risk-code -> concrete remediation. Binds each "audit" signal to the matching
+# "how to fix" reference doc, so the QA output itself tells Codex/Claude what to
+# change. `doc` paths are relative to the skill root. Codes intentionally without
+# a fix (informational / pass markers) are listed in REMEDIATION_NONE.
+REMEDIATION = {
+    "low_pixel_dimensions": ("references/publication-visual-standards.md", "Re-export at >=300 dpi or a larger output preset so detail survives at print size."),
+    "extreme_aspect_ratio": ("references/multi-panel-layout-rules.md", "Rebalance width:height toward ~0.6-2.0; split or reflow panels instead of one extreme strip."),
+    "svg_extreme_aspect_ratio": ("references/multi-panel-layout-rules.md", "Rebalance the SVG width:height toward ~0.6-2.0; avoid one extreme strip."),
+    "excessive_blank_margin": ("references/manuscript-aesthetics-rules.md", "Trim plot margins / scale expansion and crop dead whitespace around the data region."),
+    "low_content_density": ("references/manuscript-aesthetics-rules.md", "Raise data-ink: enlarge the data region or shrink the canvas so content fills the frame."),
+    "high_text_or_tick_density": ("references/label-burden-strategies.md", "Thin ticks/labels; move dense lookup labels to a rank index + key labels + label-key sidecar."),
+    "label_overlap_or_large_annotation_risk": ("references/label-burden-strategies.md", "Use ggrepel or fewer direct labels; offload collisions to a key/sidecar."),
+    "saturated_presentation_palette": ("references/color-and-style-policy.md", "Desaturate to a functional manuscript palette; drop presentation-style saturated colors."),
+    "grayscale_discrimination_risk": ("references/color-and-style-policy.md", "Separate classes by luminance, not hue alone, so they survive grayscale printing."),
+    "low_grayscale_contrast": ("references/color-and-style-policy.md", "Increase value range / contrast between marks and background."),
+    "gridline_or_long_line_burden": ("references/nature-like-style-principles.md", "Drop gridlines by default and thin axis/border strokes (~0.25-0.6 pt)."),
+    "thumbnail_readability_risk": ("references/publication-visual-standards.md", "Increase text size and reduce density so the figure still reads at column width."),
+    "panel_count_mismatch": ("references/pattern-library/multi-panel-manuscript-layout.md", "Reconcile expected vs detected panels; fix outer stitching/missing panel."),
+    "panel_size_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Equalize panel-box sizes for equal-role panels (export sub-plots at matched dimensions)."),
+    "panel_data_region_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Align visible data-region sizes across panels; equalize legend space."),
+    "panel_blank_space_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Even out per-panel margins so blank-space fractions match."),
+    "unjustified_panel_hierarchy_risk": ("references/pattern-library/multi-panel-manuscript-layout.md", "Either justify the size hierarchy (primary/secondary roles) or equalize panels."),
+    "ocr_small_text_burden": ("references/label-burden-strategies.md", "Increase font size and reduce raw text count; many tiny labels read as texture."),
+    "ocr_text_overlap_risk": ("references/label-burden-strategies.md", "Resolve label collisions with repel/offset or a key sidecar."),
+    "ocr_edge_text_concentration": ("references/multi-panel-layout-rules.md", "Reduce legend/tick edge burden; consolidate or move legends."),
+    "oversized_svg_title_or_text": ("references/manuscript-aesthetics-rules.md", "Shrink title/text to manuscript scale; remove presentation-sized headings."),
+    "huge_centered_title": ("references/manuscript-aesthetics-rules.md", "Remove or shrink the large centered title to a small panel/figure label."),
+    "svg_gridline_burden": ("references/nature-like-style-principles.md", "Remove decorative gridlines; keep only quantitatively useful guides."),
+    "svg_text_burden": ("references/label-burden-strategies.md", "Reduce text element count; move dense labels to a sidecar/key."),
+}
+REMEDIATION_NONE = {
+    "no_major_deterministic_risk",
+    "no_major_svg_structure_risk",
+    "panel_detection_empty",
+    "svg_parse_error",
+}
+
+NATURE_GUARDRAIL_REFERENCE = "references/nature-figure-guardrails.md"
+
+NATURE_GUARDRAILS = [
+    {
+        "id": "export_size_aspect",
+        "label": "Export size and aspect ratio",
+        "hard_codes": {"low_pixel_dimensions", "extreme_aspect_ratio", "svg_extreme_aspect_ratio"},
+        "review_codes": set(),
+        "fix": "Re-export at the target manuscript size or split/reflow the canvas.",
+    },
+    {
+        "id": "readable_typography",
+        "label": "Readable typography at target size",
+        "hard_codes": {"ocr_small_text_burden", "oversized_svg_title_or_text", "huge_centered_title"},
+        "review_codes": {"high_text_or_tick_density", "svg_text_burden"},
+        "fix": "Use manuscript-scale text, reduce tick/label count, and remove presentation titles.",
+    },
+    {
+        "id": "no_visible_overlap",
+        "label": "No text or annotation overlap",
+        "hard_codes": {"ocr_text_overlap_risk", "label_overlap_or_large_annotation_risk"},
+        "review_codes": set(),
+        "fix": "Resolve collisions with repel/offsets, fewer direct labels, or a label-key sidecar.",
+    },
+    {
+        "id": "controlled_whitespace",
+        "label": "Controlled whitespace and filled data region",
+        "hard_codes": {"excessive_blank_margin", "low_content_density"},
+        "review_codes": set(),
+        "fix": "Trim margins, reduce scale expansion, enlarge the data region, or shrink the canvas.",
+    },
+    {
+        "id": "panel_balance",
+        "label": "Balanced multi-panel geometry",
+        "hard_codes": {
+            "panel_count_mismatch",
+            "panel_size_imbalance",
+            "panel_data_region_imbalance",
+            "panel_blank_space_imbalance",
+            "unjustified_panel_hierarchy_risk",
+        },
+        "review_codes": {"panel_detection_empty"},
+        "fix": "Equalize equal-role panel boxes/data regions or document an intentional hierarchy.",
+    },
+    {
+        "id": "thumbnail_readability",
+        "label": "Thumbnail readability",
+        "hard_codes": {"thumbnail_readability_risk"},
+        "review_codes": set(),
+        "fix": "Reduce visible burden so the main structure survives small preview review.",
+    },
+    {
+        "id": "color_grayscale_safety",
+        "label": "Color and grayscale safety",
+        "hard_codes": set(),
+        "review_codes": {
+            "saturated_presentation_palette",
+            "grayscale_discrimination_risk",
+            "low_grayscale_contrast",
+        },
+        "fix": "Use a muted accessible palette and separate important classes by luminance/shape.",
+    },
+    {
+        "id": "gridline_stroke_discipline",
+        "label": "Gridline and stroke discipline",
+        "hard_codes": set(),
+        "review_codes": {"gridline_or_long_line_burden", "svg_gridline_burden"},
+        "fix": "Remove decorative gridlines and keep axes, borders, and intervals thin.",
+    },
+    {
+        "id": "legend_edge_burden",
+        "label": "Legend and edge burden",
+        "hard_codes": set(),
+        "review_codes": {"ocr_edge_text_concentration"},
+        "fix": "Consolidate guides, reserve legend space, and avoid edge-dominated layouts.",
+    },
+    {
+        "id": "actionable_remediation",
+        "label": "Actionable remediation",
+        "hard_codes": set(),
+        "review_codes": set(),
+        "fix": "Every risk code must include a remediation and reference document.",
+    },
+]
+
+
+def attach_remediation(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    for item in risks:
+        code = item.get("code")
+        if code in REMEDIATION:
+            doc, fix = REMEDIATION[code]
+            item["remediation"] = {"doc": doc, "fix": fix}
+    return risks
+
 
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
@@ -140,6 +280,45 @@ def status_from_score(score: int) -> str:
     if score < 8:
         return STATUS_WARN
     return STATUS_PASS
+
+
+def evaluate_nature_guardrails(result: dict[str, Any], *, strict: bool = False) -> dict[str, Any]:
+    code_to_risk = {
+        item.get("code"): item
+        for item in result.get("top_risks", [])
+        if item.get("status") != STATUS_PASS and item.get("code")
+    }
+    rows = []
+    for gate in NATURE_GUARDRAILS:
+        hard_hits = sorted(code for code in gate["hard_codes"] if code in code_to_risk)
+        review_hits = sorted(code for code in gate["review_codes"] if code in code_to_risk)
+        if strict and hard_hits:
+            gate_status = STATUS_FAIL
+        elif hard_hits or review_hits:
+            gate_status = STATUS_WARN
+        else:
+            gate_status = STATUS_PASS
+        rows.append({
+            "id": gate["id"],
+            "label": gate["label"],
+            "status": gate_status,
+            "hard_hits": hard_hits,
+            "review_hits": review_hits,
+            "fix": gate["fix"],
+            "doc": NATURE_GUARDRAIL_REFERENCE,
+        })
+
+    statuses = [row["status"] for row in rows]
+    summary_status = STATUS_FAIL if STATUS_FAIL in statuses else STATUS_WARN if STATUS_WARN in statuses else STATUS_PASS
+    return {
+        "checked": True,
+        "strict": strict,
+        "reference": NATURE_GUARDRAIL_REFERENCE,
+        "status": summary_status,
+        "hard_risk_codes": sorted({code for row in rows for code in row["hard_hits"]}),
+        "review_risk_codes": sorted({code for row in rows for code in row["review_hits"]}),
+        "checks": rows,
+    }
 
 
 def risk(status: str, code: str, message: str, value: Any = None) -> dict[str, Any]:
@@ -196,6 +375,49 @@ def resolve_input(path: Path) -> Path:
     if not path.exists():
         raise SystemExit(f"Input not found: {path}")
     return path
+
+
+def _family_from_metadata(meta_dir: Path) -> tuple[str | None, str | None]:
+    if not meta_dir.is_dir():
+        return None, None
+    for mp in sorted(meta_dir.glob("*metadata*.json")) + sorted(meta_dir.glob("*_metadata.json")):
+        try:
+            data = json.loads(mp.read_text())
+        except Exception:
+            continue
+        for getter in (
+            lambda d: (d.get("figure_spec") or {}).get("plot_type"),
+            lambda d: d.get("plot_type"),
+            lambda d: d.get("chart_family"),
+            lambda d: (d.get("design_plan") or {}).get("chart_family"),
+        ):
+            try:
+                value = getter(data)
+            except Exception:
+                value = None
+            if value:
+                return str(value), mp.name
+    return None, None
+
+
+def infer_figure_family(in_path: Path) -> tuple[str | None, str | None]:
+    """Best-effort figure family when --family is not supplied.
+
+    1) Authoritative: a sibling ``*_metadata.json`` written by the templates
+       (figure_spec.plot_type / chart_family).
+    2) Fallback: filename keywords, but only when they map to a known family so
+       a random slug is not mistaken for one.
+    Returns (family_or_None, source_label).
+    """
+    search_dir = in_path if in_path.is_dir() else in_path.parent
+    fam, src = _family_from_metadata(search_dir)
+    if fam:
+        return fam, f"metadata:{src}"
+    stem = in_path.name if in_path.is_dir() else in_path.stem
+    candidate = normalize_family(stem)
+    if candidate in KNOWN_FAMILIES:
+        return candidate, "filename"
+    return None, None
 
 
 def run_command(cmd: list[str]) -> subprocess.CompletedProcess[str]:
@@ -329,33 +551,42 @@ def rasterize_input(path: Path, out_dir: Path, dpi: int, page: int) -> tuple[Pat
 
     if ext == ".svg":
         exe = shutil.which("magick") or shutil.which("convert")
-        if not exe:
-            raise SystemExit("SVG visual QA requires ImageMagick `magick` or `convert` on PATH.")
         out_path = out_dir / "rasterized_input.png"
-        cmd = [
-            exe,
-            "-density",
-            str(dpi),
-            str(path),
-            "-background",
-            "white",
-            "-alpha",
-            "remove",
-            "-alpha",
-            "off",
-            str(out_path),
-        ]
-        proc = run_command(cmd)
-        if proc.returncode != 0 or not out_path.exists():
+        cmd = None
+        proc = None
+        if exe:
+            cmd = [
+                exe,
+                "-density",
+                str(dpi),
+                str(path),
+                "-background",
+                "white",
+                "-alpha",
+                "remove",
+                "-alpha",
+                "off",
+                str(out_path),
+            ]
+            proc = run_command(cmd)
+        # Fall back to the built-in Pillow rasterizer when ImageMagick is absent
+        # OR when it failed. Pillow has no system dependency, so SVG QA stays
+        # available on machines without ImageMagick.
+        if exe is None or proc.returncode != 0 or not out_path.exists():
+            magick_output = (proc.stderr or proc.stdout) if proc is not None else ""
             try:
                 rasterize_svg_with_pillow(path, out_path)
             except Exception as exc:
-                raise SystemExit(f"SVG rasterization failed: {proc.stderr or proc.stdout}; fallback failed: {exc}") from exc
+                detail = magick_output or "ImageMagick not found"
+                raise SystemExit(f"SVG rasterization failed: {detail}; Pillow fallback failed: {exc}") from exc
             return out_path, {
                 "performed": True,
                 "engine": "svg-pillow-fallback",
-                "fallback_from": Path(exe).name,
-                "fallback_reason": (proc.stderr or proc.stdout).strip().splitlines()[0] if (proc.stderr or proc.stdout) else "unknown",
+                "fallback_from": Path(exe).name if exe else "none",
+                "fallback_reason": (
+                    magick_output.strip().splitlines()[0] if magick_output.strip()
+                    else "imagemagick_not_available"
+                ),
                 "source_type": "svg",
                 "source_path": str(path),
                 "raster_path": str(out_path),
@@ -746,6 +977,7 @@ def analyze_raster(
     expected_panels: int | None = None,
     layout_profile: str = "auto",
     ocr_mode: str = "auto",
+    strict_nature: bool = False,
 ) -> dict[str, Any]:
     if Image is None:
         raise SystemExit(f"Pillow is required for visual QA: {PIL_IMPORT_ERROR}")
@@ -845,11 +1077,12 @@ def analyze_raster(
             score = min(score, struct_score)
     if not risks:
         risks.append(risk(STATUS_PASS, "no_major_deterministic_risk", "No major deterministic visual QA risk detected."))
+    attach_remediation(risks)
     score = max(0, min(10, score))
     status = status_from_score(score)
     if status == STATUS_PASS and any(item.get("status") == STATUS_WARN for item in risks):
         status = STATUS_WARN
-    return {
+    result = {
         "checked": True,
         "engine": "pillow-raster",
         "input_type": input_type,
@@ -884,6 +1117,12 @@ def analyze_raster(
         "status": status,
         "top_risks": risks,
     }
+    nature_guardrails = evaluate_nature_guardrails(result, strict=strict_nature)
+    result["nature_guardrails"] = nature_guardrails
+    if strict_nature and nature_guardrails["status"] == STATUS_FAIL:
+        result["status"] = STATUS_FAIL
+        result["manuscript_readiness_score"] = min(result["manuscript_readiness_score"], 4)
+    return result
 
 
 def parse_length(value: str | None) -> float | None:
@@ -976,7 +1215,7 @@ def write_markdown(result: dict[str, Any], out_dir: Path) -> None:
         f"- input: `{result.get('input_path')}`",
         f"- input type: `{result.get('input_type')}`",
         f"- engine: `{result.get('engine')}`",
-        f"- figure family: `{result.get('figure_family') or 'global'}`",
+        f"- figure family: `{result.get('figure_family') or 'global'}` (source: `{result.get('figure_family_source') or 'none'}`)",
         f"- threshold profile: `{result.get('threshold_profile')}`",
         f"- status: `{result.get('status')}`",
         f"- manuscript readiness score: `{result.get('manuscript_readiness_score')}/10`",
@@ -1023,9 +1262,28 @@ def write_markdown(result: dict[str, Any], out_dir: Path) -> None:
             f"- max font size: `{svg.get('font_size_max')}`",
             f"- light gridlines: `{svg.get('light_gridline_count')}`",
         ]
+    nature = result.get("nature_guardrails") or {}
+    if nature:
+        lines += [
+            "",
+            "## Nature guardrails",
+            "",
+            f"- strict mode: `{nature.get('strict')}`",
+            f"- status: `{nature.get('status')}`",
+            f"- reference: `{nature.get('reference')}`",
+            "",
+            "| guardrail | status | triggered codes | fix |",
+            "|---|---|---|---|",
+        ]
+        for item in nature.get("checks", []):
+            codes = ", ".join(item.get("hard_hits", []) + item.get("review_hits", [])) or "-"
+            lines.append(f"| {item.get('label')} | {item.get('status')} | {codes} | {item.get('fix')} |")
     lines += ["", "## Top risks", ""]
     for item in result.get("top_risks", []):
         lines.append(f"- `{item.get('status')}` `{item.get('code')}`: {item.get('message')}" + (f" ({item.get('value')})" if "value" in item else ""))
+        rem = item.get("remediation")
+        if rem:
+            lines.append(f"  - fix: {rem.get('fix')} (see `{rem.get('doc')}`)")
     (out_dir / "visual_qa.md").write_text("\n".join(lines) + "\n")
 
 
@@ -1039,18 +1297,25 @@ def main() -> int:
     parser.add_argument("--ocr", choices=["auto", "off", "required"], default="auto", help="Optional OCR mode")
     parser.add_argument("--expected-panels", type=int, default=None, help="Expected panel count for panel geometry QA")
     parser.add_argument("--layout-profile", choices=["auto", "equal", "hierarchical"], default="auto", help="Panel layout interpretation")
+    parser.add_argument("--strict-nature", action="store_true", help="Fail the command when hard Nature guardrails are triggered")
     args = parser.parse_args()
     in_path = resolve_input(Path(args.input).expanduser())
     out_dir = Path(args.out).expanduser()
     ensure_dir(out_dir)
     ext = in_path.suffix.lower()
-    svg_structure = analyze_svg_structure(in_path, args.family) if ext == ".svg" else None
+    # Auto-resolve figure family so family-specific thresholds actually fire even
+    # when the caller forgets --family (otherwise QA silently uses global ones).
+    if args.family:
+        figure_family, family_source = args.family, "cli"
+    else:
+        figure_family, family_source = infer_figure_family(in_path)
+    svg_structure = analyze_svg_structure(in_path, figure_family) if ext == ".svg" else None
     raster_path, rasterization = rasterize_input(in_path, out_dir, args.dpi, args.page)
     input_type = "raster" if ext in {".png", ".jpg", ".jpeg"} else ext.lstrip(".")
     result = analyze_raster(
         raster_path,
         out_dir,
-        args.family,
+        figure_family,
         input_path=in_path,
         input_type=input_type,
         rasterization=rasterization,
@@ -1058,11 +1323,17 @@ def main() -> int:
         expected_panels=args.expected_panels,
         layout_profile=args.layout_profile,
         ocr_mode=args.ocr,
+        strict_nature=args.strict_nature,
     )
+    result["figure_family_source"] = family_source
     (out_dir / "visual_qa.json").write_text(json.dumps({"image_qa": result}, indent=2, ensure_ascii=False) + "\n")
     write_markdown(result, out_dir)
     print(f"visual QA written: {out_dir / 'visual_qa.json'}")
-    return 0 if result.get("checked") else 1
+    if not result.get("checked"):
+        return 1
+    if args.strict_nature and (result.get("nature_guardrails") or {}).get("status") == STATUS_FAIL:
+        return 2
+    return 0
 
 
 if __name__ == "__main__":

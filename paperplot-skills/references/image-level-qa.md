@@ -19,6 +19,12 @@ python3 scripts/visual-qa-rendered-image.py <figure.png> --out <qa_dir> --family
 
 Use global thresholds when the family is unclear. Use family profiles only for expected scientific structure such as lollipop stems, model-validation sparsity, heatmap matrices, Manhattan point clouds, or phylogenetic annotation rings.
 
+For a final manuscript candidate, add strict Nature guardrails:
+
+```bash
+python3 scripts/visual-qa-rendered-image.py <figure.pdf-or-png> --out <qa_dir> --family <family> --strict-nature
+```
+
 ## Checklist
 
 | category | pass condition | fail condition |
@@ -32,6 +38,7 @@ Use global thresholds when the family is unclear. Use family profiles only for e
 | black-white robustness | groups still partly distinguishable by position/shape/labels | color is the only encoding for critical classes |
 | statistics | uncertainty and n/test semantics visible or documented | p-values or stars appear without context |
 | export | PDF vector and PNG preview are crisp | rasterized text, fuzzy lines, tiny file, wrong aspect |
+| Nature guardrails | `nature_guardrails.status` is pass, or warn with a documented reason | strict mode returns fail for overlap, blank space, unreadable preview, or panel imbalance |
 
 ## Old-vs-new visual comparison
 
@@ -57,3 +64,5 @@ Fail or warn if:
 - labels are technically present but unreadable,
 - scientific semantics are only in code and not in figure/notes/metadata,
 - vector output does not preserve editable text.
+
+OCR is optional and may be unavailable, so exact text overlap detection is not guaranteed in every environment. The deterministic checks still need metadata QA and human/agent visual review for scientific meaning.

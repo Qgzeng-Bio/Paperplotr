@@ -75,7 +75,7 @@ lines <- c(
     "- Not run. Use:",
     "",
     "```bash",
-    "python3 scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>",
+    "${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>",
     "```"
   ),
   "",

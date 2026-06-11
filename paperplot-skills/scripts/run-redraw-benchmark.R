@@ -12,10 +12,19 @@ source(helper_path)
 out_root <- file.path("paperplot-skills", "reports", "redraw-benchmark")
 dir.create(out_root, recursive = TRUE, showWarnings = FALSE)
 
-old_fig4 <- "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png"
-fig4_data <- "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/tables/quality_nonlinear_summary.tsv"
-old_nlr <- "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg"
-nlr_data <- "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv"
+# Author-private benchmark inputs live outside the repo. Set PAPERPLOT_FIXTURE_DIR
+# to the base directory holding them; without it this benchmark is skipped
+# (no hardcoded machine-specific path).
+fixture_base <- Sys.getenv("PAPERPLOT_FIXTURE_DIR")
+if (!nzchar(fixture_base)) {
+  message("PAPERPLOT_FIXTURE_DIR not set; skipping author-private redraw benchmark.")
+  quit(save = "no", status = 0)
+}
+fx <- function(rel) file.path(fixture_base, rel)
+old_fig4 <- fx("10-GS/final_results/figures/fig4_quality_traits.png")
+fig4_data <- fx("10-GS/final_results/tables/quality_nonlinear_summary.tsv")
+old_nlr <- fx("7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg")
+nlr_data <- fx("7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv")
 
 read_tsv <- function(path) {
   read.delim(path, sep = "\t", header = TRUE, quote = "", check.names = FALSE, comment.char = "")
