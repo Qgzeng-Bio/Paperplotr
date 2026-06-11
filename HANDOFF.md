@@ -20,8 +20,10 @@ Final public-distribution step is complete.
 9b2478a Add remote skill install workflow
 ```
 
-- `HEAD`, `origin/main`, `origin/portability-linux-fixes`, and `v0.1.0` all point at `9b2478a` at handoff time.
-- Local repo state after release: `main...origin/main` with no uncommitted changes.
+- `v0.1.0` points at `9b2478a`.
+- `origin/portability-linux-fixes` also points at `9b2478a`.
+- `main` received a later handoff-only documentation commit after the release tag; this does not change the pinned `v0.1.0` release contents.
+- Local repo state after the handoff update should be `main...origin/main` with no uncommitted changes.
 
 ### Public install commands
 
