@@ -1,0 +1,5 @@
+interface:
+  display_name: "PaperPlot Skills"
+  short_description: "Scientific figure redesign and QA"
+  brand_color: "#2B6CB0"
+  default_prompt: "Use $paperplot-skills to diagnose, redesign, and QA a scientific figure for manuscript-ready output."

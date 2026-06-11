@@ -31,6 +31,7 @@ template_files <- c(
 
 required_files <- c(
   "SKILL.md",
+  file.path("agents", "openai.yaml"),
   file.path("scripts", "paperplot_helpers.R"),
   file.path("scripts", "validate-skill.R"),
   file.path("scripts", "smoke-test-templates.R"),
@@ -60,6 +61,7 @@ required_files <- c(
   file.path("references", "nature-figure-guardrails.md"),
   file.path("references", "old-vs-new-comparison.md"),
   file.path("references", "visual-perception-qa.md"),
+  file.path("references", "visual-qa-calibration-summary.md"),
   file.path("references", "old-vs-new-visual-scoring.md"),
   file.path("references", "image-level-failure-modes.md"),
   file.path("references", "figure-type-quality-rubric.md"),

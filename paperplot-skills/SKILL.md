@@ -170,7 +170,7 @@ Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbal
 
 Strict Nature failures are revision blockers unless the accepted hierarchy or dense family-specific structure is explicitly justified in notes and metadata.
 
-Positive calibration examples in `reports/visual-qa-calibration-from-replica-library.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
+Positive calibration examples summarized in `references/visual-qa-calibration-summary.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
 
 ## Old-vs-New Comparison
 
