@@ -6,6 +6,7 @@ REPO="${PAPERPLOT_REPO:-Paperplotr}"
 REF="${PAPERPLOT_REF:-portability-linux-fixes}"
 SKILL_PATH="${PAPERPLOT_SKILL_PATH:-paperplot-skills}"
 SKILL_NAME="${PAPERPLOT_SKILL_NAME:-paperplot-skills}"
+PROFILE="${PAPERPLOT_PROFILE:-runtime}"
 DEST_ROOT="${PAPERPLOT_DEST:-${CODEX_HOME:-$HOME/.codex}/skills}"
 DEST="${DEST_ROOT}/${SKILL_NAME}"
 
@@ -60,7 +61,24 @@ if [ -z "$skill_dir" ] || [ ! -f "${skill_dir}/SKILL.md" ]; then
 fi
 
 mkdir -p "$DEST_ROOT"
-cp -R "$skill_dir" "$DEST"
+case "$PROFILE" in
+  runtime)
+    mkdir -p "$DEST"
+    for item in SKILL.md agents scripts references templates; do
+      if [ -e "${skill_dir}/${item}" ]; then
+        cp -R "${skill_dir}/${item}" "$DEST/"
+      fi
+    done
+    ;;
+  full)
+    cp -R "$skill_dir" "$DEST"
+    ;;
+  *)
+    echo "Unknown PAPERPLOT_PROFILE: $PROFILE" >&2
+    echo "Use PAPERPLOT_PROFILE=runtime or PAPERPLOT_PROFILE=full." >&2
+    exit 1
+    ;;
+esac
 
-echo "Installed ${SKILL_NAME} to ${DEST}"
+echo "Installed ${SKILL_NAME} (${PROFILE}) to ${DEST}"
 echo "Restart Codex to pick up the new skill."

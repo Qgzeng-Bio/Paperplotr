@@ -10,11 +10,23 @@ curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-l
 
 Restart Codex after installation.
 
+By default this installs the runtime profile: `SKILL.md`, `agents/`, `scripts/`,
+`references/`, and `templates/`. It omits development reports and examples.
+
 To replace an existing install:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
 ```
+
+To install the full development/validation bundle:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_PROFILE=full sh
+```
+
+Run full validation from a source checkout or a `PAPERPLOT_PROFILE=full`
+install; the default runtime profile is intended for ordinary agent use.
 
 ## Skill Links (Codex + Claude Code)
 

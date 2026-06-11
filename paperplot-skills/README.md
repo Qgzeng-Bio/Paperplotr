@@ -14,6 +14,10 @@ curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-l
 
 Restart Codex after installation.
 
+The one-line installer defaults to the runtime profile: `SKILL.md`, `agents/`,
+`scripts/`, `references/`, and `templates/`. Use `PAPERPLOT_PROFILE=full` for
+development reports, examples, and pressure scenarios.
+
 If the skill already exists, replace it explicitly:
 
 ```bash
@@ -34,7 +38,8 @@ curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-l
 
 ## Validate
 
-Run from the directory that contains `paperplot-skills/`:
+Run from the full source checkout or a `PAPERPLOT_PROFILE=full` install. From
+the directory that contains `paperplot-skills/`:
 
 ```bash
 Rscript paperplot-skills/scripts/validate-skill.R
