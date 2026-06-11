@@ -9,13 +9,19 @@ It does not depend on the PaperPlotR R package. The reusable plotting standards 
 One-line install into Codex:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
 ```
 
 If `curl` is unavailable or broken:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | sh
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+```
+
+Pinned release install:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
 ```
 
 Restart Codex after installation.
@@ -27,7 +33,7 @@ development reports, examples, pressure scenarios, and dev scripts.
 If the skill already exists, replace it explicitly:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/portability-linux-fixes/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
+curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
 ```
 
 ## What It Provides

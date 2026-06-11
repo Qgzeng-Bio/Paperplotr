@@ -3,7 +3,7 @@ set -eu
 
 OWNER="${PAPERPLOT_OWNER:-Qgzeng-Bio}"
 REPO="${PAPERPLOT_REPO:-Paperplotr}"
-REF="${PAPERPLOT_REF:-portability-linux-fixes}"
+REF="${PAPERPLOT_REF:-main}"
 SKILL_PATH="${PAPERPLOT_SKILL_PATH:-paperplot-skills}"
 SKILL_NAME="${PAPERPLOT_SKILL_NAME:-paperplot-skills}"
 PROFILE="${PAPERPLOT_PROFILE:-runtime}"
