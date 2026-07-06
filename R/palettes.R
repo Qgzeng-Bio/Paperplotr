@@ -4,6 +4,10 @@
         "#E6AB02", "#56B4E9", "#7F3C8D", "#11A579",
         "#3969AC", "#F2B701", "#E73F74", "#80BA5A"
     ),
+    manuscript_clean = c(
+        "#E68613", "#3D8EC7", "#4FAF95", "#D95F5F",
+        "#7CB342", "#6FB7C8", "#7A6FA8", "#6B7280"
+    ),
     gray = c("#4D4D4D", "#8C8C8C", "#D9D9D9"),
     black_and_white = c(
         "#000000", "#A0A0A4", "#808080", "#D4D4D4", "#606060",
@@ -42,6 +46,7 @@
 .lab_gradient_palettes <- list(
     blue_red = c("#2166AC", "#67A9CF", "#F7F7F7", "#EF8A62", "#B2182B"),
     teal_gold = c("#0B6E69", "#55A868", "#F4EBD0", "#DDAA33", "#A76C00"),
+    manuscript_density = c("#E8F1F8", "#C9DAEE", "#F6F0EA", "#F5C8B5", "#DF8C7A"),
     graphpad_heatmap = c("#DCEEFF", "#B7D8F6", "#F6F2EC", "#F7C7B2", "#EA907A", "#C95A6A"),
     graphpad_heatmap_alt = c("#E6F2FB", "#A9D0E9", "#D7E6DD", "#F3E7C9", "#D7B18C", "#9B7AA5")
 )

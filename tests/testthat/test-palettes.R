@@ -10,6 +10,7 @@ test_that("available_lab_palettes exposes Prism palette families", {
 
   expect_true(all(c(
     "main",
+    "manuscript_clean",
     "gray",
     "colors",
     "prism_light",
@@ -27,6 +28,15 @@ test_that("Prism palette values stay stable", {
   expect_equal(cols, c("#0000FF", "#FF0000", "#00C000", "#AD07E3", "#FF8000", "#000000"))
   expect_equal(prism_light, c("#A48AD3", "#1CC5FE", "#6FC7CF", "#FBA27D", "#FB7D80"))
   expect_equal(prism_dark, c("#2C1453", "#114CE8", "#0E6F7C", "#FB4F06", "#FB0005"))
+})
+
+test_that("manuscript clean palette stays stable", {
+  cols <- lab_palette(4, palette = "manuscript_clean")
+  gradient_cols <- lab_gradient_palette(5, palette = "manuscript_density")
+
+  expect_equal(cols, c("#E68613", "#3D8EC7", "#4FAF95", "#D95F5F"))
+  expect_length(gradient_cols, 5)
+  expect_equal(gradient_cols[c(1, 5)], c("#E8F1F8", "#DF8C7A"))
 })
 
 test_that("lab_palette supports reverse order and alpha adjustment", {
