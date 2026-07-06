@@ -3,6 +3,8 @@ Title: Publication-Ready ggplot2 Helpers for Scientific Figures
 Version: 0.1.0
 Authors@R:
     person("Qingguo", "Zeng", email = "228021575+Qgzeng-Bio@users.noreply.github.com", role = c("aut", "cre"))
+Author: Qingguo Zeng [aut, cre]
+Maintainer: Qingguo Zeng <228021575+Qgzeng-Bio@users.noreply.github.com>
 Description: A companion package for scientific figure workflows built on
     top of 'ggplot2'. It provides reusable themes, figure-size presets,
     semantic color helpers, multi-panel layout tools, export helpers, and

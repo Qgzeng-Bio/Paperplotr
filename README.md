@@ -118,6 +118,18 @@ Use `theme_lab()` to apply a compact scientific theme:
 p + theme_lab(base_size = 7, line_width = 0.35)
 ```
 
+For dense multi-panel manuscript figures, use the clean composite style. It
+keeps visual weight low, uses color only for semantic contrast, and favors
+alignment, whitespace, and shared legends:
+
+```r
+p +
+  scale_color_lab(palette = "manuscript_clean") +
+  theme_clean_composite()
+
+paperplot_principles()
+```
+
 ### Figure Sizing
 
 Inspect the built-in figure specification helpers:
