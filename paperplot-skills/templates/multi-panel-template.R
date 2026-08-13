@@ -52,6 +52,12 @@ layout <- pp_recommend_facet_grid(n_panels, plot_type = "small_multiples", compl
 label_strategy <- pp_label_strategy(unique(df[[x_col]]), available_width_cm = layout$width_cm / max(1, layout$ncol))
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")
 layout_check <- pp_assess_layout_risk(n_panels, plot_type = "small_multiples", label_strategy = label_strategy)
+group_count <- if (is.null(group_col)) 1L else length(unique(df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 3, n_colors = group_count, n_shapes = 1,
+  n_legend_entries = if (is.null(group_col)) 0 else group_count,
+  chart_family = "small_multiples"
+)
 
 mapping <- aes(x = .data[[x_col]], y = .data[[y_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[group_col]])
@@ -68,7 +74,7 @@ p <- pp_adjust_margins_for_labels(p, label_strategy)
 output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
 
-qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check, cognitive_load_review = cognitive_load_review)
 pp_write_notes(
   notes_path, figure_id, input_path, output_files, preset,
   design_decisions = c(paste("faceted multi-panel layout:", layout$ncol, "x", layout$nrow), "standalone ggplot2 facets instead of external composition packages", "panel sizes chosen with pp_recommend_layout()"),
@@ -81,6 +87,7 @@ pp_write_notes(
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
   palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"),
-  ordering = list(rule = "input order"), qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+  ordering = list(rule = "input order"), qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df),
+  cognitive_load_review = cognitive_load_review)
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

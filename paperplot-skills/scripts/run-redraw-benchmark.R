@@ -61,13 +61,13 @@ fig4_plot <- ggplot(quality) +
   scale_y_continuous(breaks = seq_along(levels(quality$Trait_label)), labels = levels(quality$Trait_label), expand = expansion(mult = c(0.08, 0.08))) +
   scale_x_continuous(limits = c(0, max(quality$xmax) * 1.04), breaks = seq(0, 0.5, by = 0.1), expand = expansion(mult = c(0, 0.04))) +
   labs(x = "Prediction accuracy (mean correlation +/- SD)", y = NULL) +
-  pp_theme(base_size = 7, show_grid = FALSE) +
+  pp_theme(base_size = 9, show_grid = FALSE) +
   theme(
     legend.position = "top",
     legend.justification = "left",
-    legend.title = element_text(size = 6),
-    legend.text = element_text(size = 6),
-    axis.text.y = element_text(size = 6.5),
+    legend.title = element_text(size = 8),
+    legend.text = element_text(size = 8),
+    axis.text.y = element_text(size = 8),
     plot.margin = margin(4, 7, 4, 4)
   )
 
@@ -86,14 +86,14 @@ nlr_plot <- ggplot(nlr, aes(x = High_NLR_total, y = Sample)) +
     data = nlr[top_label, , drop = FALSE],
     aes(label = High_NLR_total),
     hjust = -0.2,
-    size = 2.0,
+    size = pp_text_size_mm(8),
     colour = "#2D2D2D"
   ) +
   scale_x_continuous(limits = c(0, max(nlr$High_NLR_total) * 1.08), expand = expansion(mult = c(0, 0.02))) +
   labs(x = "High-confidence NLR genes", y = NULL) +
-  pp_theme(base_size = 7, show_grid = FALSE) +
+  pp_theme(base_size = 9, show_grid = FALSE) +
   theme(
-    axis.text.y = element_text(size = 5.8),
+    axis.text.y = element_text(size = 8),
     plot.margin = margin(4, 7, 4, 4)
   )
 

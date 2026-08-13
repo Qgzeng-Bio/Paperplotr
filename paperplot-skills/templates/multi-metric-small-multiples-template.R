@@ -71,6 +71,12 @@ palette_check <- if (!is.null(group_col)) pp_validate_palette(plot_df[[group_col
 layout_check <- pp_assess_layout_risk(length(metric_levels), plot_type = "small_multiples", label_strategy = list(status = label_strategy$status))
 data_profile <- pp_data_profile(plot_df, sample_col = sample_col, group_col = group_col, metric_col = metric_col, value_col = value_col)
 visual_budget <- pp_visual_budget(figure_role, n_panels = length(metric_levels), n_labels = length(key_samples), n_legend_entries = if (!is.null(group_col)) length(unique(plot_df[[group_col]])) else 0)
+color_count <- if (is.null(group_col)) length(metric_levels) else length(unique(plot_df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 3, n_colors = color_count, n_shapes = 1,
+  n_legend_entries = visual_budget$n_legend_entries,
+  chart_family = "multi_metric_small_multiples"
+)
 
 design_brief <- pp_design_brief(
   scientific_message = figure_spec$scientific_message,
@@ -108,7 +114,7 @@ if (nrow(key_label_df) > 0 && identical(label_strategy$direct_label_mode, "selec
   p <- p + geom_text(
     data = key_label_df,
     aes(label = .data[[sample_col]]),
-    size = 1.7,
+    size = pp_text_size_mm(8),
     hjust = -0.12,
     vjust = 0.45,
     show.legend = FALSE,
@@ -126,7 +132,7 @@ output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$widt
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_summary(
-  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message), palette_check, layout_check),
+  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message), palette_check, layout_check, cognitive_load_review = cognitive_load_review),
   pp_qa_design_preflight(design_brief, design_plan, visual_budget),
   pp_qa_label_strategy(label_strategy, figure_role)
 )
@@ -157,6 +163,7 @@ pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout 
   data_summary = pp_data_summary(df), design_brief = design_brief, design_plan = design_plan,
   data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy,
   palette_plan = list(type = if (!is.null(group_col)) "group" else "metric", name = "graphpad_discrete"),
+  cognitive_load_review = cognitive_load_review,
   sidecars = list(label_key = if (file.exists(label_key_path)) label_key_path else NULL))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

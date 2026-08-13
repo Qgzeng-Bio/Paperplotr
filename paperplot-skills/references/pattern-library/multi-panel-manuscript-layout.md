@@ -38,7 +38,7 @@ Derived from replica cases combining scatter, heatmap, ridge, tile, bar, ternary
 ## Typography And Marks
 
 - One font family and coherent base size across panels.
-- Panel labels about 8 pt bold.
+- Panel labels target 12 pt bold; ordinary labels/axes target 9 pt and compact ticks/legends target 8 pt.
 - Avoid oversized subplot titles; use caption/notes for narrative.
 - Use consistent stroke widths across panels.
 

@@ -123,9 +123,14 @@ check_notes <- function(notes_path) {
   if (length(missing) > 0) paste("notes missing:", paste(missing, collapse = ", ")) else NA_character_
 }
 
-check_metadata_contract <- function(metadata_path) {
+check_metadata_contract <- function(metadata_path, bioinformatics = FALSE) {
   metadata <- paste(readLines(metadata_path, warn = FALSE), collapse = "\n")
-  required <- c("\"design_brief\"", "\"design_plan\"", "\"label_strategy\"", "\"visual_budget\"")
+  required <- c(
+    "\"design_brief\"", "\"design_plan\"", "\"label_strategy\"", "\"visual_budget\"",
+    "\"cognitive_load_review\"", "\"journal_profile_snapshot\"", "\"export_geometry\"",
+    "\"target_text_pt\": 9", "\"compact_text_pt\": 8", "\"panel_label_pt\": 12", "\"min_text_pt\": 6"
+  )
+  if (bioinformatics) required <- c(required, "\"bioinformatics_validation\"", "\"status\": \"not_recorded\"", "\"plotting_data_path\"")
   missing <- required[!vapply(required, function(pattern) grepl(pattern, metadata, fixed = TRUE), logical(1))]
   if (length(missing) > 0) paste("metadata missing:", paste(missing, collapse = ", ")) else NA_character_
 }
@@ -154,6 +159,11 @@ run_template <- function(template_name, work_root) {
   notes_files <- list.files(output_dir, pattern = "_notes\\.md$", full.names = TRUE)
   metadata_files <- list.files(output_dir, pattern = "_metadata\\.json$", full.names = TRUE)
   qa_files <- list.files(output_dir, pattern = "_qa\\.md$", full.names = TRUE)
+  plotting_data_files <- list.files(output_dir, pattern = "_plotting_data\\.tsv$", full.names = TRUE)
+  bioinformatics <- template_name %in% c(
+    "bio-genome-quality-overview-template.R", "bio-duplication-mode-comparison-template.R",
+    "volcano-plot-template.R", "ma-plot-template.R", "enrichment-dotplot-template.R"
+  )
 
   problems <- character()
   if (!identical(status, 0L)) problems <- c(problems, paste("Rscript status", status))
@@ -162,6 +172,7 @@ run_template <- function(template_name, work_root) {
   if (length(notes_files) < 1) problems <- c(problems, "missing notes")
   if (length(metadata_files) < 1) problems <- c(problems, "missing metadata")
   if (length(qa_files) < 1) problems <- c(problems, "missing QA")
+  if (bioinformatics && length(plotting_data_files) < 1) problems <- c(problems, "missing plotting-data TSV")
 
   for (files in list(pdf_files, png_files, notes_files, metadata_files, qa_files)) {
     if (length(files) > 0 && any(file.info(files)[["size"]] <= 0, na.rm = TRUE)) problems <- c(problems, "empty output file")
@@ -171,7 +182,7 @@ run_template <- function(template_name, work_root) {
     if (!is.na(notes_problem)) problems <- c(problems, notes_problem)
   }
   if (length(metadata_files) > 0) {
-    metadata_problem <- check_metadata_contract(metadata_files[[1]])
+    metadata_problem <- check_metadata_contract(metadata_files[[1]], bioinformatics = bioinformatics)
     if (!is.na(metadata_problem)) problems <- c(problems, metadata_problem)
   }
   if (length(problems) == 0) {
@@ -179,6 +190,10 @@ run_template <- function(template_name, work_root) {
     validation_status <- attr(validation, "status")
     if (is.null(validation_status)) validation_status <- 0L
     if (!identical(validation_status, 0L)) problems <- c(problems, paste("output validator status", validation_status), paste(validation, collapse = " | "))
+    strict_validation <- suppressWarnings(system2(rscript_bin, c(validator_path, output_dir, "--manuscript-ready"), stdout = TRUE, stderr = TRUE))
+    strict_status <- attr(strict_validation, "status")
+    if (is.null(strict_status)) strict_status <- 0L
+    if (identical(strict_status, 0L)) problems <- c(problems, "template smoke output unexpectedly passed manuscript-ready validation")
   }
   if (length(problems) > 0 && length(output) > 0) problems <- c(problems, paste("Rscript output:", paste(tail(output, 8), collapse = " | ")))
 

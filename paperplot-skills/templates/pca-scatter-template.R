@@ -50,6 +50,12 @@ label_strategy <- pp_label_strategy(seq_len(nrow(df)), available_width_cm = pres
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "single ordination color")
 layout <- pp_estimate_canvas_size(1, preset = preset)
 layout_check <- pp_assess_layout_risk(1, plot_type = "ordination", label_strategy = label_strategy)
+group_count <- if (is.null(group_col)) 1L else length(unique(df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 3, n_colors = group_count, n_shapes = 1,
+  n_legend_entries = if (is.null(group_col)) 0 else group_count,
+  chart_family = "ordination_scatter"
+)
 
 mapping <- aes(x = .data[[pc1_col]], y = .data[[pc2_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[pc1_col]], y = .data[[pc2_col]], colour = .data[[group_col]])
@@ -66,7 +72,7 @@ if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]])
 output_files <- pp_save_all(p, output_stem, preset = preset)
 invisible(lapply(output_files, pp_assert_output))
 
-qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check, cognitive_load_review = cognitive_load_review)
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
   design_decisions = c("pattern: pca-pcoa-ordination", "ordination scatter with light zero reference lines", "labels should remain selective", "GraphPad-like group colors when grouped"),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
@@ -77,6 +83,7 @@ pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
   palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"), ordering = list(rule = "ordination coordinates"),
-  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df),
+  cognitive_load_review = cognitive_load_review)
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

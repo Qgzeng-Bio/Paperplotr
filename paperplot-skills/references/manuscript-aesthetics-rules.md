@@ -22,8 +22,9 @@ These rules translate the replica-library review into stable figure-design decis
 ## Text
 
 - Use one sans-serif family, preferably Arial/Helvetica-equivalent.
-- Most manuscript text: 5-7 pt at final size.
-- Panel labels: about 8 pt bold, placed consistently.
+- Ordinary print labels and axes target 9 pt; ticks, legends, and compact annotations target 8 pt.
+- Panel labels target 12 pt bold and are placed consistently.
+- Treat 6 pt as an absolute floor, not a design target. A smaller-than-target exception needs an explicit journal/family justification and final-size visual QA.
 - In-panel titles are usually removed; use axis labels, panel labels, and caption/notes instead.
 - Abbreviate or index long labels only when the full mapping is written to a sidecar.
 

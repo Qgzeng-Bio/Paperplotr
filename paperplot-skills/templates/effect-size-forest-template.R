@@ -75,6 +75,10 @@ statistical_plan <- list(
 
 label_strategy <- pp_label_strategy_v2(metric_levels, figure_role = figure_role, available_width_cm = 18, sample_identity_role = "core")
 visual_budget <- pp_visual_budget(figure_role = figure_role, n_panels = 1, n_labels = length(metric_levels), n_legend_entries = 2)
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 3, n_colors = 2, n_shapes = 1, n_legend_entries = 0,
+  chart_family = "effect_size_forest"
+)
 
 design_brief <- pp_design_brief(
   scientific_message = scientific_message,
@@ -104,10 +108,10 @@ plot <- ggplot(effect_df, aes(y = metric, x = estimate)) +
   geom_point(aes(color = direction), size = 2.3) +
   scale_color_manual(values = c(positive = "#2F6DB3", negative = "#B54A47"), guide = "none") +
   labs(x = effect_label, y = NULL) +
-  pp_theme(base_size = 7)
+  pp_theme(base_size = 9)
 
 qa_results <- pp_qa_summary(
-  pp_qa_preflight(figure_spec, metric_spec),
+  pp_qa_preflight(figure_spec, metric_spec, cognitive_load_review = cognitive_load_review),
   pp_qa_design_preflight(design_brief, design_plan, visual_budget),
   pp_qa_label_strategy(label_strategy, figure_role),
   pp_qa_result("statistical_expression", "pass", "Effect size and interval are the primary visual expression.")
@@ -144,7 +148,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = outputs,
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),
@@ -154,6 +158,8 @@ pp_write_metadata(
   data_profile = data_profile,
   visual_budget = visual_budget,
   label_strategy = label_strategy,
-  statistical_plan = statistical_plan
+  statistical_plan = statistical_plan,
+  cognitive_load_review = cognitive_load_review
 )
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

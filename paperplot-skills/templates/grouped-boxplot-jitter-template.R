@@ -68,6 +68,11 @@ visual_budget <- pp_visual_budget(
   n_labels = length(levels(df[[group_col]])),
   n_legend_entries = length(levels(df[[group_col]]))
 )
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = if (isTRUE(statistical_plan$min_n >= 5)) 4 else 3,
+  n_colors = length(levels(df[[group_col]])), n_shapes = 1, n_legend_entries = 0,
+  chart_family = "grouped_boxplot_jitter"
+)
 
 design_brief <- pp_design_brief(
   scientific_message = scientific_message,
@@ -101,11 +106,11 @@ plot <- base_plot +
   stat_summary(fun = median, geom = "crossbar", width = 0.45, linewidth = 0.35, color = "#1D1D1B") +
   pp_scale_color(levels(df[[group_col]])) +
   labs(x = NULL, y = y_label, color = "Group") +
-  pp_theme(base_size = 7) +
+  pp_theme(base_size = 9) +
   theme(legend.position = "none")
 
 qa_results <- pp_qa_summary(
-  pp_qa_preflight(figure_spec, metric_spec),
+  pp_qa_preflight(figure_spec, metric_spec, cognitive_load_review = cognitive_load_review),
   pp_qa_design_preflight(design_brief, design_plan, visual_budget),
   pp_qa_label_strategy(label_strategy, figure_role),
   pp_validate_statistical_expression(if (statistical_plan$min_n >= 5) "boxplot_jitter" else "raw_points", statistical_plan, data_profile)
@@ -143,7 +148,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = outputs,
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),
@@ -153,6 +158,8 @@ pp_write_metadata(
   data_profile = data_profile,
   visual_budget = visual_budget,
   label_strategy = label_strategy,
-  statistical_plan = statistical_plan
+  statistical_plan = statistical_plan,
+  cognitive_load_review = cognitive_load_review
 )
+qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

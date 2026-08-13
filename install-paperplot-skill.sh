@@ -10,6 +10,10 @@ PROFILE="${PAPERPLOT_PROFILE:-runtime}"
 DEST_ROOT="${PAPERPLOT_DEST:-${CODEX_HOME:-$HOME/.codex}/skills}"
 DEST="${DEST_ROOT}/${SKILL_NAME}"
 
+case "$SKILL_NAME" in
+  ""|.|..|*/*) echo "PAPERPLOT_SKILL_NAME must be one directory name." >&2; exit 1 ;;
+esac
+
 download_url() {
   url="$1"
   out="$2"
@@ -28,24 +32,39 @@ download_url() {
   fi
 
   echo "Could not download $url. Install curl or wget and try again." >&2
-  exit 1
+  return 1
 }
 
 tmp="${TMPDIR:-/tmp}/paperplot-skill-install.$$"
 archive="${tmp}/repo.zip"
-mkdir -p "$tmp"
-trap 'rm -rf "$tmp"' EXIT HUP INT TERM
-
-if [ -e "$DEST" ]; then
-  if [ "${PAPERPLOT_OVERWRITE:-0}" = "1" ]; then
-    rm -rf "$DEST"
-  else
-    echo "Destination already exists: $DEST" >&2
-    echo "Set PAPERPLOT_OVERWRITE=1 to replace it." >&2
-    exit 1
+stage=""
+backup=""
+cleanup() {
+  status="${1:-0}"
+  trap - 0 HUP INT TERM
+  if [ -n "$backup" ] && [ -e "$backup" ] && [ ! -e "$DEST" ]; then
+    if mv "$backup" "$DEST"; then
+      echo "Restored previous installation after an interrupted switch: $DEST" >&2
+      backup=""
+    else
+      echo "Automatic restore failed; previous installation remains at: $backup" >&2
+    fi
   fi
+  if [ -n "$stage" ] && [ -e "$stage" ]; then
+    rm -rf "$stage"
+  fi
+  rm -rf "$tmp"
+  exit "$status"
+}
+trap 'cleanup $?' 0 HUP INT TERM
+
+if [ -e "$DEST" ] && [ "${PAPERPLOT_OVERWRITE:-0}" != "1" ]; then
+  echo "Destination already exists: $DEST" >&2
+  echo "Set PAPERPLOT_OVERWRITE=1 to replace it transactionally." >&2
+  exit 1
 fi
 
+mkdir -p "$tmp"
 url="https://codeload.github.com/${OWNER}/${REPO}/zip/${REF}"
 echo "Downloading ${OWNER}/${REPO}@${REF}..."
 download_url "$url" "$archive"
@@ -73,26 +92,33 @@ if [ -z "$skill_dir" ] || [ ! -f "${skill_dir}/SKILL.md" ]; then
 fi
 
 mkdir -p "$DEST_ROOT"
+stage="${DEST_ROOT}/.${SKILL_NAME}.install.$$"
+backup="${DEST_ROOT}/.${SKILL_NAME}.backup.$$"
+if [ -e "$stage" ] || [ -e "$backup" ]; then
+  echo "Transactional staging path already exists; retry the install: $stage or $backup" >&2
+  exit 1
+fi
+mkdir "$stage"
+
 case "$PROFILE" in
   runtime)
-    mkdir -p "$DEST"
     for item in SKILL.md agents references templates; do
       if [ -e "${skill_dir}/${item}" ]; then
-        cp -R "${skill_dir}/${item}" "$DEST/"
+        cp -R "${skill_dir}/${item}" "$stage/"
       fi
     done
-    mkdir -p "$DEST/scripts"
+    mkdir -p "$stage/scripts"
     for script in paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py; do
       if [ -e "${skill_dir}/scripts/${script}" ]; then
-        cp "${skill_dir}/scripts/${script}" "$DEST/scripts/"
+        cp "${skill_dir}/scripts/${script}" "$stage/scripts/"
       fi
     done
     if [ -d "${skill_dir}/scripts/lib" ]; then
-      cp -R "${skill_dir}/scripts/lib" "$DEST/scripts/"
+      cp -R "${skill_dir}/scripts/lib" "$stage/scripts/"
     fi
     ;;
   full)
-    cp -R "$skill_dir" "$DEST"
+    cp -R "${skill_dir}/." "$stage/"
     ;;
   *)
     echo "Unknown PAPERPLOT_PROFILE: $PROFILE" >&2
@@ -100,6 +126,35 @@ case "$PROFILE" in
     exit 1
     ;;
 esac
+
+for required in \
+  SKILL.md \
+  scripts/paperplot_helpers.R \
+  scripts/validate-figure-output.R \
+  scripts/visual-qa-rendered-image.py \
+  scripts/compare-old-new-figures.py \
+  scripts/lib/contract-parsers.R \
+  references/journal-specs-matrix.md \
+  references/bioinformatics-figure-validation.md
+do
+  if [ ! -f "${stage}/${required}" ]; then
+    echo "Staged profile is incomplete; missing ${stage}/${required}" >&2
+    exit 1
+  fi
+done
+
+if [ -e "$DEST" ]; then
+  mv "$DEST" "$backup"
+fi
+if ! mv "$stage" "$DEST"; then
+  echo "Could not activate staged installation; restoring the previous runtime." >&2
+  exit 1
+fi
+stage=""
+if [ -n "$backup" ] && [ -e "$backup" ]; then
+  rm -rf "$backup"
+fi
+backup=""
 
 echo "Installed ${SKILL_NAME} (${PROFILE}) to ${DEST}"
 echo "Restart Codex to pick up the new skill."

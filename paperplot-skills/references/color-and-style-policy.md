@@ -6,7 +6,7 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 
 - Use `pp_theme(show_grid = FALSE)` by default.
 - Turn on gridlines only for quantitative reading tasks where they help.
-- Use Arial with 7-8 pt base text for manuscript-scale figures.
+- Use Arial or an available Helvetica-equivalent with 9 pt base text; reserve 8 pt for compact ticks, legends, and annotations.
 - Use line widths around 0.35-0.4 pt.
 - Use the selected pattern document before changing defaults; style choices should follow figure family, data density, and target size.
 - Avoid large in-panel titles; panel labels and captions carry narrative.
@@ -18,7 +18,7 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 - Keep group colors stable across panels.
 - Use gray for reference or background groups when contrast should be reduced.
 - For differential plots, use neutral background points and at most two accent directions/classes.
-- For ordination/group comparisons, keep primary group colors under 8 classes in main figures.
+- For ordination/group comparisons, more than 3 meaning-carrying colors triggers review; a larger group palette is allowed only when groups are scientifically required, directly interpretable, and documented as a family-specific exception.
 - For set/network/circos plots, color groups rather than every edge/link.
 
 ## Continuous Color

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import re
@@ -35,6 +36,8 @@ else:
 STATUS_PASS = "pass"
 STATUS_WARN = "warn"
 STATUS_FAIL = "fail"
+VISUAL_QA_SCHEMA_VERSION = 3
+VISUAL_QA_TOOL_ID = "paperplot-visual-qa-rendered-image"
 
 BASE_RASTER_THRESHOLDS = {
     "min_width_px": 900,
@@ -1208,6 +1211,49 @@ def analyze_svg_structure(path: Path, figure_family: str | None = None) -> dict[
     }
 
 
+def visual_analysis_payload(result: dict[str, Any]) -> dict[str, Any]:
+    keys = (
+        "visual_qa_schema_version", "tool_id", "checked", "engine", "input_type",
+        "input_md5", "input_size_bytes", "figure_family", "threshold_profile",
+        "family_thresholds", "image_size_px", "file_size_bytes", "aspect_ratio",
+        "content_bbox_px", "content_bbox_area_fraction", "blank_margin_fraction",
+        "content_density", "thumbnail_content_density", "grayscale_mean",
+        "grayscale_std", "color_count_estimate", "dominant_colors",
+        "high_saturation_content_fraction", "minimum_colored_luminance_delta",
+        "component_summary", "text_burden_score", "line_burden", "panel_geometry",
+        "ocr", "svg_structure", "manuscript_readiness_score", "status",
+        "top_risks", "nature_guardrails", "invocation",
+    )
+    raster = result.get("rasterization") or {}
+    payload = {key: result.get(key) for key in keys}
+    payload["rasterization"] = {
+        key: raster.get(key)
+        for key in ("performed", "engine", "source_type", "dpi", "page")
+    }
+    return payload
+
+
+def visual_analysis_fingerprint(result: dict[str, Any]) -> str:
+    canonical = json.dumps(visual_analysis_payload(result), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def verify_visual_evidence(path: Path) -> int:
+    try:
+        result = json.loads(path.read_text())["image_qa"]
+        expected = result.get("analysis_fingerprint")
+        if result.get("analysis_fingerprint_algorithm") != "sha256-canonical-v1" or not expected:
+            raise ValueError("missing analysis fingerprint")
+        actual = visual_analysis_fingerprint(result)
+        if actual != expected:
+            raise ValueError("analysis fingerprint mismatch")
+    except Exception as exc:
+        print(f"Invalid visual QA evidence: {exc}", file=sys.stderr)
+        return 1
+    print(actual)
+    return 0
+
+
 def write_markdown(result: dict[str, Any], out_dir: Path) -> None:
     lines = [
         "# Visual QA",
@@ -1289,8 +1335,9 @@ def write_markdown(result: dict[str, Any], out_dir: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Rendered image visual QA for paperplot-skills.")
-    parser.add_argument("input", help="PNG/JPG/JPEG/SVG/PDF file or output directory containing a rendered figure")
-    parser.add_argument("--out", required=True, help="Output directory for visual_qa.json/md, previews, and rasterized intermediates")
+    parser.add_argument("input", nargs="?", help="PNG/JPG/JPEG/SVG/PDF file or output directory containing a rendered figure")
+    parser.add_argument("--out", help="Output directory for visual_qa.json/md, previews, and rasterized intermediates")
+    parser.add_argument("--verify-evidence", help="Verify an existing visual_qa.json analysis fingerprint and exit")
     parser.add_argument("--family", default=None, help="Optional figure family for family-specific visual QA thresholds")
     parser.add_argument("--dpi", type=int, default=300, help="Rasterization DPI for PDF/SVG inputs")
     parser.add_argument("--page", type=int, default=1, help="PDF page number to rasterize")
@@ -1299,6 +1346,10 @@ def main() -> int:
     parser.add_argument("--layout-profile", choices=["auto", "equal", "hierarchical"], default="auto", help="Panel layout interpretation")
     parser.add_argument("--strict-nature", action="store_true", help="Fail the command when hard Nature guardrails are triggered")
     args = parser.parse_args()
+    if args.verify_evidence:
+        return verify_visual_evidence(Path(args.verify_evidence).expanduser())
+    if not args.input or not args.out:
+        parser.error("input and --out are required unless --verify-evidence is used")
     in_path = resolve_input(Path(args.input).expanduser())
     out_dir = Path(args.out).expanduser()
     ensure_dir(out_dir)
@@ -1325,7 +1376,28 @@ def main() -> int:
         ocr_mode=args.ocr,
         strict_nature=args.strict_nature,
     )
+    result["visual_qa_schema_version"] = VISUAL_QA_SCHEMA_VERSION
+    result["tool_id"] = VISUAL_QA_TOOL_ID
     result["figure_family_source"] = family_source
+    result["input_md5"] = hashlib.md5(in_path.read_bytes()).hexdigest()
+    result["input_size_bytes"] = in_path.stat().st_size
+    result["invocation"] = {
+        "family": figure_family,
+        "dpi": args.dpi,
+        "page": args.page,
+        "ocr": args.ocr,
+        "expected_panels": args.expected_panels,
+        "layout_profile": args.layout_profile,
+        "strict_nature": args.strict_nature,
+    }
+    grayscale = Path(result.get("grayscale_preview", ""))
+    result["grayscale_preview_md5"] = hashlib.md5(grayscale.read_bytes()).hexdigest() if grayscale.is_file() else None
+    raster_value = (result.get("rasterization") or {}).get("raster_path")
+    raster_file = Path(raster_value) if raster_value else None
+    if raster_file and raster_file.is_file():
+        result["rasterization"]["raster_md5"] = hashlib.md5(raster_file.read_bytes()).hexdigest()
+    result["analysis_fingerprint_algorithm"] = "sha256-canonical-v1"
+    result["analysis_fingerprint"] = visual_analysis_fingerprint(result)
     (out_dir / "visual_qa.json").write_text(json.dumps({"image_qa": result}, indent=2, ensure_ascii=False) + "\n")
     write_markdown(result, out_dir)
     print(f"visual QA written: {out_dir / 'visual_qa.json'}")

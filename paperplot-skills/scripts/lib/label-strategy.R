@@ -1,6 +1,6 @@
 # Design-aware label strategy helpers for paperplot-skills.
 
-pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5) {
+pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 8) {
   labels <- as.character(labels)
   labels <- labels[!is.na(labels)]
   if (length(labels) == 0) {

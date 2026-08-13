@@ -38,7 +38,7 @@ Derived from replica cases combining volcano plots, MA plots, GSEA/MSigDB scores
 - Background points 0.5-0.9 mm with alpha 0.25-0.45.
 - Highlight points 0.9-1.4 mm.
 - Threshold lines 0.3-0.45 pt and gray.
-- Labels 5-6 pt with strict count limits.
+- Labels target 8 pt with strict count limits; reduce labels rather than shrinking below the 6 pt absolute floor.
 
 ## Color Strategy
 

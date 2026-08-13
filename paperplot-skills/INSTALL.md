@@ -32,6 +32,10 @@ To replace an existing install:
 curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
 ```
 
+Overwrite is transactional: download, staging, and required-file validation
+finish before the previous runtime is switched out. Failure before activation
+preserves the previous installation.
+
 To install the full development/validation bundle:
 
 ```bash
