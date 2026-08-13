@@ -25,6 +25,18 @@ jobs:
       SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: any::ggplot2
+
+      - name: Install visual-contract test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python3 -m pip install --user pillow
+
       - name: Install runtime profile from remote script
         run: |
           set -eux
@@ -46,12 +58,82 @@ jobs:
           test -f "${skill}/scripts/paperplot_helpers.R"
           test -f "${skill}/scripts/visual-qa-rendered-image.py"
           test -f "${skill}/scripts/compare-old-new-figures.py"
+          test -f "${skill}/scripts/validate-figure-output.R"
           test -f "${skill}/scripts/lib/design-brief.R"
+          test -f "${skill}/scripts/lib/contract-parsers.R"
+          test -f "${skill}/references/journal-specs-matrix.md"
+          test -f "${skill}/references/bioinformatics-figure-validation.md"
           test -d "${skill}/references"
           test -d "${skill}/templates"
           test ! -d "${skill}/reports"
           test ! -f "${skill}/scripts/run-redraw-benchmark.R"
           test ! -f "${skill}/scripts/run-pressure-scenarios.R"
+          test ! -f "${skill}/scripts/test-contract-regressions.R"
+
+          SKILL="${skill}" Rscript - <<'RS'
+          root <- Sys.getenv("SKILL")
+          source(file.path(root, "scripts", "paperplot_helpers.R"))
+          stopifnot(pp_helper_version == "standalone-0.5.0")
+          stopifnot(pp_profile_for_preset("ncomms_half") == "nature_communications")
+          stopifnot(inherits(try(pp_figure_spec("f", "t", scientific_message = "m", plot_type = "scatter", output_preset = "ncomms", journal_profile = "nature_like"), silent = TRUE), "try-error"))
+          stopifnot(inherits(try(pp_figure_spec("f", "t", scientific_message = "m", plot_type = "scatter", output_preset = "double_column", journal_profile = "medical_radiology"), silent = TRUE), "try-error"))
+          source(file.path(root, "scripts", "lib", "contract-parsers.R"))
+          old <- getOption("OutDec"); options(OutDec = ",")
+          payload <- pp_parse_json_text(pp_to_json(list(decimal = 1.25, scientific = 1e-7)))
+          options(OutDec = old)
+          stopifnot(identical(payload$decimal, 1.25), identical(payload$scientific, 1e-7))
+          cat("runtime helper contract passed\n")
+          RS
+
+          work="${RUNNER_TEMP}/runtime-smoke"
+          mkdir -p "${work}/outputs"
+          printf 'x,y,group\n1,2,A\n2,3,B\n3,4,A\n4,5,B\n' > "${work}/input.csv"
+          python3 - "${skill}/templates/single-panel-template.R" "${work}/run.R" "${work}" <<'PY'
+          import pathlib, sys
+          source, target, work = map(pathlib.Path, sys.argv[1:])
+          text = source.read_text()
+          text = text.replace('input_path <- "TODO-input.csv"', f'input_path <- "{work / "input.csv"}"')
+          text = text.replace('output_dir <- "figures"', f'output_dir <- "{work / "outputs"}"')
+          text = text.replace('x_col <- "TODO_x"', 'x_col <- "x"')
+          text = text.replace('y_col <- "TODO_y"', 'y_col <- "y"')
+          text = text.replace('group_col <- NULL', 'group_col <- "group"')
+          text = text.replace('x_label <- "TODO x label with units"', 'x_label <- "X (a.u.)"')
+          text = text.replace('y_label <- "TODO y label with units"', 'y_label <- "Y (a.u.)"')
+          target.write_text(text)
+          PY
+          PAPERPLOT_HELPER="${skill}/scripts/paperplot_helpers.R" Rscript "${work}/run.R"
+          Rscript "${skill}/scripts/validate-figure-output.R" "${work}/outputs"
+          if Rscript "${skill}/scripts/validate-figure-output.R" "${work}/outputs" --manuscript-ready; then
+            echo "Runtime smoke must not claim manuscript readiness before rendered-image QA" >&2
+            exit 1
+          fi
+
+      - name: Verify transactional overwrite failure
+        run: |
+          set -eux
+          root="${RUNNER_TEMP}/transaction-test"
+          dest="${root}/skills"
+          mock="${root}/mock-bin"
+          mkdir -p "${dest}/paperplot-skills" "${mock}"
+          printf 'preserve-me\n' > "${dest}/paperplot-skills/sentinel.txt"
+          cat > "${mock}/curl" <<'SH'
+          #!/usr/bin/env sh
+          exit 23
+          SH
+          cat > "${mock}/wget" <<'SH'
+          #!/usr/bin/env sh
+          exit 24
+          SH
+          chmod +x "${mock}/curl" "${mock}/wget"
+          if PATH="${mock}:/usr/bin:/bin" \
+            PAPERPLOT_DEST="${dest}" \
+            PAPERPLOT_OVERWRITE=1 \
+            sh install-paperplot-skill.sh; then
+            echo "Fault-injected overwrite unexpectedly succeeded" >&2
+            exit 1
+          fi
+          test "$(cat "${dest}/paperplot-skills/sentinel.txt")" = "preserve-me"
+          test -z "$(find "${dest}" -maxdepth 1 -name '.paperplot-skills.*' -print -quit)"
 
       - name: Install full profile from remote script
         run: |
@@ -74,3 +156,8 @@ jobs:
           test -f "${skill}/reports/final-skill-test-report.md"
           test -f "${skill}/scripts/validate-skill.R"
           test -f "${skill}/examples/pressure-scenarios.md"
+
+          cd "${dest}"
+          Rscript paperplot-skills/scripts/validate-skill.R
+          PAPERPLOT_PYTHON=python3 Rscript paperplot-skills/scripts/test-contract-regressions.R
+          Rscript paperplot-skills/scripts/smoke-test-templates.R

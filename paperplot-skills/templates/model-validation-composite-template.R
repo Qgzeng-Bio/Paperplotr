@@ -106,6 +106,10 @@ metric_spec <- pp_metric_spec(
 data_profile <- pp_data_profile(df, group_col = group_col, value_col = y_col)
 label_strategy <- pp_label_strategy_v2(group_levels, figure_role = figure_role, available_width_cm = 18, sample_identity_role = "core")
 visual_budget <- pp_visual_budget(figure_role = figure_role, n_panels = 3, n_labels = 0, n_legend_entries = length(group_levels))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 6, n_colors = length(group_levels), n_shapes = 1,
+  n_legend_entries = length(group_levels), chart_family = "model_validation_composite"
+)
 statistical_plan <- list(
   plot_type = "model_validation_composite",
   observed_col = x_col,
@@ -147,11 +151,11 @@ p <- ggplot() +
   geom_point(data = perf_df, aes(x = x_value, y = y_value, colour = group), size = 2.1, inherit.aes = FALSE, na.rm = TRUE) +
   facet_wrap(~ panel, scales = "free", ncol = 3) +
   pp_scale_color(groups = group_levels) +
-  pp_theme(base_size = 7, show_grid = FALSE) +
+  pp_theme(base_size = 9, show_grid = FALSE) +
   labs(x = "Observed, predicted, or model index", y = "Model-validation value", colour = group_col)
 
 qa_results <- pp_qa_summary(
-  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message)),
+  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message), cognitive_load_review = cognitive_load_review),
   pp_qa_design_preflight(design_brief, design_plan, visual_budget),
   pp_qa_label_strategy(label_strategy, figure_role),
   pp_qa_result("statistical_expression", "warn", "Composite shows fit, residuals, and R-squared; confirm interval definition before final manuscript use.")
@@ -191,7 +195,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = outputs,
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),
@@ -201,7 +205,8 @@ pp_write_metadata(
   data_profile = data_profile,
   visual_budget = visual_budget,
   label_strategy = label_strategy,
-  statistical_plan = statistical_plan
+  statistical_plan = statistical_plan,
+  cognitive_load_review = cognitive_load_review
 )
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

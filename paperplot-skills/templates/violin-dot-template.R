@@ -46,6 +46,11 @@ label_strategy <- pp_label_strategy(unique(df[[group_col]]), available_width_cm 
 palette_check <- pp_validate_palette(df[[group_col]], "discrete")
 layout <- pp_estimate_canvas_size(1, preset = preset)
 layout_check <- pp_assess_layout_risk(1, plot_type = "distribution", label_strategy = label_strategy)
+group_count <- length(unique(df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 4, n_colors = group_count, n_shapes = 1, n_legend_entries = 0,
+  chart_family = "violin_dot"
+)
 
 p <- ggplot(df, aes(x = .data[[group_col]], y = .data[[value_col]], fill = .data[[group_col]])) +
   geom_violin(width = 0.72, linewidth = 0.28, alpha = 0.34, trim = FALSE) +
@@ -60,7 +65,7 @@ p <- pp_adjust_margins_for_labels(p, label_strategy)
 output_files <- pp_save_all(p, output_stem, preset = preset)
 invisible(lapply(output_files, pp_assert_output))
 
-qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check, cognitive_load_review = cognitive_load_review)
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
   design_decisions = c("pattern: raincloud-violin-jitter", "raw dots kept as primary evidence", "violin density kept light and secondary", "median marked by a horizontal point glyph", "gridlines disabled"),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
@@ -71,6 +76,7 @@ pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
   palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input group order"),
-  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df),
+  cognitive_load_review = cognitive_load_review)
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

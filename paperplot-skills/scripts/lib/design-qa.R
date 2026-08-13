@@ -3,7 +3,7 @@
 pp_visual_budget <- function(figure_role, n_panels = 1, n_labels = 0, n_legend_entries = 0) {
   figure_role <- match.arg(figure_role, c("main", "supplement", "diagnostic", "exploratory"))
   label_limit <- switch(figure_role, main = 12, supplement = 30, diagnostic = Inf, exploratory = 20)
-  legend_limit <- switch(figure_role, main = 8, supplement = 12, diagnostic = Inf, exploratory = 10)
+  legend_limit <- switch(figure_role, main = 4, supplement = 8, diagnostic = Inf, exploratory = 6)
   panel_limit <- switch(figure_role, main = 6, supplement = 12, diagnostic = Inf, exploratory = 8)
   list(
     figure_role = figure_role,
@@ -19,13 +19,13 @@ pp_visual_budget <- function(figure_role, n_panels = 1, n_labels = 0, n_legend_e
   )
 }
 
-pp_axis_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5) {
+pp_axis_burden_score <- function(labels, available_width_cm, font_size_pt = 8) {
   pp_label_burden_score(labels, available_width_cm, font_size_pt)
 }
 
 pp_legend_burden_score <- function(entries, max_entries = NULL, figure_role = "main") {
   entries <- unique(as.character(entries))
-  max_entries <- max_entries %||% switch(figure_role, main = 8, supplement = 12, diagnostic = Inf, exploratory = 10)
+  max_entries <- max_entries %||% switch(figure_role, main = 4, supplement = 8, diagnostic = Inf, exploratory = 6)
   status <- if (length(entries) <= max_entries) "pass" else "warn"
   list(status = status, n_entries = length(entries), max_entries = max_entries)
 }
@@ -41,6 +41,44 @@ pp_annotation_burden_score <- function(n_annotations, figure_role = "main") {
   max_annotations <- switch(figure_role, main = 3, supplement = 12, diagnostic = Inf, exploratory = 6)
   status <- if (n_annotations <= max_annotations) "pass" else "warn"
   list(status = status, n_annotations = n_annotations, max_annotations = max_annotations)
+}
+
+pp_cognitive_load_review <- function(n_elements, n_colors, n_shapes, n_legend_entries,
+                                     chart_family = "generic", exception_reason = NULL) {
+  values <- c(elements = n_elements, colors = n_colors, shapes = n_shapes, legend_entries = n_legend_entries)
+  if (any(!is.finite(values) | values < 0)) stop("Cognitive-load counts must be finite non-negative values.", call. = FALSE)
+  limits <- c(elements = 7, colors = 3, shapes = 3, legend_entries = 4)
+  exceeded <- names(values)[values > limits]
+  exception_reason <- trimws(as.character(exception_reason %||% ""))
+  list(
+    status = if (length(exceeded) == 0) "pass" else "warn",
+    chart_family = as.character(chart_family),
+    counts = as.list(values),
+    review_limits = as.list(limits),
+    exceeded = exceeded,
+    exception_recorded = nzchar(exception_reason),
+    exception_reason = exception_reason,
+    action = if (length(exceeded) == 0) "none" else if (nzchar(exception_reason)) "retain for final-size family-specific review" else "split, simplify, or record a family-specific exception"
+  )
+}
+
+pp_qa_cognitive_load_review <- function(cognitive_load_review = NULL) {
+  load_status <- cognitive_load_review$status %||% "not_recorded"
+  gate_status <- if (load_status == "pass") "pass" else "warn"
+  note <- if (load_status == "not_recorded") {
+    "per-panel elements, meaning-carrying colors, shapes, and legend entries were not recorded"
+  } else {
+    paste("review status:", load_status, "exceeded:", paste(cognitive_load_review$exceeded %||% character(), collapse = ", "))
+  }
+  pp_qa_result("cognitive_load_review", gate_status, note)
+}
+
+pp_qa_bioinformatics_validation <- function(figure_spec, bioinformatics_validation = NULL) {
+  domain <- figure_spec$analysis_domain %||% "general"
+  validation <- bioinformatics_validation %||% pp_bioinformatics_validation(if (identical(domain, "bioinformatics")) "not_recorded" else "not_applicable")
+  status <- validation$status %||% "not_recorded"
+  gate_status <- if (status %in% c("pass", "not_applicable")) "pass" else if (status == "block") "fail" else "warn"
+  pp_qa_result("bioinformatics_validation", gate_status, paste("analysis domain:", domain, "validation status:", status))
 }
 
 pp_qa_design_preflight <- function(design_brief, design_plan, visual_budget) {

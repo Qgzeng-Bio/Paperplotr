@@ -38,7 +38,7 @@ python3 scripts/visual-qa-rendered-image.py <figure.pdf-or-png> --out <qa_dir> -
 | black-white robustness | groups still partly distinguishable by position/shape/labels | color is the only encoding for critical classes |
 | statistics | uncertainty and n/test semantics visible or documented | p-values or stars appear without context |
 | export | PDF vector and PNG preview are crisp | rasterized text, fuzzy lines, tiny file, wrong aspect |
-| Nature guardrails | `nature_guardrails.status` is pass, or warn with a documented reason | strict mode returns fail for overlap, blank space, unreadable preview, or panel imbalance |
+| Nature guardrails | checksum-bound strict QA is pass, or warn with a structured `visual_qa_review` accepted reason | strict mode returns fail for overlap, blank space, unreadable preview, or panel imbalance |
 
 ## Old-vs-new visual comparison
 

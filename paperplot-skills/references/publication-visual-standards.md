@@ -1,6 +1,6 @@
 # Publication visual standards
 
-These standards define the minimum visual floor for professional scientific figures. They are Nature-inspired but not a claim of journal acceptance.
+These standards define the minimum visual floor for professional scientific figures. They are publication-oriented defaults, not a claim of journal acceptance. Select a profile from `journal-specs-matrix.md`, then verify the current target-journal guide before final submission.
 
 ## Size presets
 
@@ -24,11 +24,12 @@ For Nature-like manuscript work, choose size from information burden:
 
 - Use Arial, Helvetica, or a close sans-serif fallback.
 - Keep vector text editable; do not outline or rasterize text.
-- Most text: 5-7 pt at final size.
-- Panel labels: about 8 pt bold, upright; use consistent `a, b, c` or `A, B, C` based on journal/user preference.
+- Ordinary print axis labels and main text target 9 pt at final size.
+- Tick labels, legends, compact annotations, and table-like inset text target 8 pt.
+- Panel labels target 12 pt bold, upright; use consistent `a, b, c` or `A, B, C` based on journal/user preference.
+- The absolute floor is 6 pt. Falling below the 8–9 pt target requires a target-journal allowance plus a documented dense-family reason; never shrink text merely to avoid redesigning labels or layout.
 - Axis titles should be concise and include units in parentheses.
 - Avoid plot titles inside manuscript panels unless the title carries scientific meaning; prefer panel labels and caption text.
-- Tick labels can be 5-6 pt for dense panels, but must remain readable in the rendered PNG preview.
 - Long labels should move to sidecars, numbered keys, or supplement before shrinking below readable size.
 
 ## Strokes and marks

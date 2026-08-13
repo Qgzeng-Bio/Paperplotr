@@ -70,8 +70,14 @@ metric_spec <- pp_metric_spec(metric = y_col, label = y_label, unit = "a.u.", di
 data_profile <- pp_data_profile(df, sample_col = x_col, group_col = group_col, metric_col = panel_col, value_col = y_col)
 label_strategy <- pp_label_strategy_v2(unique(df[[x_col]]), figure_role = figure_role, available_width_cm = layout$width_cm / max(1, layout$ncol), sample_identity_role = "lookup")
 rank_map <- pp_rank_index_map(unique(as.character(df[[x_col]])))
-if (isTRUE(label_strategy)) pp_write_label_key(label_key_path, rank_map)
+if (isTRUE(label_strategy$needs_label_key)) pp_write_label_key(label_key_path, rank_map)
 visual_budget <- pp_visual_budget(figure_role, n_panels = length(panel_ids), n_labels = if (identical(label_strategy$strategy, "direct")) length(unique(df[[x_col]])) else 0, n_legend_entries = if (!is.null(group_col)) length(unique(df[[group_col]])) else 0)
+group_count <- if (is.null(group_col)) 1L else length(unique(df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = 4, n_colors = group_count, n_shapes = 1,
+  n_legend_entries = visual_budget$n_legend_entries,
+  chart_family = "manuscript_four_panel"
+)
 
 design_brief <- pp_design_brief(
   scientific_message = figure_spec$scientific_message,
@@ -112,7 +118,7 @@ invisible(lapply(output_files, pp_assert_output))
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")
 layout_check <- pp_qa_result("panel_hierarchy", "pass", paste("primary panels:", paste(panel_hierarchy$primary, collapse = ", ")))
 qa_results <- pp_qa_summary(
-  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message), palette_check, layout_check),
+  pp_qa_preflight(figure_spec, metric_spec, list(status = label_strategy$status, message = label_strategy$message), palette_check, layout_check, cognitive_load_review = cognitive_load_review),
   pp_qa_design_preflight(design_brief, design_plan, visual_budget),
   pp_qa_label_strategy(label_strategy, figure_role)
 )
@@ -133,6 +139,7 @@ pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout 
   ordering = list(rule = "input order"), qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)),
   data_summary = pp_data_summary(df), design_brief = design_brief, design_plan = design_plan,
   data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy,
-  palette_plan = shared_guide_plan$palette_plan, panel_hierarchy = panel_hierarchy, sidecars = list(label_key = if (file.exists(label_key_path)) label_key_path else NULL))
+  palette_plan = shared_guide_plan$palette_plan, panel_hierarchy = panel_hierarchy,
+  cognitive_load_review = cognitive_load_review, sidecars = list(label_key = if (file.exists(label_key_path)) label_key_path else NULL))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

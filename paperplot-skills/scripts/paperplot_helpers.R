@@ -9,7 +9,9 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.3.0"
+pp_helper_version <- "standalone-0.5.0"
+pp_figure_spec_schema_version <- 2L
+pp_profile_last_checked <- "2026-08-12"
 
 pp_discrete_palettes <- list(
   graphpad_discrete = c(
@@ -36,16 +38,199 @@ pp_gradient_palettes <- list(
 )
 
 pp_output_presets <- list(
-  cell = list(width_cm = 17.4, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  cell_half = list(width_cm = 8.7, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  nature = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  nature_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  ncomms = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  ncomms_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  single_column = list(width_cm = 8.9, height_cm = 6.2, dpi = 600, min_text_pt = 6),
-  double_column = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  square = list(width_cm = 8.9, height_cm = 8.9, dpi = 600, min_text_pt = 6)
+  cell = list(width_cm = 17.4, height_cm = 12.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  cell_half = list(width_cm = 8.5, height_cm = 6.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  nature = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  nature_half = list(width_cm = 8.9, height_cm = 6.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  ncomms = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  ncomms_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  single_column = list(width_cm = 8.8, height_cm = 6.2, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  double_column = list(width_cm = 17.8, height_cm = 12.0, dpi = 600, target_text_pt = 9, min_text_pt = 6),
+  square = list(width_cm = 8.8, height_cm = 8.8, dpi = 600, target_text_pt = 9, min_text_pt = 6)
 )
+
+pp_journal_profiles <- list(
+  general_scientific = list(
+    single_cm = 8.8, intermediate_cm = 12.7, double_cm = 17.8, max_height_cm = 24.1,
+    scope = "General research fallback",
+    source_url = "", source_status = "local_fallback", last_checked = pp_profile_last_checked
+  ),
+  nature_like = list(
+    single_cm = 8.9, intermediate_cm = NA_real_, double_cm = 18.0, max_height_cm = 17.0,
+    scope = "Nature-like life-science and genomics layouts",
+    source_url = "https://research-figure-guide.nature.com/", source_status = "project_baseline_verify_title", last_checked = pp_profile_last_checked
+  ),
+  nature_communications = list(
+    single_cm = 9.0, intermediate_cm = NA_real_, double_cm = 18.0, max_height_cm = 17.0,
+    scope = "Nature Communications project layouts",
+    source_url = "https://research-figure-guide.nature.com/", source_status = "project_profile_verify_title", last_checked = pp_profile_last_checked
+  ),
+  cell_press = list(
+    single_cm = 8.5, intermediate_cm = 11.4, double_cm = 17.4, max_height_cm = 20.0,
+    scope = "Cell Press two-column research figures",
+    source_url = "https://www.cell.com/information-for-authors/figure-guidelines", source_status = "official_reviewed", last_checked = pp_profile_last_checked
+  ),
+  medical_radiology = list(
+    single_cm = 8.56, intermediate_cm = 12.8, double_cm = 17.35, max_height_cm = 23.34,
+    scope = "Radiology-family journal figures",
+    source_url = "", source_status = "imported_unverified", last_checked = pp_profile_last_checked
+  )
+)
+
+pp_journal_profile <- function(name = "general_scientific") {
+  key <- tolower(gsub("-", "_", as.character(name)))
+  profile <- pp_journal_profiles[[key]]
+  if (is.null(profile)) {
+    stop("Unknown journal profile: ", name, ". See references/journal-specs-matrix.md.", call. = FALSE)
+  }
+  c(list(name = key), profile)
+}
+
+pp_profile_for_preset <- function(output_preset) {
+  switch(tolower(pp_nonempty_scalar(output_preset, "output_preset")),
+    cell =, cell_half = "cell_press",
+    nature =, nature_half = "nature_like",
+    ncomms =, ncomms_half = "nature_communications",
+    "general_scientific"
+  )
+}
+
+pp_preset_column_class <- function(output_preset) {
+  switch(tolower(pp_nonempty_scalar(output_preset, "output_preset")),
+    cell_half =, nature_half =, ncomms_half =, single_column =, square = "single",
+    cell =, nature =, ncomms =, double_column = "double",
+    "double"
+  )
+}
+
+pp_validate_profile_geometry <- function(output_preset, journal_profile, width_cm = NULL, height_cm = NULL) {
+  output_preset <- pp_nonempty_scalar(output_preset, "output_preset")
+  profile <- pp_journal_profile(journal_profile)
+  inferred <- pp_profile_for_preset(output_preset)
+  branded <- tolower(output_preset) %in% c("cell", "cell_half", "nature", "nature_half", "ncomms", "ncomms_half")
+  if (branded && !identical(profile$name, inferred)) {
+    stop("Journal profile ", profile$name, " conflicts with branded preset ", output_preset, " (expected ", inferred, ").", call. = FALSE)
+  }
+  preset <- pp_output_presets[[tolower(output_preset)]]
+  if (is.null(preset)) stop("Unknown output preset: ", output_preset, call. = FALSE)
+  width_cm <- width_cm %||% preset$width_cm
+  height_cm <- height_cm %||% preset$height_cm
+  if (!is.numeric(width_cm) || length(width_cm) != 1L || !is.finite(width_cm) || width_cm <= 0 ||
+      !is.numeric(height_cm) || length(height_cm) != 1L || !is.finite(height_cm) || height_cm <= 0) {
+    stop("Export width_cm and height_cm must be positive finite scalars.", call. = FALSE)
+  }
+  column_class <- pp_preset_column_class(output_preset)
+  max_width <- if (identical(column_class, "single")) profile$single_cm else profile$double_cm
+  tolerance <- 1e-8
+  if (width_cm > max_width + tolerance) {
+    stop("Export width ", width_cm, " cm exceeds the ", profile$name, " ", column_class, "-column envelope of ", max_width, " cm.", call. = FALSE)
+  }
+  if (height_cm > profile$max_height_cm + tolerance) {
+    stop("Export height ", height_cm, " cm exceeds the ", profile$name, " envelope of ", profile$max_height_cm, " cm.", call. = FALSE)
+  }
+  list(
+    profile = profile,
+    geometry = list(width_cm = as.numeric(width_cm), height_cm = as.numeric(height_cm), column_class = column_class,
+                    max_width_cm = as.numeric(max_width), max_height_cm = as.numeric(profile$max_height_cm))
+  )
+}
+
+pp_file_md5 <- function(path) {
+  path <- normalizePath(path, mustWork = TRUE)
+  unname(tools::md5sum(path)[[1L]])
+}
+
+pp_file_record <- function(path) {
+  path <- normalizePath(path, mustWork = TRUE)
+  if (file.access(path, 4L) != 0L || dir.exists(path)) stop("Provenance path must be a readable file: ", path, call. = FALSE)
+  list(path = path, md5 = pp_file_md5(path), size_bytes = unname(file.info(path)[["size"]]))
+}
+
+pp_write_plotting_data <- function(path, data) {
+  if (!is.data.frame(data)) stop("Plotting data must be a data.frame.", call. = FALSE)
+  unsafe_names <- grepl("[\\t\\r\\n]", names(data), perl = TRUE)
+  unsafe_values <- vapply(data, function(column) any(grepl("[\\t\\r\\n]", as.character(column), perl = TRUE), na.rm = TRUE), logical(1))
+  if (any(unsafe_names) || any(unsafe_values)) stop("Plotting data contains tabs or line breaks that would corrupt TSV structure.", call. = FALSE)
+  if (!grepl("_plotting_data\\.tsv$", path)) stop("Plotting-data sidecar must end with _plotting_data.tsv: ", path, call. = FALSE)
+  if (file.exists(path)) stop("Refusing to overwrite existing plotting-data sidecar: ", path, call. = FALSE)
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  utils::write.table(data, file = path, sep = "\t", quote = FALSE, row.names = FALSE, col.names = TRUE, na = "NA")
+  pp_assert_output(path)
+  invisible(path)
+}
+
+pp_bioinformatics_scaffold <- function(input_paths, plotting_data_path, plotting_data,
+                                       organism = "TODO organism", reference_version = "TODO reference/build",
+                                       coordinate_system = "not_applicable_nonpositional",
+                                       sample_order = "TODO document sample/feature order",
+                                       units_transforms_denominators = "TODO document units, transforms, and denominators",
+                                       statistics = "TODO document tests and correction",
+                                       notes = "Complete provenance fields and change status to pass only after scientific validation.") {
+  pp_write_plotting_data(plotting_data_path, plotting_data)
+  pp_bioinformatics_validation(
+    status = "not_recorded", input_paths = input_paths, organism = organism,
+    reference_version = reference_version, coordinate_system = coordinate_system,
+    sample_order = sample_order, units_transforms_denominators = units_transforms_denominators,
+    statistics = statistics, plotting_data_path = plotting_data_path, notes = notes
+  )
+}
+
+pp_bioinformatics_validation <- function(status = c("pass", "warn", "block", "not_recorded", "not_applicable"),
+                                         input_paths = character(), organism = "", reference_version = "",
+                                         coordinate_system = "", sample_order = "",
+                                         units_transforms_denominators = "", statistics = "",
+                                         plotting_data_path = "", notes = "",
+                                         source_records_checked = FALSE, sample_order_checked = FALSE,
+                                         units_checked = FALSE, statistics_checked = FALSE,
+                                         plotting_data_checked = FALSE) {
+  status <- match.arg(status)
+  input_paths <- as.character(input_paths)
+  input_paths <- input_paths[nzchar(trimws(input_paths))]
+  existing_inputs <- file.exists(input_paths)
+  input_paths[existing_inputs] <- vapply(input_paths[existing_inputs], normalizePath, character(1), mustWork = TRUE)
+  plotting_data_path <- as.character(plotting_data_path)
+  if (length(plotting_data_path) == 1L && nzchar(trimws(plotting_data_path)) && file.exists(plotting_data_path)) plotting_data_path <- normalizePath(plotting_data_path, mustWork = TRUE)
+  input_files <- lapply(input_paths[existing_inputs], pp_file_record)
+  plotting_data <- if (length(plotting_data_path) == 1L && nzchar(trimws(plotting_data_path)) && file.exists(plotting_data_path)) pp_file_record(plotting_data_path) else list()
+  validation_evidence <- list(
+    source_records_checked = isTRUE(source_records_checked),
+    sample_order_checked = isTRUE(sample_order_checked),
+    units_checked = isTRUE(units_checked),
+    statistics_checked = isTRUE(statistics_checked),
+    plotting_data_checked = isTRUE(plotting_data_checked),
+    recorded_at = if (status == "pass") format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z") else "not_recorded"
+  )
+  out <- list(
+    status = status,
+    input_paths = as.list(input_paths),
+    input_files = input_files,
+    organism = as.character(organism),
+    reference_version = as.character(reference_version),
+    coordinate_system = as.character(coordinate_system),
+    sample_order = as.character(sample_order),
+    units_transforms_denominators = as.character(units_transforms_denominators),
+    statistics = as.character(statistics),
+    plotting_data_path = plotting_data_path,
+    plotting_data = plotting_data,
+    validation_evidence = validation_evidence,
+    notes = as.character(notes)
+  )
+  if (status == "pass") {
+    allowed_coordinates <- c("0-based_half-open", "1-based_closed", "not_applicable_gene_level", "not_applicable_nonpositional", "mixed_documented")
+    required <- c("organism", "reference_version", "coordinate_system", "sample_order", "units_transforms_denominators", "statistics", "plotting_data_path")
+    placeholder <- function(value) grepl("^(todo|unknown|not[ _-]?recorded|tbd)(?:$|[ _:-])", trimws(as.character(value)), ignore.case = TRUE, perl = TRUE)
+    missing <- required[!vapply(required, function(key) length(out[[key]]) == 1L && !is.na(out[[key]]) && nzchar(trimws(out[[key]])) && !placeholder(out[[key]]), logical(1))]
+    if (length(input_paths) == 0L || length(input_files) != length(input_paths)) missing <- c("readable input_paths", missing)
+    if (length(plotting_data) == 0L) missing <- c("readable plotting_data_path", missing)
+    evidence_keys <- c("source_records_checked", "sample_order_checked", "units_checked", "statistics_checked", "plotting_data_checked")
+    unchecked <- evidence_keys[!vapply(evidence_keys, function(key) isTRUE(validation_evidence[[key]]), logical(1))]
+    if (length(unchecked) > 0L) missing <- c(missing, paste0("validation_evidence.", unchecked))
+    if (length(missing) > 0L) stop("PASS bioinformatics validation is missing: ", paste(unique(missing), collapse = ", "), call. = FALSE)
+    if (!out$coordinate_system %in% allowed_coordinates) stop("Unknown coordinate_system for PASS bioinformatics validation: ", out$coordinate_system, call. = FALSE)
+    if (!grepl("_plotting_data\\.tsv$", out$plotting_data_path)) stop("PASS plotting_data_path must be a stem-matched _plotting_data.tsv sidecar.", call. = FALSE)
+  }
+  out
+}
 
 pp_fig_specs <- data.frame(
   spec = c("2x2", "2.58x2", "4.9x2", "4.9x4.9"),
@@ -62,6 +247,13 @@ pp_nonempty_scalar <- function(x, name) {
     stop(name, " must be a non-empty scalar.", call. = FALSE)
   }
   as.character(x)
+}
+
+pp_text_size_mm <- function(pt = 8) {
+  if (!is.numeric(pt) || length(pt) != 1 || is.na(pt) || pt < 6) {
+    stop("Text size must be one numeric value at or above the 6 pt absolute floor.", call. = FALSE)
+  }
+  pt * 25.4 / 72.27
 }
 
 pp_pattern_reference <- function(figure_family,
@@ -108,33 +300,73 @@ pp_pattern_reference <- function(figure_family,
 
 pp_figure_spec <- function(figure_id, template_id, task_type = "new", figure_role = "main",
                            scientific_message, plot_type, sample_id = NULL, group_var = NULL,
-                           output_preset = "nature_half") {
+                           output_preset = "nature_half", journal_profile = NULL,
+                           analysis_domain = "general", old_figure_path = NULL) {
+  output_preset <- pp_nonempty_scalar(output_preset, "output_preset")
+  inferred_profile <- pp_profile_for_preset(output_preset)
+  journal_profile <- journal_profile %||% inferred_profile
   spec <- list(
     figure_id = pp_nonempty_scalar(figure_id, "figure_id"),
     template_id = pp_nonempty_scalar(template_id, "template_id"),
     backend = "R/ggplot2",
     helper_version = pp_helper_version,
+    figure_spec_schema_version = pp_figure_spec_schema_version,
     task_type = pp_nonempty_scalar(task_type, "task_type"),
     figure_role = pp_nonempty_scalar(figure_role, "figure_role"),
     scientific_message = pp_nonempty_scalar(scientific_message, "scientific_message"),
     plot_type = pp_nonempty_scalar(plot_type, "plot_type"),
     sample_id = sample_id,
     group_var = group_var,
-    output_preset = pp_nonempty_scalar(output_preset, "output_preset"),
+    output_preset = output_preset,
+    journal_profile = pp_journal_profile(pp_nonempty_scalar(journal_profile, "journal_profile"))$name,
+    analysis_domain = match.arg(analysis_domain, c("general", "bioinformatics")),
+    old_figure_path = if (is.null(old_figure_path)) NULL else normalizePath(pp_nonempty_scalar(old_figure_path, "old_figure_path"), mustWork = TRUE),
     created_at = format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z")
   )
-  pp_validate_figure_spec(spec)
+  spec <- pp_validate_figure_spec(spec)
   class(spec) <- c("pp_figure_spec", class(spec))
   spec
 }
 
 pp_validate_figure_spec <- function(figure_spec) {
-  required <- c("figure_id", "template_id", "backend", "scientific_message", "plot_type", "output_preset")
-  missing <- required[!vapply(required, function(x) !is.null(figure_spec[[x]]) && nzchar(as.character(figure_spec[[x]])), logical(1))]
+  if (!is.list(figure_spec)) stop("figure_spec must be a list.", call. = FALSE)
+  raw_schema <- figure_spec$figure_spec_schema_version
+  schema <- if (is.null(raw_schema)) 1L else raw_schema
+  if (!is.numeric(schema) || length(schema) != 1L || is.na(schema) || !is.finite(schema) || schema != as.integer(schema)) {
+    stop("figure_spec_schema_version must be one supported integer.", call. = FALSE)
+  }
+  schema <- as.integer(schema)
+  if (!schema %in% c(1L, pp_figure_spec_schema_version)) {
+    stop("Unsupported figure_spec_schema_version: ", schema, ". Supported input versions are 1 and ", pp_figure_spec_schema_version, ".", call. = FALSE)
+  }
+
+  figure_spec$output_preset <- pp_nonempty_scalar(figure_spec$output_preset, "output_preset")
+  if (schema == 1L) {
+    original_helper <- figure_spec$helper_version %||% "not_recorded"
+    figure_spec$journal_profile <- figure_spec$journal_profile %||% pp_profile_for_preset(figure_spec$output_preset)
+    figure_spec$analysis_domain <- figure_spec$analysis_domain %||% "general"
+    figure_spec$original_helper_version <- original_helper
+    figure_spec$helper_version <- pp_helper_version
+    figure_spec$figure_spec_schema_version <- pp_figure_spec_schema_version
+    figure_spec$migrated_from_schema <- 1L
+    figure_spec$migration_note <- "Explicit v1-to-v2 migration: journal profile inferred when absent; analysis domain defaulted to general when absent."
+  } else {
+    if (is.null(figure_spec$journal_profile) || is.null(figure_spec$analysis_domain)) {
+      stop("Schema v2 figure_spec must explicitly contain journal_profile and analysis_domain.", call. = FALSE)
+    }
+    figure_spec$figure_spec_schema_version <- pp_figure_spec_schema_version
+  }
+
+  profile_geometry <- pp_validate_profile_geometry(figure_spec$output_preset, figure_spec$journal_profile)
+  figure_spec$journal_profile <- profile_geometry$profile$name
+  figure_spec$journal_profile_snapshot <- profile_geometry$profile
+  figure_spec$analysis_domain <- match.arg(figure_spec$analysis_domain, c("general", "bioinformatics"))
+  required <- c("figure_id", "template_id", "backend", "helper_version", "task_type", "figure_role", "scientific_message", "plot_type", "output_preset", "journal_profile", "analysis_domain")
+  missing <- required[!vapply(required, function(x) !is.null(figure_spec[[x]]) && length(figure_spec[[x]]) == 1L && !is.na(figure_spec[[x]]) && nzchar(trimws(as.character(figure_spec[[x]]))), logical(1))]
   if (length(missing) > 0) {
     stop("figure_spec is missing required fields: ", paste(missing, collapse = ", "), call. = FALSE)
   }
-  invisible(TRUE)
+  figure_spec
 }
 
 pp_metric_spec <- function(metric, label = metric, unit = "", direction = "neutral",
@@ -222,8 +454,11 @@ pp_resolve_family <- function(preferred = "Arial") {
   "sans"
 }
 
-pp_theme <- function(base_size = 7, base_family = pp_resolve_family(), line_width = 0.35,
+pp_theme <- function(base_size = 9, base_family = pp_resolve_family(), line_width = 0.35,
                      axis_title_margin = 4, show_grid = FALSE) {
+  if (!is.numeric(base_size) || length(base_size) != 1 || is.na(base_size) || base_size < 6) {
+    stop("pp_theme base_size must be one numeric value at or above the 6 pt absolute floor.", call. = FALSE)
+  }
   grid_major <- if (isTRUE(show_grid)) {
     ggplot2::element_line(linewidth = 0.25, colour = "#D9D9D9")
   } else {
@@ -240,12 +475,12 @@ pp_theme <- function(base_size = 7, base_family = pp_resolve_family(), line_widt
           b = axis_title_margin, l = axis_title_margin
         )
       ),
-      axis.text = ggplot2::element_text(size = base_size - 0.5, colour = "#303030"),
+      axis.text = ggplot2::element_text(size = max(8, base_size - 1), colour = "#303030"),
       axis.line = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
       axis.ticks = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
       axis.ticks.length = grid::unit(1.5, "mm"),
-      legend.title = ggplot2::element_text(size = base_size - 0.2),
-      legend.text = ggplot2::element_text(size = base_size - 0.5),
+      legend.title = ggplot2::element_text(size = max(8, base_size - 1)),
+      legend.text = ggplot2::element_text(size = max(8, base_size - 1)),
       legend.key = ggplot2::element_blank(),
       legend.key.size = grid::unit(4.2, "mm"),
       legend.spacing.x = grid::unit(1, "mm"),
@@ -254,9 +489,10 @@ pp_theme <- function(base_size = 7, base_family = pp_resolve_family(), line_widt
       panel.border = ggplot2::element_blank(),
       strip.background = ggplot2::element_blank(),
       strip.text = ggplot2::element_text(size = base_size, face = "bold"),
+      plot.tag = ggplot2::element_text(size = 12, face = "bold"),
       plot.title = ggplot2::element_text(size = base_size + 1, face = "bold"),
       plot.subtitle = ggplot2::element_text(size = base_size),
-      plot.caption = ggplot2::element_text(size = base_size - 1, colour = "#6A6A6A"),
+      plot.caption = ggplot2::element_text(size = max(8, base_size - 1), colour = "#6A6A6A"),
       plot.title.position = "plot",
       plot.margin = ggplot2::margin(6, 6, 6, 6)
     )
@@ -471,7 +707,7 @@ pp_assess_layout_risk <- function(n_panels, plot_type = "general", label_strateg
   pp_qa_result("layout", status, paste(notes, collapse = "; "))
 }
 
-pp_assess_label_density <- function(labels, available_width_cm, font_size_pt = 6.5) {
+pp_assess_label_density <- function(labels, available_width_cm, font_size_pt = 8) {
   labels <- as.character(labels)
   labels <- labels[!is.na(labels)]
   if (length(labels) == 0) {
@@ -515,7 +751,7 @@ pp_make_label_key <- function(original, display) {
   data.frame(original = as.character(original), display = as.character(display), stringsAsFactors = FALSE)
 }
 
-pp_label_strategy <- function(labels, available_width_cm, font_size_pt = 6.5, max_chars = 14) {
+pp_label_strategy <- function(labels, available_width_cm, font_size_pt = 8, max_chars = 14) {
   labels <- as.character(labels)
   assessment <- pp_assess_label_density(labels, available_width_cm = available_width_cm, font_size_pt = font_size_pt)
   display <- labels
@@ -563,7 +799,7 @@ pp_stop_if_outputs_exist <- function(paths) {
 
 pp_min_output_size <- function(filename) {
   ext <- tolower(tools::file_ext(filename))
-  switch(ext, pdf = 5000, png = 1000, jpg = 1000, jpeg = 1000, tiff = 1000, tif = 1000, svg = 100, json = 50, md = 50, 100)
+  switch(ext, pdf = 5000, png = 1000, jpg = 1000, jpeg = 1000, tiff = 1000, tif = 1000, svg = 100, json = 50, md = 50, tsv = 20, 100)
 }
 
 pp_assert_output <- function(filename, min_output_size_bytes = NULL) {
@@ -574,6 +810,16 @@ pp_assert_output <- function(filename, min_output_size_bytes = NULL) {
   size <- file.info(filename)[["size"]]
   if (is.na(size) || size < min_output_size_bytes) {
     stop("Output file is suspiciously small: ", filename, " (", size, " bytes)", call. = FALSE)
+  }
+  ext <- tolower(tools::file_ext(filename))
+  if (ext == "pdf") {
+    signature <- readBin(filename, what = "raw", n = 5L)
+    if (!identical(signature, charToRaw("%PDF-"))) stop("Output does not have a valid PDF signature: ", filename, call. = FALSE)
+  }
+  if (ext == "png") {
+    signature <- readBin(filename, what = "raw", n = 8L)
+    expected <- as.raw(c(137L, 80L, 78L, 71L, 13L, 10L, 26L, 10L))
+    if (!identical(signature, expected)) stop("Output does not have a valid PNG signature: ", filename, call. = FALSE)
   }
   invisible(TRUE)
 }
@@ -632,12 +878,21 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
 pp_save_all <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
                         overwrite = FALSE, width = NULL, height = NULL, dpi = NULL, ...) {
   formats <- unique(tolower(formats))
+  preset_values <- pp_output_preset(preset)
+  export_spec <- list(
+    preset = tolower(preset),
+    width_cm = as.numeric(width %||% preset_values$width_cm),
+    height_cm = as.numeric(height %||% preset_values$height_cm),
+    dpi = as.numeric(dpi %||% preset_values$dpi),
+    formats = formats
+  )
   output_files <- stats::setNames(paste0(output_stem, ".", formats), formats)
   if (!isTRUE(overwrite)) pp_stop_if_outputs_exist(output_files)
   for (fmt in formats) {
-    pp_save_plot(plot, output_files[[fmt]], preset = preset, width = width, height = height, dpi = dpi,
+    pp_save_plot(plot, output_files[[fmt]], preset = preset, width = export_spec$width_cm, height = export_spec$height_cm, dpi = export_spec$dpi,
                  overwrite = overwrite, ...)
   }
+  attr(output_files, "export_spec") <- export_spec
   output_files
 }
 
@@ -650,38 +905,119 @@ pp_data_summary <- function(df) {
   list(n_rows = nrow(df), n_columns = ncol(df), columns = names(df))
 }
 
+pp_json_object <- function(x = list()) {
+  if (!is.list(x)) stop("JSON object input must be a list.", call. = FALSE)
+  if (length(x) > 0L && (is.null(names(x)) || any(!nzchar(names(x))) || anyDuplicated(names(x)))) stop("JSON object keys must be complete, non-empty, and unique.", call. = FALSE)
+  if (length(x) == 0L) names(x) <- character()
+  structure(x, class = c("pp_json_object", "list"))
+}
+pp_json_array <- function(x = list()) {
+  if (!is.list(x)) x <- as.list(x)
+  names(x) <- NULL
+  structure(x, class = c("pp_json_array", "list"))
+}
 pp_json_escape <- function(x) {
-  x <- as.character(x)
-  x <- gsub("\\\\", "\\\\\\\\", x)
-  x <- gsub('"', '\\"', x)
-  x <- gsub("\n", "\\n", x, fixed = TRUE)
-  x
+  if (length(x) != 1L || is.na(x)) stop("JSON string must be one non-missing value.", call. = FALSE)
+  codepoints <- utf8ToInt(enc2utf8(as.character(x)))
+  pieces <- vapply(codepoints, function(code) {
+    if (code == 34L) return("\\\"")
+    if (code == 92L) return("\\\\")
+    if (code == 8L) return("\\b")
+    if (code == 9L) return("\\t")
+    if (code == 10L) return("\\n")
+    if (code == 12L) return("\\f")
+    if (code == 13L) return("\\r")
+    if (code < 32L) return(sprintf("\\u%04X", code))
+    intToUtf8(code)
+  }, character(1))
+  paste(pieces, collapse = "")
+}
+
+pp_json_number <- function(x) {
+  if (length(x) != 1L || !is.numeric(x) || !is.finite(x)) return("null")
+  old_outdec <- getOption("OutDec", ".")
+  on.exit(options(OutDec = old_outdec), add = TRUE)
+  options(OutDec = ".")
+  value <- trimws(formatC(x, digits = 17L, format = "g", decimal.mark = "."))
+  if (!grepl("^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$", value, perl = TRUE)) stop("Could not serialize a locale-independent JSON number.", call. = FALSE)
+  value
 }
 
 pp_to_json <- function(x, indent = 0) {
   sp <- paste(rep(" ", indent), collapse = "")
   sp2 <- paste(rep(" ", indent + 2), collapse = "")
-  if (is.null(x)) return("null")
+  if (is.null(x) || inherits(x, "pp_json_null") || (is.atomic(x) && length(x) == 1L && is.na(x))) return("null")
+  if (is.atomic(x) && length(x) == 0L) return("[]")
+  if (is.atomic(x) && length(x) > 1L) return(pp_to_json(pp_json_array(as.list(x)), indent = indent))
   if (inherits(x, "data.frame")) {
-    rows <- lapply(seq_len(nrow(x)), function(i) as.list(x[i, , drop = FALSE]))
-    return(pp_to_json(rows, indent = indent))
+    rows <- lapply(seq_len(nrow(x)), function(i) pp_json_object(as.list(x[i, , drop = FALSE])))
+    return(pp_to_json(pp_json_array(rows), indent = indent))
   }
   if (is.list(x) && !is.data.frame(x)) {
-    if (length(x) == 0) return("{}")
     nms <- names(x)
-    if (!is.null(nms) && all(nzchar(nms))) {
-      parts <- vapply(seq_along(x), function(i) {
-        paste0(sp2, '"', pp_json_escape(nms[[i]]), '": ', pp_to_json(x[[i]], indent + 2))
-      }, character(1))
+    is_object <- inherits(x, "pp_json_object") || (!inherits(x, "pp_json_array") && !is.null(nms))
+    if (is_object) {
+      if (length(x) > 0L && (any(!nzchar(nms)) || anyDuplicated(nms))) stop("JSON object keys must be complete, non-empty, and unique.", call. = FALSE)
+      if (length(x) == 0L) return("{}")
+      parts <- vapply(seq_along(x), function(i) paste0(sp2, '"', pp_json_escape(nms[[i]]), '": ', pp_to_json(x[[i]], indent + 2)), character(1))
       return(paste0("{\n", paste(parts, collapse = ",\n"), "\n", sp, "}"))
     }
+    if (length(x) == 0L) return("[]")
     parts <- vapply(x, pp_to_json, character(1), indent = indent + 2)
     return(paste0("[\n", paste(paste0(sp2, parts), collapse = ",\n"), "\n", sp, "]"))
   }
-  if (is.logical(x)) return(ifelse(is.na(x), "null", ifelse(x, "true", "false")))
-  if (is.numeric(x)) return(ifelse(is.na(x), "null", as.character(x)))
-  if (length(x) > 1) return(pp_to_json(as.list(x), indent = indent))
+  if (is.logical(x)) return(if (x) "true" else "false")
+  if (is.numeric(x)) return(pp_json_number(x))
   paste0('"', pp_json_escape(x), '"')
+}
+
+pp_write_review_sidecar <- function(path, metadata_path, qa_path,
+                                    visual_qa_path = NULL,
+                                    visual_status = c("not_recorded", "pass", "accepted_warn"),
+                                    visual_exception_reason = "",
+                                    old_vs_new_path = NULL) {
+  visual_status <- match.arg(visual_status)
+  if (!grepl("_review\\.json$", path)) stop("Review sidecar must end with _review.json: ", path, call. = FALSE)
+  if (file.exists(path)) stop("Refusing to overwrite existing review sidecar: ", path, call. = FALSE)
+  expected_metadata <- sub("_review\\.json$", "_metadata.json", path)
+  expected_qa <- sub("_review\\.json$", "_qa.md", path)
+  if (!file.exists(metadata_path) || !identical(normalizePath(metadata_path, mustWork = TRUE), normalizePath(expected_metadata, mustWork = TRUE))) {
+    stop("Review sidecar requires stem-matched metadata: ", expected_metadata, call. = FALSE)
+  }
+  if (!file.exists(qa_path) || !identical(normalizePath(qa_path, mustWork = TRUE), normalizePath(expected_qa, mustWork = TRUE))) {
+    stop("Review sidecar requires stem-matched QA report: ", expected_qa, call. = FALSE)
+  }
+  visual_exception_reason <- trimws(as.character(visual_exception_reason))
+  if (visual_status == "accepted_warn" && !nzchar(visual_exception_reason)) {
+    stop("accepted_warn requires a non-empty visual_exception_reason.", call. = FALSE)
+  }
+  if (visual_status != "not_recorded" && (is.null(visual_qa_path) || !file.exists(visual_qa_path))) {
+    stop("Recorded visual review requires an existing visual_qa.json path.", call. = FALSE)
+  }
+  visual_review <- list(
+    status = visual_status,
+    exception_recorded = identical(visual_status, "accepted_warn"),
+    exception_reason = if (visual_status == "accepted_warn") visual_exception_reason else "",
+    evidence_path = if (is.null(visual_qa_path)) "" else normalizePath(visual_qa_path, mustWork = TRUE),
+    evidence_md5 = if (is.null(visual_qa_path)) "" else pp_file_md5(visual_qa_path)
+  )
+  old_review <- list(
+    status = if (is.null(old_vs_new_path)) "not_applicable" else "provided",
+    evidence_path = if (is.null(old_vs_new_path)) "" else normalizePath(old_vs_new_path, mustWork = TRUE),
+    evidence_md5 = if (is.null(old_vs_new_path)) "" else pp_file_md5(old_vs_new_path)
+  )
+  payload <- list(
+    review_schema_version = 1L,
+    created_at = format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z"),
+    metadata = pp_file_record(metadata_path),
+    qa = pp_file_record(qa_path),
+    visual_qa_review = visual_review,
+    old_vs_new_review = old_review
+  )
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  writeLines(pp_to_json(payload), con = path)
+  pp_assert_output(path)
+  invisible(path)
 }
 
 pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_files,
@@ -689,21 +1025,24 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
                               qa = list(), data_summary = list()) {
   if (file.exists(path)) stop("Refusing to overwrite existing metadata file: ", path, call. = FALSE)
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
-  pp_validate_figure_spec(figure_spec)
+  figure_spec <- pp_validate_figure_spec(figure_spec)
   if (!is.null(metric_spec)) pp_validate_metric_spec(metric_spec)
   payload <- list(
     figure_id = figure_spec$figure_id,
     template_id = figure_spec$template_id,
     backend = figure_spec$backend,
     helper_version = figure_spec$helper_version,
+    figure_spec_schema_version = figure_spec$figure_spec_schema_version,
     task_type = figure_spec$task_type,
     figure_role = figure_spec$figure_role,
     scientific_message = figure_spec$scientific_message,
     plot_type = figure_spec$plot_type,
+    journal_profile = figure_spec$journal_profile,
+    analysis_domain = figure_spec$analysis_domain,
     data = data_summary,
     metrics = metric_spec,
     ordering = ordering,
-    style = list(theme = "pp_theme", palette = palette),
+    style = list(theme = "pp_theme", palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
     layout = layout,
     export = as.list(output_files),
     qa = qa
@@ -741,8 +1080,10 @@ pp_qa_status <- function(qa_results) {
 }
 
 pp_qa_preflight <- function(figure_spec, metric_spec = NULL, label_strategy = NULL,
-                            palette_check = NULL, layout_check = NULL) {
-  pp_validate_figure_spec(figure_spec)
+                            palette_check = NULL, layout_check = NULL,
+                            cognitive_load_review = NULL,
+                            bioinformatics_validation = NULL) {
+  figure_spec <- pp_validate_figure_spec(figure_spec)
   results <- list(pp_qa_result("figure_spec", "pass", "required figure fields recorded"))
   if (!is.null(metric_spec)) {
     pp_validate_metric_spec(metric_spec)
@@ -753,6 +1094,8 @@ pp_qa_preflight <- function(figure_spec, metric_spec = NULL, label_strategy = NU
   }
   if (!is.null(palette_check)) results <- c(results, list(palette_check))
   if (!is.null(layout_check)) results <- c(results, list(layout_check))
+  results <- c(results, list(pp_qa_cognitive_load_review(cognitive_load_review)))
+  results <- c(results, list(pp_qa_bioinformatics_validation(figure_spec, bioinformatics_validation)))
   do.call(pp_qa_summary, results)
 }
 
@@ -897,10 +1240,14 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
                               visual_budget = NULL, label_strategy = NULL,
                               palette_plan = NULL, panel_hierarchy = list(),
                               redraw_strategy = list(), statistical_plan = list(),
-                              optional_dependencies = list(), sidecars = list()) {
+                              optional_dependencies = list(), sidecars = list(),
+                              cognitive_load_review = NULL,
+                              bioinformatics_validation = NULL,
+                              visual_qa_review = NULL,
+                              old_vs_new_review = NULL) {
   if (file.exists(path)) stop("Refusing to overwrite existing metadata file: ", path, call. = FALSE)
   dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
-  pp_validate_figure_spec(figure_spec)
+  figure_spec <- pp_validate_figure_spec(figure_spec)
   if (!is.null(metric_spec)) pp_validate_metric_spec(metric_spec)
   design_brief <- design_brief %||% pp_design_brief(
     scientific_message = figure_spec$scientific_message,
@@ -928,15 +1275,56 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
   }
   data_profile <- data_profile %||% data_summary
   visual_budget <- visual_budget %||% list(status = "not recorded")
+  cognitive_load_review <- cognitive_load_review %||% list(
+    status = "not_recorded",
+    review_limits = list(elements = 7, colors = 3, shapes = 3, legend_entries = 4),
+    action = "assess per panel before manuscript-ready classification"
+  )
+  bioinformatics_validation <- bioinformatics_validation %||% pp_bioinformatics_validation(
+    if (identical(figure_spec$analysis_domain, "bioinformatics")) "not_recorded" else "not_applicable"
+  )
+  visual_qa_review <- visual_qa_review %||% list(status = "not_recorded", exception_recorded = FALSE, exception_reason = "")
+  old_vs_new_review <- old_vs_new_review %||% list(
+    status = if (is.null(figure_spec$old_figure_path)) "not_applicable" else "not_recorded",
+    evidence_path = ""
+  )
+  export_spec <- attr(output_files, "export_spec")
+  if (is.null(export_spec)) {
+    preset_values <- pp_output_preset(figure_spec$output_preset)
+    export_spec <- list(
+      preset = figure_spec$output_preset,
+      width_cm = layout$width_cm %||% preset_values$width_cm,
+      height_cm = layout$height_cm %||% preset_values$height_cm,
+      dpi = preset_values$dpi,
+      formats = intersect(names(output_files), c("pdf", "png"))
+    )
+  }
+  if (!identical(tolower(export_spec$preset), tolower(figure_spec$output_preset))) {
+    stop("Export preset does not match figure_spec$output_preset.", call. = FALSE)
+  }
+  profile_geometry <- pp_validate_profile_geometry(
+    figure_spec$output_preset, figure_spec$journal_profile,
+    width_cm = export_spec$width_cm, height_cm = export_spec$height_cm
+  )
+  export_geometry <- c(export_spec, list(
+    journal_profile = profile_geometry$profile$name,
+    column_class = profile_geometry$geometry$column_class,
+    max_width_cm = profile_geometry$geometry$max_width_cm,
+    max_height_cm = profile_geometry$geometry$max_height_cm
+  ))
   payload <- list(
     figure_id = figure_spec$figure_id,
     template_id = figure_spec$template_id,
     backend = figure_spec$backend,
     helper_version = figure_spec$helper_version,
+    figure_spec_schema_version = figure_spec$figure_spec_schema_version,
     task_type = figure_spec$task_type,
     figure_role = figure_spec$figure_role,
     scientific_message = figure_spec$scientific_message,
     plot_type = figure_spec$plot_type,
+    journal_profile = figure_spec$journal_profile,
+    journal_profile_snapshot = profile_geometry$profile,
+    analysis_domain = figure_spec$analysis_domain,
     figure_spec = figure_spec,
     metric_spec = metric_spec,
     design_brief = design_brief,
@@ -947,15 +1335,20 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     metrics = metric_spec,
     ordering = ordering,
     visual_budget = visual_budget,
+    cognitive_load_review = cognitive_load_review,
+    bioinformatics_validation = bioinformatics_validation,
+    visual_qa_review = visual_qa_review,
+    old_vs_new_review = old_vs_new_review,
     label_strategy = label_strategy,
     palette_plan = palette_plan %||% palette,
-    style = list(theme = "pp_theme", palette = palette),
+    style = list(theme = "pp_theme", palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
     panel_hierarchy = panel_hierarchy,
     redraw_strategy = redraw_strategy,
     statistical_plan = statistical_plan,
     optional_dependencies = optional_dependencies,
     layout = layout,
     export = as.list(output_files),
+    export_geometry = export_geometry,
     sidecars = sidecars,
     qa = qa,
     outputs = as.list(output_files)

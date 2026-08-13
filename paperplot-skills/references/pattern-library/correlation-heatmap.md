@@ -36,7 +36,7 @@ Derived from replica cases using correlation matrices, clustered heatmaps, dot-m
 ## Typography And Marks
 
 - Cell borders off or very thin.
-- Axis text 5-6 pt, angled only when labels are short.
+- Axis text targets 8 pt and is angled only when labels are short; use an indexed key or supplement before invoking the 6 pt absolute-floor exception.
 - Significance glyphs must be sparse; many stars become texture, not information.
 
 ## Color Strategy

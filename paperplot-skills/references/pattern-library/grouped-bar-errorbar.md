@@ -35,7 +35,7 @@ Derived from replica cases covering grouped bars with raw dots, stacked bars, AN
 
 ## Typography And Marks
 
-- Axis/title text 5-7 pt at final size; panel labels about 8 pt bold.
+- Axis/title text targets 9 pt at final size; ticks/legend text target 8 pt; panel labels target 12 pt bold.
 - Bar width 0.55-0.72; errorbar width 0.12-0.22; stroke 0.35-0.55 pt.
 - Raw points 1.1-1.7 mm with alpha 0.55-0.85 and deterministic jitter.
 

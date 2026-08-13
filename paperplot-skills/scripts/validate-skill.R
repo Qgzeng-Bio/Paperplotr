@@ -5,6 +5,9 @@ fail <- function(...) stop(paste(..., collapse = ""), call. = FALSE)
 root <- normalizePath(file.path(getwd(), "paperplot-skills"), mustWork = FALSE)
 if (!dir.exists(root)) fail("paperplot-skills directory not found from working directory: ", getwd())
 rel <- function(...) file.path(root, ...)
+parser_path <- rel("scripts", "lib", "contract-parsers.R")
+if (!file.exists(parser_path)) fail("Missing contract parser: ", parser_path)
+source(parser_path, local = TRUE)
 
 template_files <- c(
   "single-panel-template.R",
@@ -36,6 +39,7 @@ required_files <- c(
   file.path("scripts", "validate-skill.R"),
   file.path("scripts", "smoke-test-templates.R"),
   file.path("scripts", "validate-figure-output.R"),
+  file.path("scripts", "test-contract-regressions.R"),
   file.path("scripts", "visual-qa-report.R"),
   file.path("scripts", "visual-qa-rendered-image.py"),
   file.path("scripts", "compare-old-new-figures.py"),
@@ -46,6 +50,7 @@ required_files <- c(
   file.path("scripts", "lib", "design-brief.R"),
   file.path("scripts", "lib", "label-strategy.R"),
   file.path("scripts", "lib", "design-qa.R"),
+  file.path("scripts", "lib", "contract-parsers.R"),
   file.path("references", "figure-design-brief.md"),
   file.path("references", "label-burden-strategies.md"),
   file.path("references", "main-vs-supplement-density.md"),
@@ -55,6 +60,9 @@ required_files <- c(
   file.path("references", "metadata-schema.md"),
   file.path("references", "optional-dependencies.md"),
   file.path("references", "publication-visual-standards.md"),
+  file.path("references", "journal-specs-matrix.md"),
+  file.path("references", "multi-panel-layout-rules.md"),
+  file.path("references", "bioinformatics-figure-validation.md"),
   file.path("references", "manuscript-aesthetics-rules.md"),
   file.path("references", "nature-like-style-principles.md"),
   file.path("references", "image-level-qa.md"),
@@ -92,23 +100,31 @@ required_files <- c(
 missing_required <- required_files[!file.exists(file.path(root, required_files))]
 if (length(missing_required) > 0) fail("Missing required files: ", paste(missing_required, collapse = ", "))
 
-skill_lines <- readLines(rel("SKILL.md"), warn = FALSE)
-if (length(skill_lines) < 5 || !identical(skill_lines[[1]], "---")) fail("SKILL.md must start with --- frontmatter")
-frontmatter_end <- which(skill_lines[-1] == "---")
-if (length(frontmatter_end) == 0) fail("SKILL.md frontmatter closing --- not found")
-frontmatter_end <- frontmatter_end[[1]] + 1L
-frontmatter <- skill_lines[2:(frontmatter_end - 1L)]
-description_line <- frontmatter[grepl("^description:\\s*", frontmatter)]
-if (!any(grepl("^name:\\s*paperplot-skills\\s*$", frontmatter))) fail("SKILL.md frontmatter must contain name: paperplot-skills")
-if (length(description_line) != 1) fail("SKILL.md frontmatter must contain exactly one description field")
-if (nchar(sub("^description:\\s*", "", description_line), type = "chars") > 350) fail("SKILL.md description is too long")
+frontmatter_contract <- pp_parse_skill_frontmatter(rel("SKILL.md"))
+skill_lines <- frontmatter_contract$lines
+frontmatter <- frontmatter_contract$values
+if (!identical(frontmatter$name, "paperplot-skills")) fail("SKILL.md frontmatter must contain name: paperplot-skills")
+if (!is.character(frontmatter$description) || length(frontmatter$description) != 1L || !nzchar(trimws(frontmatter$description))) fail("SKILL.md frontmatter must contain exactly one non-empty description field")
+if (nchar(frontmatter$description, type = "chars") > 350) fail("SKILL.md description is too long")
+if ("disable-model-invocation" %in% names(frontmatter)) fail("paperplot-skills must remain auto-discoverable for Bioflow delegation")
 if (length(skill_lines) > 230) fail("SKILL.md is too long for a concise skill entrypoint: ", length(skill_lines), " lines")
+
+skill_text <- paste(skill_lines, collapse = "\n")
+reference_tokens <- regmatches(skill_text, gregexpr("`references/[^`]+\\.md`", skill_text, perl = TRUE))[[1]]
+reference_tokens <- unique(gsub("`", "", reference_tokens, fixed = TRUE))
+for (token in reference_tokens) {
+  matches <- if (grepl("*", token, fixed = TRUE)) Sys.glob(file.path(root, token)) else file.path(root, token)
+  if (length(matches) == 0 || !all(file.exists(matches))) fail("SKILL.md references missing resource: ", token)
+}
 
 helper_text <- readLines(rel("scripts", "paperplot_helpers.R"), warn = FALSE)
 module_text <- unlist(lapply(c("design-brief.R", "label-strategy.R", "design-qa.R"), function(x) readLines(rel("scripts", "lib", x), warn = FALSE)))
 all_helper_text <- c(helper_text, module_text)
 required_helper_patterns <- c(
   "pp_theme <- function",
+  "pp_text_size_mm <- function",
+  "pp_journal_profile <- function",
+  "pp_profile_for_preset <- function",
   "pp_figure_spec <- function",
   "pp_metric_spec <- function",
   "pp_design_brief <- function",
@@ -120,6 +136,10 @@ required_helper_patterns <- c(
   "pp_rank_index_map <- function",
   "pp_write_label_key <- function",
   "pp_visual_budget <- function",
+  "pp_cognitive_load_review <- function",
+  "pp_bioinformatics_validation <- function",
+  "pp_qa_cognitive_load_review <- function",
+  "pp_qa_bioinformatics_validation <- function",
   "pp_qa_design_preflight <- function",
   "pp_qa_manuscript_readiness <- function",
   "pp_save_all <- function",
@@ -128,6 +148,30 @@ required_helper_patterns <- c(
 )
 missing_helper <- required_helper_patterns[!vapply(required_helper_patterns, function(x) any(grepl(x, all_helper_text, fixed = TRUE)), logical(1))]
 if (length(missing_helper) > 0) fail("Missing helper patterns: ", paste(missing_helper, collapse = ", "))
+
+helper_blob <- paste(helper_text, collapse = "\n")
+for (pattern in c(
+  "pp_helper_version <- \"standalone-0.5.0\"",
+  "pp_profile_last_checked <- \"2026-08-12\"",
+  "pp_validate_profile_geometry <- function",
+  "pp_write_plotting_data <- function",
+  "pp_bioinformatics_scaffold <- function",
+  "pp_write_review_sidecar <- function",
+  "pp_figure_spec_schema_version <- 2L",
+  "pp_theme <- function(base_size = 9",
+  "pp_theme base_size must be one numeric value at or above the 6 pt absolute floor",
+  "target_text_pt = 9",
+  "compact_text_pt = 8",
+  "panel_label_pt = 12",
+  "min_text_pt = 6",
+  "general_scientific = list(",
+  "nature_like = list(",
+  "nature_communications = list(",
+  "cell_press = list(",
+  "medical_radiology = list("
+)) {
+  if (!grepl(pattern, helper_blob, fixed = TRUE)) fail("Typography/journal helper contract missing: ", pattern)
+}
 
 forbidden_dependency_patterns <- c(
   "library(PaperPlotR)", "requireNamespace(\"PaperPlotR\"", "PaperPlotR::",
@@ -148,11 +192,31 @@ required_template_patterns <- c("library(ggplot2)", "paperplot_helpers.R", "sour
 for (path in template_paths) {
   rel_path <- sub(paste0("^", root, "/?"), "", path)
   text <- readLines(path, warn = FALSE)
+  text_blob <- paste(text, collapse = "\n")
   for (pattern in required_template_patterns) {
     if (!any(grepl(pattern, text, fixed = TRUE))) fail("Missing required pattern in ", rel_path, ": ", pattern)
   }
+  if (grepl("pp_theme\\(base_size\\s*=\\s*[0-8](?:\\D|$)", text_blob, perl = TRUE)) fail("Template uses below-target pp_theme base size in ", rel_path)
+  if (grepl("geom_(text|label)\\s*\\(", text_blob, perl = TRUE) && !grepl("pp_text_size_mm\\(", text_blob, perl = TRUE)) fail("Template text geometry must use explicit pt-to-mm conversion in ", rel_path)
   check_forbidden(text, rel_path)
   cat("checked template: ", rel_path, "\n", sep = "")
+}
+
+bio_template_files <- c(
+  "bio-genome-quality-overview-template.R",
+  "bio-duplication-mode-comparison-template.R",
+  "volcano-plot-template.R",
+  "ma-plot-template.R",
+  "enrichment-dotplot-template.R"
+)
+for (path in bio_template_files) {
+  text <- paste(readLines(rel("templates", path), warn = FALSE), collapse = "\n")
+  if (!grepl('analysis_domain = "bioinformatics"', text, fixed = TRUE)) fail("Bioinformatics template must declare analysis_domain in ", path)
+}
+
+output_validator_text <- paste(readLines(rel("scripts", "validate-figure-output.R"), warn = FALSE), collapse = "\n")
+for (pattern in c("--manuscript-ready", "bioinformatics_validation", "compact_text_pt", "panel_label_pt", "metadata_files <- find_files", "validate_visual_qa", "validate_old_vs_new", "input_md5", "visual_qa_schema_version", "comparison_schema_version", "analysis_fingerprint", "replay_visual_evidence", "replay_comparison_evidence", "required_qa_gates", "journal_profile_snapshot", "crc32_raw", "parse_qa_report")) {
+  if (!grepl(pattern, output_validator_text, fixed = TRUE)) fail("Output validator contract missing: ", pattern)
 }
 
 for (path in c(
@@ -160,6 +224,9 @@ for (path in c(
   "label-burden-strategies.md",
   "manuscript-readiness-rubric.md",
   "publication-visual-standards.md",
+  "journal-specs-matrix.md",
+  "multi-panel-layout-rules.md",
+  "bioinformatics-figure-validation.md",
   "manuscript-aesthetics-rules.md",
   "nature-like-style-principles.md",
   "image-level-qa.md",
@@ -173,6 +240,23 @@ for (path in c(
 )) {
   text <- readLines(rel("references", path), warn = FALSE)
   if (length(text) < 5) fail("Reference doc too short: ", path)
+}
+
+legacy_typography_patterns <- c("5-7 pt", "5–7 pt", "5-6 pt", "5–6 pt", "7-8 pt base", "7–8 pt base")
+active_typography_docs <- c(
+  "publication-visual-standards.md",
+  "journal-specs-matrix.md",
+  "manuscript-aesthetics-rules.md",
+  "color-and-style-policy.md",
+  file.path("pattern-library", "grouped-bar-errorbar.md"),
+  file.path("pattern-library", "correlation-heatmap.md"),
+  file.path("pattern-library", "volcano-ma-enrichment.md"),
+  file.path("pattern-library", "multi-panel-manuscript-layout.md")
+)
+for (path in active_typography_docs) {
+  text <- paste(readLines(rel("references", path), warn = FALSE), collapse = "\n")
+  hits <- legacy_typography_patterns[vapply(legacy_typography_patterns, function(pattern) grepl(pattern, text, fixed = TRUE), logical(1))]
+  if (length(hits) > 0) fail("Legacy typography guidance remains in ", path, ": ", paste(hits, collapse = ", "))
 }
 
 pattern_docs <- c(

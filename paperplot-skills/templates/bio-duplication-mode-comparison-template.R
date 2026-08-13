@@ -63,13 +63,22 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+plotting_data_path <- paste0(output_stem, "_plotting_data.tsv")
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path, plotting_data_path))
 
-figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "bio-duplication-mode-comparison-template", figure_role = figure_role, scientific_message = scientific_message, plot_type = "bio_duplication_mode_four_panel", sample_id = sample_col, group_var = group_col, output_preset = "double_column")
+figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "bio-duplication-mode-comparison-template", figure_role = figure_role, scientific_message = scientific_message, plot_type = "bio_duplication_mode_four_panel", sample_id = sample_col, group_var = group_col, output_preset = "double_column", analysis_domain = "bioinformatics")
 metric_spec <- pp_metric_spec(metric = mode_levels, label = mode_levels, unit = "duplication metric", direction = "neutral", transform = "none", role = "duplication_mode")
 data_profile <- pp_data_profile(df, sample_col = sample_col, group_col = group_col, metric_col = mode_col, value_col = value_col)
 label_strategy <- list(status = "pass", strategy = "mode_labels_visible", visible_label_policy = "show duplication mode labels", needs_label_key = FALSE, direct_label_mode = "none", message = "Mode labels are semantic and remain visible.")
 visual_budget <- pp_visual_budget(figure_role = figure_role, n_panels = 4, n_labels = length(mode_levels), n_legend_entries = length(group_levels))
+cognitive_load_review <- pp_cognitive_load_review(6, length(unique(plot_df$color_group)), 1, length(group_levels), chart_family = "bio_duplication_mode_four_panel")
+bioinformatics_validation <- pp_bioinformatics_scaffold(
+  input_paths = input_csv, plotting_data_path = plotting_data_path, plotting_data = plot_df,
+  coordinate_system = "not_applicable_nonpositional",
+  sample_order = paste(unique(df[[sample_col]]), collapse = "; "),
+  units_transforms_denominators = "Burden, normalized fraction, within-sample contribution, and mean-difference effect; TODO verify denominators.",
+  statistics = "Mean-difference effect shown; TODO replace approximate effect panel with final tested estimates and correction."
+)
 panel_specs <- list(pp_panel_spec("A", "Total duplicate-pair burden", "primary", "burden"), pp_panel_spec("B", "Duplicated fraction by mode", "secondary", "fraction"), pp_panel_spec("C", "Relative mode contribution", "secondary", "composition"), pp_panel_spec("D", "Group effect-size summary", "supporting", "effect_size"))
 panel_hierarchy <- pp_panel_hierarchy(panel_specs)
 design_brief <- pp_design_brief(scientific_message = scientific_message, figure_role = figure_role, main_comparison = list(group = group_col, mode = mode_col), data_roles = list(sample = "biological unit", mode = "duplication mode", group = "primary comparison", value = "mode-specific burden"), metric_semantics = list(modes = metric_spec), panel_hierarchy = panel_hierarchy, acceptable_simplifications = c("Panels share mode semantics but use free y scales."), must_show = c("group difference", "mode composition", "effect direction"), may_move_to_metadata = c("full per-sample values", "effect-size calculation details"))
@@ -81,14 +90,16 @@ plot <- ggplot(plot_df, aes(x = x, y = value, color = color_group)) +
   facet_wrap(~panel, scales = "free", ncol = 2) +
   pp_scale_color(unique(plot_df$color_group)) +
   labs(x = NULL, y = NULL, color = "Group") +
-  pp_theme(base_size = 7) +
+  pp_theme(base_size = 9) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")
-qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("panel_hierarchy", "pass", "Panel hierarchy contains primary, secondary, and supporting roles."), pp_qa_result("bio_duplication_semantics", "pass", "Duplication modes and group colors are recorded consistently."))
+qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec, cognitive_load_review = cognitive_load_review, bioinformatics_validation = bioinformatics_validation), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("panel_hierarchy", "pass", "Panel hierarchy contains primary, secondary, and supporting roles."), pp_qa_result("bio_duplication_semantics", "pass", "Duplication modes and group colors are recorded consistently."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("Four panels summarize burden, fraction, relative contribution, and effect size.", "Mode labels stay visible because they are semantic, not lookup labels.", "Free y scales are used because panels encode different quantities."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Replace approximate effect-size panel with final tested effect estimates before submission.", figure_spec = figure_spec, metric_spec = metric_spec, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)
-pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, panel_hierarchy = panel_hierarchy, statistical_plan = design_plan$statistical_plan)
+pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, panel_hierarchy = panel_hierarchy, statistical_plan = design_plan$statistical_plan,
+  cognitive_load_review = cognitive_load_review, bioinformatics_validation = bioinformatics_validation,
+  sidecars = list(plotting_data = plotting_data_path))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

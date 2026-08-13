@@ -1,8 +1,159 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-06-11 (v0.1.0 public release + local Codex install)
+Last updated: 2026-08-12 (review-first contract hardening; not installed or published)
+Previous release update: 2026-06-11 (v0.1.0 public release + local Codex install)
 Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
 Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
+
+---
+
+## 2026-08-12 — Source Contract Optimization (Not Yet Installed or Published)
+
+Purpose: reconcile an August runtime-copy experiment with the Git source, adopt
+the user-approved `make-figures` typography policy, and stop medical journal
+rules from silently becoming universal scientific-figure rules.
+
+### Decisions
+
+- Ordinary print labels and axes target **9 pt**; ticks, legends, and compact
+  annotations target **8 pt**; panel labels target **12 pt bold**.
+- **6 pt is an absolute floor**, not the normal PaperPlot target. A smaller-than-
+  target exception requires a target-journal allowance, a documented dense-family
+  reason, and final-size rendered QA.
+- More than 7 visual elements, 3 meaning-carrying colors, 3 shapes, or 4 legend
+  entries in one panel is a review trigger rather than a universal failure.
+  Heatmaps, Manhattan plots, tree rings, UpSet matrices, and other dense families
+  can retain higher burden only with a recorded scientific reason.
+- Journal dimensions are scoped profiles. Medical Radiology-family dimensions do
+  not override Nature-like, Cell Press, or general genomics/life-science work.
+- PaperPlot ships its own bioinformatics data-to-image validation contract and
+  does not require a relative `bio-workflow/` checkout. Bioflow remains an
+  optional additional project-policy layer.
+
+### Source changes
+
+- Removed the local `disable-model-invocation: true` frontmatter experiment so
+  the skill remains cross-harness valid and automatically available to Bioflow.
+- Added `references/journal-specs-matrix.md` with `general_scientific`,
+  `nature_like`, `nature_communications`, `cell_press`, and
+  `medical_radiology` profiles, provenance scope,
+  typography, DPI, review triggers, and a spec-first compositing workflow.
+- Added `references/bioinformatics-figure-validation.md` covering source paths,
+  reference/build, coordinates, sample order, units/transforms/denominators,
+  statistics, family-specific checks, and claim boundaries.
+- Updated `SKILL.md`, visual standards, metadata/figure/template contracts,
+  multi-panel rules, style guidance, and affected pattern documents.
+- Upgraded `paperplot_helpers.R` to `standalone-0.5.0`: 9 pt default theme,
+  enforced 6 pt API floor, explicit pt-to-mm conversion for `geom_text`, scoped
+  profile snapshots and geometry envelopes, explicit v1-to-v2-only figure-spec
+  migration, machine-readable 9/8/12/6 pt typography, cognitive-load review,
+  real-file/checksum/checklist-backed bioinformatics provenance, exact TSV
+  plotting-data sidecars, and immutable post-render `*_review.json` sidecars.
+- Updated templates and the redraw benchmark to stop explicitly drawing 7 pt
+  theme text or 5.8–6.5 pt labels.
+- Strengthened `validate-skill.R`: cross-harness frontmatter allowlist, SKILL
+  reference existence, new required references/helpers, typography/profile
+  implementation checks, below-target template detection, and stale typography
+  detection.
+- Reworked `validate-figure-output.R` around bundled dependency-free contract
+  parsers. Candidate mode validates PDF/PNG signatures and completeness,
+  stem-matched exports/sidecars across the full tree, exact QA/metadata status,
+  supported schema, scoped profile snapshot, export geometry, and structured
+  provenance. Candidate PASS is integrity only, not WARN or readiness.
+- `--manuscript-ready` additionally requires QA `pass`, checksum-bound strict
+  rendered QA, a structured accepted reason for any visual warning, recorded
+  cognitive-load review, complete real-file/checksum/checklist-backed
+  bioinformatics PASS, and checksum-matched old-vs-new `improved` evidence only
+  when a real `old_figure_path` is declared.
+- Added `scripts/lib/contract-parsers.R` with duplicate-key rejection, preserved
+  JSON nulls, Unicode surrogate handling, bounded nesting, and strict flat
+  cross-harness SKILL frontmatter parsing.
+- Added `scripts/test-contract-regressions.R` with positive general/bio strict
+  bundles plus negative media, QA, visual-QA, orphan, JSON, profile, schema,
+  provenance, review-sidecar, and old-vs-new checksum fixtures.
+- All 20 templates now record cognitive-load review explicitly. Five
+  bioinformatics templates write exact stem-matched plotting TSVs and a
+  `not_recorded` provenance scaffold; they cannot become manuscript-ready until
+  the scientific TODO fields and validation evidence are completed.
+
+### Validation completed
+
+- Agent Skills quick validation: PASS.
+- Standalone `validate-skill.R`: PASS for all 20 templates and new contracts.
+- Helper assertions: profile normalization/inference, 8 pt conversion, review
+  trigger and documented exception: PASS.
+- Contract regression suite: PASS, including general/bio strict positive
+  fixtures and all review-discovered false-positive regressions; latest root
+  `/tmp/paperplot-contract-regressions-20260813-023117`; positive strict
+  fixtures run the real rendered-QA and old-vs-new tools. Adversarial negatives
+  now also cover deletion of required QA gates, refingerprinted visual-metric
+  forgery, refingerprinted comparison-score forgery, locale-dependent JSON
+  numbers, and the earlier media/parser/profile/provenance cases. Strict v3
+  evidence is fingerprint-verified and deterministically replayed against the
+  current pixels; v2 evidence remains candidate-compatible but cannot receive
+  readiness.
+- Template smoke test: **20/20 PASS**; candidate bundles validate, all unfinished
+  smoke outputs are correctly rejected by manuscript-ready mode; latest root
+  `/tmp/paperplot-skills-smoke-20260813-025230`; all 20 QA reports contain the
+  common `figure_spec`, cognitive, bioinformatics, PDF, PNG, notes, and metadata
+  gate set.
+- Behavior pressure scenarios: **5/5 PASS**; latest root
+  `/tmp/paperplot-pressure-20260813-025230`.
+- Visual pressure scenarios: all **11 available synthetic/repository fixtures**
+  behaved as expected (pass/warn/fail/expected-error and old-vs-new outcomes);
+  **5 optional private fixtures were skipped as `fixture_missing`**. Latest root
+  `/tmp/paperplot-visual-pressure-m_ova2f_`, using the existing `claude` Python.
+- `git diff --check`: PASS at the documented checkpoints.
+- Review-first iteration: two independent read-only reviews found no P0 and six
+  classes of P1 (strict readiness false positives, visual-QA orphan masking,
+  JSON null/duplicate semantics, profile/geometry labels without enforcement,
+  fabricated bioinformatics provenance, and incomplete frontmatter parsing).
+  Every reported P1 was independently reproduced under `/tmp` before repair.
+  A fresh implementation audit then found five further P1 adversarial gaps:
+  crafted media, QA gate/overall contradiction, forged visual/comparison JSON,
+  unknown-preset/DPI bypass, and unsafe PNG chunk lengths. These were all
+  reproduced or confirmed, then fixed with CRC/chunk/xref/decoder checks,
+  recomputed QA state, versioned tool schemas and internally consistent evidence,
+  explicit preset/profile/DPI agreement, and bounded parsers. The review's four
+  P2 parser/writer/YAML/TSV-orphan findings were fixed in the same batch. Two
+  later bounded reviews found five additional P1 boundaries: missing required
+  QA gates, self-asserted visual metrics, unbound comparison summaries,
+  non-transactional runtime overwrite, and locale-sensitive JSON numbers. All
+  five were reproduced or confirmed and fixed with common-gate enforcement,
+  v3 tool fingerprints plus real analysis replay, new-analysis cross-binding,
+  staging-before-atomic-switch installation, and locale-independent numeric
+  serialization. Fault-injected download failure preserved the old runtime at
+  `/tmp/paperplot-transaction-o86hsf`; a staged runtime strict replay passed
+  against the latest real evidence bundle.
+
+The first visual-pressure attempt under base Anaconda failed before QA because
+Pillow could not load `libLerc.so.4` against the system `libstdc++`
+(`GLIBCXX_3.4.29` missing). This is an existing interpreter ABI problem, not a
+PaperPlot regression. No package was installed or upgraded; the already-working
+`claude` Python (Pillow 12.0.0, NumPy 2.4.0) passed the suite.
+
+### Current state / next gate
+
+- Source worktree contains this uncommitted optimization batch.
+- `~/.codex/skills/paperplot-skills` (also used by Pi) remains the older runtime
+  copy with an August experiment; it has **not** been overwritten in this batch.
+- Claude still points to the source checkout and therefore sees source edits in a
+  fresh/reloaded session.
+- No commit, tag, push, release, remote download, package install, or runtime sync
+  has been performed.
+- A broad final audit hit its turn limit without producing review evidence and
+  is not counted as signoff. Two bounded audits then found the five P1 items
+  above; their FAIL verdicts triggered the final hardening batch.
+- Two new bounded post-fix read-only audits independently signed off the frozen
+  result: strict-v3 false-positive boundary **PASS, no P0/P1**; runtime install,
+  locale JSON, and standalone boundary **PASS, no P0/P1**. Their requested
+  environment-specific contract run is the passing regression root above.
+  The only remaining review suggestion is a non-blocking P2 to add CI fault
+  injection for activation-`mv` failure; local failure injection already proved
+  restoration and no transaction debris.
+- Test-only Python cache artifacts were removed after explicit confirmation.
+- Next safe step: request separate confirmation before replacing the Codex/Pi
+  runtime copy or committing; push, tag, or release remain separate actions.
 
 ---
 

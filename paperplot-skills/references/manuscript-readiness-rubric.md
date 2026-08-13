@@ -21,7 +21,9 @@ A manuscript-ready figure needs no hard failures and enough design quality to su
 | Supplement | no hard fail and score >= 7 |
 | Diagnostic | no hard fail; role must be explicit |
 
-Final manuscript candidates must also pass rendered-image QA with `nature_guardrails.status` equal to `pass`, or `warn` only when the accepted risk is justified in notes and metadata. A `--strict-nature` failure is not manuscript-ready.
+Final manuscript candidates must also have QA status `pass` recomputed from the complete common QA gate set, structurally valid and decoder-tested PDF/PNG media, and current-schema rendered-image QA using strict Nature guardrails. Strict validation verifies the tool fingerprint and reruns the bundled analysis against the current pixels; an edited/re-signed JSON record is not sufficient. `nature_guardrails.status=pass` is accepted directly; `warn` requires `visual_qa_review.status=accepted_warn`, `exception_recorded=true`, and a non-empty reason. A strict Nature `fail` is never manuscript-ready.
+
+Candidate validator PASS proves output integrity only. It is not a manuscript-readiness score or warning. For bioinformatics figures, manuscript-ready also requires real-file/checksum/checklist-backed provenance `pass`; when a real old figure is declared, checksum-matched completed old-vs-new evidence must conclude `improved`.
 
 ## Hard Failure Examples
 

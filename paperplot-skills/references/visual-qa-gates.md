@@ -24,7 +24,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Connecting lines encode real paired, repeated, ordered, or trajectory semantics.
 - Main figure does not look like a diagnostic table of labels.
 - Equal-role multi-panel figures pass panel geometry QA or have an explicit reason for unequal panel hierarchy.
-- Final manuscript candidates pass `nature_guardrails.status` or document why a `warn` is accepted.
+- Final manuscript candidates have checksum-bound strict visual QA: `nature_guardrails.status=pass`, or `warn` with a structured `visual_qa_review` exception. Record post-render review in immutable `*_review.json` with `pp_write_review_sidecar()` when metadata already exists. Hard `fail` cannot be waived.
 
 ## Soft Warnings
 
@@ -56,6 +56,6 @@ Do not add a family profile to hide a real problem. If a warning disappears unde
 
 ## Completion Rule
 
-Do not report "ready for manuscript use" unless all hard gates pass and the manuscript readiness score meets the role threshold.
+Do not report "ready for manuscript use" unless all hard gates pass, QA status is `pass`, the manuscript readiness score meets the role threshold, and `validate-figure-output.R --manuscript-ready` passes.
 
-For final rendered figures, also require the ten checks in `nature-figure-guardrails.md`.
+Candidate validator PASS only proves bundle integrity. For final rendered figures, also require the ten checks in `nature-figure-guardrails.md` and bind the QA evidence to the current image MD5.

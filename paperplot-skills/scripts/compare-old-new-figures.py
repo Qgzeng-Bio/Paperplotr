@@ -10,6 +10,7 @@ review rubric both support that verdict.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -27,6 +28,9 @@ RUBRIC_DIMENSIONS = [
     ("color_legend_discipline", "Colors and legends are functional, consistent, and not excessive."),
     ("data_preservation", "The redraw does not remove or distort required scientific information."),
 ]
+
+COMPARISON_SCHEMA_VERSION = 3
+COMPARISON_TOOL_ID = "paperplot-compare-old-new-figures"
 
 SEVERE_PANEL_RISKS = {
     "panel_size_imbalance",
@@ -239,6 +243,56 @@ def final_verdict(
     return "mixed", "warn"
 
 
+def stable_qa_summary(summary: dict[str, Any] | None) -> dict[str, Any]:
+    summary = summary or {}
+    raster = summary.get("rasterization") or {}
+    return {
+        "input_type": summary.get("input_type"),
+        "rasterization": {key: raster.get(key) for key in ("performed", "engine", "source_type", "dpi", "page")},
+        "panel_geometry": summary.get("panel_geometry"),
+        "nature_guardrails": summary.get("nature_guardrails"),
+    }
+
+
+def comparison_analysis_payload(result: dict[str, Any]) -> dict[str, Any]:
+    keys = (
+        "comparison_schema_version", "tool_id", "checked", "old_image_md5",
+        "new_image_md5", "old_analysis_fingerprint", "new_analysis_fingerprint",
+        "old_media", "new_media", "old_family", "new_family",
+        "old_threshold_profile", "new_threshold_profile", "comparison_limitation",
+        "deterministic_verdict", "panel_geometry_delta", "review_rubric_status",
+        "final_verdict", "verdict", "status", "message_clarity_delta",
+        "visual_burden_delta", "metric_deltas", "old_score", "new_score",
+        "severe_new_panel_risk", "new_nature_guardrails_failed", "review_rubric",
+        "old_qa_summary", "new_qa_summary", "remaining_risks", "invocation",
+    )
+    payload = {key: result.get(key) for key in keys}
+    payload["old_qa_summary"] = stable_qa_summary(result.get("old_qa_summary"))
+    payload["new_qa_summary"] = stable_qa_summary(result.get("new_qa_summary"))
+    return payload
+
+
+def comparison_analysis_fingerprint(result: dict[str, Any]) -> str:
+    canonical = json.dumps(comparison_analysis_payload(result), sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def verify_comparison_evidence(path: Path) -> int:
+    try:
+        result = json.loads(path.read_text())["old_vs_new_visual_qa"]
+        expected = result.get("analysis_fingerprint")
+        if result.get("analysis_fingerprint_algorithm") != "sha256-canonical-v1" or not expected:
+            raise ValueError("missing analysis fingerprint")
+        actual = comparison_analysis_fingerprint(result)
+        if actual != expected:
+            raise ValueError("analysis fingerprint mismatch")
+    except Exception as exc:
+        print(f"Invalid old-vs-new evidence: {exc}", file=sys.stderr)
+        return 1
+    print(actual)
+    return 0
+
+
 def write_md(payload: dict[str, Any], out_dir: Path) -> None:
     lines = [
         "# Old-vs-new visual QA",
@@ -286,9 +340,10 @@ def write_md(payload: dict[str, Any], out_dir: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Compare old and new rendered figures using deterministic visual QA metrics and a structured review rubric.")
-    parser.add_argument("old_image")
-    parser.add_argument("new_image")
-    parser.add_argument("--out", required=True)
+    parser.add_argument("old_image", nargs="?")
+    parser.add_argument("new_image", nargs="?")
+    parser.add_argument("--out")
+    parser.add_argument("--verify-evidence", help="Verify an existing old_vs_new_visual_qa.json analysis fingerprint and exit")
     parser.add_argument("--family", default=None, help="Optional family profile applied to both old and new figures")
     parser.add_argument("--old-family", default=None, help="Optional family profile for the old figure")
     parser.add_argument("--new-family", default=None, help="Optional family profile for the new figure")
@@ -305,13 +360,31 @@ def main() -> int:
     parser.add_argument("--old-strict-nature", action="store_true", help="Apply strict Nature guardrails to the old figure")
     parser.add_argument("--new-strict-nature", action="store_true", help="Apply strict Nature guardrails to the new figure")
     parser.add_argument("--review-json", default=None)
+    parser.add_argument("--review-evidence", default=None, help="Rebuild review scores from prior comparison evidence for deterministic replay")
     args = parser.parse_args()
+    if args.verify_evidence:
+        return verify_comparison_evidence(Path(args.verify_evidence).expanduser())
+    if not args.old_image or not args.new_image or not args.out:
+        parser.error("old_image, new_image, and --out are required unless --verify-evidence is used")
 
     old_path = Path(args.old_image).expanduser()
     new_path = Path(args.new_image).expanduser()
     out_dir = Path(args.out).expanduser()
     ensure_dir(out_dir)
     review_template = write_review_template(out_dir)
+    review_path = Path(args.review_json).expanduser() if args.review_json else None
+    if args.review_evidence:
+        prior = json.loads(Path(args.review_evidence).expanduser().read_text())["old_vs_new_visual_qa"]
+        rows = (prior.get("review_rubric") or {}).get("rows") or []
+        dimensions = {
+            row.get("dimension"): {
+                "old_score": row.get("old_score"), "new_score": row.get("new_score"), "notes": row.get("notes", "")
+            }
+            for row in rows if row.get("dimension")
+        }
+        replay_review = out_dir / "replay-review.json"
+        replay_review.write_text(json.dumps({"rubric_version": "1.0", "dimensions": dimensions}, indent=2, ensure_ascii=False) + "\n")
+        review_path = replay_review
     with tempfile.TemporaryDirectory(prefix="paperplot-old-new-") as tmp:
         tmp_path = Path(tmp)
         old = run_visual_qa(
@@ -381,7 +454,7 @@ def main() -> int:
     new_risks = risk_codes(new)
     severe_panel_risk = bool(new_risks.intersection(SEVERE_PANEL_RISKS))
     new_nature_failed = (new.get("nature_guardrails") or {}).get("status") == "fail"
-    review = load_review(Path(args.review_json).expanduser() if args.review_json else None)
+    review = load_review(review_path)
     final, status = final_verdict(deterministic_verdict, old_score, new_score, new.get("status", ""), new_nature_failed, severe_panel_risk, review)
     if final == "human-review-required":
         remaining.append("Final improvement requires completed old_vs_new_review_template.json or --review-json.")
@@ -392,9 +465,15 @@ def main() -> int:
 
     payload = {
         "old_vs_new_visual_qa": {
+            "comparison_schema_version": COMPARISON_SCHEMA_VERSION,
+            "tool_id": COMPARISON_TOOL_ID,
             "checked": True,
             "old_image": str(old_path),
+            "old_image_md5": hashlib.md5(old_path.read_bytes()).hexdigest(),
             "new_image": str(new_path),
+            "new_image_md5": hashlib.md5(new_path.read_bytes()).hexdigest(),
+            "old_analysis_fingerprint": old.get("analysis_fingerprint"),
+            "new_analysis_fingerprint": new.get("analysis_fingerprint"),
             "old_media": old_media,
             "new_media": new_media,
             "old_family": old.get("figure_family"),
@@ -430,8 +509,28 @@ def main() -> int:
                 "nature_guardrails": new.get("nature_guardrails"),
             },
             "remaining_risks": remaining,
+            "invocation": {
+                "family": args.family,
+                "old_family": args.old_family,
+                "new_family": args.new_family,
+                "dpi": args.dpi,
+                "page": args.page,
+                "ocr": args.ocr,
+                "expected_panels": args.expected_panels,
+                "old_expected_panels": args.old_expected_panels,
+                "new_expected_panels": args.new_expected_panels,
+                "layout_profile": args.layout_profile,
+                "old_layout_profile": args.old_layout_profile,
+                "new_layout_profile": args.new_layout_profile,
+                "strict_nature": args.strict_nature,
+                "old_strict_nature": args.old_strict_nature,
+                "new_strict_nature": args.new_strict_nature,
+            },
         }
     }
+    result = payload["old_vs_new_visual_qa"]
+    result["analysis_fingerprint_algorithm"] = "sha256-canonical-v1"
+    result["analysis_fingerprint"] = comparison_analysis_fingerprint(result)
     (out_dir / "old_vs_new_visual_qa.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n")
     write_md(payload["old_vs_new_visual_qa"], out_dir)
     print(f"old-vs-new visual QA written: {out_dir / 'old_vs_new_visual_qa.json'}")

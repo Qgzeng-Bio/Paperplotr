@@ -51,6 +51,12 @@ label_strategy <- pp_label_strategy(unique(df[[category_col]]), available_width_
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_validate_palette(df[[category_col]], "discrete")
 layout <- pp_estimate_canvas_size(1, preset = preset)
 layout_check <- pp_assess_layout_risk(1, plot_type = "summary", label_strategy = label_strategy)
+color_count <- if (is.null(group_col)) length(unique(df[[category_col]])) else length(unique(df[[group_col]]))
+cognitive_load_review <- pp_cognitive_load_review(
+  n_elements = if (is.null(error_col)) 2 else 3, n_colors = color_count, n_shapes = 1,
+  n_legend_entries = if (is.null(group_col)) 0 else color_count,
+  chart_family = "barplot_errorbar"
+)
 
 mapping <- aes(x = .data[[category_col]], y = .data[[value_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[category_col]], y = .data[[value_col]], fill = .data[[group_col]])
@@ -80,7 +86,7 @@ p <- pp_adjust_margins_for_labels(p, label_strategy)
 output_files <- pp_save_all(p, output_stem, preset = preset)
 invisible(lapply(output_files, pp_assert_output))
 
-qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
+qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check, cognitive_load_review = cognitive_load_review)
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
   design_decisions = c("barplot for summary values", "GraphPad-like fills", "x label strategy recorded"),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
@@ -91,6 +97,7 @@ pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
   palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input category order"),
-  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df),
+  cognitive_load_review = cognitive_load_review)
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

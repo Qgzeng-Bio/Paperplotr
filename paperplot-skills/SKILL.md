@@ -27,7 +27,7 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 4. Write a design brief.
 5. Define `figure_spec` and `metric_spec`.
 6. Create a pattern-based design plan.
-7. Apply visual budget, proportional layout, and label/legend/panel burden checks.
+7. Apply the target-journal profile, proportional layout, and label/legend/panel burden review triggers in `references/journal-specs-matrix.md` and `references/multi-panel-layout-rules.md`.
 8. Render/export PDF and PNG.
 9. Perform image-level QA and Nature guardrail review when an image is available.
 10. If old and new figures exist, perform old-vs-new comparison.
@@ -56,11 +56,11 @@ Do not call a figure manuscript-ready just because the code runs.
 
 ## Default Visual Standards
 
-Use `references/publication-visual-standards.md` as the baseline. Key defaults:
+Choose and record a target profile from `references/journal-specs-matrix.md` before composing; verify the current journal guide at final submission. Use `references/publication-visual-standards.md` as the baseline. Key defaults:
 
 - Width: 89 mm single column, 180-183 mm double column, max height about 170 mm for Nature-like layouts.
 - Font: Arial or Helvetica-equivalent sans serif; keep text editable in vector output.
-- Text: 5-7 pt for most figure text; panel labels about 8 pt bold lowercase or journal-specific equivalent.
+- Text: target 9 pt for ordinary print labels and axes; 8 pt for ticks, legends, and compact annotations; 12 pt bold panel labels. Never go below the 6 pt absolute floor, and document any dense-family exception.
 - Lines: 0.25-0.6 pt for axes, intervals, and borders; avoid thick strokes.
 - Points: usually 1.2-2.2 mm depending on density; use alpha for overplotting.
 - Bars: avoid over-wide bars; show raw points or intervals when statistical evidence matters.
@@ -108,6 +108,7 @@ Use `references/figure-type-selector.md`, `references/figure-type-quality-rubric
 - Effect summaries: prefer effect size + CI over p-value-only displays.
 - Volcano/MA/enrichment: keep effect, significance, count, and label roles separate.
 - Multi-panel figures: define primary, secondary, and supporting panels.
+- Element, color, shape, and legend ceilings are review triggers, not universal vetoes; dense family-specific exceptions require a recorded reason and final-size QA.
 - Unsupported specialized plots such as circos, synteny, genome tracks, phylogenetic trees, networks, schematics, and model diagrams: provide diagnosis and implementation plan; do not fake specialized layout without the required data structure.
 - If there is no data, only diagnose and propose redraw strategy; do not claim a faithful data-backed redraw.
 - If data and code exist, redraw and verify instead of stopping at critique.
@@ -206,6 +207,14 @@ Default outputs:
 - `*_qa.md`.
 - Conditional `*_label_key.csv`, `*_sample_order.csv`, or design sidecars.
 
+## Bioinformatics Figure Validation
+
+For bioinformatics figures, read `references/bioinformatics-figure-validation.md`. Verify source data, sample order, reference/version, coordinate conventions, units, transforms, denominators, and plotted intervals before trusting rendered-image QA. Bioinformatics templates write a stem-matched TSV plotting table and a `not_recorded` provenance scaffold. Change it to `pass` with `pp_bioinformatics_validation()` only after readable source/plotting files, MD5 checksums, required semantics, and all validation-evidence flags are complete. When Bioflow is available, its project acceptance rules are an additional policy rather than a required relative-path dependency.
+
+## Final Acceptance
+
+Use `scripts/validate-figure-output.R <output_dir>` for candidate output integrity. Candidate PASS is not a readiness verdict. After rendered QA and optional old-vs-new comparison, write an immutable stem-matched `*_review.json` with `pp_write_review_sidecar()` rather than overwriting metadata. Use `--manuscript-ready` only after the complete common QA gate set is `pass`, current-schema rendered-image QA was run with strict Nature guardrails, its fingerprint and deterministic replay match the current pixels, any visual warning has a structured accepted reason, cognitive-load review is recorded, and any bioinformatics provenance gate passes. When `old_figure_path` is declared, completed checksum-matched old-vs-new evidence must conclude `improved`. A template smoke PASS or candidate validator PASS is not manuscript readiness.
+
 ## Final Response
 
-Report generated files, template, preset, design decisions, visible simplifications, scientific assumptions, QA status, old-vs-new verdict if applicable, and remaining manuscript-readiness risks.
+Report generated files, template, preset, target-journal profile, design decisions, visible simplifications, scientific assumptions, QA status, old-vs-new verdict if applicable, and remaining manuscript-readiness risks.

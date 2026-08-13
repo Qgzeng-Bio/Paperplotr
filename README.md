@@ -54,8 +54,9 @@ The package focuses on standardization rather than automatic plotting.
 ## AI Scientific Plotting Skill
 
 PaperPlotR also includes a repository-local AI skill wrapper:
-[`paperplot-skills/`](paperplot-skills/). It guides AI agents to use PaperPlotR
-as a reproducible scientific figure standardization workflow, including
+[`paperplot-skills/`](paperplot-skills/). It is a repository-local standalone
+workflow built on bundled ggplot2 helpers and does not load or require the
+PaperPlotR package. It guides AI agents through reproducible figure design, including
 template selection, semantic colors, panel sizing, no-overwrite versioned
 exports, sidecar notes, and output QA.
 
