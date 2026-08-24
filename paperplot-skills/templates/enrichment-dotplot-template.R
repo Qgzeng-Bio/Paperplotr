@@ -47,7 +47,7 @@ design_plan <- pp_design_plan(chart_family = "enrichment_dotplot", figure_role =
 
 plot <- ggplot(df, aes(x = .data[[ratio_col]], y = .data[[term_col]], size = .data[[count_col]], color = neg_log10_q)) +
   geom_point(alpha = 0.86) +
-  scale_color_gradient(low = "#9FB7C9", high = "#B33A2B", name = "-log10 q") +
+  scale_color_gradientn(colours = pp_gradient_palette(256, "graphpad_heatmap"), name = "-log10 q") +
   labs(x = "Enrichment ratio", y = NULL, size = "Count") +
   pp_theme(base_size = 7) + theme(legend.position = "right")
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_enrichment_semantics", "pass", "Ratio, count, and q-value use distinct visual channels."))
