@@ -49,10 +49,21 @@ legend_plan <- pp_legend_plan(entries = 2, labels = c("significant", "not_signif
 design_brief <- pp_design_brief(scientific_message = scientific_message, figure_role = figure_role, main_comparison = list(abundance = base_mean_col, effect = log2fc_col), data_roles = list(feature = "lookup identity", abundance = "x-axis", effect = "y-axis"), metric_semantics = list(metrics = metric_spec), acceptable_simplifications = c("Only selected genes are labeled."), must_show = c("abundance", "fold-change", "significance class"), may_move_to_metadata = c("full feature labels"))
 design_plan <- pp_design_plan(chart_family = "ma_plot", figure_role = figure_role, layout_plan = list(type = "single_panel"), label_strategy = label_strategy, palette_plan = list(color_role = "adjusted significance"), statistical_plan = list(padj_threshold = padj_threshold), visible_simplifications = design_brief$acceptable_simplifications, risks = c("low abundance estimates may be noisy"))
 
+# Overlap-safe gene labels (WP4): ggrepel when available, legacy fallback.
+gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
+  ggrepel::geom_text_repel(
+    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
+    size = 1.8, color = "#1D1D1B", max.overlaps = 20,
+    segment.size = 0.25, min.segment.length = 0, seed = 42
+  )
+} else {
+  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
+}
+
 plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = significant)) +
   geom_hline(yintercept = 0, linewidth = 0.35, color = "#4D4D4A") +
   geom_point(alpha = 0.72, size = 1.25) +
-  geom_text(data = key_df, aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
+  gene_label_layer +
   scale_color_manual(values = c(significant = "#D9342B", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log10(base mean + 1)", y = "log2 fold change") +
   pp_theme(base_size = 7) +

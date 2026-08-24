@@ -65,9 +65,19 @@ layout <- pp_recommend_facet_grid(length(metric_levels), plot_type = "small_mult
 design_plan <- pp_design_plan(chart_family = "bio_genome_quality_small_multiples", figure_role = figure_role, layout_plan = layout, label_strategy = label_strategy, palette_plan = list(color_role = group_col, consistent_across_panels = TRUE), statistical_plan = list(type = "descriptive"), visible_simplifications = design_brief$acceptable_simplifications, risks = c("dense sample labels", "heterogeneous units"))
 
 color_aes <- if (group_col %in% names(df)) aes(color = .data[[group_col]]) else aes()
+# Overlap-safe labels (WP4): ggrepel when available, legacy fallback otherwise.
+sample_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
+  ggrepel::geom_text_repel(
+    data = key_df, ggplot2::aes(label = .data[[sample_col]]),
+    size = 1.8, color = "#2F2F2D", max.overlaps = 20,
+    segment.size = 0.25, min.segment.length = 0, seed = 42
+  )
+} else {
+  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[sample_col]]), size = 1.8, vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D")
+}
 plot <- ggplot(df, aes(x = rank_index, y = .data[[value_col]])) +
   geom_point(color_aes, size = 1.7, alpha = 0.88) +
-  geom_text(data = key_df, aes(label = .data[[sample_col]]), size = 1.8, vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D") +
+  sample_label_layer +
   facet_wrap(~facet_label, scales = "free_y", nrow = layout$nrow) +
   labs(x = "Sample rank index", y = NULL, color = "Group") +
   pp_theme(base_size = 7) +

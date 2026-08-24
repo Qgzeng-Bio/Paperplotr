@@ -48,11 +48,23 @@ legend_plan <- pp_legend_plan(entries = 3, labels = c("up", "down", "not_signifi
 design_brief <- pp_design_brief(scientific_message = scientific_message, figure_role = figure_role, main_comparison = list(effect = log2fc_col, significance = padj_col), data_roles = list(feature = "lookup identity", effect = "x-axis", significance = "y-axis"), metric_semantics = list(metrics = metric_spec), acceptable_simplifications = c("Only top differential features are labeled."), must_show = c("effect direction", "adjusted significance", "thresholds"), may_move_to_metadata = c("full feature table", "all gene labels"))
 design_plan <- pp_design_plan(chart_family = "volcano", figure_role = figure_role, layout_plan = list(type = "single_panel"), label_strategy = label_strategy, palette_plan = list(color_role = "differential class"), statistical_plan = list(thresholds = list(log2fc = log2fc_threshold, padj = padj_threshold)), visible_simplifications = design_brief$acceptable_simplifications, risks = character())
 
+# Overlap-safe gene labels (WP4): prefer ggrepel when available; the fallback
+# keeps the legacy check_overlap behavior. Seed keeps exports reproducible.
+gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
+  ggrepel::geom_text_repel(
+    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
+    size = 1.8, color = "#1D1D1B", max.overlaps = 20,
+    segment.size = 0.25, min.segment.length = 0, seed = 42
+  )
+} else {
+  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
+}
+
 plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volcano_class)) +
   geom_point(alpha = 0.54, size = 0.85) +
   geom_vline(xintercept = c(-log2fc_threshold, log2fc_threshold), linetype = "dashed", linewidth = 0.28, color = "#888888") +
   geom_hline(yintercept = -log10(padj_threshold), linetype = "dashed", linewidth = 0.28, color = "#888888") +
-  geom_text(data = key_df, aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
+  gene_label_layer +
   scale_color_manual(values = c(up = "#C95A4E", down = "#4E79A7", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log2 fold change", y = "-log10 adjusted p-value") +
   pp_theme(base_size = 7) +
