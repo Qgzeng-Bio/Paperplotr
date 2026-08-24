@@ -51,6 +51,7 @@ RISK_TO_BUCKET = {
     "svg_gridline_burden": "stroke_grid",
     "text_data_overlap_risk": "label_collision",
     "vector_text_overlap": "label_collision",
+    "vector_text_overlap_minor": "label_collision",
     "ocr_text_overlap_risk": "label_collision",
     "label_overlap_or_large_annotation_risk": "label_collision",
     "tick_label_collision_risk": "label_collision",

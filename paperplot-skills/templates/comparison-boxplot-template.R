@@ -50,14 +50,14 @@ layout_check <- pp_assess_layout_risk(1, plot_type = "comparison", label_strateg
 
 p <- ggplot(df, aes(x = .data[[group_col]], y = .data[[value_col]], fill = .data[[group_col]])) +
   geom_boxplot(width = 0.55, outlier.shape = NA, linewidth = 0.35, alpha = 0.78) +
-  geom_jitter(aes(colour = .data[[group_col]]), width = 0.12, size = 1.2, alpha = 0.65, show.legend = FALSE) +
+  geom_jitter(aes(colour = .data[[group_col]]), width = 0.12, size = pp_point_size("normal"), alpha = 0.65, show.legend = FALSE) +
   pp_scale_fill(groups = df[[group_col]], values = semantic_colors, guide = "none") +
   pp_scale_color(groups = df[[group_col]], values = semantic_colors, guide = "none") +
   pp_theme(show_grid = FALSE) +
   labs(x = NULL, y = y_label)
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-output_files <- pp_save_all(p, output_stem, preset = preset)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)

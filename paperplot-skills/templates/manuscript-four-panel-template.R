@@ -58,7 +58,8 @@ panel_specs <- lapply(seq_along(panel_ids), function(i) {
     message = paste("Panel", panel_ids[[i]], "supports the figure message"),
     role = if (i == 1) "primary" else if (i == 2) "secondary" else "supporting",
     plot_type = "scatter",
-    metric = y_col
+    metric = y_col,
+    guide_semantics = if (!is.null(group_col)) paste0("colour:", group_col) else NULL
   )
 })
 panel_hierarchy <- pp_panel_hierarchy(panel_specs)
@@ -111,7 +112,7 @@ mapping <- aes(x = .data[[x_col]], y = .data[[y_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[group_col]])
 
 p <- ggplot(df, mapping) +
-  geom_point(size = 1.35, alpha = 0.82) +
+  geom_point(size = pp_point_size("normal"), alpha = 0.82) +
   facet_wrap(stats::as.formula(paste("~", panel_col)), ncol = layout$ncol, scales = "free_y") +
   pp_theme(show_grid = FALSE) +
   labs(x = x_label, y = y_label, colour = group_col)
@@ -119,7 +120,7 @@ if (!is.null(group_col)) {
   p <- pp_apply_legend_plan(p + pp_scale_color(groups = df[[group_col]]), legend_plan)
 }
 
-output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
 
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")

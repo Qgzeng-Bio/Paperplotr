@@ -60,7 +60,7 @@ p <- ggplot(df, aes(x = .data[[x_col]], y = .data[[y_col]], fill = .data[[value_
   labs(x = NULL, y = NULL)
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-output_files <- pp_save_all(p, output_stem, preset = preset)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)

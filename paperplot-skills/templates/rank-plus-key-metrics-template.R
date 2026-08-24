@@ -118,7 +118,7 @@ mapping <- aes(x = rank_index, y = plot_value, colour = facet_label)
 if (!is.null(group_col)) mapping <- aes(x = rank_index, y = plot_value, colour = .data[[group_col]])
 
 p <- ggplot(plot_df, mapping) +
-  geom_point(size = 1.8, alpha = 0.9) +
+  geom_point(size = pp_point_size("emphasis"), alpha = 0.9) +
   facet_wrap(~ facet_label, ncol = layout$ncol, scales = "free_y") +
   scale_x_continuous(breaks = rank_map$rank_index, labels = rank_map$rank_label, expand = expansion(mult = c(0.03, 0.05))) +
   pp_theme(show_grid = FALSE) +
@@ -128,7 +128,7 @@ if (nrow(key_label_df) > 0 && identical(label_strategy$direct_label_mode, "selec
   p <- p + geom_text(
     data = key_label_df,
     aes(label = .data[[sample_col]]),
-    size = 1.7,
+    size = pp_text_size("minimum"),
     hjust = -0.12,
     vjust = 0.45,
     show.legend = FALSE,
@@ -142,7 +142,7 @@ if (!is.null(group_col)) {
   p <- p + pp_scale_color(groups = plot_df$facet_label, guide = "none")
 }
 
-output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_summary(

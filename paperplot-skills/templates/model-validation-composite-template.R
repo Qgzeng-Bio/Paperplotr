@@ -142,9 +142,9 @@ design_plan <- pp_design_plan(
 p <- ggplot() +
   geom_abline(data = identity_ref, aes(intercept = intercept, slope = slope), inherit.aes = FALSE, linewidth = 0.35, linetype = "dashed", color = "#6D6D6D") +
   geom_hline(data = zero_ref, aes(yintercept = yintercept), inherit.aes = FALSE, linewidth = 0.35, linetype = "dashed", color = "#6D6D6D") +
-  geom_point(data = scatter_df, aes(x = x_value, y = y_value, colour = group), size = 1.45, alpha = 0.76) +
+  geom_point(data = scatter_df, aes(x = x_value, y = y_value, colour = group), size = pp_point_size("normal"), alpha = 0.76) +
   geom_segment(data = perf_df, aes(x = x_value, xend = x_value, y = lower, yend = upper, colour = group), linewidth = 0.45, inherit.aes = FALSE, na.rm = TRUE) +
-  geom_point(data = perf_df, aes(x = x_value, y = y_value, colour = group), size = 2.1, inherit.aes = FALSE, na.rm = TRUE) +
+  geom_point(data = perf_df, aes(x = x_value, y = y_value, colour = group), size = pp_point_size("emphasis"), inherit.aes = FALSE, na.rm = TRUE) +
   facet_wrap(~ panel, scales = "free", ncol = 3) +
   pp_scale_color(groups = group_levels) +
   pp_theme(base_size = 7, show_grid = FALSE) +
@@ -157,7 +157,7 @@ qa_results <- pp_qa_summary(
   pp_qa_result("statistical_expression", "warn", "Composite shows fit, residuals, and R-squared; confirm interval definition before final manuscript use.")
 )
 
-outputs <- pp_save_all(p, output_stem, preset = figure_spec$output_preset, width = 18, height = 8.5, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(p, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 18, height = 8.5, overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path))
@@ -192,7 +192,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = pp_extend_output_files(outputs, notes = notes_path, qa = qa_path),
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),

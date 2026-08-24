@@ -5,11 +5,16 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
   stop("The standalone paperplot skill requires ggplot2.", call. = FALSE)
 }
 
+pp_helper_source_file <- local({
+  ofile <- tryCatch(sys.frame(1)$ofile, error = function(e) NULL)
+  if (!is.null(ofile) && nzchar(ofile) && file.exists(ofile)) normalizePath(ofile) else NULL
+})
+
 `%||%` <- function(x, y) {
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.4.0"
+pp_helper_version <- "standalone-0.4.1"
 
 # ---- Style registry (WP1): single source of truth for global style constants ----
 # Templates must consume these through pp_theme()/pp_finalize(). Literal
@@ -28,12 +33,22 @@ pp_style_registry <- function() {
       plot_subtitle = 0,
       plot_caption = -1
     ),
+    text_sizes_pt = list(
+      body = 7,
+      label = 6.5,
+      minimum = 6,
+      panel_tag = 8
+    ),
     line_widths = list(
       axis_line = 0.35,
       axis_ticks = 0.35,
-      grid_major = 0.25
+      grid_major = 0.25,
+      reference = 0.28,
+      interval = 0.45,
+      outline = 0.35
     ),
     point_sizes = list(
+      micro = 0.55,
       dense = 0.85,
       normal = 1.3,
       emphasis = 2.0
@@ -42,8 +57,10 @@ pp_style_registry <- function() {
       tick_length = 1.5,
       legend_key = 4.2,
       legend_spacing_x = 1,
-      plot_margin = 6,
-      axis_title_margin = 4
+      # ggplot2::margin() defaults to points. These values preserve the old
+      # 6 pt / 4 pt visual spacing while making the registry's mm unit honest.
+      plot_margin = 2.12,
+      axis_title_margin = 1.41
     )
   )
 }
@@ -64,13 +81,42 @@ pp_style_number <- function(path, default = NULL) {
   resolved <- if (is.null(value)) default else value
   opt_key <- paste0("paperplot.", gsub("\\.", "_", path))
   opt <- getOption(opt_key)
-  if (!is.null(opt)) return(as.numeric(opt))
-  env_val <- Sys.getenv(toupper(opt_key), unset = "")
+  if (!is.null(opt)) {
+    opt <- suppressWarnings(as.numeric(opt))
+    if (length(opt) != 1L || !is.finite(opt)) stop("Invalid numeric style option: ", opt_key, call. = FALSE)
+    return(opt)
+  }
+  env_key <- toupper(gsub("[^A-Za-z0-9]", "_", opt_key))
+  env_val <- Sys.getenv(env_key, unset = "")
   if (nzchar(env_val)) {
     num <- suppressWarnings(as.numeric(env_val))
-    if (!is.na(num)) return(num)
+    if (length(num) == 1L && is.finite(num)) return(num)
+    stop("Invalid numeric style environment value: ", env_key, call. = FALSE)
   }
   resolved
+}
+
+pp_text_size <- function(role = c("body", "label", "minimum", "panel_tag"),
+                         unit = c("geom", "pt")) {
+  role <- match.arg(role)
+  unit <- match.arg(unit)
+  value_pt <- pp_style_number(paste0("text_sizes_pt.", role))
+  if (identical(unit, "pt")) value_pt else value_pt / ggplot2::.pt
+}
+
+pp_point_size <- function(role = c("micro", "dense", "normal", "emphasis")) {
+  role <- match.arg(role)
+  pp_style_number(paste0("point_sizes.", role))
+}
+
+pp_line_width <- function(role = c("axis_line", "axis_ticks", "grid_major", "reference", "interval", "outline")) {
+  role <- match.arg(role)
+  pp_style_number(paste0("line_widths.", role))
+}
+
+pp_spacing_mm <- function(role = c("tick_length", "legend_key", "legend_spacing_x", "plot_margin", "axis_title_margin")) {
+  role <- match.arg(role)
+  pp_style_number(paste0("spacing_mm.", role))
 }
 
 pp_discrete_palettes <- list(
@@ -300,12 +346,12 @@ pp_resolve_family <- function(preferred = "Arial") {
 
 pp_theme <- function(base_size = pp_style_number("base_size"),
                      base_family = pp_resolve_family(pp_style_registry()$family_fallbacks[[1]]),
-                     line_width = pp_style_number("line_widths.axis_line"),
-                     axis_title_margin = pp_style_number("spacing_mm.axis_title_margin"),
+                     line_width = pp_line_width("axis_line"),
+                     axis_title_margin = pp_spacing_mm("axis_title_margin"),
                      show_grid = FALSE) {
   hier <- pp_style_registry()$font_hierarchy
   grid_major <- if (isTRUE(show_grid)) {
-    ggplot2::element_line(linewidth = pp_style_number("line_widths.grid_major"), colour = "#D9D9D9")
+    ggplot2::element_line(linewidth = pp_line_width("grid_major"), colour = "#D9D9D9")
   } else {
     ggplot2::element_blank()
   }
@@ -317,18 +363,19 @@ pp_theme <- function(base_size = pp_style_number("base_size"),
         size = base_size + hier$axis_title,
         margin = ggplot2::margin(
           t = axis_title_margin, r = axis_title_margin,
-          b = axis_title_margin, l = axis_title_margin
+          b = axis_title_margin, l = axis_title_margin,
+          unit = "mm"
         )
       ),
       axis.text = ggplot2::element_text(size = base_size + hier$axis_text, colour = "#303030"),
       axis.line = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
       axis.ticks = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
-      axis.ticks.length = grid::unit(pp_style_number("spacing_mm.tick_length"), "mm"),
+      axis.ticks.length = grid::unit(pp_spacing_mm("tick_length"), "mm"),
       legend.title = ggplot2::element_text(size = base_size + hier$legend_title),
       legend.text = ggplot2::element_text(size = base_size + hier$legend_text),
       legend.key = ggplot2::element_blank(),
-      legend.key.size = grid::unit(pp_style_number("spacing_mm.legend_key"), "mm"),
-      legend.spacing.x = grid::unit(pp_style_number("spacing_mm.legend_spacing_x"), "mm"),
+      legend.key.size = grid::unit(pp_spacing_mm("legend_key"), "mm"),
+      legend.spacing.x = grid::unit(pp_spacing_mm("legend_spacing_x"), "mm"),
       panel.grid.major = grid_major,
       panel.grid.minor = ggplot2::element_blank(),
       panel.border = ggplot2::element_blank(),
@@ -339,30 +386,38 @@ pp_theme <- function(base_size = pp_style_number("base_size"),
       plot.caption = ggplot2::element_text(size = base_size + hier$plot_caption, colour = "#6A6A6A"),
       plot.title.position = "plot",
       plot.margin = ggplot2::margin(
-        pp_style_number("spacing_mm.plot_margin"), pp_style_number("spacing_mm.plot_margin"),
-        pp_style_number("spacing_mm.plot_margin"), pp_style_number("spacing_mm.plot_margin")
+        pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"),
+        pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"),
+        unit = "mm"
       )
     )
-  # Geom-level text must inherit the manuscript typography too; otherwise any
-  # geom_text()/annotate() added without an explicit size= renders at ggplot2's
-  # ~11 pt default on a 7 pt figure (the classic "one giant label" failure).
-  geom_text_size <- base_size / ggplot2::.pt
-  tryCatch(
-    {
-      ggplot2::update_geom_defaults("text", list(size = geom_text_size, family = base_family))
-      ggplot2::update_geom_defaults("label", list(size = geom_text_size, family = base_family))
-    },
-    error = function(e) NULL
-  )
+  attr(out, "paperplot_theme") <- TRUE
   out
 }
 
-# Re-apply the house theme LAST so ad-hoc theme() tweaks cannot silently
-# override typography/line-width standards. Apply on the final composite
-# object just before saving; keep deliberate per-panel tweaks inside the
-# validate-skill whitelist.
-pp_finalize <- function(plot, ...) {
-  plot + pp_theme(...)
+# Finalize a plot copy without changing ggplot2's process-wide geom defaults.
+# House defaults are applied first; deliberate plot-local theme overrides remain
+# intact. Text/label layers with no explicit or mapped size/family receive local
+# manuscript defaults, including optional ggrepel geoms.
+pp_finalize <- function(plot, base_size = pp_style_number("base_size"),
+                        base_family = pp_resolve_family(pp_style_registry()$family_fallbacks[[1]]),
+                        show_grid = FALSE) {
+  if (!inherits(plot, "ggplot")) return(plot)
+  out <- plot
+  existing_theme <- out$theme
+  out$theme <- pp_theme(base_size = base_size, base_family = base_family, show_grid = show_grid) + existing_theme
+  text_classes <- c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel")
+  for (i in seq_along(out$layers)) {
+    layer <- out$layers[[i]]
+    if (!any(class(layer$geom) %in% text_classes)) next
+    size_mapped <- !is.null(layer$mapping$size) || !is.null(out$mapping$size)
+    family_mapped <- !is.null(layer$mapping$family) || !is.null(out$mapping$family)
+    if (!size_mapped && is.null(layer$aes_params$size)) layer$aes_params$size <- base_size / ggplot2::.pt
+    if (!family_mapped && is.null(layer$aes_params$family)) layer$aes_params$family <- base_family
+    out$layers[[i]] <- layer
+  }
+  attr(out, "paperplot_finalized") <- TRUE
+  out
 }
 
 pp_palette <- function(n, palette = "graphpad_discrete", reverse = FALSE, alpha = 1) {
@@ -730,7 +785,8 @@ pp_layer_text_sizes_pt <- function(plot) {
   sizes <- numeric(0)
   if (inherits(plot, "ggplot") && !is.null(plot$layers)) {
     for (lr in plot$layers) {
-      if (inherits(lr$geom, "GeomText") || inherits(lr$geom, "GeomLabel")) {
+      is_text_geom <- any(class(lr$geom) %in% c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel"))
+      if (is_text_geom) {
         s <- lr$aes_params$size %||% lr$geom$default_aes$size
         if (is.numeric(s)) sizes <- c(sizes, s * ggplot2::.pt)
       }
@@ -780,6 +836,53 @@ pp_extract_legend <- function(plot) {
 
 # ---- WP6: closed-loop QA auto-fix ------------------------------------------
 
+pp_set_qa_context <- function(plot, family = NULL, expected_panels = NULL,
+                              layout_profile = NULL, target_width_mm = NULL,
+                              journal_profile = NULL, allow_grid = "auto") {
+  attr(plot, "pp_qa_context") <- list(
+    family = family,
+    expected_panels = expected_panels,
+    layout_profile = layout_profile,
+    target_width_mm = target_width_mm,
+    journal_profile = journal_profile,
+    allow_grid = allow_grid
+  )
+  plot
+}
+
+pp_infer_panel_count <- function(plot) {
+  if (!inherits(plot, "ggplot")) return(1L)
+  tryCatch({
+    layout <- ggplot2::ggplot_build(plot)$layout$layout
+    max(1L, length(unique(layout$PANEL)))
+  }, error = function(e) 1L)
+}
+
+pp_resolve_qa_context <- function(plot, preset, width = NULL, context = list()) {
+  preset_values <- pp_output_preset(preset)
+  stored <- attr(plot, "pp_qa_context") %||% list()
+  merged <- utils::modifyList(stored, context, keep.null = TRUE)
+  expected_panels <- merged$expected_panels %||% pp_infer_panel_count(plot)
+  if (expected_panels <= 1L) expected_panels <- NULL
+  merged$expected_panels <- expected_panels
+  merged$layout_profile <- merged$layout_profile %||% if (!is.null(expected_panels)) "equal" else "auto"
+  merged$target_width_mm <- merged$target_width_mm %||% ((width %||% preset_values$width_cm) * 10)
+  merged$journal_profile <- merged$journal_profile %||% if (grepl("nature", preset, fixed = TRUE)) "nature" else "generic"
+  merged$allow_grid <- merged$allow_grid %||% "auto"
+  merged
+}
+
+pp_qa_context_args <- function(context) {
+  args <- c("--ocr", "off")
+  if (!is.null(context$family) && nzchar(context$family)) args <- c(args, "--family", shQuote(context$family))
+  if (!is.null(context$expected_panels)) args <- c(args, "--expected-panels", as.character(context$expected_panels))
+  if (!is.null(context$layout_profile)) args <- c(args, "--layout-profile", context$layout_profile)
+  if (!is.null(context$target_width_mm)) args <- c(args, "--target-width-mm", as.character(context$target_width_mm))
+  if (!is.null(context$journal_profile)) args <- c(args, "--journal-profile", context$journal_profile)
+  if (!is.null(context$allow_grid)) args <- c(args, "--allow-grid", context$allow_grid)
+  args
+}
+
 pp_locate_qa_script <- function() {
   env <- Sys.getenv("PAPERPLOT_QA_SCRIPT", unset = "")
   if (nzchar(env) && file.exists(env)) return(normalizePath(env))
@@ -800,18 +903,53 @@ pp_locate_qa_script <- function() {
   NULL
 }
 
-# Run the rendered-image QA on an exported figure; returns parsed JSON list or
-# NULL when python3/the script is unavailable (auto-fix then degrades to a
-# plain save, never blocks rendering).
+pp_python_supports_visual_qa <- function(python) {
+  if (is.null(python) || !nzchar(python)) return(FALSE)
+  status <- tryCatch(
+    suppressWarnings(system2(python, c("-c", shQuote("import PIL")), stdout = FALSE, stderr = FALSE)),
+    error = function(e) 127L
+  )
+  identical(as.integer(status), 0L)
+}
+
+pp_resolve_qa_python <- function() {
+  configured <- Sys.getenv("PAPERPLOT_PYTHON", unset = "")
+  if (nzchar(configured)) return(configured)
+  candidates <- unique(c(
+    unname(Sys.which("python3")),
+    unname(Sys.which("python")),
+    Sys.getenv("CONDA_PYTHON_EXE", unset = "")
+  ))
+  candidates <- candidates[nzchar(candidates)]
+  hit <- candidates[vapply(candidates, pp_python_supports_visual_qa, logical(1))]
+  if (length(hit)) hit[[1]] else NULL
+}
+
+# Run rendered-image QA and always return an auditable availability result.
 pp_run_visual_qa <- function(path, out_dir = tempfile("pp-qa-"), extra_args = character()) {
   script <- pp_locate_qa_script()
-  if (is.null(script)) return(invisible(NULL))
-  py <- Sys.getenv("PAPERPLOT_PYTHON", unset = "python3")
-  status <- suppressWarnings(system2(py, c(shQuote(script), shQuote(path), "--out", shQuote(out_dir), extra_args), stdout = FALSE, stderr = FALSE))
+  if (is.null(script)) return(list(available = FALSE, status = "unavailable", qa_dir = out_dir, error = "visual QA script not found"))
+  py <- pp_resolve_qa_python()
+  if (is.null(py)) return(list(available = FALSE, status = "unavailable", qa_dir = out_dir, error = "no Python interpreter with Pillow was found; set PAPERPLOT_PYTHON"))
+  dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
+  output <- tryCatch(
+    suppressWarnings(system2(py, c(shQuote(script), shQuote(path), "--out", shQuote(out_dir), extra_args), stdout = TRUE, stderr = TRUE)),
+    error = function(e) structure(conditionMessage(e), status = 127L)
+  )
+  status <- attr(output, "status") %||% 0L
   json_path <- file.path(out_dir, "visual_qa.json")
-  if (!identical(status, 0L) || !file.exists(json_path)) return(invisible(NULL))
-  if (!requireNamespace("jsonlite", quietly = TRUE)) return(invisible(NULL))
-  tryCatch(jsonlite::fromJSON(json_path, simplifyVector = FALSE)$image_qa, error = function(e) NULL)
+  if (!identical(as.integer(status), 0L) || !file.exists(json_path)) {
+    return(list(available = FALSE, status = "unavailable", qa_dir = out_dir,
+                error = paste(output, collapse = "\n")))
+  }
+  if (!requireNamespace("jsonlite", quietly = TRUE)) {
+    return(list(available = FALSE, status = "unavailable", qa_dir = out_dir, error = "R package jsonlite is unavailable"))
+  }
+  payload <- tryCatch(jsonlite::fromJSON(json_path, simplifyVector = FALSE)$image_qa, error = function(e) NULL)
+  if (is.null(payload)) return(list(available = FALSE, status = "unavailable", qa_dir = out_dir, error = "visual_qa.json could not be parsed"))
+  payload$available <- TRUE
+  payload$qa_dir <- out_dir
+  payload
 }
 
 # Apply whitelisted machine fixes from visual QA onto a ggplot object.
@@ -826,13 +964,25 @@ pp_apply_machine_fixes <- function(plot, qa_payload) {
     param <- f$param; value <- f$value
     if (is.null(param)) next
     switch(param,
-      "legend.position" = { legend_pos <- value },
-      "legend.key.size_mm" = { key_mm <- as.numeric(value) },
-      "plot.margin_mm" = { margin_mm <- as.numeric(value) },
-      "axis.text.x.angle" = { angle_x <- as.numeric(value) },
-      "axis.text.x.hjust" = { hjust_x <- as.numeric(value) },
+      "legend.position" = { if (value %in% c("bottom", "right", "none")) legend_pos <- value },
+      "legend.key.size_mm" = {
+        candidate <- suppressWarnings(as.numeric(value))
+        if (length(candidate) == 1L && is.finite(candidate) && candidate >= 2 && candidate <= 8) key_mm <- candidate
+      },
+      "plot.margin_mm" = {
+        candidate <- suppressWarnings(as.numeric(value))
+        if (length(candidate) == 1L && is.finite(candidate) && candidate >= 0.5 && candidate <= 8) margin_mm <- candidate
+      },
+      "axis.text.x.angle" = {
+        candidate <- suppressWarnings(as.numeric(value))
+        if (length(candidate) == 1L && candidate %in% c(0, 30, 45, 90)) angle_x <- candidate
+      },
+      "axis.text.x.hjust" = {
+        candidate <- suppressWarnings(as.numeric(value))
+        if (length(candidate) == 1L && is.finite(candidate) && candidate >= 0 && candidate <= 1) hjust_x <- candidate
+      },
       # label_repel requires rebuilding geoms; report it instead of guessing.
-      "label_repel" = applied <<- c(applied, "label_repel (manual: rebuild text layers with ggrepel)")
+      "label_repel" = applied <- c(applied, "label_repel (manual: rebuild text layers with ggrepel)")
     )
   }
   th <- ggplot2::theme()
@@ -845,7 +995,7 @@ pp_apply_machine_fixes <- function(plot, qa_payload) {
     applied <- c(applied, paste0("legend.key.size=", key_mm, "mm"))
   }
   if (!is.null(margin_mm)) {
-    th <- th + ggplot2::theme(plot.margin = ggplot2::margin(margin_mm, margin_mm, margin_mm, margin_mm))
+    th <- th + ggplot2::theme(plot.margin = ggplot2::margin(margin_mm, margin_mm, margin_mm, margin_mm, unit = "mm"))
     applied <- c(applied, paste0("plot.margin=", margin_mm, "mm"))
   }
   if (!is.null(angle_x)) {
@@ -858,23 +1008,44 @@ pp_apply_machine_fixes <- function(plot, qa_payload) {
   plot
 }
 
-# Save PDF+PNG, run rendered-image QA on the PNG preview, and when the QA
-# returns warn/fail with machine-applicable fixes, re-render once with those
-# fixes applied. Iteration count is attached for metadata recording.
+pp_qa_candidate_improved <- function(initial, candidate) {
+  rank <- c(unavailable = 0L, fail = 1L, warn = 2L, pass = 3L)
+  initial_status <- initial$status %||% "unavailable"
+  candidate_status <- candidate$status %||% "unavailable"
+  initial_rank <- if (initial_status %in% names(rank)) unname(rank[[initial_status]]) else 0L
+  candidate_rank <- if (candidate_status %in% names(rank)) unname(rank[[candidate_status]]) else 0L
+  if (candidate_rank > initial_rank) return(TRUE)
+  if (candidate_rank < initial_rank) return(FALSE)
+  initial_score <- suppressWarnings(as.numeric(initial$manuscript_readiness_score %||% NA_real_))
+  candidate_score <- suppressWarnings(as.numeric(candidate$manuscript_readiness_score %||% NA_real_))
+  is.finite(initial_score) && is.finite(candidate_score) && candidate_score > initial_score
+}
+
+# Save PDF+PNG, run rendered-image QA, apply at most one whitelisted visual
+# retry, then always QA the retried output before reporting final status.
 pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
                                      max_iterations = 1L, overwrite = FALSE, width = NULL, height = NULL,
-                                     dpi = NULL, ...) {
+                                     dpi = NULL, qa_context = list(), qa_out_dir = paste0(output_stem, "_visual_qa"), ...) {
+  if (!isTRUE(overwrite) && dir.exists(qa_out_dir)) stop("Refusing to overwrite existing QA directory: ", qa_out_dir, call. = FALSE)
+  plot <- pp_finalize(plot)
+  initial_plot <- plot
+  context <- pp_resolve_qa_context(plot, preset = preset, width = width, context = qa_context)
   output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
-                              overwrite = overwrite, width = width, height = height, dpi = dpi, ...)
+                              overwrite = overwrite, width = width, height = height, dpi = dpi,
+                              finalize_plot = FALSE, ...)
   iterations <- 0L
   all_fixes <- character()
-  qa_status <- NULL
   png_file <- if ("png" %in% names(output_files)) output_files[["png"]]
-  while (iterations < max_iterations && !is.null(png_file)) {
-    qa <- pp_run_visual_qa(png_file, extra_args = c("--ocr", "off"))
-    if (is.null(qa)) break
-    qa_status <- qa$status %||% NA_character_
-    if (!identical(qa_status, "warn") && !identical(qa_status, "fail")) break
+  qa_args <- pp_qa_context_args(context)
+  qa <- if (!is.null(png_file)) {
+    pp_run_visual_qa(png_file, out_dir = file.path(qa_out_dir, "iteration-0"), extra_args = qa_args)
+  } else {
+    list(available = FALSE, status = "unavailable", qa_dir = qa_out_dir, error = "PNG preview was not requested")
+  }
+  initial_status <- qa$status %||% "unavailable"
+  initial_qa <- qa
+  rejected_fixes <- character()
+  while (iterations < max_iterations && isTRUE(qa$available) && qa$status %in% c("warn", "fail")) {
     fixed <- pp_apply_machine_fixes(plot, qa)
     new_fixes <- attr(fixed, "pp_machine_fixes_applied")
     theme_fixes <- new_fixes[!grepl("manual:", new_fixes)]
@@ -883,32 +1054,53 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     all_fixes <- c(all_fixes, theme_fixes)
     iterations <- iterations + 1L
     output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
-                                overwrite = TRUE, width = width, height = height, dpi = dpi, ...)
+                                overwrite = TRUE, width = width, height = height, dpi = dpi,
+                                finalize_plot = FALSE, ...)
+    qa <- pp_run_visual_qa(png_file, out_dir = file.path(qa_out_dir, paste0("iteration-", iterations)), extra_args = qa_args)
+  }
+  if (iterations > 0L && !pp_qa_candidate_improved(initial_qa, qa)) {
+    rejected_fixes <- all_fixes
+    all_fixes <- character()
+    output_files <- pp_save_all(initial_plot, output_stem, preset = preset, formats = formats,
+                                overwrite = TRUE, width = width, height = height, dpi = dpi,
+                                finalize_plot = FALSE, ...)
+    qa <- initial_qa
   }
   attr(output_files, "qa_iterations") <- iterations
   attr(output_files, "qa_machine_fixes") <- all_fixes
-  attr(output_files, "qa_final_status") <- qa_status
+  attr(output_files, "qa_machine_fixes_rejected") <- rejected_fixes
+  attr(output_files, "qa_available") <- isTRUE(qa$available)
+  attr(output_files, "qa_initial_status") <- initial_status
+  attr(output_files, "qa_final_status") <- qa$status %||% "unavailable"
+  attr(output_files, "qa_error") <- qa$error %||% NULL
+  attr(output_files, "qa_context") <- context
+  attr(output_files, "qa_final_dir") <- qa$qa_dir %||% qa_out_dir
   output_files
 }
 
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
-                         dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE, ...) {
+                         dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE,
+                         finalize_plot = TRUE,
+                         text_floor_action = getOption("paperplot.text_floor_action", "error"), ...) {
   if (!isTRUE(overwrite) && file.exists(filename)) {
     stop("Refusing to overwrite existing output file: ", filename, call. = FALSE)
   }
   dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
   preset_values <- pp_output_preset(preset)
+  if (isTRUE(finalize_plot)) plot <- pp_finalize(plot)
   # Save-time gate (WP2): enforce the preset's promised minimum text size.
   # min_text_pt was defined on every output preset but never consumed; this
   # warning makes the floor real. Silence with PAPERPLOT_ALLOW_SMALL_TEXT=1.
   floor_pt <- preset_values$min_text_pt
   min_pt <- tryCatch(pp_min_rendered_text_pt(plot), error = function(e) NA_real_)
   allow_small <- identical(Sys.getenv("PAPERPLOT_ALLOW_SMALL_TEXT"), "1")
-  if (!allow_small && !is.na(min_pt) && !is.null(floor_pt) && min_pt < floor_pt - 0.01) {
-    warning(sprintf(
-      "Text-size floor violated for '%s': smallest themed/labelled text is %.2f pt but preset '%s' requires >= %g pt. Raise base_size/label sizes, or set PAPERPLOT_ALLOW_SMALL_TEXT=1 to silence.",
+  text_floor_action <- if (allow_small) "off" else match.arg(text_floor_action, c("error", "warn", "off"))
+  if (!identical(text_floor_action, "off") && !is.na(min_pt) && !is.null(floor_pt) && min_pt < floor_pt - 0.01) {
+    message <- sprintf(
+      "Text-size floor violated for '%s': smallest themed/labelled text is %.2f pt but preset '%s' requires >= %g pt. Raise base_size/label sizes, or set PAPERPLOT_ALLOW_SMALL_TEXT=1 only for a documented diagnostic exception.",
       basename(filename), min_pt, preset, floor_pt
-    ), call. = FALSE)
+    )
+    if (identical(text_floor_action, "error")) stop(message, call. = FALSE) else warning(message, call. = FALSE)
   }
   device <- pp_default_device(filename)
   ggplot2::ggsave(
@@ -927,13 +1119,15 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
 }
 
 pp_save_all <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
-                        overwrite = FALSE, width = NULL, height = NULL, dpi = NULL, ...) {
+                        overwrite = FALSE, width = NULL, height = NULL, dpi = NULL,
+                        finalize_plot = TRUE, ...) {
   formats <- unique(tolower(formats))
   output_files <- stats::setNames(paste0(output_stem, ".", formats), formats)
   if (!isTRUE(overwrite)) pp_stop_if_outputs_exist(output_files)
+  if (isTRUE(finalize_plot)) plot <- pp_finalize(plot)
   for (fmt in formats) {
     pp_save_plot(plot, output_files[[fmt]], preset = preset, width = width, height = height, dpi = dpi,
-                 overwrite = overwrite, ...)
+                 overwrite = overwrite, finalize_plot = FALSE, ...)
   }
   output_files
 }
@@ -941,6 +1135,14 @@ pp_save_all <- function(plot, output_stem, preset = "nature_half", formats = c("
 pp_format_output_files <- function(paths) {
   sizes <- file.info(unname(paths))[["size"]]
   paste0("- ", names(paths), ": ", unname(paths), " (", sizes, " bytes)")
+}
+
+pp_extend_output_files <- function(output_files, ...) {
+  qa_attributes <- attributes(output_files)
+  qa_attributes <- qa_attributes[grepl("^qa_", names(qa_attributes))]
+  out <- c(output_files, ...)
+  for (name in names(qa_attributes)) attr(out, name) <- qa_attributes[[name]]
+  out
 }
 
 pp_data_summary <- function(df) {
@@ -1170,6 +1372,7 @@ pp_write_notes <- function(path, figure_id, input_path, output_files, preset,
 pp_helper_script_dir <- local({
   env_path <- Sys.getenv("PAPERPLOT_HELPER")
   if (nzchar(env_path) && file.exists(env_path)) return(dirname(normalizePath(env_path, mustWork = FALSE)))
+  if (!is.null(pp_helper_source_file) && file.exists(pp_helper_source_file)) return(dirname(pp_helper_source_file))
   if (exists("helper_path", inherits = TRUE)) {
     hp <- get("helper_path", inherits = TRUE)
     if (nzchar(hp) && file.exists(hp)) return(dirname(normalizePath(hp, mustWork = FALSE)))
@@ -1225,6 +1428,17 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
   }
   data_profile <- data_profile %||% data_summary
   visual_budget <- visual_budget %||% list(status = "not recorded")
+  qa_loop <- list(
+    available = attr(output_files, "qa_available") %||% FALSE,
+    initial_status = attr(output_files, "qa_initial_status") %||% "not_run",
+    final_status = attr(output_files, "qa_final_status") %||% "not_run",
+    iterations = attr(output_files, "qa_iterations") %||% 0L,
+    machine_fixes = attr(output_files, "qa_machine_fixes") %||% character(),
+    rejected_machine_fixes = attr(output_files, "qa_machine_fixes_rejected") %||% character(),
+    context = attr(output_files, "qa_context") %||% list(),
+    final_qa_dir = attr(output_files, "qa_final_dir") %||% NULL,
+    error = attr(output_files, "qa_error") %||% NULL
+  )
   payload <- list(
     figure_id = figure_spec$figure_id,
     template_id = figure_spec$template_id,
@@ -1255,6 +1469,7 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     export = as.list(output_files),
     sidecars = sidecars,
     qa = qa,
+    qa_loop = qa_loop,
     outputs = as.list(output_files)
   )
   writeLines(pp_to_json(payload), con = path)

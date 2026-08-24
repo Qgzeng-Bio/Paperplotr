@@ -1,7 +1,81 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-08-24 (WP1-WP8 one-shot figure quality optimization round)
+Last updated: 2026-08-24 (standalone-0.4.1 contract hardening and verified QA loop)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
+
+---
+
+## 2026-08-24 — standalone-0.4.1 Contract Hardening
+
+The WP1-WP8 implementation below was independently reviewed and then hardened.
+The main correction is architectural: production templates now use one enforced,
+auditable finalize/export/QA path rather than merely exposing optional helpers.
+
+### Resolved defects
+
+- `pp_theme()` is now a pure theme constructor. It no longer calls
+  `update_geom_defaults()` and therefore does not alter unrelated ggplot2 plots
+  in the same R process.
+- `pp_finalize()` applies house defaults to a plot copy and fills only implicit
+  text/label layer size and family values. Explicit plot-local settings remain
+  deliberate and inspectable.
+- Documented environment overrides now use shell-safe keys such as
+  `PAPERPLOT_BASE_SIZE` and `PAPERPLOT_POINT_SIZES_DENSE`.
+- Text, point, line, and spacing roles have typed accessors. Production point
+  marks and direct labels were migrated away from unexplained size literals.
+- The preset text floor is an error by default, not a warning-only gate.
+  Diagnostic exceptions require the explicit `PAPERPLOT_ALLOW_SMALL_TEXT=1`
+  opt-out.
+- All 27 direct templates call `pp_save_all_with_qa_loop()`; the 8 recipe-backed
+  wrappers inherit the same path through `run-template-recipe.R`.
+- QA context now carries figure family, target width, inferred panel count, and
+  equal/hierarchical interpretation. Multi-panel templates no longer silently
+  fall back to one whole-image panel during production QA.
+- A retry is always followed by a second QA run. A candidate is accepted only
+  when status or score improves; otherwise the initial deterministic render is
+  restored and the attempted fix is recorded as rejected.
+- QA availability, initial/final status, iteration count, accepted/rejected
+  fixes, context, error, and final QA directory are persisted in metadata.
+- `pp_shared_guide_plan()` now requires shared guide-variable semantics rather
+  than comparing plot-type counts. The faceted production layout declares
+  equal panel boxes; unsupported asymmetric weighting is no longer promised by
+  dead `primary_weight` fields.
+- Every emitted deterministic risk code has remediation coverage or an explicit
+  informational exemption. `validate-skill.R` executes the standalone contract
+  tests and QA coverage audit instead of checking only that the scripts exist.
+- Visual-pressure reporting distinguishes pass/fail/skip. Missing private
+  fixtures are no longer counted as successful scenarios.
+
+### Validation evidence
+
+```text
+test-standalone-contract.R       pass
+validate-skill.R                 pass (includes contract + remediation audit)
+smoke-test-templates.R           35/35 pass with real visual-QA directories
+run-pressure-scenarios.R         5/5 pass
+visual/vector/family scenarios   26/26 executed pass; 5 private fixtures skipped
+old-vs-new scenarios             4/4 pass
+QA remediation coverage          50 emitted codes; all covered/exempted
+```
+
+The runtime automatically selected `/opt/miniconda3/bin/python` on this Mac
+because the earlier PATH-first `python3` lacks Pillow. `PAPERPLOT_PYTHON`
+remains the portable explicit override.
+
+The verified tree was synchronized to
+`/Users/qingguozeng/.codex/skills/paperplot-skills`. A directory diff excluding
+Python bytecode caches is empty, and the installed contract/standalone
+validation passes when invoked outside the repository working directory.
+
+### Remaining boundaries
+
+- The five skipped real/private visual fixtures were not available in this
+  checkout; their historical claims were not revalidated in this round.
+- Multi-ggplot asymmetric composition still requires an explicit composite
+  backend. Current faceted production templates intentionally use equal boxes
+  and one shared facet-level guide.
+- A QA `warn` or `fail` is preserved honestly in metadata. Auto-fix does not
+  convert unresolved visual or scientific risk into a pass.
 
 ---
 

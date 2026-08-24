@@ -51,9 +51,11 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 
 ## Style Registry and Global Overrides
 
-All typography, line-width, point-size, and spacing constants live in
+Shared typography, line-width, point-size, and spacing constants live in
 `pp_style_registry()` (scripts/paperplot_helpers.R). Templates consume them via
-`pp_theme()`/`pp_finalize()`; literal overrides outside the registry are style drift.
+`pp_theme()`, `pp_text_size()`, `pp_point_size()`, `pp_line_width()`, and the
+plot-local `pp_finalize()` step. Family-specific overrides remain allowed when
+their role is explicit and documented; unexplained literals are style drift.
 
 Session-wide overrides (apply to every template without editing code):
 
@@ -66,5 +68,10 @@ Export gates in `pp_save_plot()`:
 - Text-size floor: if the smallest themed/labelled text is below the preset's
   `min_text_pt`, a warning names the offending size and the fix. Silence with
   `PAPERPLOT_ALLOW_SMALL_TEXT=1` only for deliberate diagnostic figures.
-- Geom-level text inherits `base_size`/family automatically; do not pass raw
-  `size=` to `geom_text()` unless intentionally deviating (then document it).
+- `pp_theme()` never calls `theme_set()` or `update_geom_defaults()` and cannot
+  affect unrelated plots in the R session.
+- Geom-level text with no explicit/mapped size inherits `base_size`/family on
+  the finalized plot copy. Use `pp_text_size()` for deliberate label roles.
+- Production templates export through `pp_save_all_with_qa_loop()`, which runs
+  QA before and after at most one whitelisted visual retry and records both
+  statuses. QA-runtime unavailability is metadata, not a silent pass.

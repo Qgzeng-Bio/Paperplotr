@@ -102,7 +102,7 @@ pp_run_recipe_template <- function(recipe_id,
   )
 
   if (is.null(output_stem)) output_stem <- file.path(output_dir, template_id)
-  outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, width = width_cm, height = height_cm, overwrite = TRUE)
+  outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = width_cm, height = height_cm, overwrite = TRUE)
   invisible(lapply(outputs, pp_assert_output))
   notes_path <- paste0(output_stem, "_notes.md")
   metadata_path <- paste0(output_stem, "_metadata.json")
@@ -137,7 +137,7 @@ pp_run_recipe_template <- function(recipe_id,
     metadata_path,
     figure_spec = figure_spec,
     metric_spec = metric_spec,
-    output_files = c(outputs, notes = notes_path, qa = qa_path),
+    output_files = pp_extend_output_files(outputs, notes = notes_path, qa = qa_path),
     layout = design_plan$layout_plan,
     palette = design_plan$palette_plan,
     qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),

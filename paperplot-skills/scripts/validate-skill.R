@@ -49,6 +49,7 @@ required_files <- c(
   file.path("agents", "openai.yaml"),
   file.path("scripts", "paperplot_helpers.R"),
   file.path("scripts", "validate-skill.R"),
+  file.path("scripts", "test-standalone-contract.R"),
   file.path("scripts", "smoke-test-templates.R"),
   file.path("scripts", "validate-figure-output.R"),
   file.path("scripts", "visual-qa-report.R"),
@@ -166,6 +167,10 @@ module_text <- unlist(lapply(c("design-brief.R", "label-strategy.R", "design-qa.
 all_helper_text <- c(helper_text, module_text)
 required_helper_patterns <- c(
   "pp_theme <- function",
+  "pp_finalize <- function",
+  "pp_style_registry <- function",
+  "pp_text_size <- function",
+  "pp_save_all_with_qa_loop <- function",
   "pp_figure_spec <- function",
   "pp_metric_spec <- function",
   "pp_design_brief <- function",
@@ -201,16 +206,42 @@ check_forbidden(all_helper_text, "helper/modules")
 
 template_paths <- file.path(rel("templates"), template_files)
 if (length(list.files(rel("templates"), pattern = "\\.R$")) != length(template_files)) fail("Unexpected number of R templates in templates/")
-required_template_patterns <- c("library(ggplot2)", "paperplot_helpers.R", "source(helper_path)", "figure_spec <- pp_figure_spec", "metric_spec", "pp_save_all", "pp_write_notes", "pp_write_metadata", "pp_write_qa_report")
+required_template_patterns <- c("library(ggplot2)", "paperplot_helpers.R", "source(helper_path)", "figure_spec <- pp_figure_spec", "metric_spec", "pp_write_notes", "pp_write_metadata", "pp_write_qa_report")
 for (path in template_paths) {
   rel_path <- sub(paste0("^", root, "/?"), "", path)
   text <- readLines(path, warn = FALSE)
   for (pattern in required_template_patterns) {
     if (!any(grepl(pattern, text, fixed = TRUE))) fail("Missing required pattern in ", rel_path, ": ", pattern)
   }
+  uses_integrated_export <- any(grepl("pp_save_all_with_qa_loop", text, fixed = TRUE)) ||
+    any(grepl("pp_run_recipe_template", text, fixed = TRUE))
+  if (!uses_integrated_export) fail("Template bypasses integrated finalize/export/QA contract: ", rel_path)
   check_forbidden(text, rel_path)
   cat("checked template: ", rel_path, "\n", sep = "")
 }
+
+runner_text <- readLines(rel("scripts", "run-template-recipe.R"), warn = FALSE)
+if (!any(grepl("pp_save_all_with_qa_loop", runner_text, fixed = TRUE))) {
+  fail("Recipe template runner bypasses integrated finalize/export/QA contract")
+}
+
+run_contract_check <- function(command, args, label) {
+  output <- tryCatch(
+    system2(command, args, stdout = TRUE, stderr = TRUE),
+    error = function(e) structure(conditionMessage(e), status = 127L)
+  )
+  status <- attr(output, "status")
+  if (is.null(status)) status <- 0L
+  if (!identical(as.integer(status), 0L)) {
+    fail(label, " failed:\n", paste(output, collapse = "\n"))
+  }
+  cat(paste(output, collapse = "\n"), "\n")
+}
+
+rscript_bin <- Sys.getenv("PAPERPLOT_RSCRIPT", unset = file.path(R.home("bin"), "Rscript"))
+python_bin <- Sys.getenv("PAPERPLOT_PYTHON", unset = "python3")
+run_contract_check(rscript_bin, rel("scripts", "test-standalone-contract.R"), "standalone contract tests")
+run_contract_check(python_bin, rel("scripts", "validate-qa-coverage.py"), "QA remediation coverage")
 
 for (path in c(
   "figure-design-brief.md",

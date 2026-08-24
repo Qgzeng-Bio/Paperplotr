@@ -107,9 +107,9 @@ design_plan <- pp_design_plan(
 )
 
 plot <- ggplot(effect_df, aes(y = metric, x = estimate)) +
-  geom_vline(xintercept = 0, linetype = "dashed", linewidth = 0.35, color = "#555555") +
-  geom_segment(aes(x = ci_low, xend = ci_high, y = metric, yend = metric), linewidth = 0.45, color = "#2F2F2D", na.rm = TRUE) +
-  geom_point(aes(color = direction), size = 2.3) +
+  geom_vline(xintercept = 0, linetype = "dashed", linewidth = pp_line_width("reference"), color = "#555555") +
+  geom_segment(aes(x = ci_low, xend = ci_high, y = metric, yend = metric), linewidth = pp_line_width("interval"), color = "#2F2F2D", na.rm = TRUE) +
+  geom_point(aes(color = direction), size = pp_point_size("emphasis")) +
   scale_color_manual(values = c(positive = "#2F6DB3", negative = "#B54A47"), guide = "none") +
   labs(x = effect_label, y = NULL) +
   pp_theme(base_size = 7)
@@ -123,7 +123,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(
@@ -154,7 +154,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = pp_extend_output_files(outputs, notes = notes_path, qa = qa_path),
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),

@@ -30,8 +30,8 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 7. Query `references/plot-grammar-atoms.md` and the code recipe manifest before writing new plot code.
 8. Select a production template, executable recipe, optional backend plan, or diagnostic benchmark path.
 9. Apply visual budget, proportional layout, and label/legend/panel burden checks.
-10. Render/export PDF and PNG.
-11. Perform image-level QA, detail QA, and Nature guardrail review when an image is available.
+10. Finalize and export PDF/PNG through `pp_save_all_with_qa_loop()`; do not bypass the integrated production contract with raw `ggsave()` or `pp_save_all()`.
+11. Verify the post-retry image-level QA result, detail QA, and Nature guardrails. If the configured Python/Pillow QA runtime is unavailable, report that explicitly and do not call the figure manuscript-ready.
 12. If old and new figures exist, perform old-vs-new comparison.
 13. If the new figure is not objectively better, iterate or state the blocker.
 14. Write notes, metadata JSON, QA report, visual QA, and conditional sidecars.
@@ -128,7 +128,9 @@ Choose and adapt one template:
 
 The code recipe layer now has 80+ manifest entries. Use production recipes for normal redraws; use optional-backend/reference recipes for complex heatmaps, circos, maps, trees, networks, UpSet, genome tracks, or synteny-like figures only when required data structures and packages are available.
 
-All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG, and write notes, metadata, QA, and required sidecars.
+All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG through `pp_save_all_with_qa_loop()`, and write notes, metadata, QA, and required sidecars. Recipe-backed wrappers inherit this requirement from `scripts/run-template-recipe.R`.
+
+`pp_theme()` is a pure plot theme and must not change session-wide ggplot2 geom defaults. The export contract calls `pp_finalize()` on a plot copy, fills only implicit text/label defaults, preserves deliberate explicit layer settings, applies the preset text floor, and records QA availability plus initial/final status in metadata.
 
 ## Image-Level QA
 
@@ -148,7 +150,7 @@ For final manuscript candidates, use strict Nature mode:
 ${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --strict-nature
 ```
 
-Visual QA requires Pillow for raster images. PDF and SVG inputs are rasterized before pixel QA when `pdftoppm` or ImageMagick are available; SVG structural checks are retained as supplemental signals. OCR is optional: `--ocr auto` uses Tesseract if available and otherwise records an unavailable OCR engine without failing.
+Visual QA requires Pillow for raster images. Set `PAPERPLOT_PYTHON` to a Python interpreter with Pillow when the shell default does not provide it. PDF and SVG inputs are rasterized before pixel QA when `pdftoppm` or ImageMagick are available; SVG structural checks are retained as supplemental signals. OCR is optional: `--ocr auto` uses Tesseract if available and otherwise records an unavailable OCR engine without failing.
 
 The visual QA layer must report image size, blank margin, content density, color burden, grayscale risk, gridline/line burden, approximate text/mark burden, panel geometry, OCR availability, manuscript-readiness score, and top risks. If visual QA returns `warn` or `fail`, either revise the plot or report why the risk remains accepted.
 

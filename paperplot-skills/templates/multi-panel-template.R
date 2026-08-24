@@ -57,7 +57,7 @@ mapping <- aes(x = .data[[x_col]], y = .data[[y_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[group_col]])
 
 p <- ggplot(df, mapping) +
-  geom_point(size = 1.4, alpha = 0.82) +
+  geom_point(size = pp_point_size("normal"), alpha = 0.82) +
   facet_wrap(stats::as.formula(paste("~", panel_col)), ncol = layout$ncol, scales = "free_y") +
   pp_theme(show_grid = FALSE) +
   labs(x = x_label, y = y_label, colour = group_col)
@@ -65,7 +65,7 @@ p <- ggplot(df, mapping) +
 if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]])
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
