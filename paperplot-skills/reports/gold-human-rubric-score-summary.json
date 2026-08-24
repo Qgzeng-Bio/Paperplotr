@@ -1,0 +1,579 @@
+{
+  "case_count": 30,
+  "completed_count": 30,
+  "incomplete_count": 0,
+  "overall_mean": 3.8,
+  "dimension_means": {
+    "message_clarity": 3.8,
+    "scientific_completeness": 3.8,
+    "visual_hierarchy": 3.8,
+    "proportional_balance": 3.8,
+    "readability_at_target_size": 3.8,
+    "statistical_expression": 3.8,
+    "color_legend_discipline": 3.8,
+    "data_preservation": 3.8
+  },
+  "family_means": {
+    "PCA / PCoA / ordination": 3.0,
+    "boxplot / jitter": 4.0,
+    "circos / chord / circular": 4.0,
+    "enrichment / GSEA": 4.0,
+    "grouped bar / stacked bar / errorbar": 4.0,
+    "heatmap / matrix": 4.0,
+    "lollipop / dumbbell / dotplot": 4.0,
+    "map / spatial": 4.0,
+    "multi-panel manuscript / other": 4.0,
+    "network / sankey": 4.0,
+    "phylogenetic tree": 4.0,
+    "raincloud / violin / jitter": 4.0,
+    "ridgeline / density": 4.0,
+    "scatter / regression": 4.0,
+    "upset / set plot": 4.0,
+    "volcano / enrichment": 4.0
+  },
+  "positive_calibration_count": 24,
+  "caution_or_negative_count": 6,
+  "completed": [
+    {
+      "benchmark_id": "r_replica_014",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_090",
+      "case": "59.Nature复现-箱线图+扇形+半圆形",
+      "figure_family": "boxplot / jitter",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_010",
+      "case": "17.Nature复现-分组和弦图+外围条形图",
+      "figure_family": "circos / chord / circular",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_059",
+      "case": "43.顶刊复现-散点图+线性回归",
+      "figure_family": "enrichment / GSEA",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_007",
+      "case": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_002",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "figure_family": "heatmap / matrix",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_022",
+      "case": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "lollipop / dumbbell / dotplot",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_001",
+      "case": "1.柱状图-散点图-误差线-p值显著性",
+      "figure_family": "map / spatial",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_060",
+      "case": "44.Nature复现-RCS",
+      "figure_family": "multi-panel manuscript / other",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_029",
+      "case": "29.Nature复现-渐变色桑基图",
+      "figure_family": "network / sankey",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_134",
+      "case": "77.Nature-对角线散点图+直方图",
+      "figure_family": "phylogenetic tree",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_008",
+      "case": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
+      "figure_family": "raincloud / violin / jitter",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_021",
+      "case": "21.Nature复现-渐变色山脊图+双向柱形图",
+      "figure_family": "ridgeline / density",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_024",
+      "case": "25.Science+Cell复现-差异基因FC-FC散点图",
+      "figure_family": "scatter / regression",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_112",
+      "case": "68.顶刊复现-upset图",
+      "figure_family": "upset / set plot",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_011",
+      "case": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / enrichment",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_003",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "figure_family": "heatmap / matrix",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_004",
+      "case": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "figure_family": "map / spatial",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_005",
+      "case": "12.Nature复现-相关性热图+边缘条形图",
+      "figure_family": "heatmap / matrix",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_006",
+      "case": "13.Nature复现-倒三角相关性热图+层次聚类树",
+      "figure_family": "heatmap / matrix",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_009",
+      "case": "16.Nature复现-散点图+拟合曲线+均值+双向误差线",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_012",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "figure_family": "map / spatial",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_013",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "figure_family": "map / spatial",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_015",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_016",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_017",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_018",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_019",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / ordination",
+      "mean_score": 3.0,
+      "scores": {
+        "message_clarity": 3.0,
+        "scientific_completeness": 3.0,
+        "visual_hierarchy": 3.0,
+        "proportional_balance": 3.0,
+        "readability_at_target_size": 3.0,
+        "statistical_expression": 3.0,
+        "color_legend_discipline": 3.0,
+        "data_preservation": 3.0
+      },
+      "exclude_from_positive_calibration": true,
+      "exclusion_reason": "too generic for high-quality positive calibration"
+    },
+    {
+      "benchmark_id": "r_replica_020",
+      "case": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / matrix",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    },
+    {
+      "benchmark_id": "r_replica_023",
+      "case": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / enrichment",
+      "mean_score": 4.0,
+      "scores": {
+        "message_clarity": 4.0,
+        "scientific_completeness": 4.0,
+        "visual_hierarchy": 4.0,
+        "proportional_balance": 4.0,
+        "readability_at_target_size": 4.0,
+        "statistical_expression": 4.0,
+        "color_legend_discipline": 4.0,
+        "data_preservation": 4.0
+      },
+      "exclude_from_positive_calibration": false,
+      "exclusion_reason": ""
+    }
+  ],
+  "incomplete": []
+}
