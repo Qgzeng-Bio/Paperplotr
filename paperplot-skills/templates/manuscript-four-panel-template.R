@@ -65,6 +65,17 @@ panel_hierarchy <- pp_panel_hierarchy(panel_specs)
 layout_budget <- pp_layout_budget(panel_hierarchy, figure_role = figure_role)
 layout <- pp_recommend_manuscript_layout(panel_hierarchy, available_width_cm = 18, available_height_cm = 12)
 shared_guide_plan <- pp_shared_guide_plan(panel_specs, palette_plan = list(type = if (!is.null(group_col)) "group" else "none"))
+# Pre-render legend placement: estimate physical footprint from group entries
+# and canvas dims instead of hardcoding a position (WP3 legend coordinator).
+legend_plan <- if (!is.null(group_col)) {
+  pp_legend_plan(
+    entries = length(unique(as.character(df[[group_col]]))),
+    labels = unique(as.character(df[[group_col]])),
+    canvas_width_cm = layout$width_cm,
+    canvas_height_cm = layout$height_cm,
+    has_title = TRUE
+  )
+} else NULL
 
 metric_spec <- pp_metric_spec(metric = y_col, label = y_label, unit = "a.u.", direction = "neutral")
 data_profile <- pp_data_profile(df, sample_col = x_col, group_col = group_col, metric_col = panel_col, value_col = y_col)
@@ -104,7 +115,9 @@ p <- ggplot(df, mapping) +
   facet_wrap(stats::as.formula(paste("~", panel_col)), ncol = layout$ncol, scales = "free_y") +
   pp_theme(show_grid = FALSE) +
   labs(x = x_label, y = y_label, colour = group_col)
-if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]]) + theme(legend.position = shared_guide_plan$legend_position)
+if (!is.null(group_col)) {
+  p <- pp_apply_legend_plan(p + pp_scale_color(groups = df[[group_col]]), legend_plan)
+}
 
 output_files <- pp_save_all(p, output_stem, preset = preset, width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
@@ -118,7 +131,7 @@ qa_results <- pp_qa_summary(
 )
 
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
-  design_decisions = c("four-panel manuscript layout", "panel hierarchy recorded", "shared guide preferred", "lookup labels can move to metadata"),
+  design_decisions = c("four-panel manuscript layout", "panel hierarchy recorded", if (!is.null(legend_plan)) paste0("legend plan: ", legend_plan$position, "; ", legend_plan$note) else "no grouped guide needed", "lookup labels can move to metadata"),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "If panels need asymmetric sizes, use optional patchwork in a future tier",
   figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,

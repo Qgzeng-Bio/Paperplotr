@@ -744,6 +744,40 @@ pp_min_rendered_text_pt <- function(plot) {
   if (length(all_sizes)) min(all_sizes) else NA_real_
 }
 
+# Apply a legend plan (see pp_legend_plan in scripts/lib/layout-planner.R) to a
+# plot: position, direction, and the adaptive key size decided before render.
+# Dual-mode: with `plot` supplied it returns the updated plot; without `plot`
+# it returns a theme object so pipelines can do
+#   pp_theme() + pp_apply_legend_plan(plan = legend_plan).
+pp_apply_legend_plan <- function(plot = NULL, plan, position = plan$position,
+                                 direction = plan$direction, key_size_mm = plan$key_size_mm) {
+  if (is.null(plan)) {
+    if (is.null(plot)) return(ggplot2::theme()) else return(plot)
+  }
+  th <- ggplot2::theme(
+    legend.position = position,
+    legend.direction = if (identical(direction, "vertical")) "vertical" else "horizontal",
+    legend.key.size = grid::unit(key_size_mm, "mm")
+  )
+  if (identical(position, "none")) {
+    th <- th + ggplot2::theme(legend.title = ggplot2::element_blank())
+  }
+  if (is.null(plot)) th else plot + th
+}
+
+# Extract the rendered legend grob from a plot (experimental; for multi-ggplot
+# composites that want one canvas-level shared key). Returns NULL when the plot
+# has no guides. cowplot is not required.
+pp_extract_legend <- function(plot) {
+  g <- tryCatch(ggplot2::ggplotGrob(plot), error = function(e) NULL)
+  if (is.null(g)) return(NULL)
+  idx <- which(vapply(g$grobs, function(x) {
+    !inherits(x, "zeroGrob") && grepl("guide-box", x$name %||% "", fixed = TRUE)
+  }, logical(1)))
+  if (!length(idx)) return(NULL)
+  g$grobs[[idx[[1]]]]
+}
+
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
                          dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE, ...) {
   if (!isTRUE(overwrite) && file.exists(filename)) {

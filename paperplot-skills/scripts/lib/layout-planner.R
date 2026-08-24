@@ -53,12 +53,94 @@ pp_recommend_manuscript_layout <- function(panel_hierarchy, available_width_cm, 
 }
 
 pp_shared_guide_plan <- function(panel_specs, palette_plan = NULL) {
-  plot_types <- vapply(panel_specs, function(x) x$plot_type, character(1))
+  plot_types <- vapply(panel_specs, function(x) x$plot_type %||% "", character(1))
+  palette_types <- unique(c(palette_plan$type %||% ""))
+  # A single shared legend is only meaningful when every panel encodes the
+  # same aesthetic roles (same chart family and same palette semantics).
+  # The old heuristic (unique(types) <= n_panels) was a tautology - always
+  # TRUE - so it never actually gated anything.
+  same_chart_family <- length(unique(plot_types)) == 1L
+  homogeneous_palette <- length(palette_types) <= 1L && !identical(palette_types, "")
+  shared_legend <- same_chart_family && homogeneous_palette
   list(
-    shared_legend = length(unique(plot_types)) <= length(plot_types),
+    shared_legend = shared_legend,
+    shared_legend_reason = if (shared_legend) {
+      "all panels share one chart family and palette semantics"
+    } else {
+      "heterogeneous panels must keep compact per-panel guides"
+    },
     legend_position = "bottom",
     palette_plan = palette_plan,
     repeated_guides = "avoid unless panel-specific semantics differ"
+  )
+}
+
+# Pre-render legend placement planner (WP3).
+# Estimates the physical footprint of a legend BEFORE rendering from entry
+# count, longest label, and the style registry, then picks the placement that
+# fits the canvas: bottom strip first (best readability), right column next,
+# otherwise flags an overflow risk instead of letting the renderer decide.
+pp_legend_plan <- function(entries, labels = NULL, canvas_width_cm = NULL, canvas_height_cm = NULL,
+                           base_size = pp_style_number("base_size"), has_title = FALSE,
+                           title_chars = 10) {
+  entries <- max(0L, as.integer(entries[[1]]))
+  labels <- as.character(labels)
+  labels <- labels[nzchar(labels)]
+  key_mm <- pp_style_number("spacing_mm.legend_key")
+  # Adaptive key shrink keeps very long keys from eating the data region.
+  if (entries > 12) key_mm <- max(2.6, key_mm * (1 - (entries - 12) * 0.02))
+  pt_to_mm <- 25.4 / 72
+  # Legend text renders at the theme hierarchy offset (base_size - 0.5 by
+  # default); glyph advance measured from PDF text bboxes is ~0.55 em.
+  legend_text_pt <- base_size + pp_style_registry()$font_hierarchy$legend_text
+  char_mm <- legend_text_pt * pt_to_mm * 0.55
+  entry_gap_mm <- 1.2
+  # Sum each label's own width; multiplying the longest label by the entry
+  # count overestimated real legends ~3x and pushed them off-bottom wrongly.
+  if (length(labels)) {
+    label_widths_mm <- nchar(labels, type = "chars") * char_mm
+    total_text_mm <- sum(label_widths_mm)
+    max_label_mm <- max(label_widths_mm)
+  } else {
+    avg_chars <- 12
+    total_text_mm <- entries * avg_chars * char_mm
+    max_label_mm <- avg_chars * char_mm
+  }
+  title_mm <- if (isTRUE(has_title)) title_chars * char_mm + entry_gap_mm else 0
+  bottom_w_mm <- total_text_mm + entries * (key_mm + entry_gap_mm) + title_mm + 4
+  right_w_mm <- key_mm + entry_gap_mm + max_label_mm + 4
+  right_h_mm <- entries * (key_mm * 0.72) + title_mm + 3
+  fits_bottom <- if (is.null(canvas_width_cm)) TRUE else bottom_w_mm <= canvas_width_cm * 10 * 0.9
+  fits_right <- if (is.null(canvas_height_cm)) TRUE else {
+    right_h_mm <= canvas_height_cm * 10 * 0.72 &&
+      right_w_mm <= canvas_width_cm * 10 * 0.28
+  }
+  position <- if (entries <= 0L) {
+    "none"
+  } else if (fits_bottom) {
+    "bottom"
+  } else if (fits_right) {
+    "right"
+  } else {
+    "bottom"
+  }
+  overflow_risk <- entries > 0L && !fits_bottom && !fits_right
+  list(
+    entries = entries,
+    position = position,
+    direction = if (identical(position, "right")) "vertical" else "horizontal",
+    key_size_mm = round(key_mm, 2),
+    estimated_bottom_width_mm = round(bottom_w_mm, 1),
+    estimated_right_block_mm = c(width = round(right_w_mm, 1), height = round(right_h_mm, 1)),
+    overflow_risk = overflow_risk,
+    status = if (overflow_risk) "warn" else "pass",
+    note = if (overflow_risk) {
+      "Legend does not fit bottom or right within budget; reduce entries or move mapping to a label-key sidecar."
+    } else if (identical(position, "none")) {
+      "No legend entries; guides suppressed."
+    } else {
+      paste0("Legend placed ", position, " (~", if (identical(position, "bottom")) bottom_w_mm else right_w_mm, " mm wide).")
+    }
   )
 }
 
