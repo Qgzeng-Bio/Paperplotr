@@ -31,7 +31,18 @@ RUBRIC_DIMENSIONS = [
 SEVERE_PANEL_RISKS = {
     "panel_size_imbalance",
     "panel_data_region_imbalance",
+    "panel_data_region_mismatch",
     "unjustified_panel_hierarchy_risk",
+}
+
+SEVERE_DETAIL_RISKS = {
+    "text_data_overlap_risk",
+    "vector_text_overlap",
+    "vector_tick_collision",
+    "vector_font_out_of_range",
+    "font_too_small_at_target_width",
+    "panel_data_region_mismatch",
+    "grid_background_burden",
 }
 
 
@@ -50,6 +61,11 @@ def run_visual_qa(
     expected_panels: int | None = None,
     layout_profile: str = "auto",
     strict_nature: bool = False,
+    target_width_mm: float | None = None,
+    journal_profile: str = "generic",
+    strict_detail_qa: bool = False,
+    allow_grid: str = "auto",
+    expected_font_range: str = "5,7",
 ) -> dict[str, Any]:
     script = Path(__file__).with_name("visual-qa-rendered-image.py")
     ensure_dir(out_dir)
@@ -67,7 +83,17 @@ def run_visual_qa(
         ocr,
         "--layout-profile",
         layout_profile,
+        "--journal-profile",
+        journal_profile,
+        "--allow-grid",
+        allow_grid,
+        "--expected-font-range",
+        expected_font_range,
     ]
+    if target_width_mm:
+        cmd.extend(["--target-width-mm", str(target_width_mm)])
+    if strict_detail_qa:
+        cmd.append("--strict-detail-qa")
     if family:
         cmd.extend(["--family", family])
     if expected_panels:
@@ -222,13 +248,16 @@ def final_verdict(
     new_status: str,
     new_nature_failed: bool,
     severe_panel_risk: bool,
+    severe_detail_risk: bool,
     review: dict[str, Any],
 ) -> tuple[str, str]:
     if new_nature_failed or new_status == "fail" or new_score < old_score or deterministic_verdict == "worse":
         return "worse", "fail"
-    if severe_panel_risk:
+    if severe_panel_risk or severe_detail_risk:
         return "human-review-required", "warn"
     if not review.get("provided"):
+        if deterministic_verdict == "improved" and new_score >= 8 and new_status != "fail":
+            return "deterministic_better_pending_human_review", "warn"
         return "human-review-required", "warn"
     if review.get("status") == "invalid":
         return "human-review-required", "warn"
@@ -266,6 +295,11 @@ def write_md(payload: dict[str, Any], out_dir: Path) -> None:
         "",
         f"- panel geometry delta: `{payload['panel_geometry_delta']}`",
         f"- severe new panel risk: `{payload['severe_new_panel_risk']}`",
+        "",
+        "## Nature detail QA",
+        "",
+        f"- detail QA delta: `{payload.get('detail_qa_delta')}`",
+        f"- severe new detail risk: `{payload.get('severe_new_detail_risk')}`",
         "",
         "## Review rubric",
         "",
@@ -305,6 +339,11 @@ def main() -> int:
     parser.add_argument("--old-strict-nature", action="store_true", help="Apply strict Nature guardrails to the old figure")
     parser.add_argument("--new-strict-nature", action="store_true", help="Apply strict Nature guardrails to the new figure")
     parser.add_argument("--review-json", default=None)
+    parser.add_argument("--target-width-mm", type=float, default=None)
+    parser.add_argument("--journal-profile", choices=["nature", "cell", "science", "generic"], default="generic")
+    parser.add_argument("--strict-detail-qa", action="store_true")
+    parser.add_argument("--allow-grid", choices=["auto", "off", "light", "required"], default="auto")
+    parser.add_argument("--expected-font-range", default="5,7")
     args = parser.parse_args()
 
     old_path = Path(args.old_image).expanduser()
@@ -324,6 +363,11 @@ def main() -> int:
             expected_panels=args.old_expected_panels or args.expected_panels,
             layout_profile=args.old_layout_profile or args.layout_profile,
             strict_nature=args.strict_nature or args.old_strict_nature,
+            target_width_mm=args.target_width_mm,
+            journal_profile=args.journal_profile,
+            strict_detail_qa=args.strict_detail_qa,
+            allow_grid=args.allow_grid,
+            expected_font_range=args.expected_font_range,
         )
         new = run_visual_qa(
             new_path,
@@ -335,6 +379,11 @@ def main() -> int:
             expected_panels=args.new_expected_panels or args.expected_panels,
             layout_profile=args.new_layout_profile or args.layout_profile,
             strict_nature=args.strict_nature or args.new_strict_nature,
+            target_width_mm=args.target_width_mm,
+            journal_profile=args.journal_profile,
+            strict_detail_qa=args.strict_detail_qa,
+            allow_grid=args.allow_grid,
+            expected_font_range=args.expected_font_range,
         )
 
     metric_specs = [
@@ -356,6 +405,23 @@ def main() -> int:
         old_v = panel_value(old, panel_metric)
         new_v = panel_value(new, panel_metric)
         deltas.append({"metric": panel_metric, "old": round(old_v, 4), "new": round(new_v, 4), "delta": metric_delta(old_v, new_v, lower_is_better=True)})
+    detail_metric_specs = [
+        ("text_geometry", "ocr_overlap_pair_count", True),
+        ("text_geometry", "edge_text_like_fraction", True),
+        ("vector_text_geometry", "text_box_overlap_count", True),
+        ("vector_text_geometry", "text_box_data_region_intrusion", True),
+        ("vector_layout_geometry", "right_edge_text_fraction", True),
+        ("grid_background", "long_line_count", True),
+        ("legend_geometry", "edge_content_fraction", True),
+        ("stroke_geometry", "line_burden_score", True),
+    ]
+    for outer, inner, lower_is_better in detail_metric_specs:
+        old_v = num((old.get(outer) or {}).get(inner))
+        new_v = num((new.get(outer) or {}).get(inner))
+        deltas.append({"metric": f"{outer}.{inner}", "old": round(old_v, 4), "new": round(new_v, 4), "delta": metric_delta(old_v, new_v, lower_is_better=lower_is_better)})
+    old_detail_fail = num((old.get("nature_detail_rubric") or {}).get("hard_fail_count"))
+    new_detail_fail = num((new.get("nature_detail_rubric") or {}).get("hard_fail_count"))
+    deltas.append({"metric": "nature_detail_hard_fail_count", "old": int(old_detail_fail), "new": int(new_detail_fail), "delta": metric_delta(old_detail_fail, new_detail_fail, lower_is_better=True, tolerance=0.0)})
     old_score = int(old.get("manuscript_readiness_score", 0))
     new_score = int(new.get("manuscript_readiness_score", 0))
     deltas.append({"metric": "manuscript_readiness_score", "old": old_score, "new": new_score, "delta": score_delta(old_score, new_score)})
@@ -381,14 +447,26 @@ def main() -> int:
     new_risks = risk_codes(new)
     severe_panel_risk = bool(new_risks.intersection(SEVERE_PANEL_RISKS))
     new_nature_failed = (new.get("nature_guardrails") or {}).get("status") == "fail"
+    severe_detail_risk = bool(new_risks.intersection(SEVERE_DETAIL_RISKS)) or bool((new.get("nature_detail_rubric") or {}).get("hard_fail_count"))
     review = load_review(Path(args.review_json).expanduser() if args.review_json else None)
-    final, status = final_verdict(deterministic_verdict, old_score, new_score, new.get("status", ""), new_nature_failed, severe_panel_risk, review)
+    final, status = final_verdict(
+        deterministic_verdict,
+        old_score,
+        new_score,
+        new.get("status", ""),
+        new_nature_failed,
+        severe_panel_risk,
+        severe_detail_risk,
+        review,
+    )
     if final == "human-review-required":
         remaining.append("Final improvement requires completed old_vs_new_review_template.json or --review-json.")
     if severe_panel_risk:
         remaining.append("New figure has severe panel geometry risk; do not claim manuscript improvement before fixing layout.")
     if new_nature_failed:
         remaining.append("New figure failed strict Nature guardrails; revise before claiming final manuscript readiness.")
+    if severe_detail_risk:
+        remaining.append("New figure has severe Nature-detail QA risk; inspect text overlap, target-size fonts, grid burden, and data-region balance before claiming improvement.")
 
     payload = {
         "old_vs_new_visual_qa": {
@@ -415,6 +493,8 @@ def main() -> int:
             "new_score": new_score,
             "severe_new_panel_risk": severe_panel_risk,
             "new_nature_guardrails_failed": new_nature_failed,
+            "severe_new_detail_risk": severe_detail_risk,
+            "detail_qa_delta": verdict_from_deltas([d["delta"] for d in deltas if d["metric"].startswith(("text_geometry.", "grid_background.", "legend_geometry.", "stroke_geometry.", "nature_detail_"))]),
             "review_template": str(review_template),
             "review_rubric": review,
             "old_qa_summary": {

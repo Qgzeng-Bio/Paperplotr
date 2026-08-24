@@ -25,6 +25,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Main figure does not look like a diagnostic table of labels.
 - Equal-role multi-panel figures pass panel geometry QA or have an explicit reason for unequal panel hierarchy.
 - Final manuscript candidates pass `nature_guardrails.status` or document why a `warn` is accepted.
+- Nature-detail QA has no hard failures for text/data overlap, unreadable target-size fonts, severe panel data-region mismatch, or unnecessary grid-background burden.
 
 ## Soft Warnings
 
@@ -39,6 +40,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 - Old-vs-new comparisons without completed review rubric cannot claim final improvement.
 - Panel geometry warnings are layout risks that require revision or explicit hierarchy justification.
 - `--strict-nature` failures are revision blockers for final figures.
+- Detail QA warnings such as `tick_label_collision_risk`, `legend_dominates_panel`, `stroke_too_heavy`, and `presentation_title_risk` require visible revision or explicit acceptance in notes.
 
 ## Family-Specific Threshold Profiles
 
