@@ -40,6 +40,11 @@ metric_spec <- pp_metric_spec(metric = c(log2fc_col, padj_col), label = c("log2 
 data_profile <- pp_data_profile(df, sample_col = gene_col, value_col = log2fc_col)
 label_strategy <- list(status = "pass", strategy = "selected_extreme_labels", visible_label_policy = "label top differential features only", needs_label_key = FALSE, direct_label_mode = "selected genes", message = "Only selected genes are directly labeled.")
 visual_budget <- pp_visual_budget(figure_role = figure_role, n_panels = 1, n_labels = nrow(key_df), n_legend_entries = 3)
+# WP3: legend placement decided from estimated physical footprint, not hardcoded.
+legend_plan <- pp_legend_plan(entries = 3, labels = c("up", "down", "not_significant"),
+                              canvas_width_cm = pp_output_preset("nature_half")$width_cm,
+                              canvas_height_cm = pp_output_preset("nature_half")$height_cm,
+                              has_title = TRUE)
 design_brief <- pp_design_brief(scientific_message = scientific_message, figure_role = figure_role, main_comparison = list(effect = log2fc_col, significance = padj_col), data_roles = list(feature = "lookup identity", effect = "x-axis", significance = "y-axis"), metric_semantics = list(metrics = metric_spec), acceptable_simplifications = c("Only top differential features are labeled."), must_show = c("effect direction", "adjusted significance", "thresholds"), may_move_to_metadata = c("full feature table", "all gene labels"))
 design_plan <- pp_design_plan(chart_family = "volcano", figure_role = figure_role, layout_plan = list(type = "single_panel"), label_strategy = label_strategy, palette_plan = list(color_role = "differential class"), statistical_plan = list(thresholds = list(log2fc = log2fc_threshold, padj = padj_threshold)), visible_simplifications = design_brief$acceptable_simplifications, risks = character())
 
@@ -50,7 +55,8 @@ plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volc
   geom_text(data = key_df, aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
   scale_color_manual(values = c(up = "#C95A4E", down = "#4E79A7", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log2 fold change", y = "-log10 adjusted p-value") +
-  pp_theme(base_size = 7) + theme(legend.position = "bottom")
+  pp_theme(base_size = 7) +
+  pp_apply_legend_plan(plan = legend_plan)
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_volcano_semantics", "pass", "Effect size and adjusted significance are encoded on separate axes."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
