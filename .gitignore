@@ -9,3 +9,16 @@ inst/doc
 docs/
 Rplots.pdf
 visual-checks/
+
+# Local research analysis (uses the skill; not part of the skill)
+analysis/
+
+# Third-party replica archive (copyright: do not distribute)
+paperplot-skills/provenance/
+
+# Large regenerable QA/benchmark asset directories (rebuild via scripts/)
+paperplot-skills/reports/auto-mined-qa-examples/
+paperplot-skills/reports/code-recipe-gallery/
+paperplot-skills/reports/demo-real-data/
+paperplot-skills/reports/gold-human-rubric-pack/
+paperplot-skills/reports/real-figure-benchmark/
