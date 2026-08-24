@@ -8,14 +8,28 @@ pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5
   }
   available_width_pt <- available_width_cm / 2.54 * 72
   max_chars <- max(nchar(labels, type = "chars"), na.rm = TRUE)
+  # Conservative proxy retained as THE gate signal (do not silently loosen QA
+  # bands). When systemfonts works on this host, also record the exact ink
+  # width ratio as exact_score for future threshold calibration only.
   score <- max_chars * font_size_pt * 0.55 * length(labels) / available_width_pt
+  exact_score <- NULL
+  if (requireNamespace("systemfonts", quietly = TRUE)) {
+    widths_pt <- tryCatch(
+      systemfonts::string_width(labels, size = font_size_pt)$width,
+      error = function(e) NULL
+    )
+    if (!is.null(widths_pt) && all(is.finite(widths_pt))) {
+      exact_score <- unname(sum(widths_pt) / available_width_pt)
+    }
+  }
   status <- if (score < 0.8) "pass" else if (score <= 1.2) "warn" else "fail"
   message <- switch(status,
     pass = "visible labels fit the available width",
     warn = "visible labels are dense; use rotation, wrapping, abbreviation, or selective labels",
     fail = "visible labels are too dense for manuscript display; prefer rank index plus key labels and sidecar"
   )
-  list(score = unname(score), status = status, n_labels = length(labels), max_chars = max_chars, message = message)
+  list(score = unname(score), status = status, n_labels = length(labels), max_chars = max_chars,
+       exact_score = exact_score, message = message)
 }
 
 pp_rank_index_map <- function(samples, order = NULL, prefix = "") {
