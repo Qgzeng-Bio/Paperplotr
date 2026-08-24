@@ -85,3 +85,12 @@ No immediate new template. Upgrade existing bar and grouped-comparison templates
 ## Old-vs-New Criteria
 
 Improvement means the new figure reduces repeated legends and annotation burden, clarifies uncertainty/n, preserves category order, and does not reduce manuscript-readiness score or content density.
+
+## Detail QA Rules
+
+- Text density should stay low; repeated p-value brackets, long category labels, and in-panel titles are common failure points.
+- Background gridlines are usually off; use only light y-gridlines when they materially help compare bar heights.
+- Error bars and bar outlines should be thin. Heavy caps or thick axes trigger `stroke_too_heavy`.
+- Legends should be top/right/outside or removed through direct labeling; they fail when `legend_dominates_panel` is raised.
+- Equal-role facets must keep comparable data-region sizes. Legend-only shrinkage of one panel triggers `panel_data_region_mismatch`.
+- `text_data_overlap_risk` is serious because labels or brackets can cover bars, raw points, or error bars.

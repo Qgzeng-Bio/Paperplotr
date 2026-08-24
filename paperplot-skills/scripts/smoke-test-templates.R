@@ -36,7 +36,22 @@ template_files <- c(
   "volcano-plot-template.R",
   "ma-plot-template.R",
   "enrichment-dotplot-template.R",
-  "model-validation-composite-template.R"
+  "compact-dot-matrix-enrichment-template.R",
+  "model-validation-composite-template.R",
+  "raincloud-template.R",
+  "manhattan-plot-template.R",
+  "upset-summary-template.R",
+  "pcoa-marginal-template.R",
+  "annotated-heatmap-template.R",
+  "lollipop-ranked-template.R",
+  "stacked-fraction-bar-template.R",
+  "bar-dot-errorbar-template.R",
+  "ridgeline-density-template.R",
+  "labelled-regression-template.R",
+  "matrix-dotplot-template.R",
+  "time-series-ribbon-template.R",
+  "network-summary-template.R",
+  "spatial-distribution-template.R"
 )
 
 missing_templates <- template_files[!file.exists(file.path(template_root, template_files))]
@@ -60,6 +75,13 @@ patch_template <- function(template_text, input_path, output_dir) {
   text <- replace_fixed(text, 'error_col <- NULL', 'error_col <- "error"')
   text <- replace_fixed(text, 'pc1_col <- "TODO_PC1"', 'pc1_col <- "pc1"')
   text <- replace_fixed(text, 'pc2_col <- "TODO_PC2"', 'pc2_col <- "pc2"')
+  text <- replace_fixed(text, 'chrom_col <- "TODO_chr"', 'chrom_col <- "chr"')
+  text <- replace_fixed(text, 'position_col <- "TODO_position"', 'position_col <- "position"')
+  text <- replace_fixed(text, 'pvalue_col <- "TODO_pvalue"', 'pvalue_col <- "pvalue"')
+  text <- replace_fixed(text, 'feature_col <- "TODO_gene"', 'feature_col <- "gene"')
+  text <- replace_fixed(text, 'item_col <- "TODO_item"', 'item_col <- "item"')
+  text <- replace_fixed(text, 'set_col <- "TODO_set"', 'set_col <- "set"')
+  text <- replace_fixed(text, 'present_col <- "TODO_present"', 'present_col <- "present"')
   text <- replace_fixed(text, 'panel_col <- "TODO_panel"', 'panel_col <- "panel"')
   text <- replace_fixed(text, 'sample_col <- "TODO_sample"', 'sample_col <- "sample"')
   text <- replace_fixed(text, 'paired_id_col <- "TODO_sample"', 'paired_id_col <- "sample"')
@@ -76,6 +98,14 @@ patch_template <- function(template_text, input_path, output_dir) {
   text <- replace_fixed(text, 'ratio_col <- "TODO_ratio"', 'ratio_col <- "ratio"')
   text <- replace_fixed(text, 'qvalue_col <- "TODO_qvalue"', 'qvalue_col <- "qvalue"')
   text <- replace_fixed(text, 'count_col <- "TODO_count"', 'count_col <- "count"')
+  text <- replace_fixed(text, 'row_col <- "TODO_row"', 'row_col <- "term"')
+  text <- replace_fixed(text, 'column_col <- "TODO_column"', 'column_col <- "category"')
+  text <- replace_fixed(text, 'row_group_col <- "TODO_group"', 'row_group_col <- "group"')
+  text <- replace_fixed(text, 'effect_col <- "TODO_effect"', 'effect_col <- "log2fc"')
+  text <- replace_fixed(text, 'support_col <- "TODO_support"', 'support_col <- "count"')
+  text <- replace_fixed(text, 'sig_col <- NULL', 'sig_col <- "padj"')
+  text <- replace_fixed(text, 'row_group_col <- NULL', 'row_group_col <- "group"')
+  text <- replace_fixed(text, 'row_label_col <- NULL', 'row_label_col <- "term"')
   text <- replace_fixed(text, 'x_label <- "TODO x label with units"', 'x_label <- "X value (a.u.)"')
   text <- replace_fixed(text, 'y_label <- "TODO y label with units"', 'y_label <- "Y value (a.u.)"')
   text <- replace_fixed(text, 'y_label <- "TODO value with units"', 'y_label <- "Value (a.u.)"')
@@ -83,6 +113,8 @@ patch_template <- function(template_text, input_path, output_dir) {
   text <- replace_fixed(text, 'value_label <- "TODO value"', 'value_label <- "Value (%)"')
   text <- replace_fixed(text, 'pc1_label <- "PC1 (TODO%)"', 'pc1_label <- "PC1 (42%)"')
   text <- replace_fixed(text, 'pc2_label <- "PC2 (TODO%)"', 'pc2_label <- "PC2 (18%)"')
+  text <- replace_fixed(text, 'pc1_label <- "PCoA1 (TODO%)"', 'pc1_label <- "PCoA1 (42%)"')
+  text <- replace_fixed(text, 'pc2_label <- "PCoA2 (TODO%)"', 'pc2_label <- "PCoA2 (18%)"')
   text
 }
 
@@ -113,6 +145,14 @@ make_smoke_data <- function(path) {
   grid$ratio <- round(runif(nrow(grid), min = 0.05, max = 0.65), 3)
   grid$qvalue <- p.adjust(runif(nrow(grid), min = 0.0005, max = 0.5), method = "BH")
   grid$count <- sample(5:80, nrow(grid), replace = TRUE)
+  grid$chr <- rep(paste0("Chr", seq_len(6)), length.out = nrow(grid))
+  grid$position <- rep(seq_len(12), length.out = nrow(grid)) * 1000000 + sample(1:99999, nrow(grid), replace = TRUE)
+  grid$item <- rep(paste0("Item", sprintf("%02d", seq_len(30))), length.out = nrow(grid))
+  grid$set <- rep(paste0("Set", LETTERS[1:5]), length.out = nrow(grid))
+  grid$present <- sample(c(0, 1), nrow(grid), replace = TRUE, prob = c(0.35, 0.65))
+  grid$estimate <- round(rnorm(nrow(grid), sd = 0.6), 3)
+  grid$lower <- grid$estimate - runif(nrow(grid), min = 0.1, max = 0.35)
+  grid$upper <- grid$estimate + runif(nrow(grid), min = 0.1, max = 0.35)
   write.csv(grid, path, row.names = FALSE)
 }
 

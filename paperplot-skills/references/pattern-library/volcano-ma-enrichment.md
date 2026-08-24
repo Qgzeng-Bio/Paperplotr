@@ -85,3 +85,12 @@ No immediate new template. Future composite templates should be built only when 
 ## Old-vs-New Criteria
 
 Improvement means highlighted biology is clearer, label count is lower, thresholds are explicit, and the new plot keeps or improves readiness score without hiding major signal classes.
+
+## Detail QA Rules
+
+- Threshold lines are allowed but must be thin and named in labels or notes.
+- Gene/pathway labels must use collision control; labels over dense point clouds trigger `text_data_overlap_risk`.
+- Background gridlines are usually unnecessary for volcano and enrichment dot plots.
+- Color and size legends should be merged or stacked compactly; legend dominance is a manuscript risk.
+- Enrichment labels should prioritize top terms and move long full names to notes or sidecars.
+- MA/volcano plots must preserve effect direction, significance threshold, and transformation semantics.

@@ -16,6 +16,21 @@ Choose a template before writing code. Adapt the selected template rather than s
 | Ranked samples plus key metrics | `templates/rank-plus-key-metrics-template.R` | sample, score, metric, value | rank view plus facets |
 | Four-panel manuscript figure | `templates/manuscript-four-panel-template.R` | x, y, panel, optional group | 2x2 manuscript grid |
 | Model validation composite | `templates/model-validation-composite-template.R` | observed x, predicted y, model/group | fit, residual, performance panels |
+| Compact enrichment matrix | `templates/compact-dot-matrix-enrichment-template.R` | row, column, effect, support, optional significance/row_group | compact dot-matrix |
+| Raincloud distribution | `templates/raincloud-template.R` | group, value, optional sample | violin, box, and raw points |
+| Manhattan genome-wide scan | `templates/manhattan-plot-template.R` | chr, position, pvalue, optional feature | chromosome-ordered dense scatter |
+| UpSet summary | `templates/upset-summary-template.R` | item, set, optional present | set-size overview plus membership cues |
+| PCoA with marginal cues | `templates/pcoa-marginal-template.R` | PC1/axis1, PC2/axis2, group, optional sample | ordination with restrained marginal rugs |
+| Annotated heatmap | `templates/annotated-heatmap-template.R` | row, column, value, optional row_group | faceted annotation heatmap |
+| Ranked lollipop | `templates/lollipop-ranked-template.R` | category, value, optional group | sorted segment-plus-point rank view |
+| Stacked fraction bar | `templates/stacked-fraction-bar-template.R` | group, category, value | composition/fraction bar |
+| Bar + raw points + errorbar | `templates/bar-dot-errorbar-template.R` | group, category, value, error | summary bar with interval and raw evidence |
+| Ridgeline/density | `templates/ridgeline-density-template.R` | group, value | density facets |
+| Labelled regression | `templates/labelled-regression-template.R` | x, y, group, optional label | scatter, fit, sparse labels |
+| Matrix dotplot | `templates/matrix-dotplot-template.R` | row/metric, column/category, value, support/count | dual-encoded matrix |
+| Time series ribbon | `templates/time-series-ribbon-template.R` | time, value, group, error | line plus uncertainty ribbon |
+| Network summary | `templates/network-summary-template.R` | source, target, weight | edge-list flow summary |
+| Spatial distribution | `templates/spatial-distribution-template.R` | longitude, latitude, value, optional count | coordinate point map fallback |
 
 ## Contract Rules
 
@@ -27,9 +42,13 @@ Choose a template before writing code. Adapt the selected template rather than s
 
 ## Selection Rules
 
+- Before writing custom code, check `references/code-recipes/recipe-library.md` and `recipes/recipe_manifest.csv` for a matching code recipe.
 - If stable group colors matter, use a named color vector or `pp_group_colors()`.
 - If no semantic mapping is provided, use `pp_scale_color()` or `pp_scale_fill()` with `graphpad_discrete`.
 - Prefer small multiples when metrics have different units and original values matter.
 - Use heatmaps only when normalized relative patterns are the main message.
+- Use compact dot-matrix enrichment when categorical rows and columns carry effect, count, and significance and ordinary bubble plots waste horizontal space.
+- Use recipe-backed templates for raincloud, Manhattan, UpSet, PCoA marginal, annotated heatmap, lollipop, stacked fraction bar, bar-dot-errorbar, ridgeline, labelled regression, matrix dotplot, time-series ribbon, network summary, and spatial distribution before inventing new layer combinations.
+- For families absent from `templates/`, query `recipes/recipe_manifest.csv` and `references/code-recipes/recipe-library.md`; use optional-backend recipes only when required packages and data structures are available.
 - Use rank-plus-key-metrics when a main figure would otherwise include too many metrics.
 - If the task is conceptual drawing rather than plotting data, do not use this skill.

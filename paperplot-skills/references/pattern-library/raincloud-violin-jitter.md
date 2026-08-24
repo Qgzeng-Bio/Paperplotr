@@ -84,3 +84,12 @@ Consider `raincloud-template.R` only after the existing violin/jitter template s
 ## Old-vs-New Criteria
 
 Improvement means raw evidence is clearer, distribution summaries are less decorative, p-value burden is lower, labels remain readable at target size, and group order supports the scientific message.
+
+## Detail QA Rules
+
+- Raw dots must remain visible; label or bracket collision with dots, violins, boxes, or quartile lines triggers `text_data_overlap_risk`.
+- Gridlines are off by default. A dense background grid competes with distribution shape.
+- Violin/box outlines and jitter points should be light enough that raw observations remain the evidence layer.
+- Significance annotations should be compact and outside the main density where possible; top-heavy annotation raises `significance_annotation_overcrowding`.
+- Long group labels should be wrapped, abbreviated with metadata, or moved to facets; collided tick labels trigger `tick_label_collision_risk`.
+- Legends are often unnecessary when x-axis groups already encode color.

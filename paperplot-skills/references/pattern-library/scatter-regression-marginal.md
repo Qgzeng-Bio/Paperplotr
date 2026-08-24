@@ -83,3 +83,12 @@ No default new template. A future `model-validation-composite-template.R` can re
 ## Old-vs-New Criteria
 
 Improvement means the relationship is more legible, labels are more selective, fitted/statistical information is present but secondary, and residual/marginal panels clarify rather than clutter.
+
+## Detail QA Rules
+
+- Light gridlines are allowed when they improve quantitative reading; dense or default grids still trigger `grid_background_burden`.
+- Direct labels must use collision control. Labels over points, confidence bands, or regression lines trigger `text_data_overlap_risk`.
+- Regression lines, confidence bands, and error bars should be visually secondary to observations.
+- Marginal panels must not steal data-region space from the main relationship panel unless the hierarchy is explicit.
+- Legends should not duplicate direct labels; edge dominance triggers `legend_dominates_panel`.
+- Axis labels must state transform, units, and model/statistic when relevant.
