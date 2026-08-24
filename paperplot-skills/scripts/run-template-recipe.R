@@ -53,7 +53,9 @@ pp_run_recipe_template <- function(recipe_id,
     figure_role = "main",
     scientific_message = paste("Render", family_label, "with a code-recipe-driven manuscript template."),
     plot_type = family_label,
-    output_preset = if (width_cm > 10) "nature" else "nature_half"
+    # Report a preset that actually matches the exported canvas instead of
+    # silently fighting preset metadata (WP2 canvas-truthfulness gate).
+    output_preset = if (width_cm > 10) "nature" else if (isTRUE(all.equal(c(width_cm, height_cm), c(8.9, 6.2)))) "single_column" else "nature_half"
   )
   metric_spec <- pp_metric_spec(
     metric = c("value", "group", "category"),

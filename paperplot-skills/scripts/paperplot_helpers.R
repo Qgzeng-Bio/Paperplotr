@@ -9,7 +9,69 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.3.0"
+pp_helper_version <- "standalone-0.4.0"
+
+# ---- Style registry (WP1): single source of truth for global style constants ----
+# Templates must consume these through pp_theme()/pp_finalize(). Literal
+# overrides outside this registry are treated as style drift.
+pp_style_registry <- function() {
+  list(
+    base_size = 7,
+    family_fallbacks = c("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans", "sans"),
+    font_hierarchy = list(
+      axis_title = 0,
+      axis_text = -0.5,
+      legend_title = -0.2,
+      legend_text = -0.5,
+      strip_text = 0,
+      plot_title = 1,
+      plot_subtitle = 0,
+      plot_caption = -1
+    ),
+    line_widths = list(
+      axis_line = 0.35,
+      axis_ticks = 0.35,
+      grid_major = 0.25
+    ),
+    point_sizes = list(
+      dense = 0.85,
+      normal = 1.3,
+      emphasis = 2.0
+    ),
+    spacing_mm = list(
+      tick_length = 1.5,
+      legend_key = 4.2,
+      legend_spacing_x = 1,
+      plot_margin = 6,
+      axis_title_margin = 4
+    )
+  )
+}
+
+# Resolve a style constant by dotted path (e.g. "point_sizes.dense"), letting
+# options(paperplot.point_sizes_dense)/PAPERPLOT_POINT_SIZES_DENSE override the
+# registry value session-wide. One setting here applies to every template.
+pp_style_number <- function(path, default = NULL) {
+  parts <- strsplit(path, ".", fixed = TRUE)[[1]]
+  value <- pp_style_registry()
+  for (p in parts) {
+    if (!is.list(value) || is.null(value[[p]])) {
+      value <- NULL
+      break
+    }
+    value <- value[[p]]
+  }
+  resolved <- if (is.null(value)) default else value
+  opt_key <- paste0("paperplot.", gsub("\\.", "_", path))
+  opt <- getOption(opt_key)
+  if (!is.null(opt)) return(as.numeric(opt))
+  env_val <- Sys.getenv(toupper(opt_key), unset = "")
+  if (nzchar(env_val)) {
+    num <- suppressWarnings(as.numeric(env_val))
+    if (!is.na(num)) return(num)
+  }
+  resolved
+}
 
 pp_discrete_palettes <- list(
   graphpad_discrete = c(
@@ -236,44 +298,71 @@ pp_resolve_family <- function(preferred = "Arial") {
   "sans"
 }
 
-pp_theme <- function(base_size = 7, base_family = pp_resolve_family(), line_width = 0.35,
-                     axis_title_margin = 4, show_grid = FALSE) {
+pp_theme <- function(base_size = pp_style_number("base_size"),
+                     base_family = pp_resolve_family(pp_style_registry()$family_fallbacks[[1]]),
+                     line_width = pp_style_number("line_widths.axis_line"),
+                     axis_title_margin = pp_style_number("spacing_mm.axis_title_margin"),
+                     show_grid = FALSE) {
+  hier <- pp_style_registry()$font_hierarchy
   grid_major <- if (isTRUE(show_grid)) {
-    ggplot2::element_line(linewidth = 0.25, colour = "#D9D9D9")
+    ggplot2::element_line(linewidth = pp_style_number("line_widths.grid_major"), colour = "#D9D9D9")
   } else {
     ggplot2::element_blank()
   }
 
-  ggplot2::theme_classic(base_size = base_size, base_family = base_family) +
+  out <- ggplot2::theme_classic(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
       text = ggplot2::element_text(family = base_family, size = base_size, colour = "#1F1F1F"),
       axis.title = ggplot2::element_text(
-        size = base_size,
+        size = base_size + hier$axis_title,
         margin = ggplot2::margin(
           t = axis_title_margin, r = axis_title_margin,
           b = axis_title_margin, l = axis_title_margin
         )
       ),
-      axis.text = ggplot2::element_text(size = base_size - 0.5, colour = "#303030"),
+      axis.text = ggplot2::element_text(size = base_size + hier$axis_text, colour = "#303030"),
       axis.line = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
       axis.ticks = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
-      axis.ticks.length = grid::unit(1.5, "mm"),
-      legend.title = ggplot2::element_text(size = base_size - 0.2),
-      legend.text = ggplot2::element_text(size = base_size - 0.5),
+      axis.ticks.length = grid::unit(pp_style_number("spacing_mm.tick_length"), "mm"),
+      legend.title = ggplot2::element_text(size = base_size + hier$legend_title),
+      legend.text = ggplot2::element_text(size = base_size + hier$legend_text),
       legend.key = ggplot2::element_blank(),
-      legend.key.size = grid::unit(4.2, "mm"),
-      legend.spacing.x = grid::unit(1, "mm"),
+      legend.key.size = grid::unit(pp_style_number("spacing_mm.legend_key"), "mm"),
+      legend.spacing.x = grid::unit(pp_style_number("spacing_mm.legend_spacing_x"), "mm"),
       panel.grid.major = grid_major,
       panel.grid.minor = ggplot2::element_blank(),
       panel.border = ggplot2::element_blank(),
       strip.background = ggplot2::element_blank(),
-      strip.text = ggplot2::element_text(size = base_size, face = "bold"),
-      plot.title = ggplot2::element_text(size = base_size + 1, face = "bold"),
-      plot.subtitle = ggplot2::element_text(size = base_size),
-      plot.caption = ggplot2::element_text(size = base_size - 1, colour = "#6A6A6A"),
+      strip.text = ggplot2::element_text(size = base_size + hier$strip_text, face = "bold"),
+      plot.title = ggplot2::element_text(size = base_size + hier$plot_title, face = "bold"),
+      plot.subtitle = ggplot2::element_text(size = base_size + hier$plot_subtitle),
+      plot.caption = ggplot2::element_text(size = base_size + hier$plot_caption, colour = "#6A6A6A"),
       plot.title.position = "plot",
-      plot.margin = ggplot2::margin(6, 6, 6, 6)
+      plot.margin = ggplot2::margin(
+        pp_style_number("spacing_mm.plot_margin"), pp_style_number("spacing_mm.plot_margin"),
+        pp_style_number("spacing_mm.plot_margin"), pp_style_number("spacing_mm.plot_margin")
+      )
     )
+  # Geom-level text must inherit the manuscript typography too; otherwise any
+  # geom_text()/annotate() added without an explicit size= renders at ggplot2's
+  # ~11 pt default on a 7 pt figure (the classic "one giant label" failure).
+  geom_text_size <- base_size / ggplot2::.pt
+  tryCatch(
+    {
+      ggplot2::update_geom_defaults("text", list(size = geom_text_size, family = base_family))
+      ggplot2::update_geom_defaults("label", list(size = geom_text_size, family = base_family))
+    },
+    error = function(e) NULL
+  )
+  out
+}
+
+# Re-apply the house theme LAST so ad-hoc theme() tweaks cannot silently
+# override typography/line-width standards. Apply on the final composite
+# object just before saving; keep deliberate per-panel tweaks inside the
+# validate-skill whitelist.
+pp_finalize <- function(plot, ...) {
+  plot + pp_theme(...)
 }
 
 pp_palette <- function(n, palette = "graphpad_discrete", reverse = FALSE, alpha = 1) {
@@ -620,6 +709,41 @@ pp_default_device <- function(filename) {
   NULL
 }
 
+# Smallest themed/labelled text size in points for a ggplot object.
+# Theme element sizes are absolute pt when set numerically; geom text/label
+# layer sizes are in geom units and convert via ggplot2::.pt.
+pp_theme_text_sizes_pt <- function(plot) {
+  sizes <- numeric(0)
+  if (inherits(plot, "ggplot") && !is.null(plot$theme)) {
+    for (name in names(plot$theme)) {
+      el <- plot$theme[[name]]
+      if (inherits(el, "element_text") && !inherits(el$size, "rel")) {
+        s <- suppressWarnings(as.numeric(el$size))
+        sizes <- c(sizes, s[!is.na(s)])
+      }
+    }
+  }
+  sizes
+}
+
+pp_layer_text_sizes_pt <- function(plot) {
+  sizes <- numeric(0)
+  if (inherits(plot, "ggplot") && !is.null(plot$layers)) {
+    for (lr in plot$layers) {
+      if (inherits(lr$geom, "GeomText") || inherits(lr$geom, "GeomLabel")) {
+        s <- lr$aes_params$size %||% lr$geom$default_aes$size
+        if (is.numeric(s)) sizes <- c(sizes, s * ggplot2::.pt)
+      }
+    }
+  }
+  sizes
+}
+
+pp_min_rendered_text_pt <- function(plot) {
+  all_sizes <- c(pp_theme_text_sizes_pt(plot), pp_layer_text_sizes_pt(plot))
+  if (length(all_sizes)) min(all_sizes) else NA_real_
+}
+
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
                          dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE, ...) {
   if (!isTRUE(overwrite) && file.exists(filename)) {
@@ -627,6 +751,18 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
   }
   dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
   preset_values <- pp_output_preset(preset)
+  # Save-time gate (WP2): enforce the preset's promised minimum text size.
+  # min_text_pt was defined on every output preset but never consumed; this
+  # warning makes the floor real. Silence with PAPERPLOT_ALLOW_SMALL_TEXT=1.
+  floor_pt <- preset_values$min_text_pt
+  min_pt <- tryCatch(pp_min_rendered_text_pt(plot), error = function(e) NA_real_)
+  allow_small <- identical(Sys.getenv("PAPERPLOT_ALLOW_SMALL_TEXT"), "1")
+  if (!allow_small && !is.na(min_pt) && !is.null(floor_pt) && min_pt < floor_pt - 0.01) {
+    warning(sprintf(
+      "Text-size floor violated for '%s': smallest themed/labelled text is %.2f pt but preset '%s' requires >= %g pt. Raise base_size/label sizes, or set PAPERPLOT_ALLOW_SMALL_TEXT=1 to silence.",
+      basename(filename), min_pt, preset, floor_pt
+    ), call. = FALSE)
+  }
   device <- pp_default_device(filename)
   ggplot2::ggsave(
     filename = filename,
