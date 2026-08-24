@@ -52,7 +52,7 @@ rel <- rel[, c("panel", "x", "value", "color_group")]
 effect_parts <- lapply(mode_levels, function(mode) {
   d <- df[df[[mode_col]] == mode, , drop = FALSE]
   es <- if (length(unique(d[[group_col]])) == 2) pp_effect_size(d, group_col = group_col, value_col = value_col, method = "mean_difference") else data.frame(method = "mean_difference", group_a = NA, group_b = NA, estimate = NA, ci_low = NA, ci_high = NA, stringsAsFactors = FALSE)
-  data.frame(panel = "D. Group effect size", x = mode, value = es$estimate, color_group = "effect", stringsAsFactors = FALSE)
+  data.frame(panel = "D. Group effect size", x = mode, value = es$estimate, color_group = NA_character_, stringsAsFactors = FALSE)
 })
 effect <- do.call(rbind, effect_parts)
 plot_df <- rbind(burden[, c("panel", "x", "value", "color_group")], frac, rel, effect)
@@ -79,7 +79,7 @@ plot <- ggplot(plot_df, aes(x = x, y = value, color = color_group)) +
   geom_hline(data = data.frame(panel = factor("D. Group effect size", levels = levels(plot_df$panel))), aes(yintercept = 0), inherit.aes = FALSE, linetype = "dashed", linewidth = 0.3, color = "#555555") +
   geom_point(position = position_jitter(width = 0.12, height = 0), size = 1.55, alpha = 0.82) +
   facet_wrap(~panel, scales = "free", ncol = 2) +
-  pp_scale_color(unique(plot_df$color_group)) +
+  pp_scale_color(stats::na.omit(unique(plot_df$color_group))) +
   labs(x = NULL, y = NULL, color = "Group") +
   pp_theme(base_size = 7) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")

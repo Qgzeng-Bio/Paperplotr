@@ -201,7 +201,7 @@ pp_recipe_plot <- function(recipe_id, df = pp_recipe_mock_data(recipe_id)) {
     return(ggplot2::ggplot(df, ggplot2::aes(x, y, colour = group)) +
       ggplot2::geom_point(size = 1.0, alpha = 0.62) +
       ggplot2::geom_smooth(method = "lm", se = TRUE, linewidth = 0.45, alpha = 0.14) +
-      pp_scale_color(levels(df$group)) + pp_theme(base_size = 7, show_grid = TRUE) +
+      pp_scale_color(levels(df$group)) + pp_theme(base_size = 7, show_grid = FALSE) +
       ggplot2::labs(x = "Predictor (a.u.)", y = "Response (a.u.)", colour = "Group"))
   }
 
@@ -477,7 +477,7 @@ pp_recipe_plot <- function(recipe_id, df = pp_recipe_mock_data(recipe_id)) {
     }
     plot <- ggplot2::ggplot(df, ggplot2::aes(x, y, colour = group)) +
       {if (grepl("bubble", recipe_id)) ggplot2::geom_point(ggplot2::aes(size = count), alpha = 0.62) else ggplot2::geom_point(size = 1.0, alpha = 0.62)} +
-      pp_scale_color(levels(df$group)) + pp_theme(base_size = 7, show_grid = TRUE) +
+      pp_scale_color(levels(df$group)) + pp_theme(base_size = 7, show_grid = FALSE) +
       ggplot2::labs(x = "Predictor (a.u.)", y = "Response (a.u.)", colour = "Group")
     if (grepl("regression|labelled|ci", recipe_id)) plot <- plot + ggplot2::geom_smooth(method = "lm", se = TRUE, linewidth = 0.42, alpha = 0.14)
     if (grepl("labelled", recipe_id)) plot <- plot + ggplot2::geom_text(data = df[df$label != "", ], ggplot2::aes(label = label), size = 1.7, vjust = -0.6, check_overlap = TRUE, colour = "#202020")

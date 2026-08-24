@@ -205,11 +205,8 @@ plot <- plot +
   labs(x = NULL, y = NULL) +
   pp_theme(base_size = 7, show_grid = FALSE) +
   theme(
-    axis.line = element_blank(),
-    axis.ticks = element_blank(),
     axis.text.x = element_text(face = "bold", margin = margin(b = 2)),
     axis.text.y = element_text(hjust = 1, margin = margin(r = 4)),
-    panel.border = element_rect(fill = NA, colour = "#2D2D2D", linewidth = 0.35),
     legend.position = "right",
     legend.box = "vertical",
     plot.margin = margin(3, 3, 3, 5)
