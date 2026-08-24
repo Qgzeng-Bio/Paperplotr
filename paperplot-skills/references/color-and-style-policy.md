@@ -48,3 +48,23 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 - Scatter/regression: neutral cloud plus sparse highlights; fit line not brighter than the data.
 - Volcano/MA: gray background, directional accents, strict label budget.
 - Multi-panel: one shared group palette; separate heatmap scale only when it encodes a different data role.
+
+## Style Registry and Global Overrides
+
+All typography, line-width, point-size, and spacing constants live in
+`pp_style_registry()` (scripts/paperplot_helpers.R). Templates consume them via
+`pp_theme()`/`pp_finalize()`; literal overrides outside the registry are style drift.
+
+Session-wide overrides (apply to every template without editing code):
+
+- `options(paperplot.base_size = 8)` or `PAPERPLOT_BASE_SIZE=8`
+- Same pattern for any dotted path: `paperplot.line_widths_grid_major`,
+  `paperplot.point_sizes_dense`, `paperplot.spacing_mm_legend_key`, ...
+
+Export gates in `pp_save_plot()`:
+
+- Text-size floor: if the smallest themed/labelled text is below the preset's
+  `min_text_pt`, a warning names the offending size and the fix. Silence with
+  `PAPERPLOT_ALLOW_SMALL_TEXT=1` only for deliberate diagnostic figures.
+- Geom-level text inherits `base_size`/family automatically; do not pass raw
+  `size=` to `geom_text()` unless intentionally deviating (then document it).

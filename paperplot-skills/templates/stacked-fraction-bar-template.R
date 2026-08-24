@@ -16,7 +16,7 @@ pp_run_recipe_template(
   family_label = "stacked bar / fraction composition",
   input_path = input_path,
   output_dir = output_dir,
-  width_cm = 8.9,
+  width_cm = 9.0,
   height_cm = 6.0,
   y_label = "Fraction of total"
 )

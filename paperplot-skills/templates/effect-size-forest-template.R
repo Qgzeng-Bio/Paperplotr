@@ -73,8 +73,15 @@ statistical_plan <- list(
   effect_table = effect_df
 )
 
-label_strategy <- pp_label_strategy_v2(metric_levels, figure_role = figure_role, available_width_cm = 18, sample_identity_role = "core")
+label_strategy <- pp_label_strategy_v2(metric_levels, figure_role = figure_role, available_width_cm = 9, sample_identity_role = "core")
 visual_budget <- pp_visual_budget(figure_role = figure_role, n_panels = 1, n_labels = length(metric_levels), n_legend_entries = 2)
+
+# Truthful 9 cm canvas moves dense metric sets onto the rank-index contract:
+# when the strategy demands a key, write the label-key sidecar and reference it
+# in notes/metadata instead of silently keeping full labels.
+label_key_path <- paste0(output_stem, "_label_key.csv")
+rank_map <- if (isTRUE(label_strategy$needs_label_key)) pp_rank_index_map(metric_levels) else NULL
+if (!is.null(rank_map)) pp_write_label_key(label_key_path, rank_map)
 
 design_brief <- pp_design_brief(
   scientific_message = scientific_message,
@@ -129,7 +136,8 @@ pp_write_notes(
     "Code recipe link: forest_effect_size.",
     "Effect size and interval are the primary visual expression.",
     "P-value stars are avoided in the main forest plot.",
-    "Raw group distributions are moved to metadata or supporting figures."
+    "Raw group distributions are moved to metadata or supporting figures.",
+    if (!is.null(rank_map)) "Metric names moved to a label-key sidecar; main axis shows rank indices." else NULL
   ),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "Intervals are simple approximate confidence intervals from available group values; confirm method before final submission.",
@@ -156,6 +164,7 @@ pp_write_metadata(
   data_profile = data_profile,
   visual_budget = visual_budget,
   label_strategy = label_strategy,
-  statistical_plan = statistical_plan
+  statistical_plan = statistical_plan,
+  sidecars = if (!is.null(rank_map)) list(label_key = basename(label_key_path)) else list()
 )
 pp_write_qa_report(qa_path, qa_results)
