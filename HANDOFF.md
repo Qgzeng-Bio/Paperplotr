@@ -1,8 +1,92 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
-Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
-Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
+Last updated: 2026-08-24 (WP1-WP8 one-shot figure quality optimization round)
+Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
+
+---
+
+## 2026-08-24 — One-shot Figure Quality Optimization (WP1-WP8)
+
+Driver: real-world usage showed unified typography / line widths / panel
+sizes / legend placement underperforming, with text-element overlap
+surviving QA. Audit found the root cause was architectural: consistency
+rules were advisory only, several core features were dead code, and QA
+was an open loop (detect-but-no-repair). Eight work packages were
+implemented and committed.
+
+### Commits in this round
+
+```text
+235bc49 Ignore local analysis, third-party replica archive, regenerable assets
+7175d91 Refresh QA/benchmark reports and handoff docs
+b045d1c Code-recipe system + 15 new templates (20 -> 35)
+90e9c79 Visual QA engine upgrade (detail/family/gold-rubric)
+41ea7ec Benchmark, auto-QA-mining, replica-audit toolchain
+a2ad506 WP1+WP2 Style registry and save-time gates
+7ffc245 WP3 Legend coordinator (placement planner + shared-guide fix)
+6c1e120 WP4 Overlap prevention layer (ggrepel labels)
+6c72a31 WP5 Vector overlap detection promoted; severity fixes
+87e39bd WP6 Closed-loop QA auto-fix
+c1a5814 WP7 Template hygiene sweep
+```
+
+### Engine changes
+
+- `pp_style_registry()` (WP1): single source of truth for base_size,
+  font hierarchy, line widths, point-size roles, spacing constants.
+- `pp_style_number(path)` (WP1): `options(paperplot.*)` / `PAPERPLOT_*`
+  env overrides resolve session-wide; e.g. options(paperplot.base_size=8).
+- `pp_theme()` consumes the registry and calls update_geom_defaults()
+  for text/label so geom-level text inherits manuscript typography
+  (kills the ~11pt giant-label failure). Helper version standalone-0.4.0.
+- `pp_finalize(plot)` (WP1): opt-in last-word theme application.
+- Save-time gate (WP2): pp_save_plot consumes min_text_pt (was defined
+  on every preset, read nowhere); warns when smallest themed/labelled
+  text is under the floor; silence via PAPERPLOT_ALLOW_SMALL_TEXT=1.
+- Legend coordinator (WP3): pp_shared_guide_plan tautology fixed;
+  pp_legend_plan() estimates physical footprint pre-render (calibrated
+  on PDF text bboxes; per-label sums; adaptive key shrink >12 entries);
+  pp_apply_legend_plan() dual-mode; pp_extract_legend() experimental.
+- Overlap prevention (WP4): volcano/ma/bio-genome-quality use
+  ggrepel::geom_text_repel when available (seeded), check_overlap
+  fallback otherwise; all top-N labels survive render. Burden score
+  records optional systemfonts exact_score without loosening gates.
+- Vector overlap detection (WP5): one true pairwise word-box overlap
+  warns (was silent until >3 / >3%); widespread overlap fails under
+  --strict-detail-qa; strict flag threaded through SVG+PDF paths;
+  ocr_text_overlap_risk added to family-score BLOCKING_RISKS.
+- Closed-loop auto-fix (WP6): MACHINE_FIXES whitelist emitted as
+  image_qa.machine_fixes; R gains pp_locate_qa_script(),
+  pp_run_visual_qa(), pp_apply_machine_fixes(), and
+  pp_save_all_with_qa_loop(max_iterations=1); degrades to plain save
+  when python3/script/jsonlite unavailable.
+
+### Template/recipe changes
+
+- run-template-recipe reports presets matching exported canvas dims.
+- stacked-fraction normalized to 9.0x6.0 (nature_half exact).
+- manhattan 18x7 override records canvas_override_reason in metadata.
+- effect-size forest: truthful 9 cm label budget; dense metric sets now
+  correctly trigger the rank-index contract and write the sidecar.
+- volcano/ma/manuscript-four-panel consume pp_legend_plan.
+- recipes scatter grids OFF; enrichment-dotplot uses shared graphpad_
+  heatmap ramp; compact-dot-matrix drops its library-only panel.border;
+  bio-duplication panel D no longer injects a pseudo legend level.
+
+### Validation state
+
+validate-skill passes; smoke 35/35; visual-pressure suite exit 0 with
+30/30 scenarios passing (two stale SVG fixture scenarios repaired by
+making the fixture genuinely presentation-scale: 110px title and 14px
+stroke at a 1200px canvas).
+
+### Known leftovers
+
+- qa_iterations/machine-fix attributes are not yet wired into the
+  *_metadata.json schema (schema bump pending).
+- Family threshold overrides still cover only the original five families.
+- ggrepel/systemfonts stay optional; exact-width burden data collection
+  is passive by design (gates intentionally unchanged).
 
 ---
 
