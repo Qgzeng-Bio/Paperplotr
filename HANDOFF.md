@@ -1,6 +1,6 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-08-24 (standalone-0.4.1 contract hardening and verified QA loop)
+Last updated: 2026-08-24 (standalone-0.4.1 pushed; GitHub CI and Pages verified green)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
 
 ---
@@ -58,6 +58,53 @@ old-vs-new scenarios             4/4 pass
 QA remediation coverage          50 emitted codes; all covered/exempted
 ```
 
+### Git and GitHub state
+
+The complete local development line and the standalone-0.4.1 hardening are now
+on `origin/main`. There is no local/remote divergence at this handoff update.
+
+```text
+84cd6b9 Harden standalone PaperPlot QA contract
+dd736c9 Fix pkgdown reference index
+verified implementation/config tip = dd736c929835c94cfe0b1809bf4f9b4d416158f2
+```
+
+This handoff continuation is documentation-only and may advance `main` beyond
+that implementation tip without changing the validated runtime.
+
+The first push at `84cd6b9` verified the skill-specific paths:
+
+- `paperplot-skills`: success, including standalone contract validation and
+  the 35-template smoke test.
+- `skill-remote-install`: success.
+- `R-CMD-check`, `lint`, and `test-coverage`: success.
+
+That push exposed one pre-existing package-site configuration defect:
+`paperplot_principles` and `theme_clean_composite` were exported but absent from
+the `_pkgdown.yml` reference index. Commit `dd736c9` added both topics. The
+follow-up GitHub run completed successfully:
+
+- `R-CMD-check`: success on Ubuntu, macOS, and Windows.
+- `lint`: success.
+- `test-coverage`: success.
+- `pkgdown`: success; artifact upload and GitHub Pages deployment succeeded.
+
+GitHub Actions emitted only Node.js 20 deprecation annotations for upstream
+actions; these were warnings, not repository test or build failures.
+
+Current verified workflow runs:
+
+- skill: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705136039`
+- remote install: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705136122`
+- R CMD check: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705638162`
+- lint: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705638140`
+- coverage: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705638151`
+- pkgdown and Pages: `https://github.com/Qgzeng-Bio/Paperplotr/actions/runs/32705638217`
+
+Important release boundary: `main` contains standalone-0.4.1, but no new
+release tag was created in this round. The existing public `v0.1.0` tag remains
+the older pinned release described below.
+
 The runtime automatically selected `/opt/miniconda3/bin/python` on this Mac
 because the earlier PATH-first `python3` lacks Pillow. `PAPERPLOT_PYTHON`
 remains the portable explicit override.
@@ -80,6 +127,10 @@ validation passes when invoked outside the repository working directory.
 ---
 
 ## 2026-08-24 — One-shot Figure Quality Optimization (WP1-WP8)
+
+Historical snapshot only. The `update_geom_defaults()`, warning-only text
+floor, optional QA-loop, metadata gap, and `30/30` validation claims in this
+section were audited and superseded by standalone-0.4.1 above.
 
 Driver: real-world usage showed unified typography / line widths / panel
 sizes / legend placement underperforming, with text-element overlap
@@ -147,12 +198,13 @@ c1a5814 WP7 Template hygiene sweep
   heatmap ramp; compact-dot-matrix drops its library-only panel.border;
   bio-duplication panel D no longer injects a pseudo legend level.
 
-### Validation state
+### Validation state (historical; superseded)
 
-validate-skill passes; smoke 35/35; visual-pressure suite exit 0 with
-30/30 scenarios passing (two stale SVG fixture scenarios repaired by
-making the fixture genuinely presentation-scale: 110px title and 14px
-stroke at a 1200px canvas).
+The WP1-WP8 round reported validate-skill pass, smoke 35/35, and visual-pressure
+30/30. The later audit found that five missing private fixtures were represented
+by a truthy `"skipped"` value and therefore counted as passes. The corrected
+standalone-0.4.1 result is 26/26 executed visual scenarios passing, with five
+private fixtures reported separately as skipped.
 
 ### Known leftovers
 
