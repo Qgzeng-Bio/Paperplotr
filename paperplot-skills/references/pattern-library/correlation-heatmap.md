@@ -84,3 +84,12 @@ No immediate new template; upgrade heatmap metadata with matrix method, transfor
 ## Old-vs-New Criteria
 
 Improvement means matrix ordering is clearer, color scale semantics are stronger, label burden is lower, and the new plot does not hide important row/column groups.
+
+## Detail QA Rules
+
+- Heatmaps may legitimately have high line/cell density; interpret `grid_background_burden` through the heatmap family profile before failing.
+- Cell borders should be thin or absent unless they improve lookup reading.
+- Row/column labels are the main collision risk. Dense labels should move to selective labels, sidebars, or supplement.
+- Colorbars must be compact and semantically named; oversized legends trigger `legend_dominates_panel`.
+- Numeric cell labels and significance stars should not both dominate the same matrix.
+- Diverging palettes need a meaningful midpoint; sequential palettes need ordered magnitude semantics.

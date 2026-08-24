@@ -171,6 +171,7 @@ pp_write_notes(
   output_files = outputs,
   preset = figure_spec$output_preset,
   design_decisions = c(
+    "Code recipe link: model_validation_composite.",
     "Three-panel composite follows the model-validation pattern: fit, residuals, and performance summary.",
     "Reference lines are dashed and low-weight to support interpretation without dominating the panel.",
     "RMSE and interval details are preserved in metadata rather than overloading the visible figure."

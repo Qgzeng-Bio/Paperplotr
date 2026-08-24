@@ -27,13 +27,15 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 4. Write a design brief.
 5. Define `figure_spec` and `metric_spec`.
 6. Create a pattern-based design plan.
-7. Apply visual budget, proportional layout, and label/legend/panel burden checks.
-8. Render/export PDF and PNG.
-9. Perform image-level QA and Nature guardrail review when an image is available.
-10. If old and new figures exist, perform old-vs-new comparison.
-11. If the new figure is not objectively better, iterate or state the blocker.
-12. Write notes, metadata JSON, QA report, visual QA, and conditional sidecars.
-13. Report remaining scientific and manuscript-readiness risks.
+7. Query `references/plot-grammar-atoms.md` and the code recipe manifest before writing new plot code.
+8. Select a production template, executable recipe, optional backend plan, or diagnostic benchmark path.
+9. Apply visual budget, proportional layout, and label/legend/panel burden checks.
+10. Render/export PDF and PNG.
+11. Perform image-level QA, detail QA, and Nature guardrail review when an image is available.
+12. If old and new figures exist, perform old-vs-new comparison.
+13. If the new figure is not objectively better, iterate or state the blocker.
+14. Write notes, metadata JSON, QA report, visual QA, and conditional sidecars.
+15. Report remaining scientific and manuscript-readiness risks.
 
 ## Input Handling
 
@@ -112,31 +114,19 @@ Use `references/figure-type-selector.md`, `references/figure-type-quality-rubric
 - If there is no data, only diagnose and propose redraw strategy; do not claim a faithful data-backed redraw.
 - If data and code exist, redraw and verify instead of stopping at critique.
 - Every redesign should record the selected pattern document in metadata.
+- When the requested family matches a learned code pattern, consult `references/code-recipe-contract.md`, `references/code-recipes/recipe-library.md`, and `recipes/recipe_manifest.csv` before writing new plotting code.
 
 ## Templates
 
 Choose and adapt one template:
 
-- `templates/single-panel-template.R`
-- `templates/multi-panel-template.R`
-- `templates/comparison-boxplot-template.R`
-- `templates/violin-dot-template.R`
-- `templates/correlation-scatter-template.R`
-- `templates/heatmap-template.R`
-- `templates/pca-scatter-template.R`
-- `templates/barplot-template.R`
-- `templates/multi-metric-small-multiples-template.R`
-- `templates/rank-plus-key-metrics-template.R`
-- `templates/manuscript-four-panel-template.R`
-- `templates/grouped-boxplot-jitter-template.R`
-- `templates/paired-comparison-template.R`
-- `templates/effect-size-forest-template.R`
-- `templates/bio-genome-quality-overview-template.R`
-- `templates/bio-duplication-mode-comparison-template.R`
-- `templates/volcano-plot-template.R`
-- `templates/ma-plot-template.R`
-- `templates/enrichment-dotplot-template.R`
-- `templates/model-validation-composite-template.R`
+- General and layout: `single-panel`, `multi-panel`, `manuscript-four-panel`, `multi-metric-small-multiples`, `rank-plus-key-metrics`.
+- Group comparison: `comparison-boxplot`, `grouped-boxplot-jitter`, `paired-comparison`, `violin-dot`, `raincloud`, `barplot`, `bar-dot-errorbar`, `stacked-fraction-bar`.
+- Association, ordination, and matrix: `correlation-scatter`, `labelled-regression`, `pca-scatter`, `pcoa-marginal`, `heatmap`, `annotated-heatmap`, `matrix-dotplot`.
+- Bio/omics: `volcano-plot`, `ma-plot`, `enrichment-dotplot`, `compact-dot-matrix-enrichment`, `manhattan-plot`.
+- Summaries, spatial, and validation: `effect-size-forest`, `model-validation-composite`, `time-series-ribbon`, `ridgeline-density`, `lollipop-ranked`, `upset-summary`, `network-summary`, `spatial-distribution`, `bio-genome-quality-overview`, `bio-duplication-mode-comparison`.
+
+The code recipe layer now has 80+ manifest entries. Use production recipes for normal redraws; use optional-backend/reference recipes for complex heatmaps, circos, maps, trees, networks, UpSet, genome tracks, or synteny-like figures only when required data structures and packages are available.
 
 All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG, and write notes, metadata, QA, and required sidecars.
 
@@ -144,7 +134,9 @@ All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, expo
 
 Rendered-image QA is mandatory after generating or modifying a figure. Do not claim manuscript readiness from code, notes, or metadata alone.
 
-Use `references/visual-perception-qa.md` and `references/nature-figure-guardrails.md`, then run:
+Use `references/visual-perception-qa.md`, `references/visual-detail-qa-spec.md`,
+`references/nature-figure-detail-rubric.md`, and
+`references/nature-figure-guardrails.md`, then run:
 
 ```bash
 ${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
@@ -166,7 +158,25 @@ For multi-panel figures, pass explicit layout expectations whenever possible:
 ${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --expected-panels 2 --layout-profile equal
 ```
 
-Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbalance`, and `unjustified_panel_hierarchy_risk` are manuscript layout risks, not cosmetic nits.
+For Nature-like detail review, pass target-size expectations:
+
+```bash
+python3 scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --target-width-mm 89 --journal-profile nature --allow-grid auto
+```
+
+The detail QA layer must inspect text/data collision, tick label crowding, target-size font risk, stroke burden, grid-background burden, legend dominance, panel data-region mismatch, and excessive panel padding. Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbalance`, `panel_data_region_mismatch`, and `unjustified_panel_hierarchy_risk` are manuscript layout risks, not cosmetic nits.
+
+For SVG/PDF inputs, treat vector text and stroke extraction as stronger evidence than raster heuristics. SVG reports true font/stroke distributions; PDF text boxes use `pdftotext -bbox`, and PDF strokes/paths use `pypdf` content-stream parsing when available.
+
+When the figure family is known or inferred, add family-specific scoring:
+
+```bash
+python3 scripts/family-qa-score.py --qa-json <qa_dir>/visual_qa.json --out <qa_dir>/family_qa.json
+```
+
+Family scoring prevents ordinary statistical-plot thresholds from incorrectly failing heatmaps, tree rings, maps, networks, or other specialized layouts, while keeping text overlap and severe panel imbalance as blocking manuscript risks.
+
+When `references/gold-human-calibration-rules.json` exists, family QA also reports whether the figure family is supported by local human-scored positive examples. Treat generic ordination/PCA/PCoA plots as baseline/caution unless they show stronger manuscript hierarchy than the current gold set.
 
 Strict Nature failures are revision blockers unless the accepted hierarchy or dense family-specific structure is explicitly justified in notes and metadata.
 
@@ -190,7 +200,9 @@ When old and new rendered images both exist, run:
 ${PAPERPLOT_PYTHON:-python3} scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir> --new-strict-nature
 ```
 
-The comparison writes `old_vs_new_review_template.json`. Without a completed review JSON, the final verdict must remain `human-review-required`; deterministic visual metrics alone cannot prove that the scientific message is clearer. If the new figure has worse visual burden, severe panel geometry risk, or a lower manuscript-readiness score, do not present it as final.
+The comparison writes `old_vs_new_review_template.json`. Without a completed review JSON, the final verdict can at most be `deterministic_better_pending_human_review`; deterministic visual metrics alone cannot prove that the scientific message is clearer. If the new figure has worse visual burden, severe panel geometry/detail risk, or a lower manuscript-readiness score, do not present it as final.
+
+Optional vision-model review may be used only through `scripts/vision-review-adapter.py` as a second opinion. It is not a default dependency and cannot override deterministic hard failures.
 
 Only identifying that a figure is bad is not enough. With data/code, produce a better pattern-based candidate, run QA, compare old-vs-new, and continue iterating until the tradeoff is explicit.
 

@@ -95,7 +95,8 @@ design_plan <- pp_design_plan(
   palette_plan = list(color_role = "effect direction", positive = "#2F6DB3", negative = "#B54A47"),
   statistical_plan = statistical_plan,
   visible_simplifications = c("Display effect sizes and intervals instead of p-value stars."),
-  risks = character()
+  risks = c("Confirm interval method and reference group before final manuscript use."),
+  pattern_reference = pp_pattern_reference("effect_size_forest", template_id = "effect-size-forest-template", source = "code-recipe-library")
 )
 
 plot <- ggplot(effect_df, aes(y = metric, x = estimate)) +
@@ -125,6 +126,7 @@ pp_write_notes(
   output_files = outputs,
   preset = figure_spec$output_preset,
   design_decisions = c(
+    "Code recipe link: forest_effect_size.",
     "Effect size and interval are the primary visual expression.",
     "P-value stars are avoided in the main forest plot.",
     "Raw group distributions are moved to metadata or supporting figures."

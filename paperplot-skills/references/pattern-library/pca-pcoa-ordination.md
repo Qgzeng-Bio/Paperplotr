@@ -55,6 +55,12 @@ Derived from ordination replica cases with group ellipses, marginal boxplots, PE
 
 Ordination figures should communicate structure and uncertainty without pretending the 2D projection is the original data.
 
+## Human Gold Calibration
+
+The current 30-case gold-set scoring judged the available PCA/PCoA/ordination examples as readable but visually generic, with a family mean of 3.0/5 and exclusion from positive calibration. Use ordinary ordination plots as baseline/reference examples, not as high-quality Nature-like exemplars.
+
+To become a positive manuscript-style exemplar, an ordination figure should add at least one clear improvement over a generic point cloud: refined proportional layout, compact but informative legend, selective labels, method/variance or stress semantics, PERMANOVA/ANOSIM context, marginal distribution panels that do not distort panel balance, or multi-panel integration with a clear scientific hierarchy.
+
 ## Existing Templates
 
 - `pca-scatter-template.R`
@@ -71,6 +77,7 @@ Consider `pcoa-marginal-template.R` after the pattern-library work, especially f
 - Sample labels are selective or moved to sidecar.
 - Legend does not dominate the data cloud.
 - Batch/group semantics are separated.
+- A plain default PCA/PCoA scatter should not be considered a Nature-like positive calibration sample merely because it is readable.
 
 ## Visual QA Focus
 
@@ -81,3 +88,12 @@ Consider `pcoa-marginal-template.R` after the pattern-library work, especially f
 ## Old-vs-New Criteria
 
 Improvement means the sample cloud is larger and clearer, group semantics are documented, labels are less burdensome, and statistical annotations are readable but not dominant.
+
+## Detail QA Rules
+
+- Light grids are optional and usually unnecessary; axes and percent variance labels are more important.
+- Labels should be selective. Dense sample labels over point clouds trigger `text_data_overlap_risk`.
+- Ellipses/hulls should not obscure outliers or imply unsupported statistics.
+- Marginal panels or legends must not shrink the ordination cloud unevenly.
+- Legends should encode group, batch, or treatment once and remain compact.
+- Axis titles must state ordination method and explained variance or distance semantics when available.

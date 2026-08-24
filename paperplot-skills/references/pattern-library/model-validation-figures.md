@@ -85,3 +85,12 @@ No immediate new template is required for the core fit/residual/performance work
 ## Old-vs-New Criteria
 
 Improvement means calibration, residual, and metric evidence are easier to compare, model failures are not hidden, and the visual hierarchy emphasizes validation over decoration.
+
+## Detail QA Rules
+
+- Point-range and calibration panels are often sparse; do not fail low density without checking metric semantics.
+- Equal-role model comparison panels need matched x/y scales and data-region sizes.
+- Error bars, confidence bands, and reference lines must be thin and named.
+- Gridlines may be light for calibration/residual reading but should not dominate.
+- Legends should be stable across model panels and should not exceed the data area.
+- Text labels should identify only priority models/traits; dense labels move to tables or notes.

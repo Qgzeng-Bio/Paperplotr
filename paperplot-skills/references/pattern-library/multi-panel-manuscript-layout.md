@@ -94,3 +94,12 @@ No immediate new template. Existing multi-panel templates need stronger panel hi
 ## Old-vs-New Criteria
 
 Improvement means the figure story is clearer, repeated legends/titles are reduced, primary evidence gains space, equal-role panels remain proportionally balanced, and all panels remain readable at target width.
+
+## Detail QA Rules
+
+- Equal-role panels require equal panel boxes and comparable data-region sizes; `panel_data_region_mismatch` is a layout failure.
+- Hierarchical panels are allowed only when primary/supporting roles are explicit in notes.
+- Repeated legends, repeated titles, and inconsistent axis text create visual hierarchy noise.
+- Panel labels should be consistent in size, position, and casing.
+- Panel spacing should be tight but not cramped; excessive internal padding should be fixed by re-exporting panels to the intended box.
+- Old-vs-new comparison must include panel geometry delta before claiming improvement.

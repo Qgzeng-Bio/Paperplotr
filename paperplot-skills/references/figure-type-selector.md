@@ -29,6 +29,7 @@ If roles cannot be detected, profile the data and ask for the minimum missing fi
 | matrix values or correlations | heatmap/correlation matrix | `pattern-library/correlation-heatmap.md` |
 | ordination coordinates from multivariate data | PCA/PCoA/NMDS/UMAP | `pattern-library/pca-pcoa-ordination.md` |
 | feature-level effect + p-value | volcano/MA/enrichment | `pattern-library/volcano-ma-enrichment.md` |
+| categorical row x categorical class + signed effect + support count + significance | compact dot-matrix enrichment | `pattern-library/compact-dot-matrix-enrichment.md` |
 | ordered genome/locus coordinate + score | Manhattan/genome-wide | `pattern-library/manhattan-genomewide.md` |
 | tree topology + tip metadata | phylo annotation rings | `pattern-library/phylo-annotation-ring.md` |
 | set membership across multiple sets | UpSet/set plot | `pattern-library/upset-set-plot.md` |
@@ -38,6 +39,7 @@ If roles cannot be detected, profile the data and ask for the minimum missing fi
 
 ## Alternatives By Problem Shape
 
+- If the role set matches `recipes/recipe_manifest.csv`, select a code recipe before writing new ggplot code. Use production templates when available; otherwise render through `scripts/render-code-recipes.R` logic and adapt the recipe.
 - Small n group comparison: raw dot + interval, not summary bars alone.
 - Medium n distribution: violin/box/jitter or raincloud.
 - Large n distribution: density/ridgeline or summarized quantiles, with n and binning stated.
@@ -45,6 +47,7 @@ If roles cannot be detected, profile the data and ask for the minimum missing fi
 - Many metrics with mixed units: small multiples or rank-plus-key metrics; do not use one y-axis.
 - Paired data: paired plot with `paired_id`; never connect lines without pairing semantics.
 - Feature-level differential data: volcano/MA; enrichment terms should be a separate panel/table.
+- Categorical enrichment matrices with effect, count, and significance: compact dot-matrix enrichment, especially when ordinary bubble plots waste x-axis space.
 - Model validation: observed-vs-predicted plus residual/metric panel, not R2-only scatter.
 
 ## Not Recommended Conditions
@@ -84,6 +87,7 @@ Before plotting, write a short selection record in notes/metadata:
 
 - detected data roles;
 - selected figure family;
+- selected code recipe or reason no recipe was used;
 - pattern-library document consulted;
 - rejected alternatives and why;
 - main/supplement/diagnostic tier;
