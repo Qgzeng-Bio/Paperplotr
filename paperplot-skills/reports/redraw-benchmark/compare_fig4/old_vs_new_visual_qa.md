@@ -1,6 +1,6 @@
 # Old-vs-new visual QA
 
-- old: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
+- old: `~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
 - new: `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png`
 - media: `raster` -> `raster`
 - threshold profiles: `global` -> `model-validation`

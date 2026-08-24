@@ -1,0 +1,887 @@
+{
+  "rubric": [
+    "message_clarity",
+    "scientific_completeness",
+    "visual_hierarchy",
+    "proportional_balance",
+    "readability_at_target_size",
+    "statistical_expression",
+    "color_legend_discipline",
+    "data_preservation"
+  ],
+  "cases": [
+    {
+      "benchmark_id": "r_replica_014",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/NMDS.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/NMDS.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "ggplot2",
+        "vegan"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_090",
+      "case": "59.Nature复现-箱线图+扇形+半圆形",
+      "script": "59.Nature复现-箱线图+扇形+半圆形/boxplot_point.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.pdf",
+      "source_image_count": 7,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "boxplot / jitter",
+      "source_suitability": "production_recipe",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "ggbeeswarm",
+        "ggpubr",
+        "readxl",
+        "tidyr",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_010",
+      "case": "17.Nature复现-分组和弦图+外围条形图",
+      "script": "17.Nature复现-分组和弦图+外围条形图/group_chord_bar.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+      "source_image_count": 1,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/data1.xlsx",
+      "data_file_count": 2,
+      "figure_family": "circos / chord / circular",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "error",
+        "group",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "circlize",
+        "grid",
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [
+        "specialized_package",
+        "decorative_or_polar_layout"
+      ],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_059",
+      "case": "43.顶刊复现-散点图+线性回归",
+      "script": "43.顶刊复现-散点图+线性回归/scatter_plot2.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/43.顶刊复现-散点图+线性回归/scatter_plot2.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/scatter1.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/data1.xlsx",
+      "data_file_count": 2,
+      "figure_family": "enrichment / GSEA",
+      "source_suitability": "decorative_or_case_specific",
+      "benchmark_mode": "caution_diagnostic",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group"
+      ],
+      "packages": [
+        "RColorBrewer",
+        "ggplot2",
+        "ggpubr",
+        "ggrepel",
+        "grid",
+        "readxl"
+      ],
+      "risks": [
+        "case_specific_grob_layout"
+      ],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_007",
+      "case": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "script": "14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line_error_sig.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line_error_sig.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "coordinate",
+        "group",
+        "value"
+      ],
+      "packages": [
+        "ggpubr",
+        "patchwork",
+        "readxl",
+        "reshape2",
+        "rstatix",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "grid_and_legend_strict"
+    },
+    {
+      "benchmark_id": "r_replica_002",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "script": "10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.pdf",
+      "source_image_count": 4,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "heatmap / matrix",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample"
+      ],
+      "packages": [
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "matrix_density_allowed"
+    },
+    {
+      "benchmark_id": "r_replica_022",
+      "case": "22.Nature复现-堆积柱形图+哑铃图",
+      "script": "22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/data/family_depth.csv",
+      "data_file_count": 2,
+      "figure_family": "lollipop / dumbbell / dotplot",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample"
+      ],
+      "packages": [
+        "dplyr",
+        "ggplot2",
+        "patchwork"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_001",
+      "case": "1.柱状图-散点图-误差线-p值显著性",
+      "script": "1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.pdf",
+      "source_image_count": 3,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "map / spatial",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "error",
+        "group",
+        "value"
+      ],
+      "packages": [
+        "ggsignif",
+        "multcomp",
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_060",
+      "case": "44.Nature复现-RCS",
+      "script": "44.Nature复现-RCS/RCS_merge.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/44.Nature复现-RCS/RCS_merge.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/RCS.pdf",
+      "source_image_count": 1,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "multi-panel manuscript / other",
+      "source_suitability": "decorative_or_case_specific",
+      "benchmark_mode": "caution_diagnostic",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "metric",
+        "network",
+        "sample"
+      ],
+      "packages": [
+        "ggplot2",
+        "patchwork",
+        "readxl",
+        "rms",
+        "survival"
+      ],
+      "risks": [
+        "case_specific_grob_layout"
+      ],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_029",
+      "case": "29.Nature复现-渐变色桑基图",
+      "script": "29.Nature复现-渐变色桑基图/sankey_networkD3_v1.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/29.Nature复现-渐变色桑基图/sankey_networkD3_v1.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/29.Nature复现-渐变色桑基图",
+      "source_image": "",
+      "source_image_count": 0,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/29.Nature复现-渐变色桑基图/data1.xlsx",
+      "data_file_count": 2,
+      "figure_family": "network / sankey",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "error",
+        "group",
+        "sample"
+      ],
+      "packages": [
+        "htmlwidgets",
+        "networkD3",
+        "readxl",
+        "tidyverse",
+        "webshot"
+      ],
+      "risks": [
+        "specialized_package"
+      ],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_134",
+      "case": "77.Nature-对角线散点图+直方图",
+      "script": "77.Nature-对角线散点图+直方图/scatter_histogram.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/77.Nature-对角线散点图+直方图/scatter_histogram.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/readme.pdf",
+      "source_image_count": 3,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "phylogenetic tree",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "group"
+      ],
+      "packages": [
+        "ggpubr",
+        "grid",
+        "patchwork",
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [
+        "case_specific_grob_layout"
+      ],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_008",
+      "case": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
+      "script": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "raincloud / violin / jitter",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "network"
+      ],
+      "packages": [
+        "gghalves",
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_021",
+      "case": "21.Nature复现-渐变色山脊图+双向柱形图",
+      "script": "21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/data.csv",
+      "data_file_count": 1,
+      "figure_family": "ridgeline / density",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "ggridges",
+        "patchwork",
+        "tidyr",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_024",
+      "case": "25.Science+Cell复现-差异基因FC-FC散点图",
+      "script": "25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.pdf",
+      "source_image_count": 5,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/data/science.adk0775_data_s1.csv",
+      "data_file_count": 2,
+      "figure_family": "scatter / regression",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "coordinate",
+        "effect",
+        "error",
+        "feature",
+        "group",
+        "pvalue",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "ggplot2",
+        "ggrepel"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_112",
+      "case": "68.顶刊复现-upset图",
+      "script": "68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.pdf",
+      "source_image_count": 8,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/data2.xlsx",
+      "data_file_count": 2,
+      "figure_family": "upset / set plot",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "effect",
+        "error",
+        "feature",
+        "pvalue",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "ComplexUpset",
+        "ggplot2",
+        "readxl"
+      ],
+      "risks": [
+        "specialized_package"
+      ],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_011",
+      "case": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "script": "18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_gsea.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_gsea.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/data/Defining the KRAS- and ERK-dependent transcriptome in KRAS-mutant cancers(科研通-ablesci.com).pdf",
+      "source_image_count": 3,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/data/science.adk0775_data_s1.csv",
+      "data_file_count": 1,
+      "figure_family": "volcano / enrichment",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "coordinate",
+        "effect",
+        "error",
+        "feature",
+        "pvalue",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "dplyr",
+        "ggplot2",
+        "ggrepel"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    },
+    {
+      "benchmark_id": "r_replica_003",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "script": "10.Nature复现-添加显著性星号标记的热图/heatmap-significant.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/10.Nature复现-添加显著性星号标记的热图/heatmap-significant.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.pdf",
+      "source_image_count": 4,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/data.xlsx",
+      "data_file_count": 1,
+      "figure_family": "heatmap / matrix",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample"
+      ],
+      "packages": [
+        "cowplot",
+        "readxl",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "matrix_density_allowed"
+    },
+    {
+      "benchmark_id": "r_replica_004",
+      "case": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "script": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+      "source_image_count": 1,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/data.csv",
+      "data_file_count": 1,
+      "figure_family": "map / spatial",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "group",
+        "network"
+      ],
+      "packages": [
+        "ggExtra",
+        "ggsignif",
+        "grid",
+        "scales",
+        "tidyverse"
+      ],
+      "risks": [],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_005",
+      "case": "12.Nature复现-相关性热图+边缘条形图",
+      "script": "12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+      "source_image_count": 1,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/data/data.csv",
+      "data_file_count": 2,
+      "figure_family": "heatmap / matrix",
+      "source_suitability": "decorative_or_case_specific",
+      "benchmark_mode": "caution_diagnostic",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample",
+        "spatial",
+        "value"
+      ],
+      "packages": [
+        "corrplot",
+        "grid",
+        "tidyverse"
+      ],
+      "risks": [
+        "decorative_or_polar_layout"
+      ],
+      "expected_qa_profile": "matrix_density_allowed"
+    },
+    {
+      "benchmark_id": "r_replica_006",
+      "case": "13.Nature复现-倒三角相关性热图+层次聚类树",
+      "script": "13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+      "source_image_count": 1,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/data/data.csv",
+      "data_file_count": 2,
+      "figure_family": "heatmap / matrix",
+      "source_suitability": "decorative_or_case_specific",
+      "benchmark_mode": "caution_diagnostic",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "network",
+        "sample",
+        "spatial",
+        "value"
+      ],
+      "packages": [
+        "cowplot",
+        "factoextra",
+        "ggplotify",
+        "grid",
+        "reshape2",
+        "tidyverse"
+      ],
+      "risks": [
+        "decorative_or_polar_layout"
+      ],
+      "expected_qa_profile": "matrix_density_allowed"
+    },
+    {
+      "benchmark_id": "r_replica_009",
+      "case": "16.Nature复现-散点图+拟合曲线+均值+双向误差线",
+      "script": "16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/data.csv",
+      "data_file_count": 1,
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "group",
+        "network"
+      ],
+      "packages": [
+        "ggh4x",
+        "ggplot2",
+        "plyr"
+      ],
+      "risks": [],
+      "expected_qa_profile": "grid_and_legend_strict"
+    },
+    {
+      "benchmark_id": "r_replica_012",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "script": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.pdf",
+      "source_image_count": 4,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/data.csv",
+      "data_file_count": 1,
+      "figure_family": "map / spatial",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "group",
+        "value"
+      ],
+      "packages": [
+        "ggsignif",
+        "ggtext",
+        "grid",
+        "patchwork",
+        "reshape2",
+        "stringr",
+        "tidyverse"
+      ],
+      "risks": [
+        "case_specific_grob_layout"
+      ],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_013",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "script": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_violin.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_violin.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.pdf",
+      "source_image_count": 4,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/data.csv",
+      "data_file_count": 1,
+      "figure_family": "map / spatial",
+      "source_suitability": "specialized_reference",
+      "benchmark_mode": "specialized_diagnostic",
+      "dependency_tier": "optional_backend",
+      "input_roles": [
+        "group",
+        "value"
+      ],
+      "packages": [
+        "ggplot2",
+        "ggsignif",
+        "ggtext",
+        "grid",
+        "patchwork",
+        "stringr"
+      ],
+      "risks": [
+        "case_specific_grob_layout"
+      ],
+      "expected_qa_profile": "specialized_line_density_caution"
+    },
+    {
+      "benchmark_id": "r_replica_015",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/NMDS_box_dot_ANOSIM.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/NMDS_box_dot_ANOSIM.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "ggplot2",
+        "patchwork",
+        "vegan"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_016",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCA_FactoMineR.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCA_FactoMineR.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "FactoMineR",
+        "RColorBrewer",
+        "factoextra",
+        "ggplot2"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_017",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCA_ade4.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCA_ade4.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "RColorBrewer",
+        "ade4",
+        "ggplot2"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_018",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCoA.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCoA.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "ggplot2",
+        "vegan"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_019",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "script": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCoA_box_dot_PERMANOVA.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/scripts/PCoA_box_dot_PERMANOVA.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.pdf",
+      "source_image_count": 12,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/group_info.txt",
+      "data_file_count": 7,
+      "figure_family": "PCA / PCoA / ordination",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "group",
+        "ordination",
+        "sample"
+      ],
+      "packages": [
+        "ggplot2",
+        "patchwork",
+        "vegan"
+      ],
+      "risks": [],
+      "expected_qa_profile": "label_collision_and_light_grid"
+    },
+    {
+      "benchmark_id": "r_replica_020",
+      "case": "20.Nature复现-表格形式的热图",
+      "script": "20.Nature复现-表格形式的热图/table_heatmap.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/20.Nature复现-表格形式的热图/table_heatmap.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/data/10.1038@s41587-019-0071-9.pdf",
+      "source_image_count": 5,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/data/column_group.csv",
+      "data_file_count": 3,
+      "figure_family": "heatmap / matrix",
+      "source_suitability": "production_recipe",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "error",
+        "feature",
+        "group",
+        "sample",
+        "spatial",
+        "value"
+      ],
+      "packages": [
+        "RColorBrewer",
+        "dplyr",
+        "funkyheatmap",
+        "ggplot2"
+      ],
+      "risks": [],
+      "expected_qa_profile": "matrix_density_allowed"
+    },
+    {
+      "benchmark_id": "r_replica_023",
+      "case": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "script": "23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.R",
+      "archive_script": "paperplot-skills/provenance/r-replica-scripts/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.R",
+      "case_dir": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "source_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.pdf",
+      "source_image_count": 2,
+      "data_file": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/data/data_deg.csv",
+      "data_file_count": 2,
+      "figure_family": "volcano / enrichment",
+      "source_suitability": "template_candidate",
+      "benchmark_mode": "executable_recipe_candidate",
+      "dependency_tier": "core_or_light",
+      "input_roles": [
+        "effect",
+        "feature",
+        "pvalue",
+        "sample",
+        "value"
+      ],
+      "packages": [
+        "dplyr",
+        "ggplot2",
+        "ggrepel"
+      ],
+      "risks": [],
+      "expected_qa_profile": "nature_detail_default"
+    }
+  ]
+}

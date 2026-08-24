@@ -1,0 +1,1484 @@
+{
+  "stats": {
+    "auto_positive_count": 22,
+    "auto_caution_count": 24,
+    "auto_negative_count": 30,
+    "expected_risk_detection_fraction": 0.9333,
+    "pillow_available": true,
+    "visual_qa_run_on_synthetic_negatives": true
+  },
+  "examples": [
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "figure_family": "scatter / regression / marginal histogram",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "13.Nature复现-倒三角相关性热图+层次聚类树",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 8,
+      "risks": [
+        "excessive_blank_margin",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "score": 7,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "low_content_density",
+        "low_grayscale_contrast"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 8,
+      "risks": [
+        "gridline_or_long_line_burden",
+        "low_pixel_dimensions",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "score": 7,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "27.Cell复现-堆积柱形图+散点图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/35.Cell复现-环形热图/circos_heatmap.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "35.Cell复现-环形热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 8,
+      "risks": [
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "36.Nature复现-配对散点图",
+      "figure_family": "scatter / regression / marginal histogram",
+      "score": 7,
+      "risks": [
+        "axis_title_collision_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "38.顶刊复现-相关性热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 9,
+      "risks": [
+        "excessive_blank_margin"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "39.Nature复现-分组柱状图+ANOVA+事后多重比较",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 7,
+      "risks": [
+        "axis_title_collision_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "48.Nature复现-差异云雨图",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "49.顶刊复现-双Y轴+GO富集-嵌套柱形图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "5.Nature复现-分组柱状图+误差线+抖点图+t检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "score": 7,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "6.Cell复现-双Y轴+富集条形图",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "63.Nature复现-填充型和渐变型等高线图",
+      "figure_family": "ridgeline / density / contour",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "69.SciAdv复现-差异OTU曼哈顿图",
+      "figure_family": "Manhattan plot",
+      "score": 10,
+      "risks": [
+        "significance_annotation_overcrowding",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "7.Nature复现-气泡热图（绿色系）",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 10,
+      "risks": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "71.Cell-上下三角双热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "score": 8,
+      "risks": [
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "label": "auto_positive",
+      "source": "nature_detail_calibration",
+      "case_dir": "9.Nature复现-山脊图",
+      "figure_family": "ridgeline / density / contour",
+      "score": 10,
+      "risks": [
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "17.Nature复现-分组和弦图+外围条形图",
+      "figure_family": "circos / chord / synteny-like plot",
+      "sample_class": "specialized_positive",
+      "score": 5,
+      "risks": [
+        "axis_title_collision_risk",
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "sample_class": "decorative_or_caution",
+      "score": 6,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "24.Nature复现-Circos+EnrichNetwork",
+      "figure_family": "network / chord / Sankey",
+      "sample_class": "specialized_positive",
+      "score": 8,
+      "risks": [
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "30.Nature复现-分面散点饼图",
+      "figure_family": "multi-panel manuscript figure",
+      "sample_class": "decorative_or_caution",
+      "score": 6,
+      "risks": [
+        "axis_title_collision_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "31.Nature复现-绝美环形图",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "sample_class": "decorative_or_caution",
+      "score": 6,
+      "risks": [
+        "extreme_aspect_ratio",
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "32.SCI复现-绝美极坐标条形图",
+      "figure_family": "radar / polar / circular bar",
+      "sample_class": "decorative_or_caution",
+      "score": 5,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "33.顶刊复现-样本地理分布图",
+      "figure_family": "map / spatial plot",
+      "sample_class": "specialized_positive",
+      "score": 4,
+      "risks": [
+        "excessive_blank_margin",
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "34.Lancet复现-绝美极坐标棒棒糖图",
+      "figure_family": "dotplot / lollipop / dumbbell",
+      "sample_class": "decorative_or_caution",
+      "score": 8,
+      "risks": [
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "37.Nature复现-网络条形图",
+      "figure_family": "network / chord / Sankey",
+      "sample_class": "specialized_positive",
+      "score": 8,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "4.Nature复现-绝美云雨图",
+      "figure_family": "boxplot / violin / raincloud / jitter",
+      "sample_class": "decorative_or_caution",
+      "score": 8,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "40.Nature复现-平滑曲线-3种方法",
+      "figure_family": "multi-panel manuscript figure",
+      "sample_class": "decorative_or_caution",
+      "score": 10,
+      "risks": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "41.顶刊复现-分面山脊图",
+      "figure_family": "multi-panel manuscript figure",
+      "sample_class": "decorative_or_caution",
+      "score": 6,
+      "risks": [
+        "axis_title_collision_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "47.Nature复现-绝美雷达图",
+      "figure_family": "radar / polar / circular bar",
+      "sample_class": "decorative_or_caution",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/50.Nature复现-绝美时序图/time_series_1.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "50.Nature复现-绝美时序图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "sample_class": "decorative_or_caution",
+      "score": 8,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "58.Nature复现-环状渐变柱形图+环状分组折线图+显著性",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "sample_class": "decorative_or_caution",
+      "score": 5,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "61.Nature复现-差异雷达图",
+      "figure_family": "radar / polar / circular bar",
+      "sample_class": "decorative_or_caution",
+      "score": 9,
+      "risks": [
+        "excessive_blank_margin",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "62.Nature复现-分组型和单组型环状条形图",
+      "figure_family": "circos / chord / synteny-like plot",
+      "sample_class": "decorative_or_caution",
+      "score": 6,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "65.Cell复现-基础热图-分面和对称风格",
+      "figure_family": "multi-panel manuscript figure",
+      "sample_class": "decorative_or_caution",
+      "score": 5,
+      "risks": [
+        "axis_title_collision_risk",
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "68.顶刊复现-upset图",
+      "figure_family": "upset / venn-like set plot",
+      "sample_class": "specialized_positive",
+      "score": 4,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "70.Nature-PNAS-中国地图",
+      "figure_family": "map / spatial plot",
+      "sample_class": "specialized_positive",
+      "score": 7,
+      "risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "75.Nature-绝美点线图",
+      "figure_family": "dotplot / lollipop / dumbbell",
+      "sample_class": "decorative_or_caution",
+      "score": 8,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "significance_annotation_overcrowding",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "79.Nature-环状条形图+饼图",
+      "figure_family": "circos / chord / synteny-like plot",
+      "sample_class": "decorative_or_caution",
+      "score": 5,
+      "risks": [
+        "excessive_blank_margin",
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "8.顶刊复现-系统发育树+外圈热图-条形图",
+      "figure_family": "phylogenetic tree with annotation rings",
+      "sample_class": "specialized_positive",
+      "score": 8,
+      "risks": [
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ]
+    },
+    {
+      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+      "label": "auto_caution",
+      "source": "nature_detail_calibration_boundary_rule",
+      "case_dir": "80.Nature-分面山脊图+垂直刻度",
+      "figure_family": "multi-panel manuscript figure",
+      "sample_class": "decorative_or_caution",
+      "score": 3,
+      "risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_001_heavy_grid_groups_bar_line.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy"
+      ],
+      "expected_risks_detected": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_002_oversized_title_groups_bar_line.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_003_text_overlap_groups_bar_line.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_004_low_resolution_groups_bar_line.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "low_pixel_dimensions",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_005_high_saturation_groups_bar_line.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_006_heavy_grid_volcano_ES.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_007_oversized_title_volcano_ES.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_008_text_overlap_volcano_ES.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": []
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_009_low_resolution_volcano_ES.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "high_text_or_tick_density",
+        "label_overlap_or_large_annotation_risk",
+        "low_pixel_dimensions",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_010_high_saturation_volcano_ES.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_011_heavy_grid_NMDS.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "low_grayscale_contrast",
+        "significance_annotation_overcrowding"
+      ],
+      "expected_risks_detected": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_012_oversized_title_NMDS.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_013_text_overlap_NMDS.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_014_low_resolution_NMDS.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "low_grayscale_contrast",
+        "low_pixel_dimensions",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_015_high_saturation_NMDS.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "figure_family": "PCA / PCoA / NMDS / UMAP / t-SNE",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_016_heavy_grid_embedding.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "gridline_or_long_line_burden",
+        "low_pixel_dimensions",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_017_oversized_title_embedding.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "gridline_or_long_line_burden",
+        "low_pixel_dimensions",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_018_text_overlap_embedding.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "gridline_or_long_line_burden",
+        "low_grayscale_contrast",
+        "low_pixel_dimensions",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": []
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_019_low_resolution_embedding.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "gridline_or_long_line_burden",
+        "low_grayscale_contrast",
+        "low_pixel_dimensions",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_020_high_saturation_embedding.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "case_dir": "20.Nature复现-表格形式的热图",
+      "figure_family": "heatmap / correlation heatmap / matrix dotplot",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "gridline_or_long_line_burden",
+        "low_grayscale_contrast",
+        "low_pixel_dimensions",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_021_heavy_grid_dumbbell_stacked_bar.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy",
+        "tick_label_collision_risk"
+      ],
+      "expected_risks_detected": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_022_oversized_title_dumbbell_stacked_bar.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk",
+        "tick_label_collision_risk"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_023_text_overlap_dumbbell_stacked_bar.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ],
+      "expected_risks_detected": [
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_024_low_resolution_dumbbell_stacked_bar.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "high_text_or_tick_density",
+        "label_overlap_or_large_annotation_risk",
+        "low_grayscale_contrast",
+        "low_pixel_dimensions",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_025_high_saturation_dumbbell_stacked_bar.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
+      "figure_family": "grouped bar / stacked bar / errorbar",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "thumbnail_readability_risk",
+        "tick_label_collision_risk"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_026_heavy_grid_volcano.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "heavy_grid"
+      ],
+      "expected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "stroke_too_heavy"
+      ],
+      "expected_risks_detected": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_027_oversized_title_volcano.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "oversized_title"
+      ],
+      "expected_risks": [
+        "significance_annotation_overcrowding",
+        "high_text_or_tick_density",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ],
+      "expected_risks_detected": [
+        "significance_annotation_overcrowding"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_028_text_overlap_volcano.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "text_overlap"
+      ],
+      "expected_risks": [
+        "text_data_overlap_risk",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "label_overlap_or_large_annotation_risk",
+        "significance_annotation_overcrowding",
+        "text_data_overlap_risk"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_029_low_resolution_volcano.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "low_resolution"
+      ],
+      "expected_risks": [
+        "low_pixel_dimensions",
+        "thumbnail_readability_risk"
+      ],
+      "detected_risks": [
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "high_text_or_tick_density",
+        "label_overlap_or_large_annotation_risk",
+        "low_pixel_dimensions",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy",
+        "text_data_overlap_risk"
+      ],
+      "expected_risks_detected": [
+        "low_pixel_dimensions"
+      ]
+    },
+    {
+      "image": "paperplotr/paperplot-skills/reports/auto-mined-qa-examples/negative_030_high_saturation_volcano.png",
+      "label": "auto_negative",
+      "source": "synthetic_degradation",
+      "parent_image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "figure_family": "volcano / MA / enrichment / GSEA",
+      "degradation": [
+        "high_saturation"
+      ],
+      "expected_risks": [
+        "saturated_presentation_palette",
+        "decorative_background_risk",
+        "grayscale_discrimination_risk"
+      ],
+      "detected_risks": [
+        "grayscale_discrimination_risk",
+        "grid_background_burden",
+        "gridline_or_long_line_burden",
+        "label_overlap_or_large_annotation_risk",
+        "legend_dominates_panel",
+        "significance_annotation_overcrowding",
+        "stroke_too_heavy"
+      ],
+      "expected_risks_detected": [
+        "grayscale_discrimination_risk"
+      ]
+    }
+  ]
+}

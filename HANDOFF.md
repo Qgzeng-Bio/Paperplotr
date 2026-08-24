@@ -1,6 +1,6 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-06-11 (v0.1.0 public release + local Codex install)
+Last updated: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
 Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
 Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
 
@@ -238,6 +238,209 @@ Important behavioral rule: detecting that a figure is bad is not enough. If data
 Important layout rule from the latest GS-quality demo review: proportional balance is a hard manuscript requirement. Multi-panel previews must not stitch plots with different source aspect ratios as if they were equal panels. Equal-role panels need equal panel boxes and visually comparable data regions; unequal panel sizes must encode a deliberate evidence hierarchy, not accidental export dimensions, legend placement, or margin differences.
 
 Current QA upgrade in progress/completed after that review: `visual-qa-rendered-image.py` now supports PDF/SVG rasterized QA, panel geometry metrics, and optional OCR status; `compare-old-new-figures.py` now writes an old-vs-new review rubric and does not claim final improvement without completed human review. Use `--expected-panels` and `--layout-profile equal` for equal-role multi-panel figures.
+
+## Latest 2026-06-11 Pangenome Visualization State
+
+The active recent task is an FAD2 pangenome graph/tube-map style figure from the user's real data, not mock data.
+
+Input data directory:
+
+- `/Users/qingguozeng/Documents/1-博士课题/2-油棕基因组/Manuscripts/Review-6.2/Nature稿件修改/第二轮/Pangenome_viz`
+
+Important input files:
+
+- `FAD2_main_RegHap_SV5kb.gfa`
+- `FAD2_main_RegHap_SV5kb.sv_summary.tsv`
+- `region.txt`
+- `FAD2_main_RegHap_SV5kb.xg` exists, but the current static renderer uses the GFA/SV summary/region files rather than parsing the binary xg index directly.
+
+Current renderer:
+
+- `analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py`
+
+Current outputs:
+
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_refined.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_refined.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_refined.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_refined_metadata.json`
+
+Latest follow-up experimental outputs:
+
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_polished.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_polished.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_polished.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_polished_metadata.json`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_polished_notes.md`
+- `analysis/FAD2_pangenome_ggplot2/output/visual_qa_pangenome_tubemap_polished/`
+- `analysis/FAD2_pangenome_ggplot2/output/old_vs_new_refined_vs_polished/`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_metadata.json`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_notes.md`
+- `analysis/FAD2_pangenome_ggplot2/output/visual_qa_pangenome_tubemap_graph_compact/`
+- `analysis/FAD2_pangenome_ggplot2/output/old_vs_new_polished_vs_graph_compact/`
+- `analysis/FAD2_pangenome_ggplot2/output/snapshots/graph_compact_9pt_20260613/`
+- `analysis/FAD2_pangenome_ggplot2/output/arc_iterations/`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_nature.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_nature.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_nature.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_nature_metadata.json`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_graph_compact_nature_notes.md`
+- `analysis/FAD2_pangenome_ggplot2/output/visual_qa_pangenome_tubemap_graph_compact_nature/`
+- `analysis/FAD2_pangenome_ggplot2/output/old_vs_new_graph_compact_vs_nature/`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap_metadata.json`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap_notes.md`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap_nodes.csv`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_sequence_tubemap_track_shapes.csv`
+- `analysis/FAD2_pangenome_ggplot2/output/visual_qa_pangenome_tubemap_sequence_tubemap/`
+- `analysis/FAD2_pangenome_ggplot2/output/old_vs_new_nature_vs_sequence_tubemap/`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph.svg`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph.pdf`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph.png`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph_metadata.json`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph_notes.md`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph_nodes.csv`
+- `analysis/FAD2_pangenome_ggplot2/output/pangenome_tubemap_bubble_graph_track_shapes.csv`
+- `analysis/FAD2_pangenome_ggplot2/output/visual_qa_pangenome_tubemap_bubble_graph/`
+- `analysis/FAD2_pangenome_ggplot2/output/old_vs_new_sequence_tubemap_vs_bubble_graph/`
+
+The renderer now accepts an optional third CLI argument:
+
+```text
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> refined
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> polished
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> graph_compact
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> graph_compact_nature
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> sequence_tubemap
+python3 analysis/FAD2_pangenome_ggplot2/fad2_static_svg_tubemap_renderer.py <input_dir> <out_dir> bubble_graph
+```
+
+`refined` remains the stable baseline. `polished` is an experimental candidate with subtle event-box tinting by haplotype class, half-ellipse event arcs, and local connector smoothing around the dense SV021/SV023/SV026/SV027 cluster. The 2026-06-11 follow-up specifically replaced shallow wave-like event paths with true half-ellipse arcs and uses half-ellipse U-turns for near-vertical connectors instead of merely increasing global arc height. It deliberately does not use the rejected global thick-ribbon/rounded-box style.
+
+`graph_compact` is the current target-style compact tube-map / graph-layout variant. It intentionally stops preserving base-pair coordinate scale and instead lays out reference/SV records as compact graph nodes. Haplotype paths are drawn as continuous tubes through node columns, and short branch connectors use stronger semicircle-like Bézier routing instead of shallow diagonal turns. This is the version to use when the user wants the example-like compact pangenome graph browser style.
+
+`graph_compact_nature` is the current best arc-polished variant after the user asked to save the 9/10 version and iterate 20+ additional versions without rebuilding the frame. The 9/10 `graph_compact` state was saved in `output/snapshots/graph_compact_9pt_20260613/`. A total of 96 stored arc-routing candidates were generated under `output/arc_iterations/` (`arc_*`, `quad_*`, `elbow_*`, `semi_*`). The selected candidate is `quad_18_b20_xm0.06`, which uses single-bend quadratic-like arcs and reverses overlapping branch spans only where the old direction would force a backward U-turn. This version keeps the same node-column frame and is meant to reduce S-shaped connectors and >90-degree back-turns.
+
+`sequence_tubemap` is the static SequenceTubeMap-like variant added after reviewing the public `vgteam/sequenceTubeMap` visual/algorithm structure. It is not a full interactive clone and does not copy the upstream JavaScript renderer. It uses the same conceptual pipeline for this FAD2 data: GFA `S` records become nodes, GFA `P` records become haplotype tracks, path steps retain order/orientation, node widths use a compressed/log-like display policy, tracks are assigned lanes, and the renderer emits straight `track_rectangle` pieces plus cubic `track_curve` connectors. It also writes `*_nodes.csv` and `*_track_shapes.csv` so future iterations can audit the generated geometry.
+
+`bubble_graph` is the user-reference-image style variant added after the user provided a compact bubble sequence graph screenshot and said ATCG sequence text is not needed. The first black-box version was rejected as "非常差劲" because it simply wrapped the old tube map with too many node boxes. It has now been rebuilt as a macro-node schematic: continuous reference runs are merged into a small set of visible boxes (`R001`, `R004-R006`, `R007`, `R008-R013`, `R014-R017`, `R018`, `R019`), and the main SVs are shown as upper/lower bubble boxes. It hides nucleotide sequence strings, coordinate axis, gene/promoter arrow, and legend. It is intended as a reference-style candidate, not as the current best Nature manuscript replacement.
+
+Follow-up QA for `polished`:
+
+```text
+visual QA: pass
+manuscript_readiness_score: 10
+family QA: genome-track/synteny, pass, score 10.0
+old-vs-new against refined: deterministic verdict improved; final verdict deterministic_better_pending_human_review
+```
+
+Follow-up QA for `graph_compact`:
+
+```text
+PNG: 4400 x 1472, 600 dpi
+visual QA: warn
+manuscript_readiness_score: 9
+family QA: genome-track/synteny, pass, score 9.8
+old-vs-new against polished: deterministic verdict mixed; target-specific review improved; final tool verdict still worse because the compact version deliberately sacrifices coordinate-preserving metrics
+self-assessed visual match to compact tube-map reference: about 9/10
+remaining risk: grayscale_discrimination_risk; check grayscale manuscript reproduction
+```
+
+Follow-up QA for `graph_compact_nature`:
+
+```text
+PNG: 4400 x 1472, 600 dpi
+visual QA: pass
+manuscript_readiness_score: 10
+family QA: genome-track/synteny, pass, score 10.0
+old-vs-new against saved graph_compact: deterministic verdict improved; final verdict deterministic_better_pending_human_review
+selected arc candidate: quad_18_b20_xm0.06
+stored arc candidates: 96
+remaining risk: coordinate scale is intentionally compressed; final biological emphasis still needs manuscript-context review
+```
+
+Important follow-up detail: a direct left-lane-label experiment was tried and removed because old-vs-new QA showed increased text burden. Do not re-add direct lane labels by default unless the user explicitly values path labels over the extra text burden.
+
+The renderer is deterministic and writes SVG path elements with cubic Bézier `C` commands, PDF, and a 600 dpi PNG preview. `refined` and `polished` are coordinate-preserving locus-panel variants; `graph_compact` is intentionally coordinate-compressed for graph readability. Required SVG groups are present:
+
+- `axis`
+- `gene_annotation`
+- `haplotype_paths`
+- `sv_boxes`
+- `legend`
+- `scale_bar`
+
+Current structure check for `graph_compact_nature`:
+
+```text
+C_commands: cubic Bézier path output retained
+SVG height: 736
+PNG: 4400 x 1472, 600 dpi
+```
+
+Current QA for `graph_compact_nature`:
+
+```text
+visual QA: pass, manuscript_readiness_score 10
+family QA: pass, score 10.0
+blocking risks: none
+old-vs-new vs saved graph_compact: improved, pending human review
+```
+
+Current QA for `sequence_tubemap`:
+
+```text
+PNG: 4400 x 1496, 600 dpi
+visual QA: warn
+manuscript_readiness_score: 9
+family QA: genome-track/synteny, pass, score 9.69
+old-vs-new against graph_compact_nature: deterministic verdict mixed/worse because the new figure intentionally uses thicker SequenceTubeMap-like tubes and higher line burden
+remaining risk: grayscale_discrimination_risk and edge-text heuristic; the variant should be treated as a target-style static TubeMap candidate, not as a replacement for the current best Nature manuscript figure
+```
+
+Current QA for `bubble_graph`:
+
+```text
+PNG: 4400 x 1120, 600 dpi
+visual QA: warn
+manuscript_readiness_score: 6
+family QA: genome-track/synteny, pass, score 8.2
+old-vs-new against sequence_tubemap: deterministic verdict mixed/worse because the reference-style graph is intentionally very wide and uses thick long horizontal tubes
+current state: macro-node rebuild after rejection; visually closer to the provided bubble-graph reference than the first black-box attempt
+remaining risk: extreme_aspect_ratio, grayscale_discrimination_risk, and long-line burden; acceptable only if the goal is to match the user's provided bubble graph style
+```
+
+Important user feedback:
+
+- The user disliked the initial ggplot2 schematic because it looked like a haplotype bar plot rather than a pangenome graph.
+- A later static SVG tube-map renderer was much better, but still felt less polished than SequenceTubeMap-like examples.
+- The user then provided a stronger ribbon-like reference image and asked for more curved SV paths using real data.
+- A trial with thicker ribbons, rounded SV boxes, and dynamic large arc heights was generated, but the user said: "算了 还不如之前的呢".
+- That over-curved trial has now been reverted. The current output is the more conservative previous style, with thinner tubes, modest SV-box arcs, rectangular SV boxes, and clearer data hierarchy.
+
+Do not blindly reapply the rejected over-curved style. In particular, avoid these rejected settings unless explicitly requested:
+
+- very thick tube fill as the dominant mark
+- large dynamic long-SV arc heights
+- rounded SV boxes as the default
+- global "make every SV curve bigger" tuning
+
+Better next direction for this figure:
+
+1. Keep `refined` / `polished` as stable coordinate-preserving baselines.
+2. Use `graph_compact` for the user's requested compact graph-browser style.
+3. If another pass is needed, improve only local routing and label placement; do not reintroduce thick global ribbons or large decorative arcs.
+4. For grayscale publication, either add line-style redundancy or tune class colors after checking the final journal layout.
+5. Do not judge `graph_compact` only by coordinate-panel old-vs-new metrics; it optimizes a different visual grammar.
+
+One QA caveat:
+
+- Direct SVG raster QA through ImageMagick can fail on this machine with `unable to read font` even for minimal SVG text. PNG QA is currently reliable. `visual-qa-rendered-image.py` was updated to scale SVG font/stroke sizes by target manuscript width when `--target-width-mm` is provided, but ImageMagick font configuration may still force fallback rasterization for SVG inputs.
 
 ## Git / Working Tree Note
 

@@ -11,8 +11,8 @@ This benchmark tests whether the upgraded pattern-library workflow can move real
 
 ## Case 1: Genomic selection quality traits
 
-- Original figure: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
-- Data path: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/tables/quality_nonlinear_summary.tsv`
+- Original figure: `~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
+- Data path: `~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/tables/quality_nonlinear_summary.tsv`
 - New figure: `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png`
 - New PDF: `paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.pdf`
 - Reference pattern: `references/pattern-library/model-validation-figures.md` with `references/pattern-library/multi-panel-manuscript-layout.md`
@@ -79,9 +79,9 @@ Remaining risks:
 
 ## Case 2: High-confidence NLR count by sample
 
-- Original SVG: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg`
-- Comparable old PNG: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png`
-- Data path: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv`
+- Original SVG: `~/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg`
+- Comparable old PNG: `~/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png`
+- Data path: `~/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv`
 - New figure: `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png`
 - New PDF: `paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.pdf`
 - Reference pattern: `references/pattern-library/grouped-bar-errorbar.md`, adapted to a sorted lollipop because each sample has one scalar count.

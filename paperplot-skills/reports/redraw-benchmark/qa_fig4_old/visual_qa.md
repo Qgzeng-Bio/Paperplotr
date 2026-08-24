@@ -1,6 +1,6 @@
 # Visual QA
 
-- input: `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
+- input: `~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
 - engine: `pillow`
 - status: `warn`
 - manuscript readiness score: `6/10`

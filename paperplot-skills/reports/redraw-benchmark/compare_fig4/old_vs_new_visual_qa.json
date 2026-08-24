@@ -1,7 +1,7 @@
 {
   "old_vs_new_visual_qa": {
     "checked": true,
-    "old_image": "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
+    "old_image": "~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
     "new_image": "paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png",
     "old_media": "raster",
     "new_media": "raster",

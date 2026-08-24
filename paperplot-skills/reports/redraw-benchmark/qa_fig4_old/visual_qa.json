@@ -3,7 +3,7 @@
     "checked": true,
     "engine": "pillow",
     "input_type": "raster",
-    "input_path": "/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
+    "input_path": "~/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png",
     "image_size_px": [
       2055,
       649
