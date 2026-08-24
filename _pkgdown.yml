@@ -24,6 +24,8 @@ reference:
   - title: Themes and Colors
     contents:
       - theme_lab
+      - theme_clean_composite
+      - paperplot_principles
       - available_lab_palettes
       - lab_palette
       - lab_gradient_palette
