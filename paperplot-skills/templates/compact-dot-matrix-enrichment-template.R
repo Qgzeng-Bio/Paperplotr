@@ -225,7 +225,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all(plot, output_stem, preset = preset, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 data_profile <- pp_data_profile(df, group_col = row_group_col, value_col = effect_col)
 pp_write_notes(

@@ -1,13 +1,15 @@
 # Multi-panel layout planning helpers for paperplot-skills.
 
-pp_panel_spec <- function(panel_id, message, role = c("primary", "secondary", "supporting"), plot_type, metric = NULL) {
+pp_panel_spec <- function(panel_id, message, role = c("primary", "secondary", "supporting"),
+                          plot_type, metric = NULL, guide_semantics = NULL) {
   role <- match.arg(role)
   list(
     panel_id = pp_nonempty_scalar(panel_id, "panel_id"),
     message = pp_nonempty_scalar(message, "message"),
     role = role,
     plot_type = pp_nonempty_scalar(plot_type, "plot_type"),
-    metric = metric
+    metric = metric,
+    guide_semantics = guide_semantics
   )
 }
 
@@ -27,14 +29,13 @@ pp_panel_hierarchy <- function(panel_specs) {
 
 pp_layout_budget <- function(panel_hierarchy, figure_role = "main") {
   pp_validate_panel_hierarchy(panel_hierarchy)
-  primary_weight <- if (length(panel_hierarchy$primary) > 0) 1.25 else 1
   list(
     figure_role = figure_role,
     n_panels = panel_hierarchy$n_panels,
-    primary_weight = primary_weight,
-    shared_legend_preferred = TRUE,
+    layout_profile = "equal",
     repeated_axis_titles_allowed = !identical(figure_role, "main"),
-    max_primary_panels = if (identical(figure_role, "main")) 2 else Inf
+    max_primary_panels = if (identical(figure_role, "main")) 2 else Inf,
+    note = "Faceted production templates use equal panel boxes. Use an explicit composite backend for unequal role weights."
   )
 }
 
@@ -48,24 +49,23 @@ pp_recommend_manuscript_layout <- function(panel_hierarchy, available_width_cm, 
     nrow = dims[[2]],
     width_cm = available_width_cm,
     height_cm = available_height_cm,
-    primary_position = if (length(panel_hierarchy$primary) > 0) "upper-left or largest available slot" else "not specified"
+    expected_panels = n,
+    layout_profile = "equal",
+    primary_position = if (length(panel_hierarchy$primary) > 0) "upper-left within equal panel boxes" else "not specified"
   )
 }
 
 pp_shared_guide_plan <- function(panel_specs, palette_plan = NULL) {
-  plot_types <- vapply(panel_specs, function(x) x$plot_type %||% "", character(1))
-  palette_types <- unique(c(palette_plan$type %||% ""))
-  # A single shared legend is only meaningful when every panel encodes the
-  # same aesthetic roles (same chart family and same palette semantics).
-  # The old heuristic (unique(types) <= n_panels) was a tautology - always
-  # TRUE - so it never actually gated anything.
-  same_chart_family <- length(unique(plot_types)) == 1L
-  homogeneous_palette <- length(palette_types) <= 1L && !identical(palette_types, "")
-  shared_legend <- same_chart_family && homogeneous_palette
+  guide_semantics <- vapply(panel_specs, function(x) x$guide_semantics %||% "", character(1))
+  palette_type <- palette_plan$type %||% ""
+  # Shared guides require the same mapped variable/meaning in every panel and
+  # one declared palette semantic. Chart family alone is not sufficient.
+  shared_legend <- length(guide_semantics) > 0L && all(nzchar(guide_semantics)) &&
+    length(unique(guide_semantics)) == 1L && nzchar(palette_type)
   list(
     shared_legend = shared_legend,
     shared_legend_reason = if (shared_legend) {
-      "all panels share one chart family and palette semantics"
+      "all panels share one guide variable and palette semantics"
     } else {
       "heterogeneous panels must keep compact per-panel guides"
     },
@@ -86,7 +86,7 @@ pp_legend_plan <- function(entries, labels = NULL, canvas_width_cm = NULL, canva
   entries <- max(0L, as.integer(entries[[1]]))
   labels <- as.character(labels)
   labels <- labels[nzchar(labels)]
-  key_mm <- pp_style_number("spacing_mm.legend_key")
+  key_mm <- pp_spacing_mm("legend_key")
   # Adaptive key shrink keeps very long keys from eating the data region.
   if (entries > 12) key_mm <- max(2.6, key_mm * (1 - (entries - 12) * 0.02))
   pt_to_mm <- 25.4 / 72

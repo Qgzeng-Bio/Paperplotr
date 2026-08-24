@@ -97,7 +97,7 @@ if (isTRUE(statistical_plan$min_n >= 5)) {
   base_plot <- base_plot + geom_boxplot(width = 0.52, outlier.shape = NA, linewidth = 0.35, alpha = 0.18)
 }
 plot <- base_plot +
-  geom_jitter(width = 0.1, height = 0, size = 1.35, alpha = 0.78, stroke = 0) +
+  geom_jitter(width = 0.1, height = 0, size = pp_point_size("normal"), alpha = 0.78, stroke = 0) +
   stat_summary(fun = median, geom = "crossbar", width = 0.45, linewidth = 0.35, color = "#1D1D1B") +
   pp_scale_color(levels(df[[group_col]])) +
   labs(x = NULL, y = y_label, color = "Group") +
@@ -113,7 +113,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(
@@ -143,7 +143,7 @@ pp_write_metadata(
   metadata_path,
   figure_spec = figure_spec,
   metric_spec = metric_spec,
-  output_files = c(outputs, notes = notes_path, qa = qa_path),
+  output_files = pp_extend_output_files(outputs, notes = notes_path, qa = qa_path),
   layout = design_plan$layout_plan,
   palette = design_plan$palette_plan,
   qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness),

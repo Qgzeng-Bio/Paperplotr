@@ -302,7 +302,7 @@ def skipped_fixture_row(scenario: str, path: Path) -> dict[str, Any]:
     return {
         "scenario": scenario,
         "input": str(path),
-        "pass": "skipped",
+        "pass": None,
         "status": "fixture_missing",
         "score": "",
         "risk_codes": [],
@@ -447,9 +447,10 @@ def write_family_report(rows: list[dict[str, Any]]) -> None:
 
 
 def write_non_human_report(rows: list[dict[str, Any]], compare_rows: list[dict[str, Any]]) -> None:
-    passed = sum(1 for row in rows if row.get("pass"))
-    total = len(rows)
-    compare_passed = sum(1 for row in compare_rows if row.get("pass"))
+    passed = sum(1 for row in rows if row.get("pass") is True)
+    skipped = sum(1 for row in rows if row.get("pass") is None)
+    executed = len(rows) - skipped
+    compare_passed = sum(1 for row in compare_rows if row.get("pass") is True)
     lines = [
         "# Non-Human QA Upgrade Summary",
         "",
@@ -464,7 +465,8 @@ def write_non_human_report(rows: list[dict[str, Any]], compare_rows: list[dict[s
         "",
         "## Result",
         "",
-        f"- visual/vector/family scenarios passed: {passed}/{total}",
+        f"- visual/vector/family scenarios passed: {passed}/{executed}",
+        f"- visual/vector/family scenarios skipped: {skipped}",
         f"- old-vs-new scenarios passed: {compare_passed}/{len(compare_rows)}",
         "",
         "## Key Guarantees",

@@ -77,7 +77,7 @@ design_plan <- pp_design_plan(chart_family = "bio_duplication_mode_four_panel", 
 
 plot <- ggplot(plot_df, aes(x = x, y = value, color = color_group)) +
   geom_hline(data = data.frame(panel = factor("D. Group effect size", levels = levels(plot_df$panel))), aes(yintercept = 0), inherit.aes = FALSE, linetype = "dashed", linewidth = 0.3, color = "#555555") +
-  geom_point(position = position_jitter(width = 0.12, height = 0), size = 1.55, alpha = 0.82) +
+  geom_point(position = position_jitter(width = 0.12, height = 0), size = pp_point_size("normal"), alpha = 0.82) +
   facet_wrap(~panel, scales = "free", ncol = 2) +
   pp_scale_color(stats::na.omit(unique(plot_df$color_group))) +
   labs(x = NULL, y = NULL, color = "Group") +
@@ -86,7 +86,7 @@ plot <- ggplot(plot_df, aes(x = x, y = value, color = color_group)) +
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("panel_hierarchy", "pass", "Panel hierarchy contains primary, secondary, and supporting roles."), pp_qa_result("bio_duplication_semantics", "pass", "Duplication modes and group colors are recorded consistently."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("Four panels summarize burden, fraction, relative contribution, and effect size.", "Mode labels stay visible because they are semantic, not lookup labels.", "Free y scales are used because panels encode different quantities."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Replace approximate effect-size panel with final tested effect estimates before submission.", figure_spec = figure_spec, metric_spec = metric_spec, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)
 pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, panel_hierarchy = panel_hierarchy, statistical_plan = design_plan$statistical_plan)

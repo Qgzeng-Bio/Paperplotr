@@ -53,16 +53,16 @@ design_plan <- pp_design_plan(chart_family = "ma_plot", figure_role = figure_rol
 gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
   ggrepel::geom_text_repel(
     data = key_df, ggplot2::aes(label = .data[[gene_col]]),
-    size = 1.8, color = "#1D1D1B", max.overlaps = 20,
-    segment.size = 0.25, min.segment.length = 0, seed = 42
+    size = pp_text_size("label"), color = "#1D1D1B", max.overlaps = Inf,
+    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
   )
 } else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = 1.8, vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
+  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = pp_text_size("label"), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
 }
 
 plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = significant)) +
-  geom_hline(yintercept = 0, linewidth = 0.35, color = "#4D4D4A") +
-  geom_point(alpha = 0.72, size = 1.25) +
+  geom_hline(yintercept = 0, linewidth = pp_line_width("reference"), color = "#4D4D4A") +
+  geom_point(alpha = 0.72, size = pp_point_size("normal")) +
   gene_label_layer +
   scale_color_manual(values = c(significant = "#D9342B", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log10(base mean + 1)", y = "log2 fold change") +
@@ -71,7 +71,7 @@ plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = sig
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_ma_semantics", "pass", "Abundance and fold change are separated on x/y axes."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all(plot, output_stem, preset = figure_spec$output_preset, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("MA plot separates abundance from fold-change.", "Only selected top genes are labeled."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm whether low-count filtering was applied upstream.", figure_spec = figure_spec, metric_spec = metric_spec, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)
 pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, statistical_plan = design_plan$statistical_plan)

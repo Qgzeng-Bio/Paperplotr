@@ -189,12 +189,37 @@ REMEDIATION = {
     "huge_centered_title": ("references/manuscript-aesthetics-rules.md", "Remove or shrink the large centered title to a small panel/figure label."),
     "svg_gridline_burden": ("references/nature-like-style-principles.md", "Remove decorative gridlines; keep only quantitatively useful guides."),
     "svg_text_burden": ("references/label-burden-strategies.md", "Reduce text element count; move dense labels to a sidecar/key."),
+    "axis_title_collision_risk": ("references/label-burden-strategies.md", "Increase axis-title clearance or shorten/wrap tick labels before export."),
+    "decorative_background_risk": ("references/manuscript-aesthetics-rules.md", "Remove decorative fills and reserve saturation for data-bearing marks."),
+    "excessive_panel_padding": ("references/pattern-library/multi-panel-manuscript-layout.md", "Reduce internal panel padding and align visible data regions."),
+    "font_too_large_for_manuscript": ("references/publication-visual-standards.md", "Reduce oversized text to the declared manuscript typography range."),
+    "font_too_small_at_target_width": ("references/publication-visual-standards.md", "Raise the smallest text to the target-width floor or reduce label burden."),
+    "grid_background_burden": ("references/nature-like-style-principles.md", "Remove or lighten nonessential background grids while retaining quantitative guides."),
+    "legend_dominates_panel": ("references/multi-panel-layout-rules.md", "Consolidate legend entries, shrink keys, or move one shared guide below the data region."),
+    "presentation_title_risk": ("references/manuscript-aesthetics-rules.md", "Replace presentation-scale titles with compact manuscript labels or caption text."),
+    "significance_annotation_overcrowding": ("references/label-burden-strategies.md", "Reduce significance annotations and report full statistics in the caption or sidecar."),
+    "stroke_too_heavy": ("references/publication-visual-standards.md", "Reduce axes, borders, grids, or connector strokes to the manuscript range."),
+    "stroke_too_light": ("references/publication-visual-standards.md", "Increase essential axes or interval strokes enough to survive final-size rendering."),
+    "text_data_overlap_risk": ("references/label-burden-strategies.md", "Use collision-aware labels, fewer direct labels, or a rank-index sidecar."),
+    "tick_label_collision_risk": ("references/label-burden-strategies.md", "Thin, wrap, rotate, or index crowded tick labels based on the label strategy."),
+    "vector_font_out_of_range": ("references/publication-visual-standards.md", "Bring vector font sizes inside the declared final-width typography range."),
+    "vector_legend_oversized": ("references/multi-panel-layout-rules.md", "Reduce or consolidate the vector legend and reserve explicit canvas space for it."),
+    "vector_stroke_out_of_range": ("references/publication-visual-standards.md", "Normalize vector stroke widths to the manuscript range."),
+    "vector_text_overlap": ("references/label-burden-strategies.md", "Inspect the reported vector text boxes and resolve collisions with repel, offsets, or fewer labels."),
+    "vector_text_overlap_minor": ("references/label-burden-strategies.md", "Inspect the isolated vector bbox intersection; rotated or estimated boxes can be false positives."),
+    "vector_tick_collision": ("references/label-burden-strategies.md", "Reduce vector tick density or use wrapping, rotation, or rank indexing."),
+    "vector_title_presentation_style": ("references/manuscript-aesthetics-rules.md", "Replace the large centered vector title with manuscript-scale hierarchy."),
 }
 REMEDIATION_NONE = {
     "no_major_deterministic_risk",
     "no_major_svg_structure_risk",
     "panel_detection_empty",
     "svg_parse_error",
+    "no_major_pdf_vector_text_risk",
+    "pdf_bbox_parse_error",
+    "pdf_bbox_parse_unavailable",
+    "pdf_no_extractable_text",
+    "pdf_stroke_parse_unavailable",
 }
 
 NATURE_GUARDRAIL_REFERENCE = "references/nature-figure-guardrails.md"
@@ -297,6 +322,7 @@ def attach_remediation(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
 # emitted alongside the prose remediation - never replacing it.
 MACHINE_FIXES: dict[str, list[dict[str, Any]]] = {
     "vector_text_overlap": [{"param": "label_repel", "value": True}],
+    "vector_text_overlap_minor": [{"param": "label_repel", "value": True}],
     "ocr_text_overlap_risk": [{"param": "label_repel", "value": True}],
     "text_data_overlap_risk": [{"param": "label_repel", "value": True}],
     "legend_dominates_panel": [
@@ -304,7 +330,7 @@ MACHINE_FIXES: dict[str, list[dict[str, Any]]] = {
         {"param": "legend.key.size_mm", "value": 3.2},
     ],
     "vector_legend_oversized": [{"param": "legend.position", "value": "bottom"}],
-    "excessive_blank_margin": [{"param": "plot.margin_mm", "value": 4}],
+    "excessive_blank_margin": [{"param": "plot.margin_mm", "value": 1.4}],
     "tick_label_collision_risk": [
         {"param": "axis.text.x.angle", "value": 45},
         {"param": "axis.text.x.hjust", "value": 1},
@@ -1566,11 +1592,12 @@ def summarize_vector_text_boxes(
     # low-count warnings; family threshold overrides absorb those cases.
     widespread_overlap = overlap_count > max(3, count * 0.03)
     if overlap_count >= 1:
+        overlap_code = "vector_text_overlap" if widespread_overlap else "vector_text_overlap_minor"
         risks.append(
             risk(
                 STATUS_FAIL if (widespread_overlap and strict_detail_qa) else STATUS_WARN,
-                "vector_text_overlap",
-                "Vector text boxes overlap enough to suggest label collision.",
+                overlap_code,
+                "Vector text boxes overlap enough to suggest label collision." if widespread_overlap else "One or a few estimated vector text boxes intersect; inspect for a real collision.",
                 overlap_count,
             )
         )

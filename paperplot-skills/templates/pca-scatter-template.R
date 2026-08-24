@@ -55,15 +55,15 @@ mapping <- aes(x = .data[[pc1_col]], y = .data[[pc2_col]])
 if (!is.null(group_col)) mapping <- aes(x = .data[[pc1_col]], y = .data[[pc2_col]], colour = .data[[group_col]])
 
 p <- ggplot(df, mapping) +
-  geom_hline(yintercept = 0, linewidth = 0.25, colour = "#BFBFBF") +
-  geom_vline(xintercept = 0, linewidth = 0.25, colour = "#BFBFBF") +
-  geom_point(size = 1.75, alpha = 0.84) +
+  geom_hline(yintercept = 0, linewidth = pp_line_width("grid_major"), colour = "#BFBFBF") +
+  geom_vline(xintercept = 0, linewidth = pp_line_width("grid_major"), colour = "#BFBFBF") +
+  geom_point(size = pp_point_size("normal"), alpha = 0.84) +
   pp_theme(show_grid = FALSE) +
   labs(x = pc1_label, y = pc2_label, colour = group_col)
 
 if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]])
 
-output_files <- pp_save_all(p, output_stem, preset = preset)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
