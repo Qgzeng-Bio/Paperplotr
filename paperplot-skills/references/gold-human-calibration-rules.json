@@ -1,0 +1,457 @@
+{
+  "version": "gold-human-calibration-v1",
+  "source_scores": "paperplot-skills/reports/gold-human-rubric-pack/gold-human-rubric-scoring.csv",
+  "completed_count": 30,
+  "global_mean_score_1_5": 3.8,
+  "positive_case_count": 24,
+  "caution_case_count": 6,
+  "family_profiles": {
+    "bar/errorbar": {
+      "n": 2,
+      "mean_score_1_5": 4.0,
+      "positive_count": 2,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "grouped bar / stacked bar / errorbar"
+      ]
+    },
+    "circos/chord/sankey": {
+      "n": 2,
+      "mean_score_1_5": 4.0,
+      "positive_count": 2,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "circos / chord / circular",
+        "network / sankey"
+      ]
+    },
+    "heatmap": {
+      "n": 5,
+      "mean_score_1_5": 4.0,
+      "positive_count": 5,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "heatmap / matrix"
+      ]
+    },
+    "lollipop/dumbbell/dotplot": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "lollipop / dumbbell / dotplot"
+      ]
+    },
+    "map/spatial": {
+      "n": 4,
+      "mean_score_1_5": 4.0,
+      "positive_count": 4,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "map / spatial"
+      ]
+    },
+    "multi-panel": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "multi-panel manuscript / other"
+      ]
+    },
+    "ordination": {
+      "n": 6,
+      "mean_score_1_5": 3.0,
+      "positive_count": 0,
+      "caution_count": 6,
+      "positive_calibration_eligible": false,
+      "source_families": [
+        "PCA / PCoA / ordination"
+      ]
+    },
+    "phylo/tree": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "phylogenetic tree"
+      ]
+    },
+    "ridgeline/density": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "ridgeline / density"
+      ]
+    },
+    "scatter/regression": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "scatter / regression"
+      ]
+    },
+    "upset/set": {
+      "n": 1,
+      "mean_score_1_5": 4.0,
+      "positive_count": 1,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "upset / set plot"
+      ]
+    },
+    "violin/raincloud": {
+      "n": 2,
+      "mean_score_1_5": 4.0,
+      "positive_count": 2,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "boxplot / jitter",
+        "raincloud / violin / jitter"
+      ]
+    },
+    "volcano/enrichment": {
+      "n": 3,
+      "mean_score_1_5": 4.0,
+      "positive_count": 3,
+      "caution_count": 0,
+      "positive_calibration_eligible": true,
+      "source_families": [
+        "enrichment / GSEA",
+        "volcano / enrichment"
+      ]
+    }
+  },
+  "family_notes": {
+    "ordination": [
+      "Human gold scores did not support this family as a high-quality positive calibration source.",
+      "User judged the current PCA/PCoA/ordination gold examples as readable but visually generic; ordinary ordination plots should not be treated as Nature-like positive exemplars without stronger hierarchy, marginal/statistical context, or refined layout."
+    ]
+  },
+  "score_adjustments": {
+    "ordination": {
+      "positive_calibration_status": "baseline_or_caution",
+      "positive_calibration_score_cap": 7.0
+    }
+  },
+  "cases": [
+    {
+      "benchmark_id": "r_replica_014",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_090",
+      "case": "59.Nature复现-箱线图+扇形+半圆形",
+      "source_family": "boxplot / jitter",
+      "canonical_family": "violin/raincloud",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_010",
+      "case": "17.Nature复现-分组和弦图+外围条形图",
+      "source_family": "circos / chord / circular",
+      "canonical_family": "circos/chord/sankey",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_059",
+      "case": "43.顶刊复现-散点图+线性回归",
+      "source_family": "enrichment / GSEA",
+      "canonical_family": "volcano/enrichment",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_007",
+      "case": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
+      "source_family": "grouped bar / stacked bar / errorbar",
+      "canonical_family": "bar/errorbar",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_002",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "source_family": "heatmap / matrix",
+      "canonical_family": "heatmap",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_022",
+      "case": "22.Nature复现-堆积柱形图+哑铃图",
+      "source_family": "lollipop / dumbbell / dotplot",
+      "canonical_family": "lollipop/dumbbell/dotplot",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_001",
+      "case": "1.柱状图-散点图-误差线-p值显著性",
+      "source_family": "map / spatial",
+      "canonical_family": "map/spatial",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_060",
+      "case": "44.Nature复现-RCS",
+      "source_family": "multi-panel manuscript / other",
+      "canonical_family": "multi-panel",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_029",
+      "case": "29.Nature复现-渐变色桑基图",
+      "source_family": "network / sankey",
+      "canonical_family": "circos/chord/sankey",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_134",
+      "case": "77.Nature-对角线散点图+直方图",
+      "source_family": "phylogenetic tree",
+      "canonical_family": "phylo/tree",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_008",
+      "case": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
+      "source_family": "raincloud / violin / jitter",
+      "canonical_family": "violin/raincloud",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_021",
+      "case": "21.Nature复现-渐变色山脊图+双向柱形图",
+      "source_family": "ridgeline / density",
+      "canonical_family": "ridgeline/density",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_024",
+      "case": "25.Science+Cell复现-差异基因FC-FC散点图",
+      "source_family": "scatter / regression",
+      "canonical_family": "scatter/regression",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_112",
+      "case": "68.顶刊复现-upset图",
+      "source_family": "upset / set plot",
+      "canonical_family": "upset/set",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_011",
+      "case": "18.Science复现-火山图+GSEA_MSigDB富集得分",
+      "source_family": "volcano / enrichment",
+      "canonical_family": "volcano/enrichment",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_003",
+      "case": "10.Nature复现-添加显著性星号标记的热图",
+      "source_family": "heatmap / matrix",
+      "canonical_family": "heatmap",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_004",
+      "case": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
+      "source_family": "map / spatial",
+      "canonical_family": "map/spatial",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_005",
+      "case": "12.Nature复现-相关性热图+边缘条形图",
+      "source_family": "heatmap / matrix",
+      "canonical_family": "heatmap",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_006",
+      "case": "13.Nature复现-倒三角相关性热图+层次聚类树",
+      "source_family": "heatmap / matrix",
+      "canonical_family": "heatmap",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_009",
+      "case": "16.Nature复现-散点图+拟合曲线+均值+双向误差线",
+      "source_family": "grouped bar / stacked bar / errorbar",
+      "canonical_family": "bar/errorbar",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_012",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "source_family": "map / spatial",
+      "canonical_family": "map/spatial",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_013",
+      "case": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
+      "source_family": "map / spatial",
+      "canonical_family": "map/spatial",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_015",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_016",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_017",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_018",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_019",
+      "case": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
+      "source_family": "PCA / PCoA / ordination",
+      "canonical_family": "ordination",
+      "mean_score": 3.0,
+      "excluded": true,
+      "exclusion_reason": "too generic for high-quality positive calibration",
+      "overall_notes": "Visually generic baseline ordination; readable but not strong Nature-like positive calibration."
+    },
+    {
+      "benchmark_id": "r_replica_020",
+      "case": "20.Nature复现-表格形式的热图",
+      "source_family": "heatmap / matrix",
+      "canonical_family": "heatmap",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    },
+    {
+      "benchmark_id": "r_replica_023",
+      "case": "23.Nature复现-火山图+EnrichmentMap-GSEA",
+      "source_family": "volcano / enrichment",
+      "canonical_family": "volcano/enrichment",
+      "mean_score": 4.0,
+      "excluded": false,
+      "exclusion_reason": "",
+      "overall_notes": "User indicated 4+ overall; provisional positive calibration candidate pending optional detailed review."
+    }
+  ]
+}

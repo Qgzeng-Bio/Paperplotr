@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 SUPPORTED_EXT = {".png", ".jpg", ".jpeg", ".svg", ".pdf"}
-MAX_PER_FAMILY = 3
+DEFAULT_MAX_PER_FAMILY = 3
 
 
 def load_index(path: Path) -> dict[str, Any]:
@@ -49,7 +49,7 @@ def run_visual_qa(script: Path, image: Path, out_dir: Path, family: str, dpi: in
     return json.loads((out_dir / "visual_qa.json").read_text())["image_qa"]
 
 
-def pick_samples(index: dict[str, Any]) -> tuple[list[tuple[dict[str, Any], Path]], list[dict[str, Any]]]:
+def pick_samples(index: dict[str, Any], max_per_family: int = DEFAULT_MAX_PER_FAMILY) -> tuple[list[tuple[dict[str, Any], Path]], list[dict[str, Any]]]:
     by_family: dict[str, list[tuple[dict[str, Any], Path]]] = defaultdict(list)
     pdf_only: list[dict[str, Any]] = []
     roots = index["roots"]
@@ -69,7 +69,7 @@ def pick_samples(index: dict[str, Any]) -> tuple[list[tuple[dict[str, Any], Path
                 item[0]["case_dir"],
             ),
         )
-        samples.extend(priority[:MAX_PER_FAMILY])
+        samples.extend(priority if max_per_family <= 0 else priority[:max_per_family])
     return samples, pdf_only
 
 
@@ -229,10 +229,11 @@ def main() -> int:
     parser.add_argument("--out-json", default="paperplot-skills/reports/visual-qa-calibration-from-replica-library.json")
     parser.add_argument("--qa-root", default="/tmp/paperplot-replica-visual-calibration")
     parser.add_argument("--dpi", type=int, default=300)
+    parser.add_argument("--max-per-family", type=int, default=DEFAULT_MAX_PER_FAMILY, help="Maximum examples per family; use 0 to include all indexed examples")
     args = parser.parse_args()
 
     index = load_index(Path(args.index_json))
-    samples, pdf_only = pick_samples(index)
+    samples, pdf_only = pick_samples(index, args.max_per_family)
     script = Path(__file__).with_name("visual-qa-rendered-image.py")
     results: list[dict[str, Any]] = []
     qa_root = Path(args.qa_root)
