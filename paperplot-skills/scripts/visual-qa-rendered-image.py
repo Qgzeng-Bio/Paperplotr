@@ -292,6 +292,42 @@ def attach_remediation(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return risks
 
 
+# Machine-actionable fixes (WP6): structured parameter adjustments a renderer
+# can apply without human interpretation. Whitelisted, conservative, and only
+# emitted alongside the prose remediation - never replacing it.
+MACHINE_FIXES: dict[str, list[dict[str, Any]]] = {
+    "vector_text_overlap": [{"param": "label_repel", "value": True}],
+    "ocr_text_overlap_risk": [{"param": "label_repel", "value": True}],
+    "text_data_overlap_risk": [{"param": "label_repel", "value": True}],
+    "legend_dominates_panel": [
+        {"param": "legend.position", "value": "bottom"},
+        {"param": "legend.key.size_mm", "value": 3.2},
+    ],
+    "vector_legend_oversized": [{"param": "legend.position", "value": "bottom"}],
+    "excessive_blank_margin": [{"param": "plot.margin_mm", "value": 4}],
+    "tick_label_collision_risk": [
+        {"param": "axis.text.x.angle", "value": 45},
+        {"param": "axis.text.x.hjust", "value": 1},
+    ],
+}
+
+
+def collect_machine_fixes(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    fixes: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
+    for item in risks:
+        if item.get("status") == STATUS_PASS:
+            continue
+        for fix in MACHINE_FIXES.get(item.get("code") or "", []):
+            key = (str(fix.get("param")), str(fix.get("value")))
+            if key not in seen:
+                seen.add(key)
+                entry = dict(fix)
+                entry["source_risk"] = item.get("code")
+                fixes.append(entry)
+    return fixes
+
+
 def ensure_dir(path: Path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
@@ -2351,6 +2387,9 @@ def main() -> int:
         expected_font_range=parse_font_range(args.expected_font_range),
     )
     result["figure_family_source"] = family_source
+    # WP6: emit whitelisted machine-actionable fixes for fired risks so a
+    # renderer can close the loop without parsing prose.
+    result["machine_fixes"] = collect_machine_fixes(result.get("top_risks", []))
     (out_dir / "visual_qa.json").write_text(json.dumps({"image_qa": result}, indent=2, ensure_ascii=False) + "\n")
     write_markdown(result, out_dir)
     print(f"visual QA written: {out_dir / 'visual_qa.json'}")
