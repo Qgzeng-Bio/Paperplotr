@@ -77,6 +77,7 @@ RISK_TO_BUCKET = {
 BLOCKING_RISKS = {
     "text_data_overlap_risk",
     "vector_text_overlap",
+    "ocr_text_overlap_risk",
     "font_too_small_at_target_width",
     "panel_data_region_mismatch",
     "panel_size_imbalance",

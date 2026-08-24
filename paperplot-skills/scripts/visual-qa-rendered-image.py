@@ -1485,6 +1485,7 @@ def summarize_vector_text_boxes(
     boxes: list[dict[str, Any]],
     canvas_size: tuple[float | None, float | None],
     thresholds: dict[str, float],
+    strict_detail_qa: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any], list[dict[str, Any]]]:
     width, height = canvas_size
     overlap_count = 0
@@ -1522,8 +1523,21 @@ def summarize_vector_text_boxes(
     top_fraction = top_count / max(count, 1)
     intrusion_fraction = data_intrusion / max(count, 1)
     risks: list[dict[str, Any]] = []
-    if overlap_count > max(3, count * 0.03):
-        risks.append(risk(STATUS_WARN, "vector_text_overlap", "Vector text boxes overlap enough to suggest label collision.", overlap_count))
+    # Tiered overlap gate (WP5): even one true pairwise intersection between
+    # word boxes is now surfaced as a warning instead of passing silently;
+    # widespread overlap escalates to a hard failure under --strict-detail-qa.
+    # Rotated tick labels have inflated axis-aligned bboxes and may trigger
+    # low-count warnings; family threshold overrides absorb those cases.
+    widespread_overlap = overlap_count > max(3, count * 0.03)
+    if overlap_count >= 1:
+        risks.append(
+            risk(
+                STATUS_FAIL if (widespread_overlap and strict_detail_qa) else STATUS_WARN,
+                "vector_text_overlap",
+                "Vector text boxes overlap enough to suggest label collision.",
+                overlap_count,
+            )
+        )
     if count >= 25 and edge_fraction > 0.72:
         risks.append(risk(STATUS_WARN, "vector_tick_collision", "Vector text is heavily concentrated at plot edges; tick labels or axis labels may collide.", round(edge_fraction, 3)))
     if count >= 8 and right_fraction > 0.36:
@@ -1838,7 +1852,7 @@ def vector_font_summary(font_sizes: list[float], thresholds: dict[str, float]) -
     }, risks
 
 
-def analyze_svg_structure(path: Path, figure_family: str | None = None, target_width_mm: float | None = None) -> dict[str, Any]:
+def analyze_svg_structure(path: Path, figure_family: str | None = None, target_width_mm: float | None = None, strict_detail_qa: bool = False) -> dict[str, Any]:
     text = path.read_text(errors="ignore")
     try:
         root = ET.fromstring(text)
@@ -1915,7 +1929,7 @@ def analyze_svg_structure(path: Path, figure_family: str | None = None, target_w
     median_font = statistics.median(font_sizes) if font_sizes else None
     light_gridlines = sum(1 for ln in lines if any(x in ln["stroke"] for x in ("#eee", "#eeeeee", "#e5e5e5", "#ddd", "#dddddd")))
     profile, thresholds = threshold_profile("svg", figure_family)
-    vector_text_geometry, vector_layout_geometry, vector_text_risks = summarize_vector_text_boxes(texts, (width, height), thresholds)
+    vector_text_geometry, vector_layout_geometry, vector_text_risks = summarize_vector_text_boxes(texts, (width, height), thresholds, strict_detail_qa)
     vector_stroke_geometry, vector_stroke_risks = vector_stroke_summary(stroke_widths, thresholds)
     vector_font_geometry, vector_font_risks = vector_font_summary(font_sizes, thresholds)
     centered_large_titles = [
@@ -2001,7 +2015,7 @@ def analyze_svg_structure(path: Path, figure_family: str | None = None, target_w
     }
 
 
-def analyze_pdf_structure(path: Path, figure_family: str | None = None, page: int = 1) -> dict[str, Any]:
+def analyze_pdf_structure(path: Path, figure_family: str | None = None, page: int = 1, strict_detail_qa: bool = False) -> dict[str, Any]:
     exe = shutil.which("pdftotext")
     profile, thresholds = threshold_profile("svg", figure_family)
     pdf_strokes = analyze_pdf_strokes_with_pypdf(path, figure_family, page)
@@ -2093,7 +2107,7 @@ def analyze_pdf_structure(path: Path, figure_family: str | None = None, page: in
         fs = max(y1 - y0, 0.0)
         boxes.append({"font_size": fs, "x": x0, "y": y1, "weight": "", "font_family": None, "text": text, "anchor": "", "transform": "", "box": [x0, y0, x1, y1]})
     font_sizes = [float(item["font_size"]) for item in boxes if item.get("font_size")]
-    vector_text_geometry, vector_layout_geometry, vector_text_risks = summarize_vector_text_boxes(boxes, (width, height), thresholds)
+    vector_text_geometry, vector_layout_geometry, vector_text_risks = summarize_vector_text_boxes(boxes, (width, height), thresholds, strict_detail_qa)
     vector_font_geometry, vector_font_risks = vector_font_summary(font_sizes, thresholds)
     risks: list[dict[str, Any]] = []
     score = 10
@@ -2312,8 +2326,8 @@ def main() -> int:
         figure_family, family_source = args.family, "cli"
     else:
         figure_family, family_source = infer_figure_family(in_path)
-    svg_structure = analyze_svg_structure(in_path, figure_family, args.target_width_mm) if ext == ".svg" else None
-    pdf_structure = analyze_pdf_structure(in_path, figure_family, args.page) if ext == ".pdf" else None
+    svg_structure = analyze_svg_structure(in_path, figure_family, args.target_width_mm, args.strict_detail_qa) if ext == ".svg" else None
+    pdf_structure = analyze_pdf_structure(in_path, figure_family, args.page, args.strict_detail_qa) if ext == ".pdf" else None
     vector_structure = svg_structure or pdf_structure
     raster_path, rasterization = rasterize_input(in_path, out_dir, args.dpi, args.page)
     input_type = "raster" if ext in {".png", ".jpg", ".jpeg"} else ext.lstrip(".")
