@@ -778,6 +778,119 @@ pp_extract_legend <- function(plot) {
   g$grobs[[idx[[1]]]]
 }
 
+# ---- WP6: closed-loop QA auto-fix ------------------------------------------
+
+pp_locate_qa_script <- function() {
+  env <- Sys.getenv("PAPERPLOT_QA_SCRIPT", unset = "")
+  if (nzchar(env) && file.exists(env)) return(normalizePath(env))
+  rel_candidates <- c(
+    file.path("paperplot-skills", "scripts", "visual-qa-rendered-image.py"),
+    file.path("scripts", "visual-qa-rendered-image.py")
+  )
+  dir <- getwd()
+  for (i in 1:5) {
+    for (cand in rel_candidates) {
+      path <- file.path(dir, cand)
+      if (file.exists(path)) return(normalizePath(path))
+    }
+    parent <- dirname(dir)
+    if (identical(parent, dir)) break
+    dir <- parent
+  }
+  NULL
+}
+
+# Run the rendered-image QA on an exported figure; returns parsed JSON list or
+# NULL when python3/the script is unavailable (auto-fix then degrades to a
+# plain save, never blocks rendering).
+pp_run_visual_qa <- function(path, out_dir = tempfile("pp-qa-"), extra_args = character()) {
+  script <- pp_locate_qa_script()
+  if (is.null(script)) return(invisible(NULL))
+  py <- Sys.getenv("PAPERPLOT_PYTHON", unset = "python3")
+  status <- suppressWarnings(system2(py, c(shQuote(script), shQuote(path), "--out", shQuote(out_dir), extra_args), stdout = FALSE, stderr = FALSE))
+  json_path <- file.path(out_dir, "visual_qa.json")
+  if (!identical(status, 0L) || !file.exists(json_path)) return(invisible(NULL))
+  if (!requireNamespace("jsonlite", quietly = TRUE)) return(invisible(NULL))
+  tryCatch(jsonlite::fromJSON(json_path, simplifyVector = FALSE)$image_qa, error = function(e) NULL)
+}
+
+# Apply whitelisted machine fixes from visual QA onto a ggplot object.
+# Only parameters with explicit branches here are ever applied; everything
+# else stays prose for human/agent review.
+pp_apply_machine_fixes <- function(plot, qa_payload) {
+  fixes <- qa_payload$machine_fixes %||% list()
+  applied <- character()
+  angle_x <- NULL; hjust_x <- NULL
+  margin_mm <- NULL; key_mm <- NULL; legend_pos <- NULL
+  for (f in fixes) {
+    param <- f$param; value <- f$value
+    if (is.null(param)) next
+    switch(param,
+      "legend.position" = { legend_pos <- value },
+      "legend.key.size_mm" = { key_mm <- as.numeric(value) },
+      "plot.margin_mm" = { margin_mm <- as.numeric(value) },
+      "axis.text.x.angle" = { angle_x <- as.numeric(value) },
+      "axis.text.x.hjust" = { hjust_x <- as.numeric(value) },
+      # label_repel requires rebuilding geoms; report it instead of guessing.
+      "label_repel" = applied <<- c(applied, "label_repel (manual: rebuild text layers with ggrepel)")
+    )
+  }
+  th <- ggplot2::theme()
+  if (!is.null(legend_pos)) {
+    th <- th + ggplot2::theme(legend.position = legend_pos)
+    applied <- c(applied, paste0("legend.position=", legend_pos))
+  }
+  if (!is.null(key_mm)) {
+    th <- th + ggplot2::theme(legend.key.size = grid::unit(key_mm, "mm"))
+    applied <- c(applied, paste0("legend.key.size=", key_mm, "mm"))
+  }
+  if (!is.null(margin_mm)) {
+    th <- th + ggplot2::theme(plot.margin = ggplot2::margin(margin_mm, margin_mm, margin_mm, margin_mm))
+    applied <- c(applied, paste0("plot.margin=", margin_mm, "mm"))
+  }
+  if (!is.null(angle_x)) {
+    th <- th + ggplot2::theme(axis.text.x = ggplot2::element_text(angle = angle_x, hjust = if (!is.null(hjust_x)) hjust_x else 1))
+    applied <- c(applied, paste0("axis.text.x.angle=", angle_x))
+  }
+  if (length(applied)) plot <- plot + th
+  attr(plot, "pp_machine_fixes_applied") <- applied
+  attr(plot, "pp_machine_fixes_requested") <- vapply(fixes, function(f) f$param %||% "", character(1))
+  plot
+}
+
+# Save PDF+PNG, run rendered-image QA on the PNG preview, and when the QA
+# returns warn/fail with machine-applicable fixes, re-render once with those
+# fixes applied. Iteration count is attached for metadata recording.
+pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
+                                     max_iterations = 1L, overwrite = FALSE, width = NULL, height = NULL,
+                                     dpi = NULL, ...) {
+  output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
+                              overwrite = overwrite, width = width, height = height, dpi = dpi, ...)
+  iterations <- 0L
+  all_fixes <- character()
+  qa_status <- NULL
+  png_file <- if ("png" %in% names(output_files)) output_files[["png"]]
+  while (iterations < max_iterations && !is.null(png_file)) {
+    qa <- pp_run_visual_qa(png_file, extra_args = c("--ocr", "off"))
+    if (is.null(qa)) break
+    qa_status <- qa$status %||% NA_character_
+    if (!identical(qa_status, "warn") && !identical(qa_status, "fail")) break
+    fixed <- pp_apply_machine_fixes(plot, qa)
+    new_fixes <- attr(fixed, "pp_machine_fixes_applied")
+    theme_fixes <- new_fixes[!grepl("manual:", new_fixes)]
+    if (!length(theme_fixes)) break
+    plot <- fixed
+    all_fixes <- c(all_fixes, theme_fixes)
+    iterations <- iterations + 1L
+    output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
+                                overwrite = TRUE, width = width, height = height, dpi = dpi, ...)
+  }
+  attr(output_files, "qa_iterations") <- iterations
+  attr(output_files, "qa_machine_fixes") <- all_fixes
+  attr(output_files, "qa_final_status") <- qa_status
+  output_files
+}
+
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
                          dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE, ...) {
   if (!isTRUE(overwrite) && file.exists(filename)) {
