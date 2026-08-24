@@ -175,12 +175,12 @@ def make_svg_fixture(dst: Path) -> None:
     dst.write_text(
         """<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
 <rect width="1200" height="620" fill="white"/>
-<text x="600" y="52" text-anchor="middle" font-size="30">Presentation style SVG title</text>
+<text x="600" y="52" text-anchor="middle" font-size="110">Presentation style SVG title</text>
 <line x1="90" y1="140" x2="1110" y2="140" stroke="#eeeeee"/>
 <line x1="90" y1="240" x2="1110" y2="240" stroke="#eeeeee"/>
 <line x1="90" y1="340" x2="1110" y2="340" stroke="#eeeeee"/>
 <line x1="90" y1="440" x2="1110" y2="440" stroke="#eeeeee"/>
-<rect x="120" y="180" width="820" height="280" fill="none" stroke="#333333" stroke-width="3"/>
+<rect x="120" y="180" width="820" height="280" fill="none" stroke="#333333" stroke-width="14"/>
 <circle cx="220" cy="385" r="15" fill="#4C78A8"/>
 <circle cx="390" cy="315" r="15" fill="#E15759"/>
 <circle cx="560" cy="250" r="15" fill="#59A14F"/>
