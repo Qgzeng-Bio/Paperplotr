@@ -47,6 +47,12 @@ Default outputs:
 
 ## Final-size production
 
+For a main figure that will be refined panel by panel, first use
+`references/figure-project-workflow.md`. Read the current project status, obtain
+layout confirmation, then build/revise individual panels and assemble drawing
+objects. Do not export every child at a generic 89 mm or scale PNGs into slots.
+Data/code/style changes invalidate dependent builds and context-specific reviews.
+
 ```r
 render_spec <- pp_render_spec(n_panels = 4)
 outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = render_spec)

@@ -4,6 +4,9 @@ Use `paperplot-skills` for standalone R/ggplot2 scientific plotting tasks that n
 
 ## Required Behavior
 
+- For main figures, load the project state and recompute freshness first; follow `references/figure-project-workflow.md`.
+- Obtain layout confirmation separately from panel and final figure reviews. Build each panel at its allocated final size.
+- Preserve immutable revisions and original data; compose drawing objects, never resized PNG tiles.
 - Diagnose source figures before redesigning.
 - Use `scripts/paperplot_helpers.R`; do not load PaperPlotR.
 - Start from a template in `templates/`.

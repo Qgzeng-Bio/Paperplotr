@@ -117,6 +117,9 @@ Arial Regular/Bold/Italic, JSON, vector/raster export and Python/PDF inspection.
 Preview remains possible without full QA, but is never certified as a final figure.
 The runtime installer includes the production modules, recipe engine and
 environment/export auditing scripts. See `references/production-render-contract.md`.
+It also installs `figure-project.R`, `create-example-project.R` and the project
+state/build modules. Project mode requires jsonlite and patchwork; it stores
+research projects outside the Skill installation. See `references/figure-project-workflow.md`.
 
 Set `PAPERPLOT_RSCRIPT` or `PAPERPLOT_PYTHON` when the default `Rscript` /
 `python3` on `PATH` is not the environment with the required packages.

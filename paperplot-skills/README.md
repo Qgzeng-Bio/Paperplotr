@@ -12,6 +12,25 @@ data preservation, explicit demo mode, physical export audits and final QA.
 No missing data are synthesized in production. File smoke-test success is
 reported separately from visual acceptance and human review.
 
+## Main figure projects
+
+Use [figure project mode](references/figure-project-workflow.md) to plan a whole
+figure, build panels independently, revise only one panel and assemble objects
+at their final physical allocation. Projects retain immutable revisions and
+track data, code, layout and shared-style changes. Start with a layout sketch,
+confirm it, then work panel by panel. The four operations are available through
+`scripts/figure-project.R`; no UI or PaperPlotR package installation is needed.
+
+Generate a simulated walkthrough with:
+
+```sh
+Rscript paperplot-skills/scripts/create-example-project.R figures/example --run-demo
+```
+
+The example contains artificial data and scripted test confirmations, not
+scientific results or user approval. Real manuscript acceptance still needs the
+original inputs and review of the assembled figure.
+
 ## Install
 
 One-line install into Codex:

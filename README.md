@@ -64,6 +64,10 @@ at their final physical size (180 mm main composites, 89 mm single column).
 See the [production contract](paperplot-skills/references/production-render-contract.md)
 for environment checks, data preservation, and evidence-based acceptance.
 
+The Skill also supports [main figure projects](paperplot-skills/references/figure-project-workflow.md):
+confirm a layout, build panels separately, revise selected panels and assemble
+versioned figures with dependency and final-size checks.
+
 Install the skill into Codex with one command:
 
 ```bash
