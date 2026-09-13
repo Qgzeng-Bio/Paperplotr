@@ -7,6 +7,7 @@ if (!dir.exists(root)) fail("paperplot-skills directory not found from working d
 rel <- function(...) file.path(root, ...)
 
 template_files <- c(
+  "igs-composite-template.R",
   "single-panel-template.R",
   "multi-panel-template.R",
   "comparison-boxplot-template.R",

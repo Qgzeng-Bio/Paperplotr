@@ -148,7 +148,7 @@ pp_recipe_family_kind <- function(recipe_id) {
 
 pp_recipe_plot <- function(recipe_id, df = pp_recipe_mock_data(recipe_id)) {
   stopifnot(requireNamespace("ggplot2", quietly = TRUE))
-  pal <- pp_palette(length(unique(df$group)), "graphpad_discrete")
+  pal <- pp_palette(max(1L, length(unique(df$group))), "graphpad_discrete")
 
   if (recipe_id == "grouped_bar_errorbar_raw") {
     s <- pp_recipe_aggregate_mean(df, c("category", "group"))

@@ -32,8 +32,7 @@ df[[pc1_col]] <- as.numeric(df[[pc1_col]]); df[[pc2_col]] <- as.numeric(df[[pc2_
 df <- df[!is.na(df[[pc1_col]]) & !is.na(df[[pc2_col]]) & !is.na(df[[group_col]]), , drop = FALSE]
 if (nrow(df) < 8) stop("PCoA marginal template needs at least eight complete samples.", call. = FALSE)
 
-base <- pp_recipe_mock_data(recipe_id)
-recipe_df <- base[rep(seq_len(nrow(base)), length.out = nrow(df)), ]
+recipe_df <- data.frame(row.names = seq_len(nrow(df)))
 recipe_df$pc1 <- df[[pc1_col]]
 recipe_df$pc2 <- df[[pc2_col]]
 recipe_df$group <- factor(df[[group_col]])
@@ -57,7 +56,7 @@ plot <- pp_recipe_plot(recipe_id, recipe_df) + labs(x = pc1_label, y = pc2_label
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("ordination_semantics", "warn", "Confirm ordination method, distance metric, and axis percentages."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 8.9, height = 6.2, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 8.9, height = 6.2, overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id, input_csv, outputs, figure_spec$output_preset, design_decisions = c("Pattern reference: pca-pcoa-ordination.", "Marginal cues are restrained rugs, not unequal stitched panels.", "Ellipses are low-weight support, not the primary data."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm ordination method, distance metric, and PERMANOVA if shown.", figure_spec = figure_spec, metric_spec = metric_spec, design_brief = design_brief, design_plan = design_plan, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = pp_data_profile(recipe_df, sample_col = "sample", group_col = "group"))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, pp_extend_output_files(outputs, notes = notes_path, qa = qa_path), layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness), data_summary = pp_data_summary(recipe_df), design_brief = design_brief, design_plan = design_plan, data_profile = pp_data_profile(recipe_df, sample_col = "sample", group_col = "group"), visual_budget = visual_budget, label_strategy = label_strategy, statistical_plan = design_plan$statistical_plan)

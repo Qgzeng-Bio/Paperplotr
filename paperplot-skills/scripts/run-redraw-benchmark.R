@@ -72,7 +72,8 @@ fig4_plot <- ggplot(quality) +
   )
 
 fig4_stem <- file.path(out_root, "fig4_quality_traits_pattern_redraw")
-fig4_outputs <- pp_save_all(fig4_plot, fig4_stem, preset = "nature", overwrite = TRUE, width = 12.2, height = 6.2)
+fig4_outputs <- pp_save_all_with_qa_loop(fig4_plot, fig4_stem, preset = "nature", overwrite = FALSE,
+  render_spec = pp_render_spec(width_mm = 122, height_mm = 62))
 
 nlr <- read_tsv(nlr_data)
 nlr$Sample <- factor(nlr$Sample, levels = rev(nlr$Sample[order(nlr$High_NLR_total, decreasing = TRUE)]))
@@ -98,7 +99,8 @@ nlr_plot <- ggplot(nlr, aes(x = High_NLR_total, y = Sample)) +
   )
 
 nlr_stem <- file.path(out_root, "high_nlr_count_by_sample_pattern_redraw")
-nlr_outputs <- pp_save_all(nlr_plot, nlr_stem, preset = "single_column", overwrite = TRUE, width = 8.9, height = 8.2)
+nlr_outputs <- pp_save_all_with_qa_loop(nlr_plot, nlr_stem, preset = "single_column", overwrite = FALSE,
+  render_spec = pp_render_spec(width_mm = 89, height_mm = 82))
 
 manifest <- data.frame(
   case = c("fig4_quality_traits", "high_nlr_count_by_sample"),

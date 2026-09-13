@@ -1,6 +1,7 @@
 # Design-aware label strategy helpers for paperplot-skills.
 
-pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5) {
+pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5,
+                                  axis = "x", available_height_cm = NULL) {
   labels <- as.character(labels)
   labels <- labels[!is.na(labels)]
   if (length(labels) == 0) {
@@ -15,12 +16,17 @@ pp_label_burden_score <- function(labels, available_width_cm, font_size_pt = 6.5
   exact_score <- NULL
   if (requireNamespace("systemfonts", quietly = TRUE)) {
     widths_pt <- tryCatch(
-      systemfonts::string_width(labels, size = font_size_pt)$width,
+      systemfonts::string_width(labels, family = "Arial", size = font_size_pt),
       error = function(e) NULL
     )
     if (!is.null(widths_pt) && all(is.finite(widths_pt))) {
       exact_score <- unname(sum(widths_pt) / available_width_pt)
     }
+  }
+  if (identical(axis, "y")) {
+    if (is.null(available_height_cm)) stop("Vertical label budgeting requires available_height_cm.")
+    score <- max(max_chars * font_size_pt * .55 / available_width_pt,
+                 length(labels) * font_size_pt * 1.4 / (available_height_cm / 2.54 * 72))
   }
   status <- if (score < 0.8) "pass" else if (score <= 1.2) "warn" else "fail"
   message <- switch(status,
@@ -66,9 +72,11 @@ pp_select_key_labels <- function(data, sample_col, value_col = NULL, group_col =
   head(key, max_labels)
 }
 
-pp_label_strategy_v2 <- function(labels, figure_role, available_width_cm, sample_identity_role = "lookup") {
+pp_label_strategy_v2 <- function(labels, figure_role, available_width_cm, sample_identity_role = "lookup",
+                                 axis = "x", available_height_cm = NULL) {
   figure_role <- match.arg(figure_role, c("main", "supplement", "diagnostic", "exploratory"))
-  burden <- pp_label_burden_score(labels, available_width_cm = available_width_cm)
+  burden <- pp_label_burden_score(labels, available_width_cm = available_width_cm,
+                                  axis = axis, available_height_cm = available_height_cm)
   n <- length(unique(as.character(labels)))
   strategy <- "direct"
   visible_label_policy <- "show_all"

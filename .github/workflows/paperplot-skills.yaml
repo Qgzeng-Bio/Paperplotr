@@ -38,9 +38,24 @@ jobs:
 
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
+        env:
+          PAPERPLOT_MODE: demo
+
+      - name: Set up Python QA
+        run: python3 -m pip install Pillow pypdf
+
+      - name: Production contract regression tests
+        run: |
+          Rscript paperplot-skills/scripts/test-production-contract.R
+          python3 paperplot-skills/scripts/test-export-audit.py
+
+      - name: Report formal environment capabilities
+        run: Rscript paperplot-skills/scripts/check-environment.R
+        continue-on-error: true
 
       - name: Smoke test R templates
         run: Rscript paperplot-skills/scripts/smoke-test-templates.R
         env:
           PAPERPLOTR_SMOKE_BASE_DEVICES: "true"
           PAPERPLOTR_SMOKE_BASE_FAMILY: "sans"
+          PAPERPLOT_MODE: demo

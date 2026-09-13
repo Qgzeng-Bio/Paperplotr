@@ -50,14 +50,14 @@ layout_check <- pp_assess_layout_risk(1, plot_type = "distribution", label_strat
 p <- ggplot(df, aes(x = .data[[group_col]], y = .data[[value_col]], fill = .data[[group_col]])) +
   geom_violin(width = 0.72, linewidth = 0.28, alpha = 0.34, trim = FALSE) +
   geom_jitter(aes(colour = .data[[group_col]]), width = 0.08, size = pp_point_size("dense"), alpha = 0.72, show.legend = FALSE) +
-  stat_summary(fun = median, geom = "point", shape = 95, size = 6, colour = "#1F1F1F") +
+  stat_summary(fun = median, fun.min = median, fun.max = median, geom = "errorbar", width = 0.25, linewidth = 0.28, colour = "#1F1F1F") +
   pp_scale_fill(groups = df[[group_col]], guide = "none") +
   pp_scale_color(groups = df[[group_col]], guide = "none") +
   pp_theme(show_grid = FALSE) +
   labs(x = NULL, y = y_label)
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type))
+output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)

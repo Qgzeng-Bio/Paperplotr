@@ -6,7 +6,10 @@ pp_run_recipe_template <- function(recipe_id,
                                    width_cm = 8.9,
                                    height_cm = 6.2,
                                    output_stem = NULL,
-                                   y_label = "Value (a.u.)") {
+                                   y_label = "Value (a.u.)",
+                                   mode = Sys.getenv("PAPERPLOT_MODE", "production"),
+                                   render_spec = NULL) {
+  mode <- match.arg(mode, c("production", "preview", "demo"))
   if (!exists("helper_path", inherits = TRUE)) {
     helper_path <- Sys.getenv("PAPERPLOT_HELPER")
     if (!nzchar(helper_path)) helper_path <- "paperplot-skills/scripts/paperplot_helpers.R"
@@ -16,34 +19,36 @@ pp_run_recipe_template <- function(recipe_id,
   source(recipe_engine)
 
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
-  if (file.exists(input_path)) {
-    df <- read.csv(input_path, stringsAsFactors = FALSE, check.names = FALSE)
-    if ("group" %in% names(df)) df$group <- factor(df$group)
-    if ("category" %in% names(df)) df$category <- factor(df$category)
-    if ("metric" %in% names(df)) df$metric <- factor(df$metric)
-    if ("chr" %in% names(df)) df$chr <- factor(df$chr)
-    if ("set" %in% names(df)) df$set <- factor(df$set)
-    if ("track" %in% names(df)) df$track <- factor(df$track)
+  if (mode != "demo") {
+    df <- pp_read_recipe_data(input_path, recipe_id, mode)
+    if ("group" %in% names(df)) df$group <- factor(df$group, levels = unique(df$group))
+    if ("category" %in% names(df)) df$category <- factor(df$category, levels = unique(df$category))
+    if ("metric" %in% names(df)) df$metric <- factor(df$metric, levels = unique(df$metric))
+    if ("chr" %in% names(df)) df$chr <- factor(df$chr, levels = unique(df$chr))
+    if ("set" %in% names(df)) df$set <- factor(df$set, levels = unique(df$set))
+    if ("track" %in% names(df)) df$track <- factor(df$track, levels = unique(df$track))
   } else {
     df <- pp_recipe_mock_data(recipe_id)
   }
   n <- nrow(df)
-  if (!"label" %in% names(df)) df$label <- if ("gene" %in% names(df)) ifelse(seq_len(n) <= 8, df$gene, "") else ""
-  if (!"time" %in% names(df)) df$time <- rep(seq_len(max(1, min(12, n))), length.out = n)
-  if (!"longitude" %in% names(df)) df$longitude <- seq(70, 125, length.out = n)
-  if (!"latitude" %in% names(df)) df$latitude <- seq(15, 52, length.out = n)
-  if (!"weight" %in% names(df)) df$weight <- if ("value" %in% names(df)) abs(df$value) else rep(1, n)
-  if (!"source" %in% names(df)) df$source <- factor(rep(paste0("Source", LETTERS[1:5]), length.out = n))
-  if (!"target" %in% names(df)) df$target <- factor(rep(paste0("Target", LETTERS[1:5]), each = 2, length.out = n))
-  if (!"track" %in% names(df)) df$track <- factor(rep(paste0("Track", seq_len(4)), length.out = n))
-  if (!"start" %in% names(df)) df$start <- seq_len(n) * 100000
-  if (!"end" %in% names(df)) df$end <- df$start + 50000
-  if (!"observed" %in% names(df)) {
-    base_value <- if ("value" %in% names(df)) df$value else seq_len(n)
-    df$observed <- pmin(1, pmax(0, stats::pnorm(base_value)))
+  if (mode == "demo") {
+    if (!"label" %in% names(df)) df$label <- if ("gene" %in% names(df)) ifelse(seq_len(n) <= 8, df$gene, "") else ""
+    if (!"time" %in% names(df)) df$time <- rep(seq_len(max(1, min(12, n))), length.out = n)
+    if (!"longitude" %in% names(df)) df$longitude <- seq(70, 125, length.out = n)
+    if (!"latitude" %in% names(df)) df$latitude <- seq(15, 52, length.out = n)
+    if (!"weight" %in% names(df)) df$weight <- if ("value" %in% names(df)) abs(df$value) else rep(1, n)
+    if (!"source" %in% names(df)) df$source <- factor(rep(paste0("Source", LETTERS[1:5]), length.out = n))
+    if (!"target" %in% names(df)) df$target <- factor(rep(paste0("Target", LETTERS[1:5]), each = 2, length.out = n))
+    if (!"track" %in% names(df)) df$track <- factor(rep(paste0("Track", seq_len(4)), length.out = n))
+    if (!"start" %in% names(df)) df$start <- seq_len(n) * 100000
+    if (!"end" %in% names(df)) df$end <- df$start + 50000
+    if (!"observed" %in% names(df)) {
+      base_value <- if ("value" %in% names(df)) df$value else seq_len(n)
+      df$observed <- pmin(1, pmax(0, stats::pnorm(base_value)))
+    }
+    if (!"predicted" %in% names(df)) df$predicted <- pmin(1, pmax(0, df$observed + stats::rnorm(n, sd = 0.05)))
+    if (!"residual" %in% names(df)) df$residual <- df$observed - df$predicted
   }
-  if (!"predicted" %in% names(df)) df$predicted <- pmin(1, pmax(0, df$observed + stats::rnorm(n, sd = 0.05)))
-  if (!"residual" %in% names(df)) df$residual <- df$observed - df$predicted
   plot <- pp_recipe_plot(recipe_id, df)
 
   figure_spec <- pp_figure_spec(
@@ -75,7 +80,7 @@ pp_run_recipe_template <- function(recipe_id,
   visual_budget <- pp_visual_budget(
     figure_role = "main",
     n_panels = if ("metric" %in% names(df)) min(6, length(unique(df$metric))) else 1,
-    n_labels = 8,
+    n_labels = length(unique(df[[label_col]])),
     n_legend_entries = if ("group" %in% names(df)) length(unique(df$group)) else 0
   )
   design_brief <- pp_design_brief(
@@ -102,7 +107,9 @@ pp_run_recipe_template <- function(recipe_id,
   )
 
   if (is.null(output_stem)) output_stem <- file.path(output_dir, template_id)
-  outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = width_cm, height = height_cm, overwrite = TRUE)
+  render_spec <- render_spec %||% pp_render_spec(n_panels = pp_infer_panel_count(plot), mode = mode)
+  outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset,
+    qa_context = list(family = figure_spec$plot_type), render_spec = render_spec, overwrite = FALSE)
   invisible(lapply(outputs, pp_assert_output))
   notes_path <- paste0(output_stem, "_notes.md")
   metadata_path <- paste0(output_stem, "_metadata.json")

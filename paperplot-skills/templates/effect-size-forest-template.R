@@ -123,7 +123,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(

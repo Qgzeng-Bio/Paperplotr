@@ -17,6 +17,7 @@ if (!file.exists(helper_path)) fail("Missing helper: ", helper_path)
 if (!file.exists(validator_path)) fail("Missing output validator: ", validator_path)
 
 template_files <- c(
+  "igs-composite-template.R",
   "single-panel-template.R",
   "multi-panel-template.R",
   "comparison-boxplot-template.R",
@@ -56,6 +57,12 @@ template_files <- c(
 
 missing_templates <- template_files[!file.exists(file.path(template_root, template_files))]
 if (length(missing_templates) > 0) fail("Missing template files: ", paste(missing_templates, collapse = ", "))
+selected_templates <- Sys.getenv("PAPERPLOT_SMOKE_TEMPLATES", "")
+if (nzchar(selected_templates)) {
+  selected <- strsplit(selected_templates, ",", fixed = TRUE)[[1]]
+  if (length(setdiff(selected, template_files))) fail("Unknown selected smoke template.")
+  template_files <- selected
+}
 
 r_string <- function(x) paste0('"', gsub('(["\\\\])', '\\\\\\1', x), '"')
 replace_fixed <- function(text, old, new) gsub(old, new, text, fixed = TRUE)
@@ -181,11 +188,18 @@ run_template <- function(template_name, work_root) {
   dir.create(template_work, recursive = TRUE, showWarnings = FALSE)
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   make_smoke_data(input_path)
+  if (identical(template_name, "igs-composite-template.R")) {
+    fixture <- data.frame(species = paste("Test species", letters[1:6]), suffix = "(A)", n = 11:16,
+      p_ge95 = c(80, 40, 30, 10, 0, 0), p90_95 = 5, p85_90 = 5, p80_85 = 5,
+      p_lt80 = c(5, 45, 55, 75, 85, 85), median = seq(.72, .97, length.out = 6), max = seq(.8, .99, length.out = 6))
+    write.csv(fixture, input_path, row.names = FALSE)
+  }
 
   patched <- patch_template(readLines(template_path, warn = FALSE), input_path, output_dir)
   writeLines(patched, script_path)
 
-  output <- system2(rscript_bin, script_path, stdout = TRUE, stderr = TRUE, env = paste0("PAPERPLOT_HELPER=", helper_path))
+  output <- system2(rscript_bin, script_path, stdout = TRUE, stderr = TRUE,
+    env = c(paste0("PAPERPLOT_HELPER=", helper_path), "PAPERPLOT_MODE=demo"))
   status <- attr(output, "status")
   if (is.null(status)) status <- 0L
 
@@ -215,16 +229,21 @@ run_template <- function(template_name, work_root) {
     if (!is.na(metadata_problem)) problems <- c(problems, metadata_problem)
   }
   if (length(problems) == 0) {
-    validation <- system2(rscript_bin, c(validator_path, output_dir), stdout = TRUE, stderr = TRUE)
+    validation <- system2(rscript_bin, c(validator_path, output_dir, "--smoke"), stdout = TRUE, stderr = TRUE)
     validation_status <- attr(validation, "status")
     if (is.null(validation_status)) validation_status <- 0L
     if (!identical(validation_status, 0L)) problems <- c(problems, paste("output validator status", validation_status), paste(validation, collapse = " | "))
   }
   if (length(problems) > 0 && length(output) > 0) problems <- c(problems, paste("Rscript output:", paste(tail(output, 8), collapse = " | ")))
+  contracts <- list.files(output_dir, pattern = "_production_qa\\.json$", full.names = TRUE)
+  visual_acceptance <- if (length(contracts) && requireNamespace("jsonlite", quietly = TRUE)) {
+    tryCatch(jsonlite::fromJSON(contracts[[1]])$final$status, error = function(e) "unverified")
+  } else "not_run"
 
   data.frame(
     template = template_name,
     pass = length(problems) == 0,
+    visual_acceptance = visual_acceptance,
     pdf = length(pdf_files),
     png = length(png_files),
     notes = length(notes_files),
@@ -241,7 +260,7 @@ dir.create(work_root, recursive = TRUE, showWarnings = FALSE)
 
 results <- do.call(rbind, lapply(template_files, function(template_name) {
   tryCatch(run_template(template_name, work_root), error = function(e) {
-    data.frame(template = template_name, pass = FALSE, pdf = 0L, png = 0L, notes = 0L, metadata = 0L, qa = 0L, detail = conditionMessage(e), output_dir = NA_character_, stringsAsFactors = FALSE)
+    data.frame(template = template_name, pass = FALSE, visual_acceptance = "not_run", pdf = 0L, png = 0L, notes = 0L, metadata = 0L, qa = 0L, detail = conditionMessage(e), output_dir = NA_character_, stringsAsFactors = FALSE)
   })
 }))
 
