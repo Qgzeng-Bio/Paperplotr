@@ -35,6 +35,7 @@ jobs:
           extra-packages: |
             local::.
             any::patchwork
+            any::jsonlite
 
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
@@ -52,6 +53,18 @@ jobs:
       - name: Report formal environment capabilities
         run: Rscript paperplot-skills/scripts/check-environment.R
         continue-on-error: true
+
+      - name: Figure project incremental workflow tests
+        run: Rscript paperplot-skills/scripts/test-figure-project.R
+        env:
+          PAPERPLOT_PROJECT_TEST_OUTPUT: ${{ runner.temp }}/paperplot-project-test
+
+      - name: Upload project test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figure-project-test
+          path: ${{ runner.temp }}/paperplot-project-test
 
       - name: Smoke test R templates
         run: Rscript paperplot-skills/scripts/smoke-test-templates.R

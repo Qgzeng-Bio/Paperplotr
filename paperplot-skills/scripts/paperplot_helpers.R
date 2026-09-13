@@ -14,7 +14,7 @@ pp_helper_source_file <- local({
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.5.0"
+pp_helper_version <- "standalone-0.6.0"
 
 # ---- Style registry (WP1): single source of truth for global style constants ----
 # Templates must consume these through pp_theme()/pp_finalize(). Literal
@@ -1032,7 +1032,7 @@ pp_qa_candidate_improved <- function(initial, candidate) {
 pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "svg", "png"),
                                      max_iterations = 2L, overwrite = FALSE, width = NULL, height = NULL,
                                      dpi = NULL, qa_context = list(), qa_out_dir = paste0(output_stem, "_visual_qa"),
-                                     render_spec = NULL, ...) {
+                                     render_spec = NULL, project_context = NULL, ...) {
   if (!isTRUE(overwrite) && dir.exists(qa_out_dir)) stop("Refusing to overwrite existing QA directory: ", qa_out_dir, call. = FALSE)
   render_spec <- render_spec %||% attr(plot, "pp_render_spec") %||% pp_render_spec(n_panels = pp_infer_panel_count(plot),
     width_mm = if (!is.null(width)) width * 10, height_mm = if (!is.null(height)) height * 10)
@@ -1106,8 +1106,11 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   attr(output_files, "qa_final_dir") <- qa$qa_dir %||% qa_out_dir
   export_audit <- pp_run_export_audit(output_files, render_spec, output_stem)
   visual_status <- if (isTRUE(qa$available)) qa$status else "unverified"
-  final <- pp_final_qa(list(data_integrity = "pass", physical_export = export_audit$status,
-    visual_layout = visual_status), render_spec$human_review, render_spec$mode)
+  checks <- list(data_integrity = "pass", physical_export = export_audit$status, visual_layout = visual_status)
+  if (!is.null(project_context$checks)) checks <- c(checks,
+    stats::setNames(project_context$checks, paste0("project_", names(project_context$checks))))
+  final <- pp_final_qa(checks, render_spec$human_review, render_spec$mode)
+  attr(output_files, "qa_project_context") <- project_context
   attr(output_files, "qa_contract") <- final
   attr(output_files, "qa_render_spec") <- render_spec
   attr(output_files, "qa_style_changes") <- attr(normalized, "pp_style_changes")
@@ -1117,7 +1120,7 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     output_md5 = as.list(stats::setNames(unname(tools::md5sum(unname(output_files))), basename(output_files))))
   attr(output_files, "qa_agent_tasks") <- qa$top_risks %||% list()
   writeLines(pp_to_json(list(final = final, render_spec = render_spec, export_audit = export_audit,
-    visual_qa = qa, provenance = attr(output_files, "qa_evidence"))), paste0(output_stem, "_production_qa.json"))
+    visual_qa = qa, project_context = project_context, provenance = attr(output_files, "qa_evidence"))), paste0(output_stem, "_production_qa.json"))
   writeLines(c("# Production delivery", paste("Status:", final$status), paste("Tier:", final$tier),
     paste("Canvas (mm):", width * 10, "x", height * 10), "Requested font: Arial; actual fonts are verified in the export audit.",
     paste("Role sizes (pt):", paste(names(render_spec$text_pt), unlist(render_spec$text_pt), sep = "=", collapse = "; ")),
@@ -1538,6 +1541,7 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     export_audit = attr(output_files, "qa_export_audit"),
     provenance = attr(output_files, "qa_evidence"),
     agent_tasks = attr(output_files, "qa_agent_tasks"),
+    project_context = attr(output_files, "qa_project_context"),
     outputs = as.list(output_files)
   )
   writeLines(pp_to_json(payload), con = path)
@@ -1682,3 +1686,4 @@ invisible(lapply(c("statistical-expression.R"), pp_source_helper_module))
 invisible(lapply(c("bioinformatics-semantics.R"), pp_source_helper_module))
 
 invisible(lapply(c("production-render.R"), pp_source_helper_module))
+invisible(lapply(c("figure-project.R", "figure-project-build.R"), pp_source_helper_module))
