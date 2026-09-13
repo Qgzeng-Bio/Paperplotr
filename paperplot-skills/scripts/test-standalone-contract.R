@@ -100,7 +100,7 @@ pp_run_visual_qa <- function(...) {
   if (qa_calls == 1L) {
     list(available = TRUE, status = "warn", manuscript_readiness_score = 8,
          qa_dir = tempfile("qa-initial-"),
-         machine_fixes = list(list(param = "axis.text.x.angle", value = 45)))
+         machine_fixes = list(list(param = "axis.text.x.angle", value = 45, axis = "x")))
   } else {
     list(available = TRUE, status = "warn", manuscript_readiness_score = 7,
          qa_dir = tempfile("qa-candidate-"), machine_fixes = list())

@@ -14,7 +14,7 @@ pp_helper_source_file <- local({
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.4.1"
+pp_helper_version <- "standalone-0.5.0"
 
 # ---- Style registry (WP1): single source of truth for global style constants ----
 # Templates must consume these through pp_theme()/pp_finalize(). Literal
@@ -37,7 +37,7 @@ pp_style_registry <- function() {
       body = 7,
       label = 6.5,
       minimum = 6,
-      panel_tag = 8
+      panel_tag = 12
     ),
     line_widths = list(
       axis_line = 0.35,
@@ -851,6 +851,7 @@ pp_set_qa_context <- function(plot, family = NULL, expected_panels = NULL,
 }
 
 pp_infer_panel_count <- function(plot) {
+  if (inherits(plot, "patchwork")) return(sum(vapply(plot$patches$plots, pp_infer_panel_count, integer(1))) + 1L)
   if (!inherits(plot, "ggplot")) return(1L)
   tryCatch({
     layout <- ggplot2::ggplot_build(plot)$layout$layout
@@ -873,7 +874,9 @@ pp_resolve_qa_context <- function(plot, preset, width = NULL, context = list()) 
 }
 
 pp_qa_context_args <- function(context) {
-  args <- c("--ocr", "off")
+  args <- c("--ocr", context$ocr %||% "auto")
+  if (isTRUE(context$strict_nature)) args <- c(args, "--strict-nature")
+  if (isTRUE(context$strict_detail_qa)) args <- c(args, "--strict-detail-qa")
   if (!is.null(context$family) && nzchar(context$family)) args <- c(args, "--family", shQuote(context$family))
   if (!is.null(context$expected_panels)) args <- c(args, "--expected-panels", as.character(context$expected_panels))
   if (!is.null(context$layout_profile)) args <- c(args, "--layout-profile", context$layout_profile)
@@ -886,6 +889,8 @@ pp_qa_context_args <- function(context) {
 pp_locate_qa_script <- function() {
   env <- Sys.getenv("PAPERPLOT_QA_SCRIPT", unset = "")
   if (nzchar(env) && file.exists(env)) return(normalizePath(env))
+  bundled <- file.path(pp_helper_script_dir, "visual-qa-rendered-image.py")
+  if (file.exists(bundled)) return(normalizePath(bundled))
   rel_candidates <- c(
     file.path("paperplot-skills", "scripts", "visual-qa-rendered-image.py"),
     file.path("scripts", "visual-qa-rendered-image.py")
@@ -938,7 +943,7 @@ pp_run_visual_qa <- function(path, out_dir = tempfile("pp-qa-"), extra_args = ch
   )
   status <- attr(output, "status") %||% 0L
   json_path <- file.path(out_dir, "visual_qa.json")
-  if (!identical(as.integer(status), 0L) || !file.exists(json_path)) {
+  if (!as.integer(status) %in% c(0L, 2L) || !file.exists(json_path)) {
     return(list(available = FALSE, status = "unavailable", qa_dir = out_dir,
                 error = paste(output, collapse = "\n")))
   }
@@ -948,6 +953,7 @@ pp_run_visual_qa <- function(path, out_dir = tempfile("pp-qa-"), extra_args = ch
   payload <- tryCatch(jsonlite::fromJSON(json_path, simplifyVector = FALSE)$image_qa, error = function(e) NULL)
   if (is.null(payload)) return(list(available = FALSE, status = "unavailable", qa_dir = out_dir, error = "visual_qa.json could not be parsed"))
   payload$available <- TRUE
+  if (identical(as.integer(status), 2L)) payload$status <- "fail"
   payload$qa_dir <- out_dir
   payload
 }
@@ -963,6 +969,7 @@ pp_apply_machine_fixes <- function(plot, qa_payload) {
   for (f in fixes) {
     param <- f$param; value <- f$value
     if (is.null(param)) next
+    if (param %in% c("axis.text.x.angle", "axis.text.x.hjust") && !identical(f$axis, "x")) next
     switch(param,
       "legend.position" = { if (value %in% c("bottom", "right", "none")) legend_pos <- value },
       "legend.key.size_mm" = {
@@ -1016,19 +1023,41 @@ pp_qa_candidate_improved <- function(initial, candidate) {
   candidate_rank <- if (candidate_status %in% names(rank)) unname(rank[[candidate_status]]) else 0L
   if (candidate_rank > initial_rank) return(TRUE)
   if (candidate_rank < initial_rank) return(FALSE)
-  initial_score <- suppressWarnings(as.numeric(initial$manuscript_readiness_score %||% NA_real_))
-  candidate_score <- suppressWarnings(as.numeric(candidate$manuscript_readiness_score %||% NA_real_))
-  is.finite(initial_score) && is.finite(candidate_score) && candidate_score > initial_score
+  codes <- function(x) vapply(Filter(function(r) !identical(r$status, "pass"), x$top_risks %||% list()), function(r) r$code, character(1))
+  old_codes <- codes(initial); new_codes <- codes(candidate)
+  length(new_codes) < length(old_codes) && all(new_codes %in% old_codes)
 }
 
-# Save PDF+PNG, run rendered-image QA, apply at most one whitelisted visual
-# retry, then always QA the retried output before reporting final status.
-pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
-                                     max_iterations = 1L, overwrite = FALSE, width = NULL, height = NULL,
-                                     dpi = NULL, qa_context = list(), qa_out_dir = paste0(output_stem, "_visual_qa"), ...) {
+# Save final-size files, retaining only verified improvements across retries.
+pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "svg", "png"),
+                                     max_iterations = 2L, overwrite = FALSE, width = NULL, height = NULL,
+                                     dpi = NULL, qa_context = list(), qa_out_dir = paste0(output_stem, "_visual_qa"),
+                                     render_spec = NULL, ...) {
   if (!isTRUE(overwrite) && dir.exists(qa_out_dir)) stop("Refusing to overwrite existing QA directory: ", qa_out_dir, call. = FALSE)
-  plot <- pp_finalize(plot)
-  initial_plot <- plot
+  render_spec <- render_spec %||% attr(plot, "pp_render_spec") %||% pp_render_spec(n_panels = pp_infer_panel_count(plot),
+    width_mm = if (!is.null(width)) width * 10, height_mm = if (!is.null(height)) height * 10)
+  render_spec$shared_row_labels <- attr(plot, "pp_shared_row_labels")
+  if (render_spec$mode == "production" && !all(pp_arial_faces())) {
+    stop("Arial Regular, Bold and Italic are required. Run scripts/check-environment.R; no font substitution was made.", call. = FALSE)
+  }
+  normalized <- pp_normalize_production(plot, render_spec)
+  baseline <- unserialize(serialize(plot, NULL))
+  seed_positions <- function(p) {
+    if (inherits(p, "patchwork")) p$patches$plots <- lapply(p$patches$plots, seed_positions)
+    for (i in seq_along(p$layers)) if (any(class(p$layers[[i]]$position) %in% c("PositionJitter", "PositionJitterdodge"))) p$layers[[i]]$position$seed <- 104729L
+    p
+  }
+  baseline <- seed_positions(baseline)
+  evidence <- pp_plot_evidence(baseline)
+  pp_assert_data_unchanged(evidence, pp_plot_evidence(normalized))
+  plot <- normalized
+  width <- render_spec$width_mm / 10; height <- render_spec$height_mm / 10; dpi <- render_spec$dpi
+  qa_context <- utils::modifyList(qa_context, list(ocr = render_spec$ocr,
+    strict_nature = render_spec$mode == "production", strict_detail_qa = render_spec$mode == "production"))
+  evidence_path <- paste0(output_stem, "_data_evidence.rds")
+  if (!overwrite && file.exists(evidence_path)) stop("Refusing to overwrite data evidence.")
+  dir.create(dirname(output_stem), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(evidence, evidence_path)
   context <- pp_resolve_qa_context(plot, preset = preset, width = width, context = qa_context)
   output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
                               overwrite = overwrite, width = width, height = height, dpi = dpi,
@@ -1043,28 +1072,28 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     list(available = FALSE, status = "unavailable", qa_dir = qa_out_dir, error = "PNG preview was not requested")
   }
   initial_status <- qa$status %||% "unavailable"
-  initial_qa <- qa
   rejected_fixes <- character()
   while (iterations < max_iterations && isTRUE(qa$available) && qa$status %in% c("warn", "fail")) {
+    previous_plot <- plot; previous_qa <- qa; previous_fixes <- all_fixes
     fixed <- pp_apply_machine_fixes(plot, qa)
     new_fixes <- attr(fixed, "pp_machine_fixes_applied")
     theme_fixes <- new_fixes[!grepl("manual:", new_fixes)]
     if (!length(theme_fixes)) break
     plot <- fixed
+    pp_assert_data_unchanged(evidence, pp_plot_evidence(plot))
     all_fixes <- c(all_fixes, theme_fixes)
     iterations <- iterations + 1L
     output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
                                 overwrite = TRUE, width = width, height = height, dpi = dpi,
                                 finalize_plot = FALSE, ...)
     qa <- pp_run_visual_qa(png_file, out_dir = file.path(qa_out_dir, paste0("iteration-", iterations)), extra_args = qa_args)
-  }
-  if (iterations > 0L && !pp_qa_candidate_improved(initial_qa, qa)) {
-    rejected_fixes <- all_fixes
-    all_fixes <- character()
-    output_files <- pp_save_all(initial_plot, output_stem, preset = preset, formats = formats,
-                                overwrite = TRUE, width = width, height = height, dpi = dpi,
-                                finalize_plot = FALSE, ...)
-    qa <- initial_qa
+    if (!pp_qa_candidate_improved(previous_qa, qa)) {
+      rejected_fixes <- c(rejected_fixes, theme_fixes)
+      all_fixes <- previous_fixes; plot <- previous_plot; qa <- previous_qa
+      output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
+        overwrite = TRUE, width = width, height = height, dpi = dpi, finalize_plot = FALSE, ...)
+      break
+    }
   }
   attr(output_files, "qa_iterations") <- iterations
   attr(output_files, "qa_machine_fixes") <- all_fixes
@@ -1075,6 +1104,26 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   attr(output_files, "qa_error") <- qa$error %||% NULL
   attr(output_files, "qa_context") <- context
   attr(output_files, "qa_final_dir") <- qa$qa_dir %||% qa_out_dir
+  export_audit <- pp_run_export_audit(output_files, render_spec, output_stem)
+  visual_status <- if (isTRUE(qa$available)) qa$status else "unverified"
+  final <- pp_final_qa(list(data_integrity = "pass", physical_export = export_audit$status,
+    visual_layout = visual_status), render_spec$human_review, render_spec$mode)
+  attr(output_files, "qa_contract") <- final
+  attr(output_files, "qa_render_spec") <- render_spec
+  attr(output_files, "qa_style_changes") <- attr(normalized, "pp_style_changes")
+  attr(output_files, "qa_export_audit") <- export_audit
+  attr(output_files, "qa_evidence") <- list(path = evidence_path, md5 = unname(tools::md5sum(evidence_path)),
+    helper_version = pp_helper_version, detector_md5 = if (!is.null(pp_locate_qa_script())) unname(tools::md5sum(pp_locate_qa_script())) else NA_character_,
+    output_md5 = as.list(stats::setNames(unname(tools::md5sum(unname(output_files))), basename(output_files))))
+  attr(output_files, "qa_agent_tasks") <- qa$top_risks %||% list()
+  writeLines(pp_to_json(list(final = final, render_spec = render_spec, export_audit = export_audit,
+    visual_qa = qa, provenance = attr(output_files, "qa_evidence"))), paste0(output_stem, "_production_qa.json"))
+  writeLines(c("# Production delivery", paste("Status:", final$status), paste("Tier:", final$tier),
+    paste("Canvas (mm):", width * 10, "x", height * 10), "Requested font: Arial; actual fonts are verified in the export audit.",
+    paste("Role sizes (pt):", paste(names(render_spec$text_pt), unlist(render_spec$text_pt), sep = "=", collapse = "; ")),
+    paste("Human review:", final$human_review), paste("Data evidence:", evidence_path),
+    paste("Final checks:", paste(names(final$checks), unlist(final$checks), sep = "=", collapse = "; ")),
+    unname(output_files)), paste0(output_stem, "_delivery.md"))
   output_files
 }
 
@@ -1158,6 +1207,9 @@ pp_json_escape <- function(x) {
 }
 
 pp_to_json <- function(x, indent = 0) {
+  if (requireNamespace("jsonlite", quietly = TRUE)) {
+    return(as.character(jsonlite::toJSON(x, auto_unbox = TRUE, null = "null", na = "null", pretty = TRUE, force = TRUE, digits = 12)))
+  }
   sp <- paste(rep(" ", indent), collapse = "")
   sp2 <- paste(rep(" ", indent + 2), collapse = "")
   if (is.null(x)) return("null")
@@ -1257,6 +1309,9 @@ pp_qa_preflight <- function(figure_spec, metric_spec = NULL, label_strategy = NU
 
 pp_qa_postflight <- function(output_files, notes_path = NULL, metadata_path = NULL) {
   results <- list()
+  contract <- attr(output_files, "qa_contract")
+  final_status <- if (!is.null(contract)) contract$status else attr(output_files, "qa_final_status") %||% "unverified"
+  results <- list(pp_qa_result("rendered_final", if (final_status %in% c("pass", "fail")) final_status else "warn", final_status))
   for (nm in names(output_files)) {
     status <- if (file.exists(output_files[[nm]]) && file.info(output_files[[nm]])[["size"]] >= pp_min_output_size(output_files[[nm]])) "pass" else "fail"
     results <- c(results, list(pp_qa_result(paste0("output_", nm), status, output_files[[nm]])))
@@ -1439,6 +1494,13 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     final_qa_dir = attr(output_files, "qa_final_dir") %||% NULL,
     error = attr(output_files, "qa_error") %||% NULL
   )
+  contract <- attr(output_files, "qa_contract")
+  if (!is.null(contract)) qa <- contract
+  actual_spec <- attr(output_files, "qa_render_spec")
+  if (!is.null(actual_spec)) {
+    layout$width_cm <- actual_spec$width_mm / 10
+    layout$height_cm <- actual_spec$height_mm / 10
+  }
   payload <- list(
     figure_id = figure_spec$figure_id,
     template_id = figure_spec$template_id,
@@ -1460,6 +1522,7 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     visual_budget = visual_budget,
     label_strategy = label_strategy,
     palette_plan = palette_plan %||% palette,
+    palette = palette,
     style = list(theme = "pp_theme", palette = palette),
     panel_hierarchy = panel_hierarchy,
     redraw_strategy = redraw_strategy,
@@ -1470,6 +1533,11 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     sidecars = sidecars,
     qa = qa,
     qa_loop = qa_loop,
+    render_spec = actual_spec,
+    style_changes = attr(output_files, "qa_style_changes"),
+    export_audit = attr(output_files, "qa_export_audit"),
+    provenance = attr(output_files, "qa_evidence"),
+    agent_tasks = attr(output_files, "qa_agent_tasks"),
     outputs = as.list(output_files)
   )
   writeLines(pp_to_json(payload), con = path)
@@ -1612,3 +1680,5 @@ invisible(lapply(c("statistical-expression.R"), pp_source_helper_module))
 
 # Bioinformatics semantics helpers.
 invisible(lapply(c("bioinformatics-semantics.R"), pp_source_helper_module))
+
+invisible(lapply(c("production-render.R"), pp_source_helper_module))

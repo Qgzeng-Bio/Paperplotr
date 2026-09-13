@@ -87,7 +87,7 @@ if (group_col %in% names(df)) plot <- plot + pp_scale_color(unique(df[[group_col
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_metric_semantics", "pass", "Genome quality metric directions and units recorded."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("2x3-style small multiples used for heterogeneous metrics.", "Raw units retained in facet labels.", "Full sample names moved to label-key sidecar."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm metric direction and ranking weights before final manuscript use.", figure_spec = figure_spec, metric_spec = metric_spec, layout = layout, palette = design_plan$palette_plan, ordering = list(rule = "bio quality rank", sample_order = paste(sample_order, collapse = ", ")), label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)

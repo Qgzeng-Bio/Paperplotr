@@ -29,8 +29,7 @@ df[[present_col]] <- as.integer(as.numeric(df[[present_col]]) > 0)
 df <- df[!is.na(df[[item_col]]) & !is.na(df[[set_col]]), , drop = FALSE]
 if (nrow(df) < 6) stop("UpSet summary template needs at least six membership records.", call. = FALSE)
 
-base <- pp_recipe_mock_data(recipe_id)
-recipe_df <- base[rep(seq_len(nrow(base)), length.out = nrow(df)), ]
+recipe_df <- data.frame(row.names = seq_len(nrow(df)))
 recipe_df$item <- as.character(df[[item_col]])
 recipe_df$set <- factor(df[[set_col]], levels = unique(df[[set_col]]))
 recipe_df$present <- df[[present_col]]
@@ -53,7 +52,7 @@ plot <- pp_recipe_plot(recipe_id, recipe_df)
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("set_semantics", "warn", "Confirm whether visible bars represent set sizes or intersections."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 8.9, height = 7, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 8.9, height = 7, overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id, input_csv, outputs, figure_spec$output_preset, design_decisions = c("Pattern reference: upset-set-plot.", "Set-size bars are prioritized; dense intersections should move to a table or optional backend.", "Membership dots remain small to limit label burden."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm whether the manuscript needs exact intersection sizes or overview set sizes.", figure_spec = figure_spec, metric_spec = metric_spec, design_brief = design_brief, design_plan = design_plan, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = pp_data_summary(recipe_df))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, pp_extend_output_files(outputs, notes = notes_path, qa = qa_path), layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), manuscript_readiness = readiness), data_summary = pp_data_summary(recipe_df), design_brief = design_brief, design_plan = design_plan, data_profile = pp_data_summary(recipe_df), visual_budget = visual_budget, label_strategy = label_strategy, statistical_plan = design_plan$statistical_plan)

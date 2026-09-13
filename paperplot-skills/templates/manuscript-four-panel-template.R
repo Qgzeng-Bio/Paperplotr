@@ -51,6 +51,7 @@ missing_cols <- setdiff(required_cols, names(df))
 if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 
 panel_ids <- unique(as.character(df[[panel_col]]))
+df[[panel_col]] <- factor(df[[panel_col]], levels = panel_ids)
 if (length(panel_ids) < 1) stop("panel_col must contain at least one panel.", call. = FALSE)
 panel_specs <- lapply(seq_along(panel_ids), function(i) {
   pp_panel_spec(
@@ -82,7 +83,7 @@ metric_spec <- pp_metric_spec(metric = y_col, label = y_label, unit = "a.u.", di
 data_profile <- pp_data_profile(df, sample_col = x_col, group_col = group_col, metric_col = panel_col, value_col = y_col)
 label_strategy <- pp_label_strategy_v2(unique(df[[x_col]]), figure_role = figure_role, available_width_cm = layout$width_cm / max(1, layout$ncol), sample_identity_role = "lookup")
 rank_map <- pp_rank_index_map(unique(as.character(df[[x_col]])))
-if (isTRUE(label_strategy)) pp_write_label_key(label_key_path, rank_map)
+if (isTRUE(label_strategy$needs_label_key)) pp_write_label_key(label_key_path, rank_map)
 visual_budget <- pp_visual_budget(figure_role, n_panels = length(panel_ids), n_labels = if (identical(label_strategy$strategy, "direct")) length(unique(df[[x_col]])) else 0, n_legend_entries = if (!is.null(group_col)) length(unique(df[[group_col]])) else 0)
 
 design_brief <- pp_design_brief(
@@ -120,7 +121,7 @@ if (!is.null(group_col)) {
   p <- pp_apply_legend_plan(p + pp_scale_color(groups = df[[group_col]]), legend_plan)
 }
 
-output_files <- pp_save_all_with_qa_loop(p, output_stem, preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
 invisible(lapply(output_files, pp_assert_output))
 
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")

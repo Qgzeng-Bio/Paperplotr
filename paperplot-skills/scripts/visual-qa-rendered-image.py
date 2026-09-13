@@ -349,6 +349,11 @@ def collect_machine_fixes(risks: list[dict[str, Any]]) -> list[dict[str, Any]]:
             if key not in seen:
                 seen.add(key)
                 entry = dict(fix)
+                if item.get("code") == "tick_label_collision_risk":
+                    value = item.get("value") or {}
+                    entry["axis"] = "x" if value.get("bottom_fraction", 0) > value.get("left_fraction", 0) else "y"
+                    if entry["axis"] != "x":
+                        continue
                 entry["source_risk"] = item.get("code")
                 fixes.append(entry)
     return fixes
@@ -869,7 +874,7 @@ def analyze_text_geometry(
     ocr_overlap = int(ocr.get("text_overlap_pair_count") or 0)
     risks: list[dict[str, Any]] = []
     if ocr_overlap > 3 or (len(medium) >= 5 and text_density_score > thresholds["text_density_warn"] * 0.55) or (len(medium) >= 8 and edge_fraction < 0.65):
-        risks.append(risk(STATUS_FAIL if strict_detail_qa else STATUS_WARN, "text_data_overlap_risk", "Text/annotation components likely collide with data marks or dense labels.", {"medium_components": len(medium), "ocr_overlap_pairs": ocr_overlap}))
+        risks.append(risk(STATUS_WARN, "text_data_overlap_risk", "Text/annotation components may collide; raster components alone are not confirmed text/mark intersections.", {"medium_components": len(medium), "ocr_overlap_pairs": ocr_overlap}))
     if len(small) >= 35 and (bottom_fraction > 0.38 or left_fraction > 0.38):
         risks.append(risk(STATUS_WARN, "tick_label_collision_risk", "Dense edge text suggests tick-label collision or overcrowded category labels.", {"bottom_fraction": round(bottom_fraction, 3), "left_fraction": round(left_fraction, 3)}))
     if len(small) >= 25 and edge_fraction > 0.78:

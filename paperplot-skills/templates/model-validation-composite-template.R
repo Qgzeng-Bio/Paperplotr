@@ -157,7 +157,7 @@ qa_results <- pp_qa_summary(
   pp_qa_result("statistical_expression", "warn", "Composite shows fit, residuals, and R-squared; confirm interval definition before final manuscript use.")
 )
 
-outputs <- pp_save_all_with_qa_loop(p, output_stem, preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 18, height = 8.5, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 18, height = 8.5, overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path))
