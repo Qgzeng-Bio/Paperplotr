@@ -21,6 +21,10 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 
 ## Required Operating Mode
 
+For a manuscript main figure, use **figure project mode** (`references/figure-project-workflow.md`): locate its `project.json` in the research workspace, recompute `pp_project_status()`, and read the summary before acting. If more than one project or panel matches, resolve that ambiguity with the user. Create a dimensioned layout sketch and wait for the user's layout confirmation before building panels; this is not scientific/figure approval. Single/double column widths are project budgets (89/180 mm), not mandatory per-panel sizes. Record explicit exceptions such as 183 mm.
+
+Use the four project operations: create, build a panel, revise a panel, assemble. Each panel defines `build_panel(inputs, context)` and returns a ggplot/patchwork object plus evidence. For “only change B”, preserve other scripts/revisions, render B at its allocated size, then assemble a new contextual draft. Never raster-stitch panels. Record reviews against exact revisions; data/config/layout changes invalidate affected results. See the project reference for configure, review and restore commands. Do not reuse a historical pass without freshness checks.
+
 First read `references/production-render-contract.md`. Create a `render_spec` before choosing canvas dimensions or writing theme code. Production text uses Arial only: A/B/C/D tags 12 pt bold upright; titles 7 pt regular; species 6.5 pt with italic scientific names; ticks/legends/captions 6 pt; annotations 6.5 pt. Main composites are 180 mm wide and single-column figures 89 mm; the IGS case is 183 x 105 mm. Normalize legacy explicit sizes by role and record changes. User-specified exceptions belong in `render_spec`, never in undocumented post-export scaling.
 
 Input files and required scientific fields must exist. Never manufacture coordinates, predictions, intervals, or relationships. Only explicit `mode = "demo"` permits simulated data, and its outputs are labelled. Compare source plotting tables, category order, bins, threshold sides, and built coordinates before/after styling. Stop on conflicts rather than correcting source values.
@@ -122,13 +126,7 @@ Use `references/figure-type-selector.md`, `references/figure-type-quality-rubric
 
 ## Templates
 
-Choose and adapt one template:
-
-- General and layout: `single-panel`, `multi-panel`, `manuscript-four-panel`, `multi-metric-small-multiples`, `rank-plus-key-metrics`.
-- Group comparison: `comparison-boxplot`, `grouped-boxplot-jitter`, `paired-comparison`, `violin-dot`, `raincloud`, `barplot`, `bar-dot-errorbar`, `stacked-fraction-bar`.
-- Association, ordination, and matrix: `correlation-scatter`, `labelled-regression`, `pca-scatter`, `pcoa-marginal`, `heatmap`, `annotated-heatmap`, `matrix-dotplot`.
-- Bio/omics: `volcano-plot`, `ma-plot`, `enrichment-dotplot`, `compact-dot-matrix-enrichment`, `manhattan-plot`.
-- Summaries, spatial, and validation: `effect-size-forest`, `model-validation-composite`, `time-series-ribbon`, `ridgeline-density`, `lollipop-ranked`, `upset-summary`, `network-summary`, `spatial-distribution`, `bio-genome-quality-overview`, `bio-duplication-mode-comparison`.
+Choose and adapt a template from `references/template-selection-guide.md` and `templates/`. For heterogeneous main figures use project mode with independently built panel objects; a faceted scatter template is not an automatic substitute for an assembled manuscript figure.
 
 The code recipe layer now has 80+ manifest entries. Use production recipes for normal redraws; use optional-backend/reference recipes for complex heatmaps, circos, maps, trees, networks, UpSet, genome tracks, or synteny-like figures only when required data structures and packages are available.
 

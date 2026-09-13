@@ -1,9 +1,33 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-09-13 (standalone-0.5.0 production rendering; see local verification below)
+Last updated: 2026-09-13 (standalone-0.6.0 figure project mode; see local verification below)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
 
 ---
+
+## 2026-09-13: Main figure project mode
+
+- Four operations: `pp_project_create`, `pp_project_build_panel`,
+  `pp_project_revise_panel`, `pp_project_assemble`. Auxiliary APIs handle layout
+  confirmation/configuration, panel/figure review, status and revision restore.
+- `project.json` is authoritative; immutable revisions hold source snapshots,
+  object/evidence caches, physical previews, QA and logs. Atomic writes and a
+  directory lock protect state. Failed builds do not replace current revisions.
+- Layout confirmation precedes building; column widths are budgets (89/180 mm)
+  with explicit exceptions. Panel previews use their allocated dimensions.
+- Dependency hashes include data, source scripts, shared settings, physical slots,
+  helper implementation and R/package versions. Assembly measures actual gtable
+  allocations/data regions and produces contextual panel previews.
+- Project checks are merged into the existing production QA, not a second score.
+  Partial/stale figures and failed current panel reviews cannot be finalized.
+- Local project tests and existing production/standalone contracts passed.
+  The simulated example demonstrates B at r000002 while A/C/D stay r000001.
+- Example artifacts: ignored `visual-checks/figure-project-example-verified/`.
+  These are artificial data and not publication acceptance evidence.
+- See `paperplot-skills/references/figure-project-workflow.md` and
+  `paperplot-skills/reports/figure-project-validation.md`.
+- New remote CI results must be checked for the latest pushed commit; older
+  green CI entries below are historical.
 
 ## 2026-09-13: Final-size Arial production workflow
 
