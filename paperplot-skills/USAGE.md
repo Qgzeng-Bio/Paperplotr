@@ -45,6 +45,19 @@ Default outputs:
 - label key or sample order sidecars when labels are abbreviated/ranked,
 - optional visual QA report after rendering.
 
+## Final-size production
+
+```r
+render_spec <- pp_render_spec(n_panels = 4)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = render_spec)
+```
+
+This normalizes production text to Arial role sizes on a plot copy and audits
+the actual exports. Use `pp_render_spec(2, case = "igs")` for 183 x 105 mm.
+Explicit exceptions use `text_pt = list(axis_title = 8)`. Do not resize the
+whole figure after export. Read `_delivery.md` and `_production_qa.json`;
+unverified checks and pending human review keep the figure a candidate.
+
 ## User responsibilities
 
 The skill can catch many visual and scientific risks, but the user must confirm:

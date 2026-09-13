@@ -111,6 +111,13 @@ PAPERPLOT_PYTHON=${PAPERPLOT_PYTHON:-python3}
 "$PAPERPLOT_PYTHON" paperplot-skills/scripts/validate-qa-coverage.py
 ```
 
+Before formal plotting run `Rscript paperplot-skills/scripts/check-environment.R`.
+The check reports missing tools without installing them. Formal figures require
+Arial Regular/Bold/Italic, JSON, vector/raster export and Python/PDF inspection.
+Preview remains possible without full QA, but is never certified as a final figure.
+The runtime installer includes the production modules, recipe engine and
+environment/export auditing scripts. See `references/production-render-contract.md`.
+
 Set `PAPERPLOT_RSCRIPT` or `PAPERPLOT_PYTHON` when the default `Rscript` /
 `python3` on `PATH` is not the environment with the required packages.
 

@@ -53,11 +53,16 @@ The package focuses on standardization rather than automatic plotting.
 
 ## AI Scientific Plotting Skill
 
-PaperPlotR also includes a repository-local AI skill wrapper:
-[`paperplot-skills/`](paperplot-skills/). It guides AI agents to use PaperPlotR
-as a reproducible scientific figure standardization workflow, including
+PaperPlotR also hosts an independent AI scientific plotting skill:
+[`paperplot-skills/`](paperplot-skills/). The skill uses ggplot2 and its own
+helpers, without installing or calling the PaperPlotR package. It provides
 template selection, semantic colors, panel sizing, no-overwrite versioned
 exports, sidecar notes, and output QA.
+
+Production figures use Arial, 6-8 pt role-based text and 12 pt bold panel tags
+at their final physical size (180 mm main composites, 89 mm single column).
+See the [production contract](paperplot-skills/references/production-render-contract.md)
+for environment checks, data preservation, and evidence-based acceptance.
 
 Install the skill into Codex with one command:
 

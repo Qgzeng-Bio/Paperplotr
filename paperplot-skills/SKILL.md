@@ -16,10 +16,14 @@ The target is not decorative plotting. The target is a manuscript-credible figur
 - Do not ask the user to install PaperPlotR.
 - Do not call `library(PaperPlotR)` or PaperPlotR APIs such as `theme_lab()`, `save_lab()`, `save_lab_plot()`, `layout_lab()`, or `scale_*_lab()`.
 - Default implementation uses base R + `ggplot2` + `scripts/paperplot_helpers.R`.
-- Optional packages are allowed only when already installed and must have fallback behavior.
+- Base preview needs ggplot2. Formal delivery also requires the capabilities listed by `scripts/check-environment.R`; missing tools keep results unverified, and missing Arial stops production export. Do not silently substitute fonts.
 - Python/matplotlib, seaborn, Illustrator, SVG, and PDF workflows may be advised, but the core skill remains standalone and reproducible.
 
 ## Required Operating Mode
+
+First read `references/production-render-contract.md`. Create a `render_spec` before choosing canvas dimensions or writing theme code. Production text uses Arial only: A/B/C/D tags 12 pt bold upright; titles 7 pt regular; species 6.5 pt with italic scientific names; ticks/legends/captions 6 pt; annotations 6.5 pt. Main composites are 180 mm wide and single-column figures 89 mm; the IGS case is 183 x 105 mm. Normalize legacy explicit sizes by role and record changes. User-specified exceptions belong in `render_spec`, never in undocumented post-export scaling.
+
+Input files and required scientific fields must exist. Never manufacture coordinates, predictions, intervals, or relationships. Only explicit `mode = "demo"` permits simulated data, and its outputs are labelled. Compare source plotting tables, category order, bins, threshold sides, and built coordinates before/after styling. Stop on conflicts rather than correcting source values.
 
 1. Diagnose before drawing.
 2. Detect data roles and choose a figure family with `references/figure-type-selector.md`.
@@ -60,9 +64,9 @@ Do not call a figure manuscript-ready just because the code runs.
 
 Use `references/publication-visual-standards.md` as the baseline. Key defaults:
 
-- Width: 89 mm single column, 180-183 mm double column, max height about 170 mm for Nature-like layouts.
-- Font: Arial or Helvetica-equivalent sans serif; keep text editable in vector output.
-- Text: 5-7 pt for most figure text; panel labels about 8 pt bold lowercase or journal-specific equivalent.
+- Width: 89 mm single column, 180 mm main composite; explicit case dimensions override this. Main height defaults to 120 mm; above 170 mm propose splitting without shrinking fonts.
+- Font: Arial Regular, Arial Bold, Arial Italic; keep text editable and verify actual PDF/SVG font output.
+- Text: 6-8 pt by semantic role; panel labels A/B/C/D are 12 pt bold upright and generated once on the final composite.
 - Lines: 0.25-0.6 pt for axes, intervals, and borders; avoid thick strokes.
 - Points: usually 1.2-2.2 mm depending on density; use alpha for overplotting.
 - Bars: avoid over-wide bars; show raw points or intervals when statistical evidence matters.
@@ -210,9 +214,8 @@ Only identifying that a figure is bad is not enough. With data/code, produce a b
 
 ## Output Contract
 
-Default outputs:
-
-- PDF vector figure.
+- PDF vector figure with embedded Arial.
+- SVG vector figure with text elements and a recorded Arial editing dependency.
 - PNG preview.
 - R script or reproducible plotting code.
 - `*_notes.md`.
@@ -221,5 +224,7 @@ Default outputs:
 - Conditional `*_label_key.csv`, `*_sample_order.csv`, or design sidecars.
 
 ## Final Response
+
+Use the `_production_qa.json` final status, not the legacy readiness score. A detected hard error is fail; missing evidence or pending human review is candidate/unverified. Only completed checks plus human approval can certify manuscript-ready. Read `_delivery.md` and report remaining agent tasks with panel/axis/layer locations where available. Real IGS and held-out main-figure acceptance remain pending until the original scripts and data are supplied.
 
 Report generated files, template, preset, design decisions, visible simplifications, scientific assumptions, QA status, old-vs-new verdict if applicable, and remaining manuscript-readiness risks.

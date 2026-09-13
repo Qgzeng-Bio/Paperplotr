@@ -22,21 +22,21 @@ For Nature-like manuscript work, choose size from information burden:
 
 ## Typography
 
-- Use Arial, Helvetica, or a close sans-serif fallback.
+- Production uses Arial Regular/Bold/Italic only. Missing Arial blocks formal export; fallback preview is never manuscript-ready.
 - Keep vector text editable; do not outline or rasterize text.
-- Most text: 5-7 pt at final size.
-- Panel labels: about 8 pt bold, upright; use consistent `a, b, c` or `A, B, C` based on journal/user preference.
+- Most text: 6-8 pt at final size, using the roles in `production-render-contract.md`.
+- Panel labels: A/B/C/D, 12 pt Arial Bold, upright, once on the final composite.
 - Axis titles should be concise and include units in parentheses.
 - Avoid plot titles inside manuscript panels unless the title carries scientific meaning; prefer panel labels and caption text.
-- Tick labels can be 5-6 pt for dense panels, but must remain readable in the rendered PNG preview.
+- Tick labels and legends are 6 pt; change layout rather than silently shrinking fonts.
 - Long labels should move to sidecars, numbered keys, or supplement before shrinking below readable size.
 
 ## Strokes and marks
 
 | element | default |
 |---|---:|
-| axis line | 0.3-0.45 pt |
-| tick line | 0.25-0.35 pt |
+| axis line | 0.6 pt |
+| tick line | 0.5 pt; length 2.2 pt |
 | interval/error line | 0.35-0.55 pt |
 | boxplot line | 0.35-0.55 pt |
 | trend line | 0.45-0.7 pt, only if statistically/semantically justified |

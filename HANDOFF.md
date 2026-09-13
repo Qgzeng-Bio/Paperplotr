@@ -1,9 +1,41 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-08-24 (standalone-0.4.1 pushed; GitHub CI and Pages verified green)
+Last updated: 2026-09-13 (standalone-0.5.0 production rendering; see local verification below)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
 
 ---
+
+## 2026-09-13: Final-size Arial production workflow
+
+- `pp_render_spec()` controls 180 mm main composites, 89 mm single-column plots,
+  and the explicit 183 x 105 mm IGS case. Arial role sizes are 6-8 pt, with
+  12 pt bold A/B/C/D tags. Existing plot-local typography is normalized on a copy.
+- Production input paths and recipe roles are mandatory. Only explicit demo
+  mode may synthesize input; reference recipes without reviewed adapters are
+  blocked from production. Mock table scaffolding was removed from templates.
+- Data evidence includes input/layer tables and built coordinates/labels;
+  production checks preserve them across normalization and retries.
+- Export auditing verifies PDF/SVG physical size and typography, Arial embedding,
+  PNG dimensions, IGS shared row positions, n header, and calibrated marker/stroke
+  dimensions. Complex text/mark geometry remains explicitly unverified where
+  the detector lacks sufficient evidence.
+- Image QA fail/unavailable and physical audits feed a unified final contract.
+  Human review remains mandatory. Generation smoke tests are distinct from
+  final visual acceptance; historical numeric scores are not acceptance gates.
+- Runtime install now includes recipes and the environment/export audit scripts.
+- Local verification: production R contract tests, 5 Python audit tests,
+  standalone validation and 36/36 template generation smoke checks passed.
+  The dense simulated smoke cases include visual warnings/failures; they were
+  not certified as publication figures. Two follow-up regression checks fixed
+  a median underscore glyph and an overbroad axis-stroke classification.
+- Synthetic IGS and four-panel outputs are under ignored
+  `visual-checks/production-contract-verified-20260913/`.
+- Real IGS and held-out 4-6-panel acceptance remain pending original data/scripts.
+- Prior 0.4.1 CI statements below are historical; inspect the latest commit's
+  GitHub Actions before making a new remote-validation claim.
+
+See `paperplot-skills/references/production-render-contract.md` and
+`paperplot-skills/reports/production-render-validation.md` for limitations.
 
 ## 2026-08-24 — standalone-0.4.1 Contract Hardening
 
