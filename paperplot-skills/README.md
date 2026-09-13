@@ -4,6 +4,14 @@
 
 It does not depend on the PaperPlotR R package. The reusable plotting standards live in `scripts/paperplot_helpers.R`.
 
+Production uses final-size Arial typography: 6-8 pt ordinary text and 12 pt bold
+A/B/C/D tags, 180 mm main-composite width or 89 mm single-column width.
+The IGS case uses 183 x 105 mm. Run `scripts/check-environment.R` first;
+see [the production contract](references/production-render-contract.md) for
+data preservation, explicit demo mode, physical export audits and final QA.
+No missing data are synthesized in production. File smoke-test success is
+reported separately from visual acceptance and human review.
+
 ## Install
 
 One-line install into Codex:

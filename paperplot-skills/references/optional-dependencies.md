@@ -1,8 +1,12 @@
 # Optional Dependencies
 
-The core skill must continue to work with base R plus `ggplot2` only.
+Basic preview remains available with base R plus `ggplot2`. Formal delivery
+requires the capabilities reported by `scripts/check-environment.R`: Arial
+Regular/Bold/Italic, JSON, vector/raster backends, Python QA and PDF tools.
+Missing capabilities are reported, never silently certified.
 
-Optional packages may be considered later, but they must never become required for existing templates.
+Low-level legacy helpers retain their compatibility behavior. Production
+templates use the explicit contract in `production-render-contract.md`.
 
 ## Future Optional Tier
 
