@@ -118,7 +118,7 @@ pp_normalize_production <- function(plot, spec) {
     p
   }
   out <- normalize_one(out)
-  if (inherits(out, "patchwork")) {
+  if (inherits(out, "patchwork") && !identical(spec$panel_tags, FALSE)) {
     out <- out + patchwork::plot_annotation(tag_levels = "A", theme = pp_production_theme(spec))
     out <- out & ggplot2::theme(plot.tag = ggplot2::element_text(family = "Arial", size = spec$text_pt$panel_tag, face = "bold"))
   }

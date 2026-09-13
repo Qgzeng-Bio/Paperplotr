@@ -82,7 +82,7 @@ case "$PROFILE" in
       fi
     done
     mkdir -p "$DEST/scripts"
-    for script in paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py run-template-recipe.R check-environment.R export-audit.py; do
+    for script in paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py run-template-recipe.R check-environment.R export-audit.py figure-project.R create-example-project.R; do
       if [ -e "${skill_dir}/scripts/${script}" ]; then
         cp "${skill_dir}/scripts/${script}" "$DEST/scripts/"
       fi
