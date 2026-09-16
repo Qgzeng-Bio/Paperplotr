@@ -29,6 +29,8 @@ PAPERPLOT_SOURCE_DIR="$PWD/paperplot-skills" PAPERPLOT_OVERWRITE=1 sh install-pa
 
 Default destination is `~/.agents/skills/paperplot-skills`. Existing directories or broken links are backed up. Validate the staged runtime before switching; then execute installed commands and actual PDF/SVG/PNG exports from outside the checkout. Failed post-switch checks restore the old installation.
 
+Backups live in the sibling `~/.agents/skill-backups/`, outside skill discovery, so an old backup cannot be loaded as a duplicate skill. `PAPERPLOT_BACKUP_ROOT` may override this location on the same filesystem.
+
 `installation.json` records version, commit, dirty-source count, environment and code/lock hashes. Remote `PAPERPLOT_REF=<reviewed commit>` is resolved and downloaded to staging. Inspect the installer before execution.
 
 `PAPERPLOT_PROFILE=runtime` includes documented user commands. `full` also includes developer tests/reports. `PAPERPLOT_DEST` changes the skills root; invalid profiles/names fail before replacement.
