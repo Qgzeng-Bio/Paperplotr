@@ -95,7 +95,8 @@ pp_recipe_core <- function(entry, d, params) {
         if(variant=='quantile') q <- q + ggplot2::stat_summary(fun=stats::median,geom='point',size=pp_point_size('emphasis'))
       }
       if(variant %in% c('box_facet','raincloud_facet')) q <- q + ggplot2::facet_wrap(~metric,scales='free_y')
-      q + ggplot2::labs(x=NULL,y=params$y_label %||% 'Value',fill=NULL) + ggplot2::theme(legend.position='none')
+      q + ggplot2::labs(x=if(variant%in%c('ridge','histogram')) 'Value' else NULL,
+        y=if(variant=='ridge') NULL else if(variant=='histogram') 'Density' else 'Value',fill=NULL) + ggplot2::theme(legend.position='none')
     },
     paired = {
       q <- ggplot2::ggplot(d,ggplot2::aes(group,value,group=sample)) + ggplot2::geom_line(colour='#999999',linewidth=pp_line_width('reference')) +
@@ -104,7 +105,8 @@ pp_recipe_core <- function(entry, d, params) {
       q
     },
     scatter = {
-      q <- ggplot2::ggplot(d,ggplot2::aes(x,y,colour=group))
+      q <- ggplot2::ggplot(d,ggplot2::aes(x,y,colour=group))+ggplot2::scale_colour_manual(values=pp_group_colors(d$group))+
+        ggplot2::labs(x=params$x_label %||% 'x',y=params$y_label %||% 'y')
       q <- q + if(variant=='bubble') ggplot2::geom_point(ggplot2::aes(size=count),alpha=.7) else ggplot2::geom_point(size=pp_point_size('normal'),alpha=.7)
       if(!is.null(params$fit)) {
         if(params$fit!='lm') stop('Supported explicit fit is lm; supply other fits upstream.')
@@ -119,8 +121,13 @@ pp_recipe_core <- function(entry, d, params) {
       if(variant=='grid') q <- q + ggplot2::facet_wrap(~facet,scales='free')
       if(variant=='marginal') {
         pp_require_backend('patchwork')
-        top <- ggplot2::ggplot(d,ggplot2::aes(x,fill=group))+ggplot2::geom_density(alpha=.3)+pp_theme()+ggplot2::theme(legend.position='none')
-        right <- ggplot2::ggplot(d,ggplot2::aes(y,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::coord_flip()+pp_theme()+ggplot2::theme(legend.position='none')
+        ranges<-ggplot2::ggplot_build(q)$layout$panel_params[[1]]
+        q<-q+ggplot2::coord_cartesian(xlim=ranges$x.range,ylim=ranges$y.range,expand=FALSE)
+        top <- ggplot2::ggplot(d,ggplot2::aes(x,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_group_colors(d$group))+
+          pp_theme()+ggplot2::theme(legend.position='none',axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank())+ggplot2::labs(x=NULL,y='Density')+
+          ggplot2::coord_cartesian(xlim=ranges$x.range,expand=FALSE)
+        right <- ggplot2::ggplot(d,ggplot2::aes(y,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_group_colors(d$group))+
+          ggplot2::coord_flip(xlim=ranges$y.range,expand=FALSE)+pp_theme()+ggplot2::theme(legend.position='none',axis.text.y=ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())+ggplot2::labs(x=NULL,y='Density')
         q <- patchwork::wrap_plots(list(top,q,right),design='A#\nBC',widths=c(4,1),heights=c(1,4))
       }
       q
@@ -155,7 +162,7 @@ pp_recipe_core <- function(entry, d, params) {
         if(length(variance)!=2 || any(!is.finite(variance)|variance<0|variance>100) || sum(variance)>100+1e-6) stop('Invalid variance_percent.')
         labels <- paste0(labels,' (',variance,'%)')
       }
-      q <- q + ggplot2::labs(x=labels[1],y=labels[2])
+      q <- q + ggplot2::labs(x=params$x_label %||% labels[1],y=params$y_label %||% labels[2])
       if(variant=='ellipse') {
         if(is.null(params$ellipse_level)) stop('Explicit ellipse_level required; no inferential region is guessed.')
         groups<-split(d,d$group,drop=TRUE)
@@ -268,9 +275,16 @@ pp_recipe_core <- function(entry, d, params) {
       }
     }
   }
-  if(inherits(p,'patchwork')) p <- p & pp_theme() else p <- p + pp_theme()
-  if(!is.null(params$x_label)) p <- p + ggplot2::labs(x=params$x_label)
-  if(!is.null(params$y_label)) p <- p + ggplot2::labs(y=params$y_label)
+  base_theme <- function(q) {
+    if(inherits(q,'patchwork')) q$patches$plots<-lapply(q$patches$plots,base_theme)
+    q$theme <- pp_theme()+(q$theme %||% ggplot2::theme())
+    q
+  }
+  p <- base_theme(p)
+  if(!inherits(p,'patchwork')) {
+    if(!is.null(params$x_label)) p <- p + ggplot2::labs(x=params$x_label)
+    if(!is.null(params$y_label)) p <- p + ggplot2::labs(y=params$y_label)
+  }
   p
 }
 

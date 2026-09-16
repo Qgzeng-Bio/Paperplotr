@@ -15,7 +15,7 @@ add <- function(id,recipe,data,params=list(),source,preparation) {
 dataset_source <- 'https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/00Index.html'
 iris_data <- data.frame(sample=seq_len(nrow(iris)),group=iris$Species,category='Sepal length',value=iris$Sepal.Length,x=iris$Sepal.Length,y=iris$Petal.Length)
 for(recipe in c('boxplot_jitter','violin_dot','raincloud_violin_jitter','ridgeline_density','beeswarm_box_reference','scatter_regression','scatter_marginal_reference'))
-  add(recipe,recipe,iris_data,list(fit='lm',x_label=if(grepl('scatter',recipe)) 'Sepal length (cm)' else 'Species',y_label=if(grepl('scatter',recipe)) 'Petal length (cm)' else 'Sepal length (cm)'),dataset_source,'Iris measurements; linear regression explicitly requested only for scatter recipes.')
+  add(recipe,recipe,iris_data,list(fit='lm',x_label=if(grepl('scatter',recipe)||recipe=='ridgeline_density') 'Sepal length (cm)' else 'Species',y_label=if(grepl('scatter',recipe)) 'Petal length (cm)' else if(recipe=='ridgeline_density') 'Species' else 'Sepal length (cm)'),dataset_source,'Iris measurements; linear regression explicitly requested only for scatter recipes.')
 add('raw_summary','grouped_bar_errorbar_raw',iris_data,list(data_kind='raw',summary='mean',unit_id='sample',error_type='ci'),dataset_source,'Independent flower rows; mean and 95% t interval, not inferred statistical significance.')
 hair <- as.data.frame(margin.table(HairEyeColor,c(1,2)))
 flow <- data.frame(source=paste0('Hair:',hair$Hair),target=paste0('Eye:',hair$Eye),weight=hair$Freq)

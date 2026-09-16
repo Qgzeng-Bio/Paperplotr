@@ -194,7 +194,7 @@ pp_plot_evidence <- function(plot) {
       encoding=if(any(s$aesthetics %in% c('colour','fill','shape','size'))) s$map(breaks) else NULL)
   }
   nonposition <- Filter(function(s) !any(s$aesthetics %in% c('x','y')),built$plot$scales$scales)
-  semantics <- list(mapping=lapply(plot$mapping,rlang::as_label),
+  semantics <- list(mapping=lapply(plot$mapping,rlang::as_label),coordinate_limits=plot$coordinates$limits,
     labels=lapply(plot$labels[intersect(c('x','y','colour','fill','shape','size'),names(plot$labels))],function(x) paste(deparse(x),collapse='')),
     scales=lapply(nonposition,scale_record),axes=list(x=lapply(built$layout$panel_scales_x,scale_record),y=lapply(built$layout$panel_scales_y,scale_record)))
   list(input = plot$data, layers = lapply(plot$layers, function(lr) lr$data),
