@@ -1,0 +1,28 @@
+name: formal-render
+
+# Only an explicitly provisioned runner has the locked runtime and licensed
+# Arial. Never run untrusted pull-request code on a self-hosted scientific host.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  formal-engineering:
+    runs-on: [self-hosted, paperplot, macOS, ARM64]
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run every formal engineering gate without skips
+        run: paperplot-skills/scripts/paperplot-run paperplot-skills/scripts/formal-render.R
+        env:
+          PAPERPLOT_FORMAL_OUTPUT: visual-checks/formal-ci
+      - name: Upload evidence, including failures and pending review status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: formal-render-evidence
+          path: visual-checks/formal-ci
+      - name: Explain the remaining release gate
+        run: echo 'Engineering validation is not human scientific approval. Inspect formal-render.json; do not release stable while private/human acceptance is pending.'
