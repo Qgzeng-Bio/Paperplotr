@@ -36,6 +36,7 @@ pp_recipe_interval <- function(df, params, by) {
 }
 
 pp_recipe_core <- function(entry, d, params) {
+  d <- pp_validate_recipe_input(entry$recipe_id,d,params,attr(d,'pp_input_policy')$mode %||% 'production')
   variant <- entry$variant; h <- entry$handler
   p <- switch(h,
     bar = {
@@ -72,7 +73,7 @@ pp_recipe_core <- function(entry, d, params) {
           ggplot2::geom_histogram(ggplot2::aes(y=ggplot2::after_stat(density)),binwidth=params$binwidth,position='identity',alpha=.3) +
           ggplot2::geom_density(alpha=.1,bw=params$bandwidth %||% 'nrd0')
       } else if(variant %in% c('raincloud','raincloud_facet')) {
-        polygons <- do.call(rbind,lapply(split(d,interaction(d[intersect(c('group','metric'),names(d))],drop=TRUE)),function(s) {
+        polygons <- do.call(rbind,lapply(split(d,interaction(d[c('group',if(variant=='raincloud_facet') 'metric')],drop=TRUE)),function(s) {
           if(nrow(s)<2 || stats::sd(s$value)==0) stop('Raincloud density needs at least two nonconstant observations per group.')
           den <- stats::density(s$value,bw=params$bandwidth %||% 'nrd0')
           pos <- match(as.character(s$group[1]),levels(d$group))
@@ -143,8 +144,10 @@ pp_recipe_core <- function(entry, d, params) {
       q + ggplot2::labs(x=NULL,y=NULL)
     },
     ordination = {
+      if(entry$recipe_id=='pca_pcoa_ordination' && (is.null(params$variant)||!params$variant%in%c('pca','pcoa'))) stop('This legacy mixed-method recipe requires variant=pca or pcoa; method is never guessed.')
       q <- ggplot2::ggplot(d,ggplot2::aes(pc1,pc2,colour=group)) + ggplot2::geom_point(size=pp_point_size('normal'))
       labels <- switch(variant,nmds=c('NMDS1','NMDS2'),umap=c('UMAP1','UMAP2'),tsne=c('t-SNE1','t-SNE2'),c('Axis 1','Axis 2'))
+      if(entry$recipe_id=='pca_pcoa_ordination') labels <- paste0(if(params$variant=='pca') 'PC' else 'PCoA',1:2)
       variance <- params$variance_percent
       if(!is.null(variance)) {
         if(length(variance)!=2 || any(!is.finite(variance)|variance<0|variance>100) || sum(variance)>100+1e-6) stop('Invalid variance_percent.')
@@ -251,7 +254,19 @@ pp_recipe_core <- function(entry, d, params) {
       }
     },
     stop('No core handler: ',h))
+  if(!inherits(p,'patchwork')) {
+    for(aesthetic in c('colour','fill')) {
+      mapped <- c(list(p$mapping[[aesthetic]]),lapply(p$layers,function(l) l$mapping[[aesthetic]]))
+      fields <- unique(vapply(Filter(Negate(is.null),mapped),rlang::as_label,character(1)))
+      if(length(fields)==1 && fields%in%c('group','category') && fields%in%names(d) && !p$scales$has_scale(aesthetic)) {
+        colors<-pp_group_colors(d[[fields]])
+        p<-p+if(aesthetic=='colour') ggplot2::scale_colour_manual(values=colors) else ggplot2::scale_fill_manual(values=colors)
+      }
+    }
+  }
   if(inherits(p,'patchwork')) p <- p & pp_theme() else p <- p + pp_theme()
+  if(!is.null(params$x_label)) p <- p + ggplot2::labs(x=params$x_label)
+  if(!is.null(params$y_label)) p <- p + ggplot2::labs(y=params$y_label)
   p
 }
 
@@ -261,7 +276,12 @@ pp_recipe_genome <- function(d,params,variant) {
   if(variant=='synteny') {
     required <- c('target_chr','target_start','target_end')
     if(length(setdiff(required,names(d)))) stop('Synteny requires target_chr, target_start, target_end; source intervals cannot stand in for target coordinates.')
-    z <- do.call(rbind,lapply(seq_len(nrow(d)),function(i) data.frame(link=i,x=c(d$start[i],d$end[i],d$target_end[i],d$target_start[i]),y=c(1,1,0,0),chr=d$chr[i],target_chr=d$target_chr[i])))
+    z <- do.call(rbind,lapply(seq_len(nrow(d)),function(i) {
+      source <- c(d$start[i],d$end[i]);target<-c(d$target_start[i],d$target_end[i])
+      if('strand'%in%names(d) && d$strand[i]=='-') source<-rev(source)
+      if('target_strand'%in%names(d) && d$target_strand[i]=='-') target<-rev(target)
+      data.frame(link=i,x=c(source,rev(target)),y=c(1,1,0,0),chr=d$chr[i],target_chr=d$target_chr[i])
+    }))
     return(ggplot2::ggplot(z,ggplot2::aes(x,y,group=link,fill=chr))+ggplot2::geom_polygon(alpha=.5)+ggplot2::facet_grid(chr~target_chr,scales='free_x')+ggplot2::labs(x='Genomic position (bp)',y='Source / target'))
   }
   if(is.null(params$threshold) || params$threshold<=0 || params$threshold>1) stop('Declare a valid association threshold; no genome-wide default is inferred.')

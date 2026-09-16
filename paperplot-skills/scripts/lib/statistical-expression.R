@@ -36,7 +36,7 @@ pp_cliffs_delta <- function(x, y) {
   (sum(comparisons > 0) - sum(comparisons < 0)) / (length(x) * length(y))
 }
 
-pp_effect_size <- function(data, group_col, value_col, method = c("mean_difference", "standardized_difference", "cliffs_delta"), comparison = NULL) {
+pp_effect_size <- function(data, group_col, value_col, method = c("mean_difference", "standardized_difference", "cliffs_delta"), comparison = NULL, na_action='error') {
   method <- match.arg(method)
   groups <- unique(as.character(data[[group_col]]))
   groups <- groups[!is.na(groups) & nzchar(groups)]
@@ -44,6 +44,8 @@ pp_effect_size <- function(data, group_col, value_col, method = c("mean_differen
   if (length(groups) != 2) stop("Effect size requires exactly two groups.", call. = FALSE)
   x <- data[data[[group_col]] == groups[[1]], value_col]
   y <- data[data[[group_col]] == groups[[2]], value_col]
+  if(!is.numeric(x)||!is.numeric(y)) stop('Effect measurements must be numeric.')
+  if(any(!is.finite(c(x,y))) && na_action!='omit') stop('Missing/nonfinite measurements require explicit na_action=omit.')
   x <- x[is.finite(x)]
   y <- y[is.finite(y)]
   estimate <- switch(method,
@@ -55,8 +57,8 @@ pp_effect_size <- function(data, group_col, value_col, method = c("mean_differen
     cliffs_delta = pp_cliffs_delta(x, y)
   )
   ci <- if (identical(method, "mean_difference") && length(x) > 1 && length(y) > 1) {
-    diff_values <- x - mean(y)
-    pp_ci_t(diff_values)
+    bounds <- stats::t.test(x,y,paired=FALSE,var.equal=FALSE)$conf.int
+    c(mean=estimate,low=bounds[1],high=bounds[2])
   } else {
     c(mean = estimate, low = NA_real_, high = NA_real_)
   }
