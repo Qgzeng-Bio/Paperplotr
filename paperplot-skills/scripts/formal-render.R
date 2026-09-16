@@ -11,12 +11,12 @@ python <- pp_resolve_qa_python()
 if(system2(python,c('-c',shQuote('import sys,PIL,pypdf; assert sys.version_info[:2]==(3,13); assert PIL.__version__=="12.3.0"; assert pypdf.__version__=="6.19.0"')))!=0) stop('Python differs from requirements.lock.')
 out<-Sys.getenv('PAPERPLOT_FORMAL_OUTPUT',file.path('visual-checks',paste0('formal-',format(Sys.time(),'%Y%m%d-%H%M%S'))))
 dir.create(out,recursive=TRUE,showWarnings=FALSE);out<-normalizePath(out)
-Sys.setenv(PAPERPLOT_TEST_OUTPUT=file.path(out,'physical'),PAPERPLOT_PROJECT_TEST_OUTPUT=file.path(out,'project'),PAPERPLOT_HETEROGENEOUS_OUTPUT=file.path(out,'heterogeneous'),PAPERPLOT_REVIEW_TEST_OUTPUT=file.path(out,'review-mechanics'))
+Sys.setenv(PAPERPLOT_TEST_OUTPUT=file.path(out,'physical'),PAPERPLOT_PROJECT_TEST_OUTPUT=file.path(out,'project'),PAPERPLOT_HETEROGENEOUS_OUTPUT=file.path(out,'heterogeneous'),PAPERPLOT_REVIEW_TEST_OUTPUT=file.path(out,'review-mechanics'),PAPERPLOT_NESTED_TEST_OUTPUT=file.path(out,'nested-project'))
 jobs <- list(
   structure=c('validate-skill.R'), catalog=c('catalog.py','--check'),
   input_contract=c('test-recipe-contract.R'),specialized=c('test-specialized-contract.R'),
   recipes=c('test-recipe-exports.R',file.path(out,'recipes')),
-  templates=c('smoke-test-templates.R'),project=c('test-figure-project.R'),heterogeneous=c('test-heterogeneous.R'),
+  templates=c('smoke-test-templates.R'),project=c('test-figure-project.R'),heterogeneous=c('test-heterogeneous.R'),nested_project=c('test-nested-project.R'),
   physical=c('test-production-contract.R','--require-production'),review_mechanics=c('test-review-path.R'),
   installation=c('test-skill-install.py'),public_sources=c('fetch-public-cases.py'),
   public_cases=c('test-public-cases.R',file.path(out,'public-cases')))
