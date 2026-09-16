@@ -25,7 +25,7 @@ external edits. A/B/C/D are display labels; stable IDs survive rearrangement.
 ## Project layout and confirmation
 
 `pp_project_create(figure_id, message, panels, project, layout, column, shared,
-shared_config, mode)` creates schema version 1. Existing projects resume without
+shared_config, mode)` creates schema version 2. Existing projects resume without
 being overwritten. Each panel has an id, title, scientific question, role,
 optional script, named inputs, named extra source scripts, and dependency
 declaration. A missing script means a planned placeholder, not invented data.
@@ -56,8 +56,10 @@ build_panel <- function(inputs, context) {
 
 `inputs` contains named absolute file paths. `context` supplies the slot,
 render_spec, panel ID/question/role, seed and shared settings. Return a ggplot
-or patchwork object (alone or as `list(plot=..., evidence=...)`). No external
-SVG/PDF/image panels in v1. Do not export files, edit inputs, or add outer panel
+or patchwork object, or a vector grid object with a backend adapter. Prefer
+`list(plot=..., evidence=..., backend=..., dependencies=...)`; dependency paths
+must already be registered. Arbitrary external SVG/PDF/raster panels remain
+unsupported. Do not export files, edit inputs, or add outer panel
 letters inside the builder. Declare existing manual tag layers through the
 panel's `manual_tag_layers` list when migrating a script.
 
@@ -106,7 +108,7 @@ review. `pp_project_restore(project, target, revision)` restores a panel or
 `layout` version. Restoring never rolls back external raw data or source files;
 if they differ, the restored result is correctly marked stale.
 
-CLI equivalents use `Rscript scripts/figure-project.R`:
+CLI equivalents use `scripts/paperplot-run scripts/figure-project.R`:
 
 ```text
 create config.json
@@ -119,13 +121,23 @@ set-layout project-dir layout.json
 configure project-dir settings.json [panel]
 review project-dir A pass reviewer
 review project-dir figure pass reviewer
+review project-dir figure pass reviewer item-review.json
+migrate project-dir [apply]
 restore project-dir B r000001
 restore project-dir layout r000001
 ```
 
 Create JSON keys match the R creation arguments. Revision request keys are
-`script`, `change_type`, `reason`. Paths in configuration commands are resolved
-from the invocation directory; stored inputs/sources are absolute in v1.
+`script`, `change_type`, `reason`. Configuration paths are relative to the project;
+internal paths are stored relatively and external data stay explicit absolute
+paths. Item-review JSON supplies checks and reason; it may only close listed
+reviewable items, not exact failures.
+
+Schema 1 can be read and inspected but not written before explicit migration.
+Migration defaults to dry-run, then backs up project.json and retains historical
+revisions/reviews without moving raw inputs. A migrated panel requires a first
+scientific rebuild with reason="schema migration revalidation" because the old
+evidence lacks schema-2 encoding/statistical fields. No old pass is inherited.
 
 ## Persistence and acceptance
 

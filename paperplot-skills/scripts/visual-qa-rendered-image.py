@@ -180,6 +180,7 @@ REMEDIATION = {
     "panel_count_mismatch": ("references/pattern-library/multi-panel-manuscript-layout.md", "Reconcile expected vs detected panels; fix outer stitching/missing panel."),
     "panel_size_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Equalize panel-box sizes for equal-role panels (export sub-plots at matched dimensions)."),
     "panel_data_region_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Align visible data-region sizes across panels; equalize legend space."),
+    "panel_data_region_mismatch": ("references/pattern-library/multi-panel-manuscript-layout.md", "Inspect measured panel regions and declared hierarchy; rebalance only panels with equivalent scientific roles."),
     "panel_blank_space_imbalance": ("references/pattern-library/multi-panel-manuscript-layout.md", "Even out per-panel margins so blank-space fractions match."),
     "unjustified_panel_hierarchy_risk": ("references/pattern-library/multi-panel-manuscript-layout.md", "Either justify the size hierarchy (primary/secondary roles) or equalize panels."),
     "ocr_small_text_burden": ("references/label-burden-strategies.md", "Increase font size and reduce raw text count; many tiny labels read as texture."),
@@ -1597,11 +1598,10 @@ def summarize_vector_text_boxes(
     # low-count warnings; family threshold overrides absorb those cases.
     widespread_overlap = overlap_count > max(3, count * 0.03)
     if overlap_count >= 1:
-        overlap_code = "vector_text_overlap" if widespread_overlap else "vector_text_overlap_minor"
         risks.append(
             risk(
                 STATUS_FAIL if (widespread_overlap and strict_detail_qa) else STATUS_WARN,
-                overlap_code,
+                "vector_text_overlap" if widespread_overlap else "vector_text_overlap_minor",
                 "Vector text boxes overlap enough to suggest label collision." if widespread_overlap else "One or a few estimated vector text boxes intersect; inspect for a real collision.",
                 overlap_count,
             )
