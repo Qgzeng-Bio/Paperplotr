@@ -35,8 +35,11 @@ pp_assert_unique <- function(df, keys, what = 'records') {
 
 pp_validate_recipe_input <- function(recipe_id, df, params = list(), mode = 'production') {
   mode <- match.arg(mode, c('production', 'preview', 'demo'))
+  if(isTRUE(attr(df,'pp_demo')) && mode!='demo') stop('Demo input requires explicit demo mode at every drawing entry.')
   if (missing(df) || !is.data.frame(df) || !nrow(df)) stop('Provide a nonempty input table. Demo data must be constructed explicitly.')
   if (!is.list(params)) stop('params must be a named list.')
+  geometry <- if(inherits(df,'sf')) df else NULL
+  if(!is.null(geometry)) df <- sf::st_drop_geometry(df)
   entry <- pp_recipe_entry(recipe_id)
   required <- strsplit(entry$required_roles, ';', fixed = TRUE)[[1]]
   missing_cols <- setdiff(required, names(df))
@@ -57,26 +60,33 @@ pp_validate_recipe_input <- function(recipe_id, df, params = list(), mode = 'pro
     if (na_action == 'error') stop('Missing required values at rows ', paste(head(omitted, 10), collapse = ', '), '; declare na_action explicitly.')
     if (na_action == 'omit') df <- df[!bad, , drop = FALSE]
     if (na_action == 'keep' && !entry$handler %in% c('matrix','complex_heatmap')) stop('na_action=keep is supported only for matrix missing cells.')
+    if(na_action=='keep' && anyNA(df[setdiff(complete_fields,'value')])) stop('Only missing matrix values may be retained; axis identifiers and support values remain required.')
   }
   if (!nrow(df)) stop('No observations remain after the declared missing-value policy.')
   for (name in intersect(c('pvalue','padj','qvalue','ratio'), names(df))) {
     if (any(df[[name]] < 0 | df[[name]] > 1, na.rm = TRUE)) stop(name, ' must lie in [0,1].')
   }
+  if(recipe_id%in%c('correlation_heatmap','correlation_triangle_heatmap') && any(df$value< -1|df$value>1,na.rm=TRUE)) stop('Correlation coefficients must lie in [-1,1].')
+  if(entry$handler=='gsea' && (any(df$rank<0|df$rank!=floor(df$rank)) || ('hit'%in%names(df)&&any(!df$hit%in%c(TRUE,FALSE,0,1))))) stop('GSEA rank must be a nonnegative integer and hit must be binary.')
   for (name in intersect(c('count','error','weight','branch_length'), names(df))) {
     if (any(df[[name]] < 0, na.rm = TRUE)) stop(name, ' must be nonnegative.')
   }
   if (all(c('lower','estimate','upper') %in% names(df)) &&
       any(df$lower > df$estimate | df$upper < df$estimate, na.rm = TRUE)) stop('Invalid supplied interval: require lower <= estimate <= upper.')
   if (all(c('start','end') %in% names(df)) && any(df$start > df$end, na.rm = TRUE)) stop('Genomic start must not exceed end.')
+  if(all(c('target_start','target_end')%in%names(df)) && any(df$target_start>df$target_end,na.rm=TRUE)) stop('Target start must not exceed end; specify orientation with target_strand.')
+  for(name in intersect(c('strand','target_strand'),names(df))) if(any(!df[[name]]%in%c('+','-'))) stop(name,' must be + or -.')
   for (name in intersect(c('position','start','end','target_start','target_end'), names(df))) {
     if (any(df[[name]] < 0 | df[[name]] != floor(df[[name]]), na.rm = TRUE)) stop(name, ' must contain nonnegative integer coordinates.')
   }
   if ('present' %in% names(df) && any(!df$present %in% c(0,1,FALSE,TRUE))) stop('present must be binary.')
   for (name in intersect(c('group','category','metric','chr','set','track','subgroup','panel'), names(df))) {
+    if(anyNA(df[[name]]) || any(!nzchar(trimws(as.character(df[[name]]))))) stop('Missing grouping/axis identifiers in ',name,'; no categories were dropped.')
     if (!is.factor(df[[name]])) df[[name]] <- factor(df[[name]], levels = unique(df[[name]]))
   }
   # Optional grouping means one unnamed group, not an invented scientific result.
   if (!'group' %in% names(df)) df$group <- factor(rep('All', nrow(df)))
+  if('panel'%in%names(df) && nlevels(droplevels(df$panel))>1L) stop('Multiple explicit panel IDs require separate build_panel calls in a figure project; no rows were collapsed into one panel.')
   if (entry$handler == 'enrichment' && !'category' %in% names(df)) df$category <- factor(rep('All', nrow(df)))
   if (!is.null(params$group_order)) {
     if (!setequal(params$group_order, as.character(unique(df$group)))) stop('group_order must contain exactly the input groups.')
@@ -96,22 +106,33 @@ pp_validate_recipe_input <- function(recipe_id, df, params = list(), mode = 'pro
   }
   if (entry$handler %in% c('paired','dumbbell')) {
     identity <- if (entry$handler == 'paired') 'sample' else 'category'
-    pp_assert_unique(df, c(identity,'group','metric','panel'), 'paired observations')
+    pair_keys <- c(identity,'group',if(entry$handler=='paired' && entry$variant=='facet') 'metric')
+    pp_assert_unique(df, pair_keys, 'paired observations')
     groups <- levels(droplevels(df$group))
     if (length(groups) < 2 || (entry$handler == 'dumbbell' && length(groups) != 2)) stop('Supply the explicitly selected comparison groups; dumbbell requires exactly two.')
     pair_groups <- split(df, interaction(df[intersect(c(identity,'metric','panel'), names(df))], drop = TRUE))
     if (any(!vapply(pair_groups, function(d) setequal(as.character(d$group), groups), logical(1)))) stop('Incomplete pairing; no incomplete subjects were silently removed.')
   }
-  if (entry$handler == 'forest') pp_assert_unique(df, c('metric','group','subgroup','panel'), 'effect estimates')
+  if(entry$handler=='distribution' && entry$variant%in%c('violin','quantile','raincloud','raincloud_facet','ridge','histogram')) {
+    by<-c('group',if(entry$variant=='raincloud_facet') 'metric')
+    subsets<-split(df,interaction(df[by],drop=TRUE))
+    if(any(!vapply(subsets,function(x) nrow(x)>=2 && length(unique(x$value))>=2,logical(1)))) stop('Density requires at least two distinct observations per group; no empty violin/ridge or pseudo-observations were generated.')
+  }
+  if (entry$handler == 'forest') {
+    if(identical(params$data_kind,'raw')) stop('Forest recipes consume supplied estimates/intervals; compute raw summaries explicitly before this call.')
+    pp_assert_unique(df, c('metric','group','subgroup','panel'), 'effect estimates')
+  }
   if (entry$handler == 'enrichment') pp_assert_unique(df, c('term','group','category'), 'enrichment results')
   if (entry$handler %in% c('matrix','complex_heatmap')) pp_assert_unique(df, c('metric','category','group'), 'matrix cells')
   if (entry$handler == 'timeseries') pp_assert_unique(df, c('time','group','panel'), 'time-series summaries')
   if (entry$handler == 'sets') pp_assert_unique(df, c('item','set'), 'set memberships')
   if (entry$handler == 'rank') pp_assert_unique(df, c('category','group','panel'), 'ranked values')
-  if (entry$handler == 'model' && entry$variant == 'residual' &&
+  if(entry$handler=='model' && entry$variant=='calibration' && any(df$observed<0|df$observed>1|df$predicted<0|df$predicted>1)) stop('Calibration probabilities and observed frequencies must lie in [0,1].')
+  if (entry$handler == 'model' && entry$variant != 'calibration' &&
       !isTRUE(all.equal(df$residual, df$observed-df$predicted, tolerance=1e-10, check.attributes=FALSE))) stop('Residuals conflict with observed - predicted.')
   attr(df, 'pp_input_policy') <- list(recipe_id=recipe_id, mode=mode, na_action=na_action,
     omitted_rows=if(na_action=='omit') omitted else integer(), params=params)
+  if(!is.null(geometry)) attr(df,'pp_geometry') <- geometry
   df
 }
 
@@ -125,6 +146,7 @@ pp_summary_statistics <- function(df, value = 'value', by = 'group', method,
   if (!is.numeric(conf_level) || length(conf_level)!=1 || conf_level<=0 || conf_level>=1) stop('conf_level must be in (0,1).')
   if (anyNA(df[[value]]) && na_action != 'omit') stop('Missing measurements require explicit na_action=omit.')
   if (is.null(unit_id)) stop('Raw summaries require an explicit unit_id to define the independent observation.')
+  if(anyNA(df[c(by,unit_id)])) stop('Grouping and experimental-unit identifiers cannot be missing.')
   pp_assert_unique(df, c(by,unit_id), 'independent experimental units')
   groups <- split(df, interaction(df[by], drop=TRUE, lex.order=TRUE))
   out <- do.call(rbind, lapply(groups, function(d) {
@@ -154,7 +176,7 @@ pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NU
       coefficients=summary(fit)$coefficients,interval=stats::confint(fit,level=conf_level),model=fit))
   }
   if(method %in% c('pearson','spearman')) result <- stats::cor.test(df[[x]],df[[y]],method=method,conf.level=conf_level,exact=FALSE) else {
-    levels <- unique(as.character(df[[group]])); if(length(levels)!=2) stop('Explicitly select exactly two groups.')
+    levels <- if(is.factor(df[[group]])) levels(droplevels(df[[group]])) else unique(as.character(df[[group]])); if(length(levels)!=2) stop('Explicitly select exactly two groups.')
     a <- df[as.character(df[[group]])==levels[1],,drop=FALSE]; b <- df[as.character(df[[group]])==levels[2],,drop=FALSE]
     paired <- method %in% c('paired_t','paired_wilcoxon')
     if(paired) {
@@ -166,7 +188,9 @@ pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NU
     result <- if(method %in% c('welch_t','paired_t')) stats::t.test(a[[x]],b[[x]],paired=paired,conf.level=conf_level) else
       stats::wilcox.test(a[[x]],b[[x]],paired=paired,conf.int=TRUE,conf.level=conf_level,exact=FALSE)
   }
-  list(method=method,n=nrow(df),n_missing=omitted,conf_level=conf_level,
+  list(method=method,n=nrow(df),n_by_group=if(!method%in%c('pearson','spearman')) as.list(table(df[[group]])) else NULL,
+    group_order=if(!method%in%c('pearson','spearman')) as.list(levels) else NULL,
+    paired=method%in%c('paired_t','paired_wilcoxon'),na_action=na_action,n_missing=omitted,conf_level=conf_level,
     statistic=unname(result$statistic),estimate=result$estimate,pvalue=result$p.value,
     interval=result$conf.int,adjustment='none',pair_id=pair_id)
 }
@@ -175,4 +199,11 @@ pp_adjust_pvalues <- function(pvalues,method) {
   if(missing(method) || !method %in% stats::p.adjust.methods) stop('Choose an explicit multiple-testing correction method.')
   if(!is.numeric(pvalues) || any(!is.finite(pvalues)|pvalues<0|pvalues>1)) stop('Supply finite probabilities in [0,1].')
   list(raw=pvalues,adjusted=stats::p.adjust(pvalues,method=method),method=method,family_size=length(pvalues))
+}
+
+pp_model_metrics <- function(observed,predicted) {
+  if(!is.numeric(observed)||!is.numeric(predicted)||length(observed)!=length(predicted)||!length(observed)||any(!is.finite(c(observed,predicted)))) stop('Supply paired finite observed and predicted values.')
+  denominator <- sum((observed-mean(observed))^2)
+  list(n=length(observed),r_squared=if(denominator>0) 1-sum((predicted-observed)^2)/denominator else NA_real_,
+       rmse=sqrt(mean((predicted-observed)^2)),interval='not supplied')
 }

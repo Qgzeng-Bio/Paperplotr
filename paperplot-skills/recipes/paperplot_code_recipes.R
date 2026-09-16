@@ -1,6 +1,6 @@
 # PaperPlot recipe entrypoint: manifest-directed dispatch, mandatory real input.
 # Simulation is reachable only through the explicitly named demo constructor.
-for (.module in c("recipe-contract.R", "recipe-handlers.R", "recipe-specialized.R")) {
+for (.module in c("recipe-handlers.R", "recipe-specialized.R")) {
   source(file.path(pp_helper_script_dir, "lib", .module), local = FALSE)
 }
 
@@ -21,11 +21,26 @@ pp_recipe_plot <- function(recipe_id, df, params = list(), mode = Sys.getenv("PA
     plot <- pp_recipe_specialized(entry,df,params,spec)
   } else plot <- pp_recipe_core(entry,df,params)
   if (!inherits(plot,"ggplot") && !grid::is.grob(plot)) stop("Recipe must return a vector drawing object.")
+  if(grid::is.grob(plot) && mode=='demo') plot <- pp_demo_vector(plot,spec)
   attr(plot,"pp_render_spec") <- spec
+  if(entry$variant=='labels' && 'label'%in%names(df)) attr(plot,'pp_expected_labels') <- as.character(df$label[!is.na(df$label)&nzchar(as.character(df$label))])
+  if(entry$handler %in% c('network','tree')) attr(plot,'pp_axes') <- 'none'
   attr(plot,"pp_recipe_evidence") <- list(recipe_id=recipe_id,source=original,
     validated=df,policy=attr(df,"pp_input_policy"),params=params,backend=entry$backend,mode=mode)
-  if(!is.null(params$statistics)) {
-    statistics <- do.call(pp_statistical_test,c(list(df=df),params$statistics))
+  if(!is.null(params$statistics) || !is.null(params$statistical_result)) {
+    statistics <- params$statistical_result
+    if(!is.null(statistics) && (!is.list(statistics)||is.null(statistics$method)||is.null(statistics$n))) stop('Supplied statistical_result requires method and n with its actual statistics.')
+    if(!is.null(statistics)) {
+      if(!is.numeric(statistics$n)||any(!is.finite(statistics$n)|statistics$n<1)) stop('Supplied statistical n must be positive and finite.')
+      if(!is.null(statistics$pvalue) && (!is.numeric(statistics$pvalue)||any(!is.finite(statistics$pvalue)|statistics$pvalue<0|statistics$pvalue>1))) stop('Supplied statistical pvalue must lie in [0,1].')
+    }
+    if(!is.null(params$statistics)) {
+      computed <- do.call(pp_statistical_test,c(list(df=df),params$statistics));computed$model<-NULL
+      if(!is.null(statistics)) {
+        common <- intersect(names(statistics),names(computed))
+        if(!isTRUE(all.equal(statistics[common],computed[common],tolerance=1e-8,check.attributes=FALSE))) stop('Supplied statistical result conflicts with explicitly requested recomputation; neither was replaced.')
+      } else statistics <- computed
+    }
     statistics$model <- NULL
     attr(plot,'pp_statistics') <- statistics
     attr(plot,'pp_recipe_evidence')$statistics <- statistics
@@ -34,7 +49,11 @@ pp_recipe_plot <- function(recipe_id, df, params = list(), mode = Sys.getenv("PA
     attr(plot,"pp_backend_spec") <- spec
     attr(plot,"pp_vector_builder") <- local({
       e <- entry; data <- df; settings <- params
-      function(render_spec) pp_recipe_specialized(e,data,settings,render_spec)
+      function(render_spec) {
+        result <- pp_recipe_specialized(e,data,settings,render_spec)
+        if(render_spec$mode=='demo') result <- pp_demo_vector(result,render_spec)
+        result
+      }
     })
   }
   if (mode=="demo" && inherits(plot,"ggplot")) plot <- plot + ggplot2::labs(caption="DEMO / simulated test data")
@@ -59,6 +78,7 @@ pp_recipe_mock_data <- function(recipe_id, seed = 20260606) {
     variant="chord",crs=4326,inset_bounds=c(1,2,1,3))
   if(h=="bar" && e$variant=="horizontal") { params$data_kind <- "summary"; d <- d[1:6,]; d$category <- factor(paste0("c",1:6)); d$error <- .2 }
   if(h=="composition") {d <- expand.grid(group=c("A","B"),category=c("a","b","c")); d$value <- 1:6}
+  if(recipe_id=='pca_pcoa_ordination') params$variant <- 'pca'
   if(h=="composition" && e$variant=="diverging") {d$value[c(1,3,5)] <- -d$value[c(1,3,5)];params$input_scale <- "signed"}
   if(h %in% c("paired","dumbbell")) {
     d <- expand.grid(sample=paste0("s",1:8),group=c("A","B"))
@@ -72,7 +92,7 @@ pp_recipe_mock_data <- function(recipe_id, seed = 20260606) {
   if(h=="differential") {d$feature <- paste0("g",seq_len(nrow(d)));d$log2fc <- seq(-3,3,length.out=nrow(d));d$padj <- seq(.001,.4,length.out=nrow(d));d$base_mean <- seq_len(nrow(d))*10}
   if(h=="enrichment") {d <- data.frame(term=paste0("path",1:8),ratio=seq(.1,.8,length.out=8),qvalue=seq(.001,.1,length.out=8),count=1:8)}
   if(h=="gsea") {d <- data.frame(rank=1:50,running_score=sin((1:50)/10),hit=rep(c(TRUE,FALSE),25))}
-  if(h=="forest") {d <- expand.grid(metric=c("m1","m2"),group=c("A","B"));d$estimate <- 1:4;d$lower <- d$estimate-.5;d$upper <- d$estimate+.5;d$subgroup <- "All"}
+  if(h=="forest") {d <- expand.grid(metric=c("m1","m2"),group=c("A","B"));d$estimate <- 1:4;d$lower <- d$estimate-.5;d$upper <- d$estimate+.5;d$subgroup <- "All";params$data_kind <- 'summary';if(e$variant=='plain') d$metric <- paste0('m',1:4)}
   if(h=="rank") {d <- data.frame(category=factor(letters[1:8]),group=rep(c("A","B"),4),value=1:8,label=letters[1:8])}
   if(h=="genome") {
     d <- data.frame(chr=factor(rep(c("Chr1","Chr2"),each=20)),position=rep(seq(100,2000,100),2),pvalue=10^(-seq(1,10,length.out=40)))
