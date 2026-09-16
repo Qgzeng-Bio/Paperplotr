@@ -172,6 +172,7 @@ pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NU
   df <- df[!bad,,drop=FALSE]
   if(method=='lm') {
     fit <- stats::lm(stats::reformulate(x,y),data=df)
+    if(stats::df.residual(fit)<1L || anyNA(stats::coef(fit))) stop('Linear-regression confidence intervals need positive residual degrees of freedom and a full-rank design.')
     return(list(method='lm',n=nrow(df),n_missing=omitted,conf_level=conf_level,
       coefficients=summary(fit)$coefficients,interval=stats::confint(fit,level=conf_level),model=fit))
   }

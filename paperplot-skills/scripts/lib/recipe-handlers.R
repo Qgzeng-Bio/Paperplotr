@@ -108,6 +108,8 @@ pp_recipe_core <- function(entry, d, params) {
       q <- q + if(variant=='bubble') ggplot2::geom_point(ggplot2::aes(size=count),alpha=.7) else ggplot2::geom_point(size=pp_point_size('normal'),alpha=.7)
       if(!is.null(params$fit)) {
         if(params$fit!='lm') stop('Supported explicit fit is lm; supply other fits upstream.')
+        groups<-split(d,d$group,drop=TRUE)
+        if(any(!vapply(groups,function(x) nrow(x)>=3L && length(unique(x$x))>=2L,logical(1)))) stop('A regression confidence band requires at least three observations and two distinct predictor values per group.')
         q <- q + ggplot2::geom_smooth(method='lm',formula=y~x,se=TRUE,level=params$conf_level %||% .95,linewidth=pp_line_width('interval'))
       }
       if(variant=='ribbon' && is.null(params$fit) && !all(c('lower','upper')%in%names(d))) stop('Regression ribbon needs explicit fit=lm or supplied lower/upper bounds.')
@@ -156,6 +158,8 @@ pp_recipe_core <- function(entry, d, params) {
       q <- q + ggplot2::labs(x=labels[1],y=labels[2])
       if(variant=='ellipse') {
         if(is.null(params$ellipse_level)) stop('Explicit ellipse_level required; no inferential region is guessed.')
+        groups<-split(d,d$group,drop=TRUE)
+        if(any(!vapply(groups,function(x) nrow(x)>=3L && qr(cbind(1,x$pc1,x$pc2))$rank==3L,logical(1)))) stop('An ordination ellipse needs at least three non-collinear observations per group.')
         q <- q + ggplot2::stat_ellipse(level=params$ellipse_level)
       }
       metric <- if(variant=='nmds') 'stress' else if(variant=='permanova') 'permanova_p' else NULL
