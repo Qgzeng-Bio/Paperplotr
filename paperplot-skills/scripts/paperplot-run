@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+# Use the isolated, locked environment without activating or changing the shell.
+set -eu
+prefix="${PAPERPLOT_ENV:-$HOME/.local/share/paperplot/runtime-0.7.0}"
+[ -f "$prefix/r-library-path.txt" ] || { echo "PaperPlot environment is incomplete. Run bootstrap-environment.R for $prefix." >&2; exit 1; }
+library="$(head -n 1 "$prefix/r-library-path.txt")"
+[ -d "$library" ] || { echo "Recorded R library is missing: $library" >&2; exit 1; }
+export PATH="$prefix/bin:$PATH"
+export R_LIBS_USER="$library" R_LIBS_SITE="" R_PROFILE_USER=/dev/null R_ENVIRON_USER=/dev/null
+export PAPERPLOT_RSCRIPT="$prefix/bin/Rscript" PAPERPLOT_PYTHON="$prefix/bin/python"
+export PYTHONNOUSERSITE=1 PYTHONPATH=""
+script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
+export PAPERPLOT_HELPER="$script_dir/paperplot_helpers.R"
+if [ "$#" -eq 0 ]; then set -- "$script_dir/check-environment.R"; fi
+case "$1" in
+  python) shift; exec "$prefix/bin/python" -I "$@" ;;
+  *.py) exec "$prefix/bin/python" -I "$@" ;;
+  *) exec "$prefix/bin/Rscript" --vanilla "$@" ;;
+esac

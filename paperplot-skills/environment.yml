@@ -1,0 +1,26 @@
+name: paperplot
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.6.0
+  - python=3.13
+  - poppler
+  - gdal
+  - geos
+  - proj
+  - cairo
+  - pip
+  - pkg-config
+  - make
+  - compilers
+  - freetype
+  - fontconfig
+  - harfbuzz
+  - fribidi
+  - libpng
+  - libjpeg-turbo
+  - libtiff
+  - udunits2
+  - cmake
+  - glib
+  - gettext
