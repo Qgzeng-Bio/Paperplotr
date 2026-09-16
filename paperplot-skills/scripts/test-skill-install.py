@@ -15,6 +15,7 @@ INSTALLER = REPO / 'install-paperplot-skill.sh'
 class InstallTests(unittest.TestCase):
     def run_install(self, root, **extra):
         env = dict(os.environ, PAPERPLOT_DEST=str(root),
+                   PAPERPLOT_BACKUP_ROOT=str(root / '_backups'),
                    PAPERPLOT_SOURCE_DIR=str(REPO / 'paperplot-skills'))
         env.update(extra)
         return subprocess.run(['/bin/sh', str(INSTALLER)], env=env,
@@ -29,7 +30,7 @@ class InstallTests(unittest.TestCase):
             (destination / 'old-marker').write_text('recoverable')
             result = self.run_install(root, PAPERPLOT_OVERWRITE='1')
             self.assertEqual(result.returncode, 0, result.stderr)
-            backups = list(root.glob('paperplot-skills.backup-*'))
+            backups = list((root / '_backups').glob('paperplot-skills.backup-*'))
             self.assertEqual(len(backups), 1)
             self.assertEqual((backups[0] / 'old-marker').read_text(), 'recoverable')
             for name in ('family-qa-score.py', 'vision-review-adapter.py', 'figure-project.R',
@@ -89,7 +90,7 @@ class InstallTests(unittest.TestCase):
             result = self.run_install(root, PAPERPLOT_OVERWRITE='1')
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertTrue((destination / 'SKILL.md').exists())
-            self.assertTrue(next(root.glob('paperplot-skills.backup-*')).is_symlink())
+            self.assertTrue(next((root / '_backups').glob('paperplot-skills.backup-*')).is_symlink())
 
 
 if __name__ == '__main__':

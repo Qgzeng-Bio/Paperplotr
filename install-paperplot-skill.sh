@@ -15,6 +15,7 @@ case "$DEST_ROOT" in ""|/) echo "Invalid destination root" >&2; exit 1;; esac
 mkdir -p "$DEST_ROOT"
 DEST_ROOT="$(cd "$DEST_ROOT" && pwd -P)"
 DEST="$DEST_ROOT/$SKILL_NAME"
+BACKUP_ROOT="${PAPERPLOT_BACKUP_ROOT:-$(dirname "$DEST_ROOT")/skill-backups}"
 if { [ -e "$DEST" ] || [ -L "$DEST" ]; } && [ "${PAPERPLOT_OVERWRITE:-0}" != 1 ]; then
   echo "Destination exists: $DEST; set PAPERPLOT_OVERWRITE=1 to back up and replace it." >&2
   exit 1
@@ -91,7 +92,9 @@ for path in SKILL.md recipes/recipe_manifest.csv scripts/paperplot_helpers.R scr
 done
 "$STAGE/candidate/scripts/paperplot-run" "$STAGE/candidate/scripts/check-environment.R" >/dev/null
 if [ -e "$DEST" ] || [ -L "$DEST" ]; then
-  BACKUP="$DEST_ROOT/$SKILL_NAME.backup-$(date +%Y%m%d-%H%M%S)-$$"
+  mkdir -p "$BACKUP_ROOT"
+  "$STAGE/candidate/scripts/paperplot-run" python -c 'import os,sys; assert os.stat(sys.argv[1]).st_dev == os.stat(sys.argv[2]).st_dev, "Backup and install must share a filesystem"' "$DEST_ROOT" "$BACKUP_ROOT"
+  BACKUP="$BACKUP_ROOT/$SKILL_NAME.backup-$(date +%Y%m%d-%H%M%S)-$$"
   mv "$DEST" "$BACKUP"
 fi
 if ! mv "$STAGE/candidate" "$DEST"; then
