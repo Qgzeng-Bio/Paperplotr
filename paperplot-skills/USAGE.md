@@ -37,6 +37,8 @@ Explicit test: `pp_statistical_test(d, method="welch_t")`.
 Requested correction: `pp_adjust_pvalues(p, method="BH")`.
 Record returned methods, n, missingness and intervals. No statistics are requested implicitly.
 
+For paired tests, `n`/`n_pairs` count independent pairs; `n_observations` counts table rows. The returned `conf_level` describes the actual available interval, separately from `requested_conf_level`. Spearman/Wilcoxon retain the standard R exact-test policy unless `exact` is explicitly supplied; warnings and the test description are preserved.
+
 Explicit demo only:
 
 ```r
