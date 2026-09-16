@@ -1060,7 +1060,7 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   render_spec <- declared_spec %||% pp_render_spec(n_panels = pp_infer_panel_count(plot),
     width_mm = if (!is.null(width)) width * 10, height_mm = if (!is.null(height)) height * 10)
   render_spec$shared_row_labels <- attr(plot, "pp_shared_row_labels")
-  direct_labels <- function(p) c(attr(p,'pp_expected_labels'),if(inherits(p,'patchwork')) unlist(lapply(p$patches$plots,direct_labels)))
+  direct_labels <- function(p) c(attr(p,'pp_expected_labels'),unlist(lapply(p$layers,function(l) attr(l,'pp_required_labels'))),if(inherits(p,'patchwork')) unlist(lapply(p$patches$plots,direct_labels)))
   render_spec$expected_labels <- as.list(unique(c(unlist(render_spec$expected_labels),direct_labels(plot))))
   if(!identical(render_spec$family,'Arial')) stop('The current production font profile is Arial; unsupported font exceptions must not silently render as Arial.')
   if (render_spec$mode == "production" && !all(pp_arial_faces())) {

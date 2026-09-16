@@ -50,15 +50,10 @@ design_plan <- pp_design_plan(chart_family = "volcano", figure_role = figure_rol
 
 # Overlap-safe gene labels (WP4): prefer ggrepel when available; the fallback
 # keeps the legacy check_overlap behavior. Seed keeps exports reproducible.
-gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
-    size = pp_text_size("label"), color = "#1D1D1B", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = pp_text_size("label"), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
-}
+gene_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[gene_col]]), data = key_df,
+  color = "#1D1D1B", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 
 plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volcano_class)) +
   geom_point(alpha = 0.54, size = pp_point_size("dense")) +

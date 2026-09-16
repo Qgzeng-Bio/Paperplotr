@@ -27,6 +27,7 @@ pp_assert_data_unchanged(pp_plot_evidence(p), pp_plot_evidence(normalized))
 fails(pp_assert_data_unchanged(c(.94, .96), c(.96, .94)))
 fails(pp_assert_data_unchanged(factor(c("A", "B")), factor(c("A", "B"), levels = c("B", "A"))))
 fails(pp_normalize_production(ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg, size = cyl)) + ggplot2::geom_text(label = "x"), s))
+fails(pp_normalize_production(ggplot2::ggplot(mtcars,ggplot2::aes(wt,mpg))+ggplot2::geom_text(label='required',check_overlap=TRUE),s))
 
 source("paperplot-skills/recipes/paperplot_code_recipes.R")
 fails(pp_read_recipe_data("missing.csv", "lollipop_ranked"))
