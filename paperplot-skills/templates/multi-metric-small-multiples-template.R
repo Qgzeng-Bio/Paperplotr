@@ -105,14 +105,12 @@ p <- ggplot(plot_df, mapping) +
   labs(x = "Sample rank", y = "Value", colour = group_col)
 
 if (nrow(key_label_df) > 0 && identical(label_strategy$direct_label_mode, "selected_key_samples")) {
-  p <- p + geom_text(
+  p <- p + pp_direct_labels(
     data = key_label_df,
     aes(label = .data[[sample_col]]),
-    size = pp_text_size("minimum"),
     hjust = -0.12,
     vjust = 0.45,
-    show.legend = FALSE,
-    check_overlap = TRUE
+    show.legend = FALSE
   )
 }
 

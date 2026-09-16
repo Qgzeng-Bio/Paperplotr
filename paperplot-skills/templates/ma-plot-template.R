@@ -50,15 +50,10 @@ design_brief <- pp_design_brief(scientific_message = scientific_message, figure_
 design_plan <- pp_design_plan(chart_family = "ma_plot", figure_role = figure_role, layout_plan = list(type = "single_panel"), label_strategy = label_strategy, palette_plan = list(color_role = "adjusted significance"), statistical_plan = list(padj_threshold = padj_threshold), visible_simplifications = design_brief$acceptable_simplifications, risks = c("low abundance estimates may be noisy"))
 
 # Overlap-safe gene labels (WP4): ggrepel when available, legacy fallback.
-gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
-    size = pp_text_size("label"), color = "#1D1D1B", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = pp_text_size("label"), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
-}
+gene_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[gene_col]]), data = key_df,
+  color = "#1D1D1B", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 
 plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = significant)) +
   geom_hline(yintercept = 0, linewidth = pp_line_width("reference"), color = "#4D4D4A") +

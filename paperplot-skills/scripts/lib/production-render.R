@@ -131,6 +131,7 @@ pp_normalize_production <- function(plot, spec) {
     }
     for (i in seq_along(p$layers)) {
       lr <- p$layers[[i]]
+      if(isTRUE(lr$geom_params$check_overlap)) stop('Production labels may not use check_overlap=TRUE; use pp_direct_labels() or a reviewed explicit label layout.')
       if (any(class(lr$position) %in% c("PositionJitter", "PositionJitterdodge"))) lr$position$seed <- 104729L
       if (any(class(lr$geom) %in% c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel"))) {
         if (!is.null(lr$mapping$size) || !is.null(p$mapping$size)) stop("Mapped text size needs an explicit semantic design; normalization stopped.")
@@ -354,9 +355,12 @@ pp_direct_labels <- function(mapping, data, gap_mm = 0.8, ...) {
     stop("Collision-aware direct labels require ggrepel; otherwise supply a manually reviewed label layout. No labels were silently dropped.")
   }
   if (!is.numeric(gap_mm) || length(gap_mm) != 1L || !is.finite(gap_mm) || gap_mm < 0) stop("Invalid physical label clearance.")
-  ggrepel::geom_text_repel(mapping = mapping, data = data, family = "Arial",
+  layer <- ggrepel::geom_text_repel(mapping = mapping, data = data, family = "Arial",
     size = 6.5 / ggplot2::.pt, seed = 104729L, max.overlaps = Inf,
     point.padding = grid::unit(gap_mm, "mm"), box.padding = grid::unit(gap_mm, "mm"), ...)
+  labels <- tryCatch(rlang::eval_tidy(mapping$label,data=data),error=function(e) NULL)
+  if(is.character(labels)) attr(layer,'pp_required_labels') <- unique(labels[!is.na(labels)&nzchar(labels)])
+  layer
 }
 
 pp_apply_rank_labels <- function(plot, categories, strategy, sidecar) {

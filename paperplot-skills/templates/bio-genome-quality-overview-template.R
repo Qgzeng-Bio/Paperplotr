@@ -66,15 +66,10 @@ design_plan <- pp_design_plan(chart_family = "bio_genome_quality_small_multiples
 
 color_aes <- if (group_col %in% names(df)) aes(color = .data[[group_col]]) else aes()
 # Overlap-safe labels (WP4): ggrepel when available, legacy fallback otherwise.
-sample_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[sample_col]]),
-    size = pp_text_size("label"), color = "#2F2F2D", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[sample_col]]), size = pp_text_size("label"), vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D")
-}
+sample_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[sample_col]]), data = key_df,
+  color = "#2F2F2D", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 plot <- ggplot(df, aes(x = rank_index, y = .data[[value_col]])) +
   geom_point(color_aes, size = pp_point_size("normal"), alpha = 0.88) +
   sample_label_layer +
