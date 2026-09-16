@@ -30,6 +30,9 @@ fails(pp_normalize_production(ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg, size
 fails(pp_normalize_production(ggplot2::ggplot(mtcars,ggplot2::aes(wt,mpg))+ggplot2::geom_text(label='required',check_overlap=TRUE),s))
 
 source("paperplot-skills/recipes/paperplot_code_recipes.R")
+demo_plot<-pp_recipe_plot('lollipop_ranked',pp_recipe_mock_data('lollipop_ranked'),mode='demo')
+fails(pp_normalize_production(demo_plot,pp_render_spec()))
+fails(pp_normalize_production(pp_compose_manuscript(list(demo_plot,demo_plot)),pp_render_spec(2)))
 fails(pp_read_recipe_data("missing.csv", "lollipop_ranked"))
 check(nrow(pp_read_recipe_data("missing.csv", "lollipop_ranked", "demo")) > 0, "Explicit demo")
 csv <- tempfile(fileext = ".csv")

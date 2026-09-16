@@ -88,6 +88,11 @@ pp_production_theme <- function(spec) {
 }
 
 pp_normalize_production <- function(plot, spec) {
+  require_real_mode <- function(p) {
+    demo <- identical(attr(p,'pp_recipe_evidence')$mode,'demo') || identical(attr(p,'pp_render_spec')$mode,'demo') || isTRUE(attr(p$data,'pp_demo'))
+    if(demo && spec$mode!='demo') stop('A demo drawing cannot be promoted to production/preview; rebuild it from real inputs. Its demo provenance must remain visible.')
+  }
+  require_real_mode(plot)
   if(grid::is.grob(plot)) {
     builder <- attr(plot,'pp_vector_builder')
     if(is.null(builder)) stop('A raw grob needs a backend adapter with pp_vector_builder and source evidence; its font sizes cannot be guessed.')
@@ -102,6 +107,16 @@ pp_normalize_production <- function(plot, spec) {
   out <- unserialize(serialize(plot, NULL))
   changes <- list()
   normalize_one <- function(p) {
+    require_real_mode(p)
+    if(inherits(p,'patchwork')) {
+      patches <- p$patches
+      last <- p;last$patches<-NULL;class(last)<-setdiff(class(last),'patchwork')
+      result <- normalize_one(last)+patchwork::plot_layout()
+      result$patches<-patches
+      result$patches$plots<-lapply(patches$plots,normalize_one)
+      for(name in grep('^pp_',names(attributes(p)),value=TRUE)) attr(result,name)<-attr(p,name)
+      return(result)
+    }
     if(!is.null(attr(p,'pp_vector_element'))) {
       element <- attr(p,'pp_vector_element')
       allocated <- attr(element,'pp_backend_spec')
@@ -111,7 +126,6 @@ pp_normalize_production <- function(plot, spec) {
       attr(wrapped,'pp_vector_element') <- grob
       return(wrapped)
     }
-    if (inherits(p, "patchwork")) p$patches$plots <- lapply(p$patches$plots, normalize_one)
     theme <- p$theme
     changes[[length(changes) + 1L]] <<- lapply(theme[vapply(theme, inherits, logical(1), "element_text")], function(x) list(size = x$size, family = x$family))
     # Remove child size/family/face overrides while preserving blanks, margins and angles.
@@ -159,7 +173,7 @@ pp_normalize_production <- function(plot, spec) {
 }
 
 pp_plot_evidence <- function(plot) {
-  if(!is.null(attr(plot,'pp_vector_element'))) return(pp_plot_evidence(attr(plot,'pp_vector_element')))
+  if(!inherits(plot,'patchwork') && !is.null(attr(plot,'pp_vector_element'))) return(pp_plot_evidence(attr(plot,'pp_vector_element')))
   if(grid::is.grob(plot)) {
     evidence <- attr(plot,'pp_recipe_evidence')
     if(is.null(evidence)) stop('Vector backend source evidence is missing.')
@@ -317,8 +331,16 @@ pp_compose_manuscript <- function(plots, design = NULL, widths = NULL, heights =
                                   species_order = NULL, species_labels = species_order) {
   if (!requireNamespace("patchwork", quietly = TRUE)) stop("patchwork is required for heterogeneous manuscript panels.")
   if (!is.null(species_order)) plots <- pp_shared_rows(plots, species_order, species_labels)
+  nonstandard <- which(vapply(plots,function(p) grid::is.grob(p)||inherits(p,'patchwork'),logical(1)))
   plots <- lapply(plots,function(p) {
-    if(!grid::is.grob(p)) return(p)
+    if(!grid::is.grob(p) && !inherits(p,'patchwork')) return(p)
+    if(inherits(p,'patchwork')) {
+      p <- unserialize(serialize(p,NULL))
+      p$patches$annotation$tag_levels <- NULL
+      allocated <- attr(p,'pp_backend_spec') %||% attr(p,'pp_render_spec') %||% list()
+      allocated$panel_tags<-FALSE;allocated$expected_tags<-list()
+      attr(p,'pp_backend_spec')<-allocated
+    }
     wrapped <- patchwork::wrap_elements(full=p)
     attr(wrapped,'pp_vector_element') <- p
     wrapped
@@ -326,6 +348,7 @@ pp_compose_manuscript <- function(plots, design = NULL, widths = NULL, heights =
   out <- patchwork::wrap_plots(plots, design = design, widths = widths, heights = heights,
                                 ncol = if (is.null(design)) 2 else NULL, guides = "keep")
   attr(out, "pp_expected_panels") <- length(plots)
+  attr(out,'pp_nonstandard_panels') <- nonstandard
   if (!is.null(species_order) && is.character(species_labels)) attr(out, "pp_shared_row_labels") <- species_labels
   out
 }

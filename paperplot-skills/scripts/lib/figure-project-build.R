@@ -49,6 +49,7 @@ ppp_build <- function(x, root, id, kind = "style", reason = "build") {
     attr(plot,'pp_panel_evidence') <- statistics
     plot <- ppp_untag(plot, p$manual_tag_layers %||% integer())
     normalized <- pp_normalize_production(plot, ctx$render_spec)
+    if(inherits(normalized,'patchwork')) attr(normalized,'pp_backend_spec') <- ctx$render_spec
     evidence <- pp_plot_evidence(normalized)
     if (!is.null(p$current) && kind == "style") {
       old <- readRDS(file.path(root, p$revisions[[p$current]]$dir, "evidence.rds"))
@@ -147,7 +148,7 @@ ppp_measure <- function(plot, spec, root) {
     rows <- gt$layout[grepl(paste0("-", i, "$"), gt$layout$name), , drop = FALSE]
     if (nrow(rows)) outer[[as.character(i)]] <- measure(min(rows$t), min(rows$l), max(rows$b), max(rows$r))
     data_rows <- gt$layout[gt$layout$name == paste0("panel-", i), , drop = FALSE]
-    if (nrow(data_rows) == 1) regions[[as.character(i)]] <- measure(data_rows$t, data_rows$l, data_rows$b, data_rows$r)
+    if (nrow(data_rows) == 1 && !i%in%(attr(plot,'pp_nonstandard_panels') %||% integer())) regions[[as.character(i)]] <- measure(data_rows$t, data_rows$l, data_rows$b, data_rows$r)
   }
   grid::popViewport()
   gt$widths <- grid::unit(ws, "mm"); gt$heights <- grid::unit(hs, "mm")

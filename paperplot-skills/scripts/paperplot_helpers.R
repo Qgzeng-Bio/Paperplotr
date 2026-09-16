@@ -1060,7 +1060,14 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   render_spec <- declared_spec %||% pp_render_spec(n_panels = pp_infer_panel_count(plot),
     width_mm = if (!is.null(width)) width * 10, height_mm = if (!is.null(height)) height * 10)
   render_spec$shared_row_labels <- attr(plot, "pp_shared_row_labels")
-  direct_labels <- function(p) c(attr(p,'pp_expected_labels'),unlist(lapply(p$layers,function(l) attr(l,'pp_required_labels'))),if(inherits(p,'patchwork')) unlist(lapply(p$patches$plots,direct_labels)))
+  direct_labels <- function(p) {
+    if(inherits(p,'patchwork')) {
+      last<-p;last$patches<-NULL;class(last)<-setdiff(class(last),'patchwork')
+      return(c(attr(p,'pp_expected_labels'),unlist(lapply(c(p$patches$plots,list(last)),direct_labels))))
+    }
+    if(!is.null(attr(p,'pp_vector_element'))) return(direct_labels(attr(p,'pp_vector_element')))
+    c(attr(p,'pp_expected_labels'),unlist(lapply(p$layers,function(l) attr(l,'pp_required_labels'))),if(inherits(p,'patchwork')) unlist(lapply(p$patches$plots,direct_labels)))
+  }
   render_spec$expected_labels <- as.list(unique(c(unlist(render_spec$expected_labels),direct_labels(plot))))
   if(!identical(render_spec$family,'Arial')) stop('The current production font profile is Arial; unsupported font exceptions must not silently render as Arial.')
   if (render_spec$mode == "production" && !all(pp_arial_faces())) {
@@ -1155,7 +1162,8 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   qa_provenance <- list(detectors=pp_detector_fingerprint(),render_spec=render_spec[setdiff(names(render_spec),c('reviews','human_review'))],
     inputs=unname(tools::md5sum(evidence_path)),outputs=as.list(stats::setNames(unname(tools::md5sum(unname(output_files))),basename(output_files))))
   evidence_hash <- pp_content_hash(qa_provenance)
-  reviewable <- c('source_semantics',if(isTRUE(qa$available)) 'visual_layout',paste0('export_',unlist(export_audit$reviewable_checks)))
+  reviewable <- c('source_semantics',if(isTRUE(qa$available)) 'visual_layout',paste0('export_',unlist(export_audit$reviewable_checks)),
+    intersect(c('project_geometry','project_shared_rows'),names(checks)[vapply(checks,identical,logical(1),'unverified')]))
   required <- setdiff(names(checks),names(checks)[vapply(checks,identical,logical(1),'not_applicable')])
   final <- pp_final_qa(checks,render_spec$human_review,render_spec$mode,required=required,
     reviews=render_spec$reviews %||% list(),reviewable=reviewable,evidence_hash=evidence_hash)
