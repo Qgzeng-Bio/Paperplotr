@@ -162,7 +162,7 @@ pp_summary_statistics <- function(df, value = 'value', by = 'group', method,
 }
 
 pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NULL,
-                                pair_id = NULL, conf_level = .95, na_action = 'error') {
+                                pair_id = NULL, conf_level = .95, na_action = 'error',exact=NULL) {
   method <- match.arg(method, c('welch_t','paired_t','wilcoxon','paired_wilcoxon','pearson','spearman','lm'))
   needed <- if(method %in% c('pearson','spearman','lm')) c(x,y) else c(x,group,pair_id)
   if (is.null(y) && method %in% c('pearson','spearman','lm')) stop('Provide y for correlation/regression.')
@@ -176,7 +176,10 @@ pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NU
     return(list(method='lm',n=nrow(df),n_missing=omitted,conf_level=conf_level,
       coefficients=summary(fit)$coefficients,interval=stats::confint(fit,level=conf_level),model=fit))
   }
-  if(method %in% c('pearson','spearman')) result <- stats::cor.test(df[[x]],df[[y]],method=method,conf.level=conf_level,exact=FALSE) else {
+  if(!is.null(exact) && (!is.logical(exact)||length(exact)!=1L||is.na(exact))) stop('exact must be TRUE, FALSE, or NULL for the standard R policy.')
+  test_warnings<-character()
+  record_test<-function(expr) withCallingHandlers(expr,warning=function(w) {test_warnings<<-c(test_warnings,conditionMessage(w));invokeRestart('muffleWarning')})
+  if(method %in% c('pearson','spearman')) result <- record_test(stats::cor.test(df[[x]],df[[y]],method=method,conf.level=conf_level,exact=exact)) else {
     levels <- if(is.factor(df[[group]])) levels(droplevels(df[[group]])) else unique(as.character(df[[group]])); if(length(levels)!=2) stop('Explicitly select exactly two groups.')
     a <- df[as.character(df[[group]])==levels[1],,drop=FALSE]; b <- df[as.character(df[[group]])==levels[2],,drop=FALSE]
     paired <- method %in% c('paired_t','paired_wilcoxon')
@@ -186,12 +189,16 @@ pp_statistical_test <- function(df, method, x = 'value', group = 'group', y = NU
       if(!setequal(a[[pair_id]],b[[pair_id]])) stop('Incomplete pairs after missing-value handling.')
       b <- b[match(a[[pair_id]],b[[pair_id]]),,drop=FALSE]
     }
-    result <- if(method %in% c('welch_t','paired_t')) stats::t.test(a[[x]],b[[x]],paired=paired,conf.level=conf_level) else
-      stats::wilcox.test(a[[x]],b[[x]],paired=paired,conf.int=TRUE,conf.level=conf_level,exact=FALSE)
+    result <- record_test(if(method %in% c('welch_t','paired_t')) stats::t.test(a[[x]],b[[x]],paired=paired,conf.level=conf_level) else
+      stats::wilcox.test(a[[x]],b[[x]],paired=paired,conf.int=TRUE,conf.level=conf_level,exact=exact))
   }
-  list(method=method,n=nrow(df),n_by_group=if(!method%in%c('pearson','spearman')) as.list(table(df[[group]])) else NULL,
+  is_paired <- method%in%c('paired_t','paired_wilcoxon')
+  list(method=method,n=if(is_paired) nrow(df)/2 else nrow(df),n_observations=nrow(df),n_pairs=if(is_paired) nrow(df)/2 else NULL,
+    parameters=result$parameter,n_by_group=if(!method%in%c('pearson','spearman')) as.list(table(df[[group]])) else NULL,
     group_order=if(!method%in%c('pearson','spearman')) as.list(levels) else NULL,
-    paired=method%in%c('paired_t','paired_wilcoxon'),na_action=na_action,n_missing=omitted,conf_level=conf_level,
+    paired=method%in%c('paired_t','paired_wilcoxon'),na_action=na_action,n_missing=omitted,
+    conf_level=attr(result$conf.int,'conf.level'),requested_conf_level=conf_level,
+    test_description=result$method,exact_requested=exact,exact_policy=if(is.null(exact)) 'standard R stats default' else 'explicitly requested',warnings=as.list(test_warnings),
     statistic=unname(result$statistic),estimate=result$estimate,pvalue=result$p.value,
     interval=result$conf.int,adjustment='none',pair_id=pair_id)
 }
