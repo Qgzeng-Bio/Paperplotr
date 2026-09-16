@@ -40,6 +40,8 @@ Multiple explicit `panel` IDs must be built separately in a figure project, not 
 
 `pp_statistical_test`: Welch t, paired t, Wilcoxon/paired Wilcoxon, Pearson/Spearman or lm. Specify paired IDs, groups, confidence level and NA handling. `pp_adjust_pvalues` requires an explicit correction method. No significance stars are added.
 
+Paired `n` is the number of independent pairs, not twice that number. Raw row count, per-group counts and test degrees of freedom are retained separately. `exact=NULL` follows the standard R policy; explicit exactness overrides, warnings and the actual confidence level are recorded. An unavailable confidence band is not silently omitted from a requested fit.
+
 `params$statistical_result` accepts an upstream result with method and n. If recomputation is also explicitly requested in params$statistics, conflicts stop the call. Results are preserved in evidence and an export statistics JSON; raw/summarized tables remain auditable.
 
 ## Demo and compatibility
