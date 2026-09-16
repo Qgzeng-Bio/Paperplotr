@@ -54,21 +54,10 @@ jobs:
         run: Rscript paperplot-skills/scripts/check-environment.R
         continue-on-error: true
 
-      - name: Figure project incremental workflow tests
-        run: Rscript paperplot-skills/scripts/test-figure-project.R
-        env:
-          PAPERPLOT_PROJECT_TEST_OUTPUT: ${{ runner.temp }}/paperplot-project-test
+      - name: Core developer checks (report specialized skips, not acceptance)
+        run: |
+          Rscript paperplot-skills/scripts/test-recipe-contract.R --core
+          python3 paperplot-skills/scripts/catalog.py --check
 
-      - name: Upload project test evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: figure-project-test
-          path: ${{ runner.temp }}/paperplot-project-test
-
-      - name: Smoke test R templates
-        run: Rscript paperplot-skills/scripts/smoke-test-templates.R
-        env:
-          PAPERPLOTR_SMOKE_BASE_DEVICES: "true"
-          PAPERPLOTR_SMOKE_BASE_FAMILY: "sans"
-          PAPERPLOT_MODE: demo
+      - name: Explain formal acceptance boundary
+        run: echo 'Core developer checks only. Full 84-recipe/36-template physical and project acceptance runs in the separate formal-render workflow; no manuscript readiness is claimed here.'
