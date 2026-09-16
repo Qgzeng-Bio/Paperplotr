@@ -142,7 +142,7 @@ if (!is.null(group_col)) {
   p <- p + pp_scale_color(groups = plot_df$facet_label, guide = "none")
 }
 
-output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = preset, qa_context = list(family = figure_spec$plot_type), width = layout$width_cm, height = layout$height_cm)
+output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p), panel_tags = inherits(p, "patchwork"), width_mm = (layout$width_cm) * 10, height_mm = (layout$height_cm) * 10), preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_summary(

@@ -3,12 +3,12 @@ pp_run_recipe_template <- function(recipe_id,
                                    family_label,
                                    input_path,
                                    output_dir,
-                                   width_cm = 8.9,
-                                   height_cm = 6.2,
+                                   width_cm = NULL,
+                                   height_cm = NULL,
                                    output_stem = NULL,
-                                   y_label = "Value (a.u.)",
+                                   y_label = NULL,
                                    mode = Sys.getenv("PAPERPLOT_MODE", "production"),
-                                   render_spec = NULL) {
+                                   render_spec = NULL, params = list()) {
   mode <- match.arg(mode, c("production", "preview", "demo"))
   if (!exists("helper_path", inherits = TRUE)) {
     helper_path <- Sys.getenv("PAPERPLOT_HELPER")
@@ -17,6 +17,14 @@ pp_run_recipe_template <- function(recipe_id,
   recipe_engine <- file.path(dirname(helper_path), "..", "recipes", "paperplot_code_recipes.R")
   if (!file.exists(recipe_engine)) stop("Missing recipe engine: ", recipe_engine, call. = FALSE)
   source(recipe_engine)
+  entry <- pp_recipe_entry(recipe_id)
+  if(!is.null(render_spec) && ((!is.null(width_cm) && abs(width_cm*10-render_spec$width_mm)>.001) || (!is.null(height_cm) && abs(height_cm*10-render_spec$height_mm)>.001))) stop('Legacy dimensions conflict with render_spec.')
+  width_cm <- width_cm %||% entry$default_width_cm
+  height_cm <- height_cm %||% entry$default_height_cm
+  render_spec <- render_spec %||% pp_render_spec(width_mm=width_cm*10,height_mm=height_cm*10,mode=mode,panel_tags=FALSE)
+  width_cm <- render_spec$width_mm/10; height_cm <- render_spec$height_mm/10
+  if(!is.null(y_label)) params$y_label <- y_label
+  params$render_spec <- render_spec
 
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   if (mode != "demo") {
@@ -30,26 +38,7 @@ pp_run_recipe_template <- function(recipe_id,
   } else {
     df <- pp_recipe_mock_data(recipe_id)
   }
-  n <- nrow(df)
-  if (mode == "demo") {
-    if (!"label" %in% names(df)) df$label <- if ("gene" %in% names(df)) ifelse(seq_len(n) <= 8, df$gene, "") else ""
-    if (!"time" %in% names(df)) df$time <- rep(seq_len(max(1, min(12, n))), length.out = n)
-    if (!"longitude" %in% names(df)) df$longitude <- seq(70, 125, length.out = n)
-    if (!"latitude" %in% names(df)) df$latitude <- seq(15, 52, length.out = n)
-    if (!"weight" %in% names(df)) df$weight <- if ("value" %in% names(df)) abs(df$value) else rep(1, n)
-    if (!"source" %in% names(df)) df$source <- factor(rep(paste0("Source", LETTERS[1:5]), length.out = n))
-    if (!"target" %in% names(df)) df$target <- factor(rep(paste0("Target", LETTERS[1:5]), each = 2, length.out = n))
-    if (!"track" %in% names(df)) df$track <- factor(rep(paste0("Track", seq_len(4)), length.out = n))
-    if (!"start" %in% names(df)) df$start <- seq_len(n) * 100000
-    if (!"end" %in% names(df)) df$end <- df$start + 50000
-    if (!"observed" %in% names(df)) {
-      base_value <- if ("value" %in% names(df)) df$value else seq_len(n)
-      df$observed <- pmin(1, pmax(0, stats::pnorm(base_value)))
-    }
-    if (!"predicted" %in% names(df)) df$predicted <- pmin(1, pmax(0, df$observed + stats::rnorm(n, sd = 0.05)))
-    if (!"residual" %in% names(df)) df$residual <- df$observed - df$predicted
-  }
-  plot <- pp_recipe_plot(recipe_id, df)
+  plot <- pp_recipe_plot(recipe_id, df, params=params,mode=mode)
 
   figure_spec <- pp_figure_spec(
     figure_id = template_id,
@@ -62,14 +51,14 @@ pp_run_recipe_template <- function(recipe_id,
     # silently fighting preset metadata (WP2 canvas-truthfulness gate).
     output_preset = if (width_cm > 10) "nature" else if (isTRUE(all.equal(c(width_cm, height_cm), c(8.9, 6.2)))) "single_column" else "nature_half"
   )
-  metric_spec <- pp_metric_spec(
-    metric = c("value", "group", "category"),
-    label = c(y_label, "Group", "Category"),
-    unit = c("a.u.", "unitless", "unitless"),
-    direction = c("neutral", "neutral", "neutral"),
-    transform = "none",
-    role = c("primary", "grouping", "grouping")
-  )
+  required_roles <- strsplit(entry$required_roles,';',fixed=TRUE)[[1]]
+  measures <- required_roles[vapply(df[required_roles],is.numeric,logical(1))]
+  if(!length(measures)) measures <- required_roles[[1]]
+  units <- vapply(measures,function(name) params$units[[name]] %||%
+    if(name%in%c('pvalue','padj','qvalue','ratio','present')) 'unitless' else
+      if(name%in%c('start','end','position','target_start','target_end')) 'bp' else
+        if(name=='count') 'count' else 'not supplied; requires scientific review',character(1))
+  metric_spec <- pp_metric_spec(metric=measures,label=measures,unit=units,direction='neutral',transform='none',role='primary')
   label_col_candidates <- intersect(c("category", "metric", "term", "sample", "group"), names(df))
   label_col <- if (length(label_col_candidates) > 0) label_col_candidates[[1]] else names(df)[[1]]
   label_strategy <- pp_label_strategy_v2(
@@ -79,7 +68,7 @@ pp_run_recipe_template <- function(recipe_id,
   )
   visual_budget <- pp_visual_budget(
     figure_role = "main",
-    n_panels = if ("metric" %in% names(df)) min(6, length(unique(df$metric))) else 1,
+    n_panels = pp_infer_panel_count(plot),
     n_labels = length(unique(df[[label_col]])),
     n_legend_entries = if ("group" %in% names(df)) length(unique(df$group)) else 0
   )
@@ -100,14 +89,14 @@ pp_run_recipe_template <- function(recipe_id,
     layout_plan = list(type = "recipe_template", width_cm = width_cm, height_cm = height_cm),
     label_strategy = label_strategy,
     palette_plan = list(type = "recipe default", name = "Nature-like restrained palette"),
-    statistical_plan = list(recipe_id = recipe_id, role_mapping_required = TRUE),
+    statistical_plan = list(recipe_id = recipe_id, parameters=params, statistics=attr(plot,'pp_statistics')),
     visible_simplifications = design_brief$acceptable_simplifications,
     risks = character(),
     pattern_reference = pp_pattern_reference(family_label, template_id = template_id, source = "code-recipe-library")
   )
 
   if (is.null(output_stem)) output_stem <- file.path(output_dir, template_id)
-  render_spec <- render_spec %||% pp_render_spec(n_panels = pp_infer_panel_count(plot), mode = mode)
+  render_spec$n_panels <- pp_infer_panel_count(plot)
   outputs <- pp_save_all_with_qa_loop(plot, output_stem, preset = figure_spec$output_preset,
     qa_context = list(family = figure_spec$plot_type), render_spec = render_spec, overwrite = FALSE)
   invisible(lapply(outputs, pp_assert_output))
