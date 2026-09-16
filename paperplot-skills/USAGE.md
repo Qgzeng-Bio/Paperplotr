@@ -1,76 +1,51 @@
-# Using paperplot-skills
+# Use the installed skill
 
-## How to invoke
+Run scripts through `~/.agents/skills/paperplot-skills/scripts/paperplot-run`. With no argument it diagnoses the isolated runtime; no activation or global R changes are needed.
 
-Ask Codex to use `paperplot-skills` when you need a professional scientific figure diagnosis, redesign, or reproducible R/ggplot2 plot.
+## One real plot
 
-Example:
-
-```text
-Use paperplot-skills to redesign this figure as a manuscript-ready multi-panel plot. Data are in data.csv. The main message is ... The figure role is main figure. Please output PDF, PNG, notes, metadata, QA, and old-vs-new comparison.
-```
-
-## What to provide
-
-Best input:
-
-- data file,
-- current plot image if redesigning,
-- current plotting code if available,
-- scientific message,
-- figure role: main, supplement, diagnostic, or exploratory,
-- sample/group/metric/value columns,
-- units, transformations, normalization, and statistical test details.
-
-Minimum input depends on task:
-
-| user input | skill behavior |
-|---|---|
-| image only | diagnose and propose redesign; request data for faithful redraw |
-| code only | review and improve plotting code; avoid claiming data-backed correctness without data |
-| data only | profile data, select template, generate plot and sidecars |
-| image + data | diagnose old figure, redraw from data, compare old vs new |
-| image + code + data | full redesign, reproducibility, QA, and comparison |
-
-## What the skill outputs
-
-Default outputs:
-
-- PDF vector figure,
-- PNG preview,
-- plotting script,
-- notes markdown,
-- metadata JSON,
-- QA markdown,
-- label key or sample order sidecars when labels are abbreviated/ranked,
-- optional visual QA report after rendering.
-
-## Final-size production
-
-For a main figure that will be refined panel by panel, first use
-`references/figure-project-workflow.md`. Read the current project status, obtain
-layout confirmation, then build/revise individual panels and assemble drawing
-objects. Do not export every child at a generic 89 mm or scale PNGs into slots.
-Data/code/style changes invalidate dependent builds and context-specific reviews.
+Save this in your research workspace and pass it to paperplot-run:
 
 ```r
-render_spec <- pp_render_spec(n_panels = 4)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = render_spec)
+source(Sys.getenv("PAPERPLOT_HELPER"))
+source(file.path(pp_helper_script_dir, "..", "recipes", "paperplot_code_recipes.R"))
+d <- read.csv("effects.csv") # metric, estimate, lower, upper; optional group/subgroup/n
+p <- pp_recipe_plot("forest_effect_size", d,
+  params=list(interval_label="Effect estimate (95% CI)"))
+files <- pp_save_all_with_qa_loop(p, "outputs/effects",
+  render_spec=pp_render_spec(width_mm=89,height_mm=62))
+print(attr(files, "qa_contract"))
 ```
 
-This normalizes production text to Arial role sizes on a plot copy and audits
-the actual exports. Use `pp_render_spec(2, case = "igs")` for 183 x 105 mm.
-Explicit exceptions use `text_pt = list(axis_title = 8)`. Do not resize the
-whole figure after export. Read `_delivery.md` and `_production_qa.json`;
-unverified checks and pending human review keep the figure a candidate.
+Use “95% CI” only when the supplied bounds really are CIs. Outputs include PDF/SVG/600-dpi PNG, source evidence, candidate history and production QA. Existing files are protected unless overwrite is explicit.
 
-## User responsibilities
+Inspect the final-size image and unresolved checks, then inspect `pp_effective_export_qa("outputs/effects")`. After an actual review:
 
-The skill can catch many visual and scientific risks, but the user must confirm:
+```r
+pp_review_export("outputs/effects", decision="pass", reviewer="actual reviewer",
+  checks=c("source_semantics"), reason="Record the tables, units, intervals and evidence inspected.")
+```
 
-- biological meaning of groups,
-- units and denominators,
-- statistical model/test correctness,
-- sample pairing or repeated-measure design,
-- journal-specific final formatting requirements,
-- whether manual Illustrator/PDF edits changed scientific meaning.
+Only the named item is resolved. Other pending checks still block manuscript-ready; precise failures cannot be overridden.
+
+## Inputs and statistics
+
+`pp_recipe_entry(id)` returns schema roles, handler, variant, dimensions and backend. [Input contract](references/code-recipe-contract.md) defines conditional parameters.
+
+Raw summary: `pp_summary_statistics(d, method="mean", interval="ci", unit_id="sample")`.
+Explicit test: `pp_statistical_test(d, method="welch_t")`.
+Requested correction: `pp_adjust_pvalues(p, method="BH")`.
+Record returned methods, n, missingness and intervals. No statistics are requested implicitly.
+
+Explicit demo only:
+
+```r
+d <- pp_recipe_mock_data("lollipop_ranked")
+p <- pp_recipe_plot("lollipop_ranked", d, mode="demo")
+```
+
+## Main figure
+
+[Project workflow](references/figure-project-workflow.md): create → inspect sketch → confirm layout → build → assemble → review. Read fresh status before resuming. Use `pp_project_revise_panel()` for B-only edits; scientific changes require a reason. Unchanged data builds are reused.
+
+Schema-1 projects are read-only until backed-up `pp_project_migrate(project,dry_run=FALSE)`; first inspect the default dry run. Raw data are not moved. Old approvals require fresh validation.

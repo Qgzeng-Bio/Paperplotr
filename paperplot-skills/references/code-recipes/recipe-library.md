@@ -1,100 +1,92 @@
-# PaperPlot Code Recipe Library v2
+# Executable recipe catalog
 
-This library translates recurring code structures from the R replica archive
-into reusable plotting recipes. Each recipe is executable through
-`scripts/render-code-recipes.R` and documented here as a general plotting
-pattern, not a one-case reproduction.
+Generated from recipes/recipe_manifest.csv; do not maintain a second support list.
+Every entry requires real input and its named backend. Legacy classifications are not acceptance results.
+See ../code-recipe-contract.md for conditional parameters, types, keys, units and statistical rules.
 
-The 9.0 upgrade expands the executable manifest from 25 recipes to 84 recipe,
-benchmark, optional-backend, and reference entries. The authoritative machine
-manifest is `recipes/recipe_manifest.csv`; this document explains how those
-entries should be used.
-
-## Recipe Entries
-
-| Recipe id | Figure family | Required roles | Core layers | QA focus | Status |
+| ID | Handler / variant | Backend | Required columns | Optional columns | Canvas (mm) |
 |---|---|---|---|---|---|
-| `grouped_bar_errorbar_raw` | grouped bar / errorbar | group, category, value, error | `geom_col`, `geom_errorbar`, raw `geom_point` | bar width, interval meaning, raw point visibility | template candidate |
-| `stacked_bar_fraction` | stacked bar | group, category, value | `geom_col(position="fill")` | denominator, percent axis, restrained palette | production recipe |
-| `boxplot_jitter` | boxplot / jitter | group, value | `geom_boxplot`, `geom_jitter` | small-n raw points, no heavy grid | production recipe |
-| `violin_dot` | violin / dot | group, value | `geom_violin`, `geom_boxplot`, `geom_jitter` | distribution vs raw points, label burden | template candidate |
-| `raincloud_violin_jitter` | raincloud | group, value | violin, interval, jitter | density readability, point overlap, panel padding | template candidate |
-| `paired_comparison` | paired comparison | sample, group, value | connecting `geom_line`, `geom_point` | paired id required, order semantics | production recipe |
-| `scatter_regression` | scatter / regression | x, y, group | `geom_point`, `geom_smooth(method="lm")` | fit line visibility, axis units, light grid allowed | template candidate |
-| `scatter_marginal_reference` | scatter / marginal | x, y, group | `geom_point`, rugs, density cues | marginal cue does not dominate scatter | production recipe |
-| `correlation_heatmap` | heatmap | metric, category, value | `geom_tile`, continuous scale | colorbar, row/column label burden | template candidate |
-| `annotated_heatmap` | annotated heatmap | metric, category, value, group | `geom_tile`, annotation strip | annotation strip size, cell border discipline | template candidate |
-| `matrix_dotplot` | matrix dotplot | metric, category, value, count | `geom_point(size, color)` | dual encoding clarity, legend burden | production recipe |
-| `pca_pcoa_ordination` | PCA / PCoA | pc1, pc2, group | `geom_point`, reference axes | variance labels, legend/data cloud balance | template candidate |
-| `pcoa_marginal_box` | PCoA marginal | pc1, pc2, group | ordination plus marginal distribution cues | equal panel rhythm, no oversized marginal | template candidate |
-| `volcano_threshold` | volcano | feature, log2fc, padj | `geom_point`, threshold lines, selected labels | threshold semantics, label collision | production recipe |
-| `ma_plot` | MA plot | feature, base_mean, log2fc, padj | log axis, threshold lines | transform visibility, muted background | production recipe |
-| `enrichment_dotplot` | enrichment | term, ratio, qvalue, count | dot size + color | term label burden, q-value scale | template candidate |
-| `forest_effect_size` | forest / effect-size | metric, estimate, lower, upper | reference line, interval, point | CI method, zero/reference line | template candidate |
-| `model_validation_composite` | model validation | x, y, group | observed-vs-predicted, residuals, summary | residual semantics, equal panel sizes | template candidate |
-| `lollipop_ranked` | lollipop / ranked dot | category, value | `geom_segment`, `geom_point` | ordering, label readability, grid rejection | template candidate |
-| `dumbbell_comparison` | dumbbell | category, group, value | paired endpoints and segment | two-group clarity, label alignment | production recipe |
-| `manhattan_genomewide` | Manhattan | chr, position, pvalue | dense points, threshold line | chromosome labels, threshold semantics | template candidate |
-| `ridgeline_density` | ridgeline / density | group, value | density facets | overlap, scale comparability | production recipe |
-| `upset_summary` | upset / set | item, set, present | set-size bars + matrix | set labels, matrix/bar linkage | template candidate |
-| `phylo_annotation_reference` | phylo / tree | node, parent, group | segment tree + annotation strip | specialized caution, line density allowed | specialized reference |
-| `circos_chord_sankey_reference` | circos / chord / sankey | source, target, value | flow segments, grouped endpoints | specialized caution, dependency boundary | specialized reference |
-
-## Shared Input Role Vocabulary
-
-Use these role names when translating user data into a recipe:
-
-- Identity: `sample`, `feature`, `item`, `node`, `source`, `target`.
-- Grouping: `group`, `category`, `set`, `panel`, `chr`.
-- Measures: `value`, `x`, `y`, `pc1`, `pc2`, `estimate`, `lower`, `upper`,
-  `log2fc`, `base_mean`, `pvalue`, `padj`, `qvalue`, `ratio`, `count`.
-- Semantics: `unit`, `threshold`, `normalization`, `transform`, `error_type`,
-  `test`, `n`.
-
-## 9.0 Expansion Families
-
-The expanded manifest covers these additional recipe groups:
-
-- Bar/composition: raw-point errorbar, horizontal interval summaries, stacked
-  fractions, diverging composition, and label-burden variants.
-- Distribution: faceted box/jitter, violin quantile dot, raincloud facets,
-  ridgeline/density, and histogram-density overlays.
-- Scatter/line: labelled regression, CI ribbon, bubble scatter, marginal rugs,
-  correlation scatter grids, time-series lines, and ribbons.
-- Ordination/embedding: PCA/PCoA ellipses, PERMANOVA annotation, NMDS stress,
-  UMAP, and t-SNE.
-- Matrix: cluster-like heatmap references, annotation bars, cell-labelled
-  heatmaps, triangular correlation heatmaps, and two-scale matrix dotplots.
-- Omics/genomics: enrichment lollipop/bar-dot, GSEA running score, faceted and
-  labelled volcano plots, MA variants, Manhattan facets, regional association,
-  genome track, and synteny references.
-- Comparison/modeling: grouped/subgroup forest plots, model residuals,
-  calibration curves, prediction heatmaps, grouped lollipops, dumbbells, and
-  ranked lollipop labels.
-- Specialized references: UpSet, set matrix, network, Sankey, chord, circos,
-  spatial map, phylo tree, phylo ring annotation, shared-legend multi-panel,
-  inset, and paired-line facets.
-
-These entries are intentionally tiered:
-
-- `production_recipe`: safe default recipe for data-backed plotting.
-- `template_candidate`: stable enough to drive a production template after
-  additional smoke-test promotion.
-- `benchmark_recipe`: used to test family coverage and QA behavior.
-- `optional_backend_recipe`: requires specialized backend policy before a
-  faithful manuscript implementation.
-- `reference_recipe`: design/code structure reference, not a default execution
-  path for user data.
-
-## How The Skill Should Use Recipes
-
-1. Detect data roles and figure family.
-2. Select a pattern-library document.
-3. Query this recipe library for matching input roles.
-4. If the recipe is `template_candidate` or `production_recipe`, generate a
-   data-backed plot and run visual QA.
-5. If the recipe is `optional_backend_recipe`, `reference_recipe`, or
-   `specialized_reference`, report required data structures and optional
-   dependencies before attempting a faithful rendering.
-6. Promote only stable, general recipes into `templates/`; do not turn every
-   source script into a template.
+| grouped_bar_errorbar_raw | bar / raw | ggplot2 | group;category;value | error;sample;panel;estimate;lower;upper | 89 × 62 |
+| stacked_bar_fraction | composition / fraction | ggplot2 | group;category;value | sample;panel | 89 × 60 |
+| boxplot_jitter | distribution / box | ggplot2 | group;value | sample;panel | 89 × 62 |
+| violin_dot | distribution / violin | ggplot2 | group;value | sample;panel | 89 × 62 |
+| raincloud_violin_jitter | distribution / raincloud | ggplot2 | group;value | sample;panel | 89 × 62 |
+| paired_comparison | paired / paired | ggplot2 | sample;group;value | panel | 89 × 62 |
+| scatter_regression | scatter / regression | ggplot2 | x;y;group | label;panel | 89 × 62 |
+| scatter_marginal_reference | scatter / marginal | patchwork | x;y;group | label;panel | 89 × 62 |
+| correlation_heatmap | matrix / heatmap | ggplot2 | metric;category;value | group;label | 89 × 70 |
+| annotated_heatmap | complex_heatmap / annotation | ComplexHeatmap | metric;category;value;group | label | 120 × 72 |
+| matrix_dotplot | matrix / dots | ggplot2 | metric;category;value;count | group | 120 × 68 |
+| pca_pcoa_ordination | ordination / pca | ggplot2 | pc1;pc2;group | sample;label | 89 × 62 |
+| pcoa_marginal_box | ordination / marginal | patchwork | pc1;pc2;group | sample;label | 89 × 62 |
+| volcano_threshold | differential / volcano | ggplot2 | feature;log2fc;padj | label | 89 × 62 |
+| ma_plot | differential / ma | ggplot2 | feature;base_mean;log2fc;padj | label | 89 × 62 |
+| enrichment_dotplot | enrichment / dots | ggplot2 | term;ratio;qvalue;count | category | 89 × 68 |
+| forest_effect_size | forest / plain | ggplot2 | metric;estimate;lower;upper | group | 89 × 62 |
+| model_validation_composite | model / composite | patchwork | observed;predicted;residual;group | sample | 180 × 85 |
+| lollipop_ranked | rank / lollipop | ggplot2 | category;value | group;label | 89 × 70 |
+| dumbbell_comparison | dumbbell / plain | ggplot2 | category;group;value | label | 89 × 70 |
+| manhattan_genomewide | genome / manhattan | ggplot2 | chr;position;pvalue | feature;label | 180 × 70 |
+| ridgeline_density | distribution / ridge | ggridges | group;value | panel | 89 × 70 |
+| upset_summary | sets / upset | ComplexUpset | item;set;present | category | 89 × 70 |
+| phylo_annotation_reference | tree / annotation | ggtree | node;parent;group | label;value | 89 × 70 |
+| circos_chord_sankey_reference | flow / choose | circlize;ggalluvial | source;target;value | group | 89 × 70 |
+| bar_dot_errorbar_template | bar / raw | ggplot2 | group;category;value | error;sample;label;estimate;lower;upper | 89 × 62 |
+| horizontal_errorbar_summary | bar / horizontal | ggplot2 | group;category;value | error;sample;panel;estimate;lower;upper | 89 × 64 |
+| stacked_fraction_composition | composition / fraction | ggplot2 | group;category;value | denominator;panel | 89 × 60 |
+| diverging_composition_bar | composition / diverging | ggplot2 | group;category;value | direction;panel | 89 × 60 |
+| composition_bar_labels | composition / labels | ggplot2 | group;category;value | label;denominator | 89 × 60 |
+| box_jitter_facet | distribution / box_facet | ggplot2 | group;value;metric | sample;panel | 120 × 64 |
+| beeswarm_box_reference | distribution / beeswarm | ggbeeswarm | group;value | sample;label | 89 × 62 |
+| violin_quantile_dot | distribution / quantile | ggplot2 | group;value | sample;panel | 89 × 62 |
+| raincloud_facet | distribution / raincloud_facet | ggplot2 | group;value;metric | sample;panel | 120 × 65 |
+| ridge_facet_density | distribution / ridge | ggridges | group;value | panel | 89 × 70 |
+| histogram_density_overlay | distribution / histogram | ggplot2 | group;value | panel | 89 × 60 |
+| labelled_scatter_regression | scatter / labels | ggrepel | x;y;group | label | 89 × 62 |
+| scatter_ci_ribbon | scatter / ribbon | ggplot2 | x;y;group | ci;panel | 89 × 62 |
+| bubble_scatter_support | scatter / bubble | ggplot2 | x;y;count;group | label | 89 × 62 |
+| marginal_rug_scatter | scatter / rug | ggplot2 | x;y;group | label | 89 × 62 |
+| correlation_scatter_grid | scatter / grid | ggplot2 | x;y;group;facet | label | 120 × 70 |
+| time_series_line | timeseries / line | ggplot2 | time;value;group | error;panel | 89 × 62 |
+| time_series_ribbon | timeseries / ribbon | ggplot2 | time;value;group;error | panel | 89 × 62 |
+| pca_confidence_ellipse | ordination / ellipse | ggplot2 | pc1;pc2;group | sample;label | 89 × 62 |
+| pcoa_permanova_annotation | ordination / permanova | ggplot2 | pc1;pc2;group | permanova;sample | 89 × 62 |
+| nmds_stress_ordination | ordination / nmds | ggplot2 | pc1;pc2;group | stress;sample | 89 × 62 |
+| umap_cluster_scatter | ordination / umap | ggplot2 | pc1;pc2;group | label;sample | 89 × 62 |
+| tsne_cluster_scatter | ordination / tsne | ggplot2 | pc1;pc2;group | label;sample | 89 × 62 |
+| heatmap_cluster_reference | complex_heatmap / cluster | ComplexHeatmap | metric;category;value | cluster;label | 89 × 70 |
+| heatmap_annotation_bar | complex_heatmap / annotation | ComplexHeatmap | metric;category;value;group | annotation | 120 × 72 |
+| heatmap_cell_label | matrix / labels | ggplot2 | metric;category;value | label | 89 × 70 |
+| correlation_triangle_heatmap | matrix / triangle | ggplot2 | metric;category;value | triangle;label | 89 × 70 |
+| matrix_dotplot_two_scale | matrix / dots | ggplot2 | metric;category;value;count | group | 120 × 68 |
+| enrichment_lollipop | enrichment / lollipop | ggplot2 | term;ratio;qvalue;count | category | 89 × 68 |
+| enrichment_bar_dot | enrichment / bar_dot | ggplot2 | term;ratio;qvalue;count | category | 89 × 68 |
+| gsea_running_score | gsea / running | ggplot2 | rank;running_score | hit;pathway | 89 × 54 |
+| volcano_facet | differential / facet | ggplot2 | feature;log2fc;padj;group | label | 120 × 70 |
+| volcano_labelled | differential / labels | ggrepel | feature;log2fc;padj | label | 89 × 62 |
+| ma_density | differential / ma_density | ggplot2 | feature;base_mean;log2fc;padj | density | 89 × 62 |
+| manhattan_faceted | genome / facet | ggplot2 | chr;position;pvalue | feature;label | 180 × 70 |
+| regional_association_reference | genome / regional | ggplot2 | chr;position;pvalue | feature;window | 120 × 60 |
+| genome_track_reference | genome / track | ggplot2 | chr;start;end;track | feature;score | 180 × 62 |
+| synteny_link_reference | genome / synteny | ggplot2 | chr;start;end;target_chr;target_start;target_end | feature;score | 180 × 62 |
+| forest_grouped_effect | forest / grouped | ggplot2 | metric;estimate;lower;upper;group | panel | 89 × 64 |
+| forest_subgroup_effect | forest / subgroup | ggplot2 | metric;estimate;lower;upper;group | subgroup | 120 × 70 |
+| model_residual_diagnostic | model / residual | ggplot2 | observed;predicted;residual;group | sample | 120 × 65 |
+| calibration_curve | model / calibration | ggplot2 | predicted;observed;group;bin | sample;n | 89 × 62 |
+| prediction_accuracy_heatmap | matrix / heatmap | ggplot2 | metric;category;value | group | 89 × 65 |
+| lollipop_grouped | rank / grouped | ggplot2 | category;value;group | label | 89 × 70 |
+| dumbbell_delta | dumbbell / delta | ggplot2 | category;group;value | delta;label | 89 × 70 |
+| ranking_labelled_lollipop | rank / labels | ggplot2 | category;value | label | 89 × 70 |
+| upset_intersection_matrix | sets / upset | ComplexUpset | item;set;present | intersection | 89 × 70 |
+| set_size_bar_matrix | sets / matrix | patchwork | item;set;present | category | 89 × 70 |
+| network_edge_list_reference | network / network | ggraph | source;target;weight | node;group | 89 × 70 |
+| sankey_flow_reference | flow / sankey | ggalluvial | source;target;weight | stage;group | 89 × 70 |
+| chord_adjacency_reference | flow / chord | circlize | source;target;weight | group | 89 × 70 |
+| circos_ring_reference | circos / ring | circlize | chr;start;end;value | track;group | 89 × 70 |
+| spatial_point_map_reference | spatial / point | sf | longitude;latitude;value | group;count | 89 × 70 |
+| spatial_tile_map_reference | spatial / polygon | sf | region;value | geometry | 89 × 70 |
+| phylo_tree_segments_reference | tree / rectangular | ggtree | node;parent;group | label | 89 × 70 |
+| phylo_ring_annotation_reference | tree / circular | ggtree | node;parent;group;value | track | 89 × 70 |
+| multi_panel_shared_legend | layout / shared | patchwork | x;y;group;metric | panel | 180 × 85 |
+| inset_scatter_reference | layout / inset | patchwork | x;y;group | inset | 89 × 62 |
+| paired_line_facet | paired / facet | ggplot2 | sample;group;value;metric | panel | 120 × 65 |
