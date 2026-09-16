@@ -19,6 +19,8 @@ q <- ggplot2::ggplot(d,ggplot2::aes(x,y,colour=group))+ggplot2::geom_point()+ggp
 fails(pp_assert_data_unchanged(pp_plot_evidence(p),pp_plot_evidence(q)),'Reversed group colours need explicit scientific/display review')
 q <- p + ggplot2::labs(x='different unit')
 fails(pp_assert_data_unchanged(pp_plot_evidence(p),pp_plot_evidence(q)),'Changing units cannot masquerade as styling')
+q <- p+ggplot2::coord_cartesian(xlim=c(1,1.4))
+fails(pp_assert_data_unchanged(pp_plot_evidence(p),pp_plot_evidence(q)),'Cropping observations out of the coordinate window cannot masquerade as styling')
 
 local({
   # Isolate filesystem freshness to exercise the actual approval transition.
