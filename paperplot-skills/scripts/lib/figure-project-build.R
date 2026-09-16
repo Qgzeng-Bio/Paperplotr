@@ -1,5 +1,6 @@
 # Builds are immutable artifacts. Only successful attempts update current pointers.
 ppp_untag <- function(p, declared = integer()) {
+  if(grid::is.grob(p)) return(p)
   if (length(declared) && any(!as.integer(unlist(declared)) %in% seq_along(p$layers))) stop("Manual tag layer indices must identify existing layers.")
   if (length(declared)) p$layers <- p$layers[-as.integer(unlist(declared))]
   p$labels$tag <- NULL
@@ -13,6 +14,7 @@ ppp_untag <- function(p, declared = integer()) {
 ppp_build <- function(x, root, id, kind = "style", reason = "build") {
   if (!identical(x$layout_confirmed, x$layout_version)) stop("Confirm the current layout before building panels.")
   p <- x$panels[[id]]
+  if(isTRUE(p$migration_rebuild_required) && kind!='scientific') stop('Migrated schema-1 panel needs one explicit scientific rebuild with reason="schema migration revalidation"; historical evidence and approvals remain preserved.')
   f <- ppp_fresh(x, root, id)
   if (isTRUE(f$fresh)) return(list(state = x, revision = p$current, reused = TRUE, success = TRUE))
   rev <- ppp_next_revision(root, file.path("panels", id, "revisions"))
@@ -36,12 +38,18 @@ ppp_build <- function(x, root, id, kind = "style", reason = "build") {
       if (!exists("build_panel", env, inherits = FALSE) || !is.function(env$build_panel)) stop("Builder must define build_panel(inputs, context).")
       env$build_panel(ctx$inputs, ctx)
     }, warning = function(w) { warnings <<- c(warnings, conditionMessage(w)); invokeRestart("muffleWarning") }))
-    plot <- if (inherits(value, "ggplot")) value else value$plot
-    if (!inherits(plot, "ggplot")) stop("Only ggplot2/patchwork objects are supported; external images are not panel objects.")
+    plot <- if (inherits(value, "ggplot") || grid::is.grob(value)) value else value$plot
+    if (!inherits(plot, "ggplot") && !grid::is.grob(plot)) stop("Only vector ggplot2/patchwork/grid objects are supported.")
+    statistics <- if (inherits(value, "ggplot") || grid::is.grob(value)) attr(value,'pp_recipe_evidence') else value$evidence
+    backend <- if(inherits(value,'ggplot')||grid::is.grob(value)) attr(value,'pp_recipe_evidence')$backend else value$backend
+    returned_dependencies <- if(inherits(value,'ggplot')||grid::is.grob(value)) list() else value$dependencies %||% list()
+    declared <- unlist(c(ctx$inputs,ctx$sources))
+    declared <- if(length(declared)) normalizePath(declared,mustWork=TRUE) else character()
+    if(length(returned_dependencies) && length(setdiff(normalizePath(unlist(returned_dependencies),mustWork=TRUE),declared))) stop('Builder returned unregistered dependencies; register them before building.')
+    attr(plot,'pp_panel_evidence') <- statistics
     plot <- ppp_untag(plot, p$manual_tag_layers %||% integer())
     normalized <- pp_normalize_production(plot, ctx$render_spec)
     evidence <- pp_plot_evidence(normalized)
-    statistics <- if (inherits(value, "ggplot")) NULL else value$evidence
     if (!is.null(p$current) && kind == "style") {
       old <- readRDS(file.path(root, p$revisions[[p$current]]$dir, "evidence.rds"))
       pp_assert_data_unchanged(old, list(plot = evidence, statistics = statistics))
@@ -56,12 +64,12 @@ ppp_build <- function(x, root, id, kind = "style", reason = "build") {
     outputs <- pp_save_all_with_qa_loop(normalized, file.path(rev$path, "preview"), render_spec = ctx$render_spec, max_iterations = 0)
     if (!isTRUE(p$dependencies_declared)) warnings <- c(warnings, "Dependency tracking is unverified: declare all data and source files before reproducibility approval.")
     warnings <- c(warnings, unlist(ctx$fingerprint$dependency_warnings))
-    result <- list(success = TRUE, key = ctx$key, dir = rev$dir, kind = kind, reason = reason,
+    result <- list(success = TRUE, key = ctx$key, dir = rev$dir, kind = kind, reason = reason,backend=backend,dependencies=ctx$inputs,
                    dependency_complete = isTRUE(p$dependencies_declared) && !length(ctx$fingerprint$dependency_warnings),
                    environment = ctx$fingerprint$environment, warnings = as.list(warnings),
                    object_md5 = ppp_file_hash(file.path(rev$path, "plot.rds")),
                    evidence_md5 = ppp_file_hash(file.path(rev$path, "evidence.rds")),
-                   qa = attr(outputs, "qa_contract"), layout_version = x$layout_version)
+                   qa = attr(outputs, "qa_contract"),provenance=attr(outputs,'qa_evidence'),layout_version = x$layout_version)
     result
   }, error = function(e) list(success = FALSE, dir = rev$dir, kind = kind, reason = reason, error = conditionMessage(e)))
   writeLines(c(log, warnings, outcome$error %||% "Build completed."), file.path(rev$path, "build.log"))
@@ -69,6 +77,7 @@ ppp_build <- function(x, root, id, kind = "style", reason = "build") {
   x$panels[[id]]$revisions[[rev$id]] <- outcome
   if (isTRUE(outcome$success)) {
     x$panels[[id]]$current <- rev$id; x$panels[[id]]$review <- NULL
+    x$panels[[id]]$migration_rebuild_required <- FALSE
   }
   x <- ppp_event(x, if (isTRUE(outcome$success)) "build_panel" else "build_failed", list(panel = id, revision = rev$id))
   ppp_save(x, root)
@@ -190,6 +199,8 @@ ppp_assemble <- function(x, root, final = FALSE) {
     meanings <- vapply(ids, function(id) x$panels[[id]]$guide_semantics %||% "", character(1))
     colors <- lapply(ids, function(id) ppp_shared(x, root, x$panels[[id]])$colors)
     if (any(!nzchar(meanings)) || length(unique(meanings)) != 1 || !all(vapply(colors, identical, logical(1), colors[[1]]))) stop("Shared legends require identical declared meaning and color mapping.")
+    signatures <- lapply(plots,pp_guide_signature)
+    if(!all(vapply(signatures,identical,logical(1),signatures[[1]]))) stop('Shared legend breaks, labels, limits or aesthetic mappings differ; keep separate guides.')
   }
   for (group in x$layout$shared_rows) {
     members <- unlist(group$panels); order <- unlist(group$order, use.names = FALSE)
@@ -229,7 +240,7 @@ ppp_assemble <- function(x, root, final = FALSE) {
     qa <- attr(outputs, "qa_contract")
     manifest <- list(success = TRUE, dir = rev$dir, panels = chosen, incomplete = as.list(incomplete),
       layout_version = x$layout_version, layout = x$layout, render_spec = spec, geometry = geometry,
-      qa = qa, requested_final = final, environment = ppp_environment())
+      qa = qa,provenance=attr(outputs,'qa_evidence'),requested_final = final, environment = ppp_environment())
     ppp_json(manifest, file.path(rev$path, "assembly.json"))
     writeLines(c("# Figure assembly", paste("Revision:", rev$id), paste("Final status:", qa$status),
       paste("Tier:", qa$tier), paste("Incomplete panels:", paste(incomplete, collapse = ", ")),
@@ -261,7 +272,7 @@ pp_project_revise_panel <- function(project, panel, script = NULL, change_type =
     ppp_assemble(built$state, root, FALSE)
   })
 }
-pp_project_review <- function(project, target, decision = "pass", reviewer) {
+pp_project_review <- function(project, target, decision = "pass", reviewer, checks = character(), reason = '') {
   decision <- match.arg(decision, c("pass", "fail"))
   if (!nzchar(reviewer)) stop("Reviewer must be recorded.")
   ppp_locked(project, function(x, root) {
@@ -270,13 +281,23 @@ pp_project_review <- function(project, target, decision = "pass", reviewer) {
       a <- x$assemblies[[x$current_assembly %||% ""]]
       if (is.null(a) || !identical(a$layout_version, x$layout_version) || length(a$incomplete)) stop("No complete current assembly to review.")
       for (id in names(a$panels)) if (!isTRUE(ppp_fresh(x, root, id)$fresh) || !identical(a$panels[[id]]$revision, x$panels[[id]]$current)) stop("Assembly is stale.")
-      x$assembly_review <- list(revision = x$current_assembly, reviewer = reviewer, decision = decision,
-                               result = pp_final_qa(a$qa$checks, decision, x$mode))
+      artifact <- ppp_assembly_artifacts(a,root)
+      if(!artifact$valid) stop(artifact$reason)
+      if(length(checks) && (!nzchar(reason)||length(setdiff(checks,unlist(a$qa$reviewable))))) stop('Check-level approval needs a reason and may only resolve listed reviewable checks.')
+      reviews <- stats::setNames(lapply(checks,function(id) list(decision=decision,reviewer=reviewer,reason=reason,evidence_hash=a$qa$evidence_hash)),checks)
+      x$assembly_review <- list(revision = x$current_assembly, reviewer = reviewer, decision = decision,evidence_hash=a$qa$evidence_hash,
+        result=pp_final_qa(a$qa$raw_checks %||% a$qa$checks,decision,x$mode,
+          required=unlist(a$qa$required),reviews=reviews,reviewable=unlist(a$qa$reviewable),evidence_hash=a$qa$evidence_hash))
     } else {
       id <- ppp_panel_id(x, target); f <- ppp_fresh(x, root, id)
       if (!f$fresh) stop("Cannot approve stale panel.")
+      revision <- x$panels[[id]]$revisions[[x$panels[[id]]$current]]
+      artifact <- ppp_assembly_artifacts(revision,root)
+      if(!artifact$valid) stop(artifact$reason)
       x$panels[[id]]$review <- list(revision = x$panels[[id]]$current, key = f$key,
-        layout_version = x$layout_version, layout_key = ppp_review_context(x, id), reviewer = reviewer, decision = decision)
+        layout_version = x$layout_version, layout_key = ppp_review_context(x, id), reviewer = reviewer, decision = decision,
+        evidence_hash=revision$qa$evidence_hash,output_md5=revision$provenance$output_md5,detectors=revision$provenance$detectors)
+      x$assembly_review <- NULL
     }
     record <- if (target == "figure") x$assembly_review else x$panels[[id]]$review
     ppp_save(ppp_event(x, "review", list(target = target, record = record)), root)
@@ -296,7 +317,7 @@ pp_project_restore <- function(project, target, revision) {
       id <- ppp_panel_id(x, target); old <- x$panels[[id]]$revisions[[revision]]
       if (is.null(old) || !isTRUE(old$success)) stop("Unknown or failed panel revision.")
       ppp_backup_working(x, root, id)
-      file.copy(file.path(root, old$dir, "builder.R"), file.path(root, x$panels[[id]]$script), overwrite = TRUE)
+      if(!file.copy(file.path(root, old$dir, "builder.R"), file.path(root, x$panels[[id]]$script), overwrite = TRUE)) stop('Builder restoration failed; current revision retained.')
       x$panels[[id]]$current <- revision; x$panels[[id]]$review <- NULL
     }
     ppp_save(ppp_event(x, "restore", list(target = target, revision = revision)), root)

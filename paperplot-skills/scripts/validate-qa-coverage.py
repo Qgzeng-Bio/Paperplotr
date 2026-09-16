@@ -13,7 +13,7 @@ Exits non-zero with a readable report on any gap. No human input required.
 from __future__ import annotations
 
 import importlib.util
-import re
+import ast
 from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -28,8 +28,20 @@ def load_qa_module():
 
 
 def emitted_codes(source: str) -> set[str]:
-    # Match risk(STATUS_*, "code", ...) calls.
-    return set(re.findall(r'risk\(\s*STATUS_\w+\s*,\s*"([a-z0-9_]+)"', source))
+    # Parse calls rather than status syntax: conditional severity must not hide
+    # a risk code from the coverage gate.
+    codes = set()
+    for call in ast.walk(ast.parse(source)):
+        if not isinstance(call, ast.Call) or not isinstance(call.func, ast.Name) or call.func.id != 'risk':
+            continue
+        code = call.args[1] if len(call.args) > 1 else next((k.value for k in call.keywords if k.arg == 'code'), None)
+        if isinstance(code, ast.Constant) and isinstance(code.value, str):
+            codes.add(code.value)
+        elif isinstance(code, ast.IfExp) and all(isinstance(v, ast.Constant) and isinstance(v.value, str) for v in (code.body, code.orelse)):
+            codes.update((code.body.value, code.orelse.value))
+        else:
+            raise ValueError(f'Unresolved dynamic risk code at line {call.lineno}; declare explicit codes.')
+    return codes
 
 
 def main() -> int:

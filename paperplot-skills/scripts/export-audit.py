@@ -3,11 +3,68 @@
 import argparse
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+
+IDENTITY = (1., 0., 0., 1., 0., 0.)
+
+
+def multiply(a, b):
+    return (a[0]*b[0]+a[2]*b[1], a[1]*b[0]+a[3]*b[1],
+            a[0]*b[2]+a[2]*b[3], a[1]*b[2]+a[3]*b[3],
+            a[0]*b[4]+a[2]*b[5]+a[4], a[1]*b[4]+a[3]*b[5]+a[5])
+
+
+def point(matrix, x, y):
+    return matrix[0]*x+matrix[2]*y+matrix[4], matrix[1]*x+matrix[3]*y+matrix[5]
+
+
+def svg_transform(value):
+    result = IDENTITY
+    tokens = list(re.finditer(r'([A-Za-z]+)\s*\(([^)]*)\)', value or ''))
+    if re.sub(r'([A-Za-z]+)\s*\(([^)]*)\)', '', value or '').strip(' ,\t\n'):
+        raise ValueError('Unsupported SVG transform')
+    for token in tokens:
+        name = token[1]
+        nums = [float(x) for x in re.split(r'[\s,]+', token[2].strip()) if x]
+        if name == 'matrix' and len(nums) == 6:
+            matrix = tuple(nums)
+        elif name == 'translate' and len(nums) in (1,2):
+            matrix = (1,0,0,1,nums[0],nums[1] if len(nums)==2 else 0)
+        elif name == 'scale' and len(nums) in (1,2):
+            matrix = (nums[0],0,0,nums[-1],0,0)
+        elif name == 'rotate' and len(nums) in (1,3):
+            angle = math.radians(nums[0]); c,s = math.cos(angle),math.sin(angle)
+            matrix = (c,s,-s,c,0,0)
+            if len(nums)==3:
+                matrix = multiply(multiply((1,0,0,1,nums[1],nums[2]),matrix),(1,0,0,1,-nums[1],-nums[2]))
+        elif name in ('skewX','skewY') and len(nums)==1:
+            tangent = math.tan(math.radians(nums[0]))
+            matrix = (1,0,tangent,1,0,0) if name=='skewX' else (1,tangent,0,1,0,0)
+        else:
+            raise ValueError('Unsupported SVG transform: '+name)
+        result = multiply(result,matrix)
+    return result
+
+
+def svg_nodes(root):
+    inherited = ('font-family','font-size','font-weight','font-style','text-anchor','stroke','stroke-width','stroke-linecap','fill')
+    def walk(node, matrix, parent_style):
+        if node.tag.split('}')[-1] in ('defs','clipPath','metadata','style','title','desc'):
+            return
+        style = dict(parent_style)
+        style.update({key:node.get(key) for key in inherited if node.get(key) is not None})
+        style.update({k:v.strip() for k,v in re.findall(r'([\w-]+)\s*:\s*([^;]+)',node.get('style',''))})
+        matrix = multiply(matrix,svg_transform(node.get('transform')))
+        yield node,matrix,style
+        for child in node:
+            yield from walk(child,matrix,style)
+    yield from walk(root,IDENTITY,{})
 
 
 def audit(paths, spec):
@@ -90,12 +147,17 @@ def audit(paths, spec):
                 tags, axis_strokes, tick_strokes, medians, maxima = [], [], [], [], []
                 shared_rows = spec.get("shared_row_labels") or []
                 italic_rows = []
-                for node in root.iter():
+                unsupported_geometry = []
+                for node, matrix, style in svg_nodes(root):
                     tag = node.tag.split("}")[-1]
-                    style = dict(re.findall(r"([\w-]+)\s*:\s*([^;]+)", node.get("style", "")))
+                    sx = math.hypot(matrix[0],matrix[1]); sy = math.hypot(matrix[2],matrix[3])
+                    if abs(sx-sy)>1e-6:
+                        unsupported_geometry.append('non-uniform transform')
+                    if tag in ('path','polygon','rect','image','use'):
+                        unsupported_geometry.append(tag)
                     if tag in ("line", "polyline", "path") and style.get("stroke", "").strip().upper() == "#333333":
                         raw_stroke = style.get("stroke-width", "0")
-                        stroke = float(re.match(r"[\d.]+", raw_stroke)[0]) * scale_pt
+                        stroke = float(re.match(r"[\d.]+", raw_stroke)[0]) * scale_pt * max(sx,sy)
                         if style.get("stroke-linecap", "").strip() == "square":
                             axis_strokes.append(stroke)
                         points = [float(v) for v in re.findall(r"-?[\d.]+", node.get("points", ""))]
@@ -103,38 +165,64 @@ def audit(paths, spec):
                             length_pt = ((points[2]-points[0])**2 + (points[3]-points[1])**2)**.5 * scale_pt
                             if abs(length_pt - spec.get("tick_length_pt", 2.2)) < .03:
                                 tick_strokes.append(stroke)
-                    if tag == "text":
-                        text = "".join(node.itertext())
+                    if tag in ('text','tspan'):
+                        # Tspans are checked separately, with inherited font/transform.
+                        text = node.text or ''
+                        if not text.strip():
+                            continue
                         raw_size = style.get("font-size", node.get("font-size", "0"))
-                        size = float(re.match(r"[\d.]+", raw_size)[0]) * scale_pt
+                        match = re.fullmatch(r'([\d.]+)(px)?',raw_size.strip())
+                        if not match:
+                            raise ValueError('Unsupported SVG font unit: '+raw_size)
+                        raw_numeric = float(match[1])
+                        size = raw_numeric * scale_pt * sy
                         family = style.get("font-family", node.get("font-family", ""))
                         texts.append((text, size, family))
                         if text in shared_rows:
-                            row_positions.setdefault(text, []).append(float(node.get("y", 0)) * scale_pt * 25.4 / 72)
+                            row_positions.setdefault(text, []).append(point(matrix,float(node.get('x',0)),float(node.get('y',0)))[1] * scale_pt * 25.4 / 72)
                             italic_rows.append(style.get("font-style") == "italic")
                         if abs(size - spec["text_pt"]["panel_tag"]) <= tol["font_pt"]:
                             tags.append((text, style.get("font-weight") in ("bold", "700")))
-                        if node.get("transform"):
+                        if tag == 'tspan' and (node.get('x') is None or node.get('y') is None):
+                            unsupported_geometry.append('relative tspan positioning')
+                            continue
+                        if node.get('dx') is not None or node.get('dy') is not None:
+                            unsupported_geometry.append('relative text offsets')
                             continue
                         x, y = float(node.get("x", 0)), float(node.get("y", 0))
                         width = float(re.match(r"[\d.]+", node.get("textLength", "0"))[0])
                         if width:
-                            anchor = node.get("text-anchor", "start")
+                            anchor = style.get("text-anchor", "start")
                             x -= width if anchor == "end" else width / 2 if anchor == "middle" else 0
-                            boxes.append((text, x, y - size / scale_pt * .8, x + width, y))
+                            corners = [point(matrix,px,py) for px,py in ((x,y-raw_numeric),(x+width,y-raw_numeric),(x+width,y),(x,y))]
+                            boxes.append((text,min(c[0] for c in corners),min(c[1] for c in corners),max(c[0] for c in corners),max(c[1] for c in corners)))
+                        else:
+                            unsupported_geometry.append('text without textLength')
                     elif tag == "circle":
-                        circles.append(tuple(float(node.get(a, 0)) for a in ("cx", "cy", "r")))
+                        cx,cy = point(matrix,float(node.get('cx',0)),float(node.get('cy',0)))
+                        circles.append((cx,cy,float(node.get('r',0))*max(sx,sy)))
                         if style.get("fill", "").strip().upper() == "#173B73":
                             medians.append(float(node.get("r")) * 2 * scale_pt)
                     elif tag == "polygon" and style.get("fill", "").strip().upper() == "#D55E00":
                         coords = [float(v) for v in re.findall(r"-?[\d.]+", node.get("points", ""))]
                         maxima.append((max(coords[1::2]) - min(coords[1::2])) * scale_pt)
                 typography("svg_typography", texts)
+                expected_labels = spec.get('expected_labels') or []
+                normalize_text = lambda x: re.sub(r'\s+', ' ', x).strip()
+                actual_labels = {normalize_text(t) for t, _, _ in texts}
+                missing_labels = [t for t in expected_labels if normalize_text(t) not in actual_labels]
+                checks['svg_required_labels'] = ('fail' if missing_labels else 'pass') if expected_labels else 'not_applicable'
+                details['svg_required_labels'] = {'missing': missing_labels, 'expected': expected_labels,
+                    'reason': 'Explicit single-line required labels' if expected_labels else 'No direct-label requirement was declared for this figure'}
                 if axis_strokes and tick_strokes and "stroke_pt" in spec:
                     checks["axis_tick_strokes"] = "pass" if all(abs(x-spec["stroke_pt"]["axis"]) <= .06 for x in axis_strokes) and all(abs(x-spec["stroke_pt"]["tick"]) <= .06 for x in tick_strokes) else "fail"
                     details["axis_tick_strokes_pt"] = sorted(set(axis_strokes + tick_strokes))
-                if tags:
-                    checks["svg_panel_tags"] = "pass" if all(bold for _, bold in tags) and len({t for t, _ in tags}) == len(tags) else "fail"
+                expected_tags = spec.get('expected_tags')
+                if expected_tags is None:
+                    expected_tags = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'[:spec.get('n_panels',1)]) if spec.get('panel_tags',spec.get('n_panels',1)>1) else []
+                checks['svg_panel_tags'] = ('pass' if all(bold for _,bold in tags) and sorted(t.strip() for t,_ in tags)==sorted(expected_tags)
+                                            else 'fail') if expected_tags or tags else 'not_applicable'
+                details['expected_panel_tags'] = expected_tags
                 if shared_rows:
                     checks["shared_row_alignment"] = "unverified"
                     if all(len(row_positions.get(label, [])) == spec["n_panels"] for label in shared_rows):
@@ -154,13 +242,28 @@ def audit(paths, spec):
                         dx, dy = max(x0 - cx, 0, cx - x1), max(y0 - cy, 0, cy - y1)
                         if dx * dx + dy * dy < (radius + .2 * 72 / 25.4 / scale_pt) ** 2:
                             collisions.append({"text": text, "bbox": [x0, y0, x1, y1], "circle": [cx, cy, radius]})
-                checks["svg_text_mark_clearance"] = "warn" if collisions else "unverified"
+                checks["svg_text_mark_clearance"] = "warn" if collisions else "unverified" if unsupported_geometry else "pass"
                 details["svg_text_mark_clearance"] = {"method": "textLength rectangles vs circles; other marks require visual review", "collisions": collisions}
-        except (ImportError, ValueError, OSError, subprocess.SubprocessError, ET.ParseError) as exc:
+                text_pairs = []
+                outside = []
+                for i, a in enumerate(boxes):
+                    if a[1]<view[0] or a[2]<view[1] or a[3]>view[0]+view[2] or a[4]>view[1]+view[3]:
+                        outside.append({'text':a[0],'bbox':a[1:]})
+                    for b in boxes[i+1:]:
+                        if min(a[3],b[3])>max(a[1],b[1]) and min(a[4],b[4])>max(a[2],b[2]):
+                            text_pairs.append({'text':[a[0],b[0]],'boxes':[a[1:],b[1:]]})
+                checks['svg_text_text_clearance'] = 'warn' if text_pairs else 'unverified' if unsupported_geometry else 'pass'
+                checks['svg_text_bounds'] = 'warn' if outside else 'unverified' if unsupported_geometry else 'pass'
+                details['svg_text_text_clearance'] = text_pairs
+                details['svg_text_bounds'] = outside
+                details['unsupported_geometry'] = sorted(set(unsupported_geometry))
+        except (ImportError, ValueError, OSError, subprocess.SubprocessError, ET.ParseError,TypeError,IndexError,ZeroDivisionError) as exc:
             checks[ext + "_audit"] = "unverified"
             details[ext + "_error"] = str(exc)
     status = "fail" if "fail" in checks.values() else "warn" if "warn" in checks.values() else "unverified" if "unverified" in checks.values() else "pass"
-    return {"version": "1.0", "status": status, "checks": checks, "details": details}
+    reviewable = ['svg_text_mark_clearance','svg_text_text_clearance','svg_text_bounds']
+    return {"version": "2.0", "status": status, "checks": checks, "details": details,
+            'reviewable_checks':[k for k in reviewable if checks.get(k) in ('warn','unverified')]}
 
 
 if __name__ == "__main__":
