@@ -23,6 +23,6 @@ receipt <- list(skill_version=pp_helper_version,commit=Sys.getenv('PAPERPLOT_INS
   R=as.character(getRversion()),installed_at=format(Sys.time(),tz='UTC',usetz=TRUE),
   acceptance='actual demo PDF/SVG/PNG physical export; not manuscript approval',
   hashes=as.list(tools::md5sum(file.path(root,c('renv.lock','requirements.lock','scripts/paperplot_helpers.R','recipes/recipe_manifest.csv')))))
-writeLines(pp_to_json(receipt),file.path(root,'installation.json'))
+if(nzchar(Sys.getenv('PAPERPLOT_INSTALL_COMMIT'))) writeLines(pp_to_json(receipt),file.path(root,'installation.json'))
 cat('Installed commands and physical exports passed outside the project. Receipt:',file.path(root,'installation.json'),'\n')
 unlink(output,recursive=TRUE)
