@@ -16,44 +16,8 @@ if (!dir.exists(skill_root)) fail("paperplot-skills directory not found from wor
 if (!file.exists(helper_path)) fail("Missing helper: ", helper_path)
 if (!file.exists(validator_path)) fail("Missing output validator: ", validator_path)
 
-template_files <- c(
-  "igs-composite-template.R",
-  "single-panel-template.R",
-  "multi-panel-template.R",
-  "comparison-boxplot-template.R",
-  "violin-dot-template.R",
-  "correlation-scatter-template.R",
-  "heatmap-template.R",
-  "pca-scatter-template.R",
-  "barplot-template.R",
-  "multi-metric-small-multiples-template.R",
-  "rank-plus-key-metrics-template.R",
-  "manuscript-four-panel-template.R",
-  "grouped-boxplot-jitter-template.R",
-  "paired-comparison-template.R",
-  "effect-size-forest-template.R",
-  "bio-genome-quality-overview-template.R",
-  "bio-duplication-mode-comparison-template.R",
-  "volcano-plot-template.R",
-  "ma-plot-template.R",
-  "enrichment-dotplot-template.R",
-  "compact-dot-matrix-enrichment-template.R",
-  "model-validation-composite-template.R",
-  "raincloud-template.R",
-  "manhattan-plot-template.R",
-  "upset-summary-template.R",
-  "pcoa-marginal-template.R",
-  "annotated-heatmap-template.R",
-  "lollipop-ranked-template.R",
-  "stacked-fraction-bar-template.R",
-  "bar-dot-errorbar-template.R",
-  "ridgeline-density-template.R",
-  "labelled-regression-template.R",
-  "matrix-dotplot-template.R",
-  "time-series-ribbon-template.R",
-  "network-summary-template.R",
-  "spatial-distribution-template.R"
-)
+template_files <- utils::read.csv(file.path(skill_root,'templates','template_manifest.csv'),stringsAsFactors=FALSE)$template
+if(length(template_files)!=36L || anyDuplicated(template_files)) fail('The stable template catalog must contain 36 unique entries.')
 
 missing_templates <- template_files[!file.exists(file.path(template_root, template_files))]
 if (length(missing_templates) > 0) fail("Missing template files: ", paste(missing_templates, collapse = ", "))
@@ -188,6 +152,26 @@ run_template <- function(template_name, work_root) {
   dir.create(template_work, recursive = TRUE, showWarnings = FALSE)
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
   make_smoke_data(input_path)
+  # Valid family-specific input tables. Negative counts and repeated summaries
+  # belong in rejection tests, not fixtures silently repaired by production.
+  if(template_name=='bio-duplication-mode-comparison-template.R') {
+    fixture <- read.csv(input_path); fixture$value <- seq_len(nrow(fixture))
+    write.csv(fixture,input_path,row.names=FALSE)
+  }
+  if(template_name=='annotated-heatmap-template.R') {
+    fixture <- expand.grid(term=paste('Term',1:5),category=paste('Category',1:5))
+    fixture$group <- ifelse(fixture$term %in% paste('Term',1:3),'A','B'); fixture$value <- sin(seq_len(nrow(fixture)))
+    write.csv(fixture,input_path,row.names=FALSE)
+  }
+  if(template_name=='upset-summary-template.R') {
+    fixture <- expand.grid(item=paste0('i',1:20),set=c('A','B','C'))
+    fixture$present <- as.integer(seq_len(nrow(fixture))%%3!=0 | seq_len(nrow(fixture))%%4==0)
+    write.csv(fixture,input_path,row.names=FALSE)
+  }
+  if(template_name=='lollipop-ranked-template.R') {
+    fixture <- data.frame(category=paste('Category',1:12),group=rep(c('A','B'),6),value=1:12)
+    write.csv(fixture,input_path,row.names=FALSE)
+  }
   if (identical(template_name, "igs-composite-template.R")) {
     fixture <- data.frame(species = paste("Test species", letters[1:6]), suffix = "(A)", n = 11:16,
       p_ge95 = c(80, 40, 30, 10, 0, 0), p90_95 = 5, p85_90 = 5, p80_85 = 5,

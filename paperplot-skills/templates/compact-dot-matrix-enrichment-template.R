@@ -40,8 +40,8 @@ if (!is.null(sig_col) && !sig_col %in% names(df)) stop("significance column not 
 if (!is.null(row_group_col) && !row_group_col %in% names(df)) stop("row group column not found: ", row_group_col, call. = FALSE)
 if (!is.null(row_label_col) && !row_label_col %in% names(df)) stop("row label column not found: ", row_label_col, call. = FALSE)
 
-df[[effect_col]] <- as.numeric(df[[effect_col]])
-df[[support_col]] <- pmax(as.numeric(df[[support_col]]), 0)
+df[[effect_col]] <- pp_numeric_field(df[[effect_col]], effect_col)
+df[[support_col]] <- pp_numeric_field(df[[support_col]], support_col, minimum=0)
 if (any(!is.finite(df[[effect_col]]))) stop("effect column contains non-finite values.", call. = FALSE)
 if (any(!is.finite(df[[support_col]]))) stop("support column contains non-finite values.", call. = FALSE)
 
@@ -225,7 +225,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 data_profile <- pp_data_profile(df, group_col = row_group_col, value_col = effect_col)
 pp_write_notes(

@@ -13,7 +13,8 @@ check(all(c("required", "--strict-nature", "--strict-detail-qa") %in% args), "QA
 check(pp_final_qa(list(layout = "fail"), "pass")$status == "fail", "Fail propagation")
 check(pp_final_qa(list(layout = "unverified"), "pass")$status == "warn", "Unavailable is not pass")
 check(pp_final_qa(list(layout = "pass"))$tier == "manuscript candidate", "Human review required")
-check(pp_final_qa(list(layout = "pass"), "pass")$tier == "manuscript-ready", "Reviewed result")
+check(pp_final_qa(list(data_integrity='pass',physical_export='pass',visual_layout='pass'), "pass")$tier == "manuscript-ready", "Reviewed result")
+check(pp_final_qa(list(), 'pass')$status=='warn','Empty checks cannot certify a figure')
 
 p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) + ggplot2::geom_point() +
   ggplot2::geom_text(ggplot2::aes(label = cyl), size = 8) + ggplot2::theme_classic(base_size = 24)
@@ -59,6 +60,8 @@ if (requireNamespace("patchwork", quietly = TRUE)) {
 out <- Sys.getenv("PAPERPLOT_TEST_OUTPUT", tempfile("paperplot-production-test-"))
 dir.create(out, recursive = TRUE, showWarnings = FALSE)
 if (isTRUE(pp_check_environment(TRUE)$production_available)) {
+  missing_glyph <- ggplot2::ggplot(data.frame(x=1,y=1),ggplot2::aes(x,y))+ggplot2::geom_point()+ggplot2::labs(title='藜')
+  fails(pp_check_plot_glyphs(missing_glyph,pp_render_spec()))
   # Synthetic fixture only: never a reconstruction of the user's IGS data.
   d <- data.frame(species = paste("Species", letters[1:6]), suffix = c("(A)", "(B)", "(6x)", "(A)", "(B)", "(A)"),
     n = 101:106, p_ge95 = c(80, 20, 30, 10, 0, 0), p90_95 = c(5, 20, 10, 10, 1, 0),
@@ -93,5 +96,5 @@ if (isTRUE(pp_check_environment(TRUE)$production_available)) {
   check(attr(main, "qa_export_audit")$checks$pdf_page_mm == "pass", "180 x 120 mm main canvas")
   check(attr(main, "qa_export_audit")$checks$svg_panel_tags == "pass", "Unique bold ABCD tags")
   cat("Synthetic export artifacts:", out, "\n")
-} else cat("SKIP physical exports: formal environment unavailable; no acceptance claimed.\n")
+} else if('--require-production' %in% commandArgs(TRUE)) stop('Formal render check requires the complete environment; skipping is not success.') else cat("SKIP physical exports: formal environment unavailable; no acceptance claimed.\n")
 cat("Production contract tests passed.\n")
