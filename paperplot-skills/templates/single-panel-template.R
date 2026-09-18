@@ -63,7 +63,7 @@ p <- ggplot(df, mapping) +
 if (!is.null(group_col)) p <- p + pp_scale_color(groups = df[[group_col]])
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
-output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = preset, qa_context = list(family = figure_spec$plot_type))
+output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p), panel_tags = inherits(p, "patchwork")), preset = preset, qa_context = list(family = figure_spec$plot_type))
 invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)

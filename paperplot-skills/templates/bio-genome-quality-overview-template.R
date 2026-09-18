@@ -28,8 +28,8 @@ if (!is.null(group_col) && group_col %in% names(df)) required <- c(required, gro
 missing_cols <- setdiff(required, names(df)); if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 df[[sample_col]] <- as.character(df[[sample_col]])
 df[[metric_col]] <- as.character(df[[metric_col]])
-df[[value_col]] <- as.numeric(df[[value_col]])
-df <- df[!is.na(df[[sample_col]]) & !is.na(df[[metric_col]]) & !is.na(df[[value_col]]), , drop = FALSE]
+df[[value_col]] <- pp_numeric_field(df[[value_col]], value_col)
+if (any(!(!is.na(df[[sample_col]]) & !is.na(df[[metric_col]]) & !is.na(df[[value_col]])))) stop("Incomplete required fields; explicit upstream missing-value handling is required.")
 metric_levels <- unique(df[[metric_col]])
 metric_spec <- pp_bio_genome_quality_spec(metric_levels)
 if (unit_col %in% names(df)) {
@@ -66,15 +66,10 @@ design_plan <- pp_design_plan(chart_family = "bio_genome_quality_small_multiples
 
 color_aes <- if (group_col %in% names(df)) aes(color = .data[[group_col]]) else aes()
 # Overlap-safe labels (WP4): ggrepel when available, legacy fallback otherwise.
-sample_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[sample_col]]),
-    size = pp_text_size("label"), color = "#2F2F2D", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[sample_col]]), size = pp_text_size("label"), vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D")
-}
+sample_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[sample_col]]), data = key_df,
+  color = "#2F2F2D", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 plot <- ggplot(df, aes(x = rank_index, y = .data[[value_col]])) +
   geom_point(color_aes, size = pp_point_size("normal"), alpha = 0.88) +
   sample_label_layer +
@@ -87,7 +82,7 @@ if (group_col %in% names(df)) plot <- plot + pp_scale_color(unique(df[[group_col
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_metric_semantics", "pass", "Genome quality metric directions and units recorded."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("2x3-style small multiples used for heterogeneous metrics.", "Raw units retained in facet labels.", "Full sample names moved to label-key sidecar."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm metric direction and ranking weights before final manuscript use.", figure_spec = figure_spec, metric_spec = metric_spec, layout = layout, palette = design_plan$palette_plan, ordering = list(rule = "bio quality rank", sample_order = paste(sample_order, collapse = ", ")), label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)

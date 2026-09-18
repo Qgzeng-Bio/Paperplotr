@@ -30,8 +30,8 @@ df <- read.csv(input_csv, check.names = FALSE)
 missing_cols <- setdiff(c(paired_id_col, condition_col, value_col), names(df)); if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 df[[condition_col]] <- factor(df[[condition_col]])
 df[[paired_id_col]] <- factor(df[[paired_id_col]])
-df[[value_col]] <- as.numeric(df[[value_col]])
-df <- df[!is.na(df[[paired_id_col]]) & !is.na(df[[condition_col]]) & !is.na(df[[value_col]]), , drop = FALSE]
+df[[value_col]] <- pp_numeric_field(df[[value_col]], value_col)
+if (any(!(!is.na(df[[paired_id_col]]) & !is.na(df[[condition_col]]) & !is.na(df[[value_col]])))) stop("Incomplete required fields; explicit upstream missing-value handling is required.")
 if (nlevels(df[[condition_col]]) < 2) stop("Paired comparison requires at least two conditions.", call. = FALSE)
 
 counts_by_pair <- table(df[[paired_id_col]])
@@ -104,7 +104,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(

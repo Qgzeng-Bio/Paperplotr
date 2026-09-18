@@ -1,228 +1,60 @@
 ---
 name: paperplot-skills
-description: Use for publication-ready scientific figure diagnosis, redesign, R/ggplot2 plotting, manuscript QA, old-vs-new comparison, and bioinformatics figure workflows.
+description: Use for data-backed scientific figures, R/ggplot2 plotting, manuscript figure projects, publication-size exports, scientific and visual QA, and old-vs-new comparisons.
 ---
 
 # PaperPlot Skills
 
-## Purpose
-
-This is a standalone professional scientific plotting skill. It helps researchers diagnose, optimize, redraw, and QA manuscript figures across life sciences, genomics, omics, statistics, machine learning, medicine, and bioinformatics. It does not depend on the PaperPlotR R package.
+Create scientifically faithful figures with reproducible revisions. Standalone: never load PaperPlotR or call its APIs.
 
-The target is not decorative plotting. The target is a manuscript-credible figure: clear scientific message, controlled information hierarchy, readable typography, functional color, reproducible export, and documented scientific assumptions.
+## Start here
 
-## Independence Rule
+1. Run `scripts/paperplot-run`: diagnose the locked runtime, actual interpreters, dependencies and licensed Arial. Missing capabilities block formal work. Plotting never installs packages.
+2. Read `references/code-recipe-contract.md` and `references/production-render-contract.md`, then only the relevant pattern-library document.
+3. Inspect supplied data, units, observation IDs, groups, intervals and upstream results. Do not scan unrelated private directories. An image alone permits diagnosis, not a claimed faithful reconstruction.
+4. Select the recipe from `recipes/recipe_manifest.csv` and a template from `templates/template_manifest.csv`. Handler/variant/backend are executable routing. Legacy status labels are historical classifications, not acceptance claims.
+5. Resolve one `pp_render_spec()` before building. Export through `pp_save_all_with_qa_loop()`. Low-level save helpers are compatibility utilities, not acceptance gates.
 
-- Do not ask the user to install PaperPlotR.
-- Do not call `library(PaperPlotR)` or PaperPlotR APIs such as `theme_lab()`, `save_lab()`, `save_lab_plot()`, `layout_lab()`, or `scale_*_lab()`.
-- Default implementation uses base R + `ggplot2` + `scripts/paperplot_helpers.R`.
-- Base preview needs ggplot2. Formal delivery also requires the capabilities listed by `scripts/check-environment.R`; missing tools keep results unverified, and missing Arial stops production export. Do not silently substitute fonts.
-- Python/matplotlib, seaborn, Illustrator, SVG, and PDF workflows may be advised, but the core skill remains standalone and reproducible.
-
-## Required Operating Mode
-
-For a manuscript main figure, use **figure project mode** (`references/figure-project-workflow.md`): locate its `project.json` in the research workspace, recompute `pp_project_status()`, and read the summary before acting. If more than one project or panel matches, resolve that ambiguity with the user. Create a dimensioned layout sketch and wait for the user's layout confirmation before building panels; this is not scientific/figure approval. Single/double column widths are project budgets (89/180 mm), not mandatory per-panel sizes. Record explicit exceptions such as 183 mm.
-
-Use the four project operations: create, build a panel, revise a panel, assemble. Each panel defines `build_panel(inputs, context)` and returns a ggplot/patchwork object plus evidence. For “only change B”, preserve other scripts/revisions, render B at its allocated size, then assemble a new contextual draft. Never raster-stitch panels. Record reviews against exact revisions; data/config/layout changes invalidate affected results. See the project reference for configure, review and restore commands. Do not reuse a historical pass without freshness checks.
-
-First read `references/production-render-contract.md`. Create a `render_spec` before choosing canvas dimensions or writing theme code. Production text uses Arial only: A/B/C/D tags 12 pt bold upright; titles 7 pt regular; species 6.5 pt with italic scientific names; ticks/legends/captions 6 pt; annotations 6.5 pt. Main composites are 180 mm wide and single-column figures 89 mm; the IGS case is 183 x 105 mm. Normalize legacy explicit sizes by role and record changes. User-specified exceptions belong in `render_spec`, never in undocumented post-export scaling.
-
-Input files and required scientific fields must exist. Never manufacture coordinates, predictions, intervals, or relationships. Only explicit `mode = "demo"` permits simulated data, and its outputs are labelled. Compare source plotting tables, category order, bins, threshold sides, and built coordinates before/after styling. Stop on conflicts rather than correcting source values.
+## Main figures and revisions
 
-1. Diagnose before drawing.
-2. Detect data roles and choose a figure family with `references/figure-type-selector.md`.
-3. Consult the matching `references/pattern-library/*.md` document.
-4. Write a design brief.
-5. Define `figure_spec` and `metric_spec`.
-6. Create a pattern-based design plan.
-7. Query `references/plot-grammar-atoms.md` and the code recipe manifest before writing new plot code.
-8. Select a production template, executable recipe, optional backend plan, or diagnostic benchmark path.
-9. Apply visual budget, proportional layout, and label/legend/panel burden checks.
-10. Finalize and export PDF/PNG through `pp_save_all_with_qa_loop()`; do not bypass the integrated production contract with raw `ggsave()` or `pp_save_all()`.
-11. Verify the post-retry image-level QA result, detail QA, and Nature guardrails. If the configured Python/Pillow QA runtime is unavailable, report that explicitly and do not call the figure manuscript-ready.
-12. If old and new figures exist, perform old-vs-new comparison.
-13. If the new figure is not objectively better, iterate or state the blocker.
-14. Write notes, metadata JSON, QA report, visual QA, and conditional sidecars.
-15. Report remaining scientific and manuscript-readiness risks.
+Follow `references/figure-project-workflow.md`. Resume research-workspace `project.json` and recompute `pp_project_status()` before acting. Resolve ambiguous project/panel matches with the user.
 
-## Input Handling
+Create a millimetre-labelled layout sketch and obtain user confirmation before building. Layout confirmation is not scientific or final approval. Changing order, spans or canvas requires renewed confirmation.
 
-- If the user gives only an image: diagnose visual design, infer likely data roles cautiously, request data before claiming a faithful redraw.
-- If the user gives only code: review code and propose a safer redesign; run only if the user asks or the task requires implementation.
-- If the user gives only data: profile data, select figure type, define specs, then plot.
-- If the user gives image plus data/code: compare the old figure to the data-backed redraw and preserve useful visual rhythm.
-- If critical scientific metadata are missing, ask for the minimum missing fields: units, sample size, group meaning, statistical test, normalization, or paired status.
+Each panel defines `build_panel(inputs, context)` and returns `list(plot, evidence, backend, dependencies)`. Supported objects: ggplot, patchwork and vector grid objects with backend adapters. Build at the allocated physical size; never assemble resized PNGs.
 
-## Manuscript Figure Tiers
+For “only change B”, preserve A/C/D scripts and data builds, revise B, then reassemble and measure the actual layout. Changed guide space may require affected rendering, not recomputation of unchanged analyses. Shared legends require identical meaning, categories, breaks, labels and colour mapping.
 
-Classify every figure before finalizing:
+Schema 1 is read-only. Inspect `pp_project_migrate(project)` before an explicitly authorized backed-up migration. Migrated panels need one explicit scientific revalidation build; historical approvals are not current approvals.
 
-- `analysis sketch`: useful for exploration; not suitable for manuscript.
-- `presentation figure`: readable for slides; may be too large, decorative, or under-documented.
-- `manuscript candidate`: clear and exportable; minor risks remain.
-- `manuscript-ready`: no hard QA failures, readable at target size, scientific semantics documented, and old-vs-new risks addressed when applicable.
+## Scientific rules
 
-Do not call a figure manuscript-ready just because the code runs.
+- `pp_recipe_plot(recipe_id, df, params, mode)` requires real nonempty input. Simulation is available only through explicit `mode="demo"`; outputs remain labelled and cannot become manuscript-ready.
+- Never invent PCA variance, NMDS stress, p-values, GSEA curves, trees, edges, intervals or genomic distances. Specialized analyses come from upstream.
+- Raw summaries require independent-unit IDs, grouping and an explicit method. Supplied estimates/bounds are not re-averaged. Preserve forest subgroup keys and enrichment group identities.
+- Validate supplied fractions/percentages unchanged. Convert counts only with explicit `input_scale="counts"` and record denominators. Negative compositions, incomplete pairs and duplicate keys stop execution.
+- Common statistics are explicit mean/median/SD/SE/t intervals, lm, Pearson/Spearman, Welch/paired t and Wilcoxon. No default stars or guessed multiplicity correction.
+- Mixed-method legacy IDs require a variant. Missing backends fail; never substitute a different chart.
+- Never hide required labels with `check_overlap=TRUE`. Use collision-controlled labels; unresolved crowding remains a review item. Removing/abbreviating scientific labels needs explicit intent.
 
-## Default Visual Standards
+## Physical output and QA
 
-Use `references/publication-visual-standards.md` as the baseline. Key defaults:
+Render spec is authoritative: single column 89 mm; main composite 180 mm; IGS 183 × 105 mm; Manhattan 180 × 70 mm. Legacy dimensions must agree or fail.
 
-- Width: 89 mm single column, 180 mm main composite; explicit case dimensions override this. Main height defaults to 120 mm; above 170 mm propose splitting without shrinking fonts.
-- Font: Arial Regular, Arial Bold, Arial Italic; keep text editable and verify actual PDF/SVG font output.
-- Text: 6-8 pt by semantic role; panel labels A/B/C/D are 12 pt bold upright and generated once on the final composite.
-- Lines: 0.25-0.6 pt for axes, intervals, and borders; avoid thick strokes.
-- Points: usually 1.2-2.2 mm depending on density; use alpha for overplotting.
-- Bars: avoid over-wide bars; show raw points or intervals when statistical evidence matters.
-- Gridlines: off by default; use only when they materially improve quantitative reading.
-- Color: accessible, functional, consistent across panels; avoid rainbow and red/green dependence.
-- Multi-panel proportion: panel boxes, data regions, legends, typography, and blank space must look intentionally balanced at final export size. Equal scientific roles usually require equal panel boxes; unequal roles require an explicit hierarchy and proportional justification.
-- Export: PDF as editable vector plus PNG preview; RGB; no flattened text for vector figures.
+Arial: ordinary roles 6–8 pt, final tags 12 pt bold. `pp_theme()` is pure. Normalize copies; native backends set fonts during drawing. Do not resize exports or blindly traverse raw grobs to change text.
 
-## Scientific Hard Gates
+Export retains each candidate and its QA, attempts at most two repairs, and keeps the previous candidate when no improvement is verified. Evidence includes source data, statistics, mappings, labels, file hashes and detector fingerprints.
 
-Stop and revise when:
+- `fail`: precise error; no human override.
+- `warn / manuscript candidate`: missing evidence, heuristic risk, incomplete environment or pending review.
+- `pass / manuscript-ready`: every required check valid and an actual review bound to the exact evidence.
 
-- Axis labels or legends omit units, denominators, transforms, or normalization.
-- Percentages lack denominator or scale meaning.
-- Error bars do not say SD, SE, CI, IQR, or range.
-- Boxplots are used as primary evidence for very small groups.
-- Paired/repeated data are plotted as independent samples, or connecting lines lack pairing/order semantics.
-- P-value stars are the main statistical message without effect size or uncertainty.
-- Heterogeneous metrics are silently z-scored, ranked, or mixed on one axis.
-- Heatmaps mix incompatible units without explicit transformation and annotation.
-- A color scale encodes quality/significance but the legend is ambiguous.
+Inspect the exported image and located tasks. Raster/bbox heuristics do not prove full correctness. Record only reviews actually performed, with reviewer, reason and per-check evidence; never impersonate the user or invent human approval. Later rejection or changed data/export/detectors invalidates affected approval. Use effective status, not a cached historical pass.
 
-## Visual Hard Gates
+## Delivery
 
-Stop and revise when:
+Show the figure, key QA result, editable choices and output location. Keep detailed evidence in sidecars. Preserve originals; old-vs-new comparisons must preserve scientific meaning.
 
-- Text overlaps or becomes unreadable at target width.
-- Dense lookup labels dominate the figure instead of moving to rank index, key labels, metadata, or sidecars.
-- The figure is QA-compliant but looks like a diagnostic dump rather than a manuscript figure.
-- Legends are repeated or larger than the data region without a reason.
-- Panels are misaligned, unordered, or lack visual hierarchy.
-- Multi-panel figures have accidental size/aspect mismatch: one panel appears visually enlarged or shrunken because source plots were exported at different dimensions, legends consume unequal space, or outer image stitching ignores data-region size.
-- Strict Nature guardrails fail for exported size, text overlap, blank margin, thumbnail readability, or multi-panel balance.
-- Decorative icons, shadows, saturated colors, unnecessary frames, or background gridlines reduce clarity.
-- Old-figure redesign destroys useful visual rhythm without justification.
+Engineering/demo/public cases do not replace private IGS and independent main-figure acceptance. 0.7 remains RC until all declared gates are completed.
 
-## Figure Type Rules
-
-Use `references/figure-type-selector.md`, `references/figure-type-quality-rubric.md`, `references/template-selection-guide.md`, and the matching pattern-library document before choosing a template. Important defaults:
-
-- 5-8 heterogeneous metrics: small multiples, not compressed dot/bubble heatmaps unless justified.
-- Dense sample labels in main figures: rank index + key labels + label-key sidecar.
-- Group comparison: raw points first; box/violin summaries depend on n.
-- Paired comparison: require paired ID before drawing connecting lines.
-- Effect summaries: prefer effect size + CI over p-value-only displays.
-- Volcano/MA/enrichment: keep effect, significance, count, and label roles separate.
-- Multi-panel figures: define primary, secondary, and supporting panels.
-- Unsupported specialized plots such as circos, synteny, genome tracks, phylogenetic trees, networks, schematics, and model diagrams: provide diagnosis and implementation plan; do not fake specialized layout without the required data structure.
-- If there is no data, only diagnose and propose redraw strategy; do not claim a faithful data-backed redraw.
-- If data and code exist, redraw and verify instead of stopping at critique.
-- Every redesign should record the selected pattern document in metadata.
-- When the requested family matches a learned code pattern, consult `references/code-recipe-contract.md`, `references/code-recipes/recipe-library.md`, and `recipes/recipe_manifest.csv` before writing new plotting code.
-
-## Templates
-
-Choose and adapt a template from `references/template-selection-guide.md` and `templates/`. For heterogeneous main figures use project mode with independently built panel objects; a faceted scatter template is not an automatic substitute for an assembled manuscript figure.
-
-The code recipe layer now has 80+ manifest entries. Use production recipes for normal redraws; use optional-backend/reference recipes for complex heatmaps, circos, maps, trees, networks, UpSet, genome tracks, or synteny-like figures only when required data structures and packages are available.
-
-All templates must source `scripts/paperplot_helpers.R`, refuse overwrites, export PDF/PNG through `pp_save_all_with_qa_loop()`, and write notes, metadata, QA, and required sidecars. Recipe-backed wrappers inherit this requirement from `scripts/run-template-recipe.R`.
-
-`pp_theme()` is a pure plot theme and must not change session-wide ggplot2 geom defaults. The export contract calls `pp_finalize()` on a plot copy, fills only implicit text/label defaults, preserves deliberate explicit layer settings, applies the preset text floor, and records QA availability plus initial/final status in metadata.
-
-## Image-Level QA
-
-Rendered-image QA is mandatory after generating or modifying a figure. Do not claim manuscript readiness from code, notes, or metadata alone.
-
-Use `references/visual-perception-qa.md`, `references/visual-detail-qa-spec.md`,
-`references/nature-figure-detail-rubric.md`, and
-`references/nature-figure-guardrails.md`, then run:
-
-```bash
-${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <image_or_output_dir> --out <qa_dir>
-```
-
-For final manuscript candidates, use strict Nature mode:
-
-```bash
-${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --strict-nature
-```
-
-Visual QA requires Pillow for raster images. Set `PAPERPLOT_PYTHON` to a Python interpreter with Pillow when the shell default does not provide it. PDF and SVG inputs are rasterized before pixel QA when `pdftoppm` or ImageMagick are available; SVG structural checks are retained as supplemental signals. OCR is optional: `--ocr auto` uses Tesseract if available and otherwise records an unavailable OCR engine without failing.
-
-The visual QA layer must report image size, blank margin, content density, color burden, grayscale risk, gridline/line burden, approximate text/mark burden, panel geometry, OCR availability, manuscript-readiness score, and top risks. If visual QA returns `warn` or `fail`, either revise the plot or report why the risk remains accepted.
-
-For multi-panel figures, pass explicit layout expectations whenever possible:
-
-```bash
-${PAPERPLOT_PYTHON:-python3} scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --expected-panels 2 --layout-profile equal
-```
-
-For Nature-like detail review, pass target-size expectations:
-
-```bash
-python3 scripts/visual-qa-rendered-image.py <figure> --out <qa_dir> --target-width-mm 89 --journal-profile nature --allow-grid auto
-```
-
-The detail QA layer must inspect text/data collision, tick label crowding, target-size font risk, stroke burden, grid-background burden, legend dominance, panel data-region mismatch, and excessive panel padding. Panel geometry warnings such as `panel_size_imbalance`, `panel_data_region_imbalance`, `panel_data_region_mismatch`, and `unjustified_panel_hierarchy_risk` are manuscript layout risks, not cosmetic nits.
-
-For SVG/PDF inputs, treat vector text and stroke extraction as stronger evidence than raster heuristics. SVG reports true font/stroke distributions; PDF text boxes use `pdftotext -bbox`, and PDF strokes/paths use `pypdf` content-stream parsing when available.
-
-When the figure family is known or inferred, add family-specific scoring:
-
-```bash
-python3 scripts/family-qa-score.py --qa-json <qa_dir>/visual_qa.json --out <qa_dir>/family_qa.json
-```
-
-Family scoring prevents ordinary statistical-plot thresholds from incorrectly failing heatmaps, tree rings, maps, networks, or other specialized layouts, while keeping text overlap and severe panel imbalance as blocking manuscript risks.
-
-When `references/gold-human-calibration-rules.json` exists, family QA also reports whether the figure family is supported by local human-scored positive examples. Treat generic ordination/PCA/PCoA plots as baseline/caution unless they show stronger manuscript hierarchy than the current gold set.
-
-Strict Nature failures are revision blockers unless the accepted hierarchy or dense family-specific structure is explicitly justified in notes and metadata.
-
-Positive calibration examples summarized in `references/visual-qa-calibration-summary.md` show that `warn` is a review trigger, not automatic failure. Heatmaps, tree rings, Manhattan plots, and set matrices need family-specific interpretation.
-
-## Old-vs-New Comparison
-
-When redesigning an existing figure, use `references/old-vs-new-comparison.md`, `references/old-vs-new-visual-scoring.md`, and record:
-
-- What was preserved.
-- What was removed.
-- What became clearer.
-- What became worse or riskier.
-- Whether the new figure is actually better than the old one.
-
-If the old figure has good rhythm but poor labels, refine rather than rebuild.
-
-When old and new rendered images both exist, run:
-
-```bash
-${PAPERPLOT_PYTHON:-python3} scripts/compare-old-new-figures.py <old_image> <new_image> --out <qa_dir> --new-strict-nature
-```
-
-The comparison writes `old_vs_new_review_template.json`. Without a completed review JSON, the final verdict can at most be `deterministic_better_pending_human_review`; deterministic visual metrics alone cannot prove that the scientific message is clearer. If the new figure has worse visual burden, severe panel geometry/detail risk, or a lower manuscript-readiness score, do not present it as final.
-
-Optional vision-model review may be used only through `scripts/vision-review-adapter.py` as a second opinion. It is not a default dependency and cannot override deterministic hard failures.
-
-Only identifying that a figure is bad is not enough. With data/code, produce a better pattern-based candidate, run QA, compare old-vs-new, and continue iterating until the tradeoff is explicit.
-
-## Output Contract
-
-- PDF vector figure with embedded Arial.
-- SVG vector figure with text elements and a recorded Arial editing dependency.
-- PNG preview.
-- R script or reproducible plotting code.
-- `*_notes.md`.
-- `*_metadata.json`.
-- `*_qa.md`.
-- Conditional `*_label_key.csv`, `*_sample_order.csv`, or design sidecars.
-
-## Final Response
-
-Use the `_production_qa.json` final status, not the legacy readiness score. A detected hard error is fail; missing evidence or pending human review is candidate/unverified. Only completed checks plus human approval can certify manuscript-ready. Read `_delivery.md` and report remaining agent tasks with panel/axis/layer locations where available. Real IGS and held-out main-figure acceptance remain pending until the original scripts and data are supplied.
-
-Report generated files, template, preset, design decisions, visible simplifications, scientific assumptions, QA status, old-vs-new verdict if applicable, and remaining manuscript-readiness risks.
+Setup: `INSTALL.md`. Examples: `USAGE.md`. Developer acceptance: `references/release-acceptance.md`. Historical reports describe their own version only.

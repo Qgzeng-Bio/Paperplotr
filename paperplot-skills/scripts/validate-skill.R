@@ -6,44 +6,8 @@ root <- normalizePath(file.path(getwd(), "paperplot-skills"), mustWork = FALSE)
 if (!dir.exists(root)) fail("paperplot-skills directory not found from working directory: ", getwd())
 rel <- function(...) file.path(root, ...)
 
-template_files <- c(
-  "igs-composite-template.R",
-  "single-panel-template.R",
-  "multi-panel-template.R",
-  "comparison-boxplot-template.R",
-  "violin-dot-template.R",
-  "correlation-scatter-template.R",
-  "heatmap-template.R",
-  "pca-scatter-template.R",
-  "barplot-template.R",
-  "multi-metric-small-multiples-template.R",
-  "rank-plus-key-metrics-template.R",
-  "manuscript-four-panel-template.R",
-  "grouped-boxplot-jitter-template.R",
-  "paired-comparison-template.R",
-  "effect-size-forest-template.R",
-  "bio-genome-quality-overview-template.R",
-  "bio-duplication-mode-comparison-template.R",
-  "volcano-plot-template.R",
-  "ma-plot-template.R",
-  "enrichment-dotplot-template.R",
-  "compact-dot-matrix-enrichment-template.R",
-  "model-validation-composite-template.R",
-  "raincloud-template.R",
-  "manhattan-plot-template.R",
-  "upset-summary-template.R",
-  "pcoa-marginal-template.R",
-  "annotated-heatmap-template.R",
-  "lollipop-ranked-template.R",
-  "stacked-fraction-bar-template.R",
-  "bar-dot-errorbar-template.R",
-  "ridgeline-density-template.R",
-  "labelled-regression-template.R",
-  "matrix-dotplot-template.R",
-  "time-series-ribbon-template.R",
-  "network-summary-template.R",
-  "spatial-distribution-template.R"
-)
+template_files <- utils::read.csv(file.path(root,'templates','template_manifest.csv'),stringsAsFactors=FALSE)$template
+if(length(template_files)!=36L || anyDuplicated(template_files)) fail('The stable template catalog must contain 36 unique entries.')
 
 required_files <- c(
   "SKILL.md",
@@ -243,6 +207,8 @@ rscript_bin <- Sys.getenv("PAPERPLOT_RSCRIPT", unset = file.path(R.home("bin"), 
 python_bin <- Sys.getenv("PAPERPLOT_PYTHON", unset = "python3")
 run_contract_check(rscript_bin, rel("scripts", "test-standalone-contract.R"), "standalone contract tests")
 run_contract_check(python_bin, rel("scripts", "validate-qa-coverage.py"), "QA remediation coverage")
+run_contract_check(rscript_bin, rel('scripts','test-final-state.R'),'Scientific encoding and final-state regressions')
+run_contract_check(python_bin,rel('scripts','test-export-audit.py'),'SVG and physical-export audit regressions')
 
 for (path in c(
   "figure-design-brief.md",

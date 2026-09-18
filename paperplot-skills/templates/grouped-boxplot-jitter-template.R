@@ -28,8 +28,8 @@ if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 df <- read.csv(input_csv, check.names = FALSE)
 missing_cols <- setdiff(c(group_col, value_col), names(df)); if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 df[[group_col]] <- factor(df[[group_col]])
-df[[value_col]] <- as.numeric(df[[value_col]])
-df <- df[!is.na(df[[group_col]]) & !is.na(df[[value_col]]), , drop = FALSE]
+df[[value_col]] <- pp_numeric_field(df[[value_col]], value_col)
+if (any(!(!is.na(df[[group_col]]) & !is.na(df[[value_col]])))) stop("Incomplete required fields; explicit upstream missing-value handling is required.")
 if (nrow(df) == 0) stop("No non-missing rows remain after filtering group/value columns.", call. = FALSE)
 
 timestamp <- format(Sys.time(), "%Y%m%d-%H%M%S")
@@ -113,7 +113,7 @@ qa_results <- pp_qa_summary(
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 pp_write_notes(

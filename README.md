@@ -68,34 +68,24 @@ The Skill also supports [main figure projects](paperplot-skills/references/figur
 confirm a layout, build panels separately, revise selected panels and assemble
 versioned figures with dependency and final-size checks.
 
-Install the skill into Codex with one command:
+For the 0.7 RC, first restore the isolated runtime and licensed Arial using
+[the installation guide](paperplot-skills/INSTALL.md). From the reviewed checkout:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+PAPERPLOT_SOURCE_DIR="$PWD/paperplot-skills" PAPERPLOT_OVERWRITE=1 sh install-paperplot-skill.sh
 ```
 
-If your `curl` is broken or unavailable, use:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
-```
-
-This installs the runtime skill profile (`SKILL.md`, `agents/`, `references/`,
-`templates/`, and core scripts). Use `PAPERPLOT_PROFILE=full` to install
-development reports, examples, pressure scenarios, and dev scripts as well.
-
-For the pinned `v0.1.0` release:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
-```
+Installation uses the stable `~/.agents/skills/paperplot-skills` directory,
+backs up existing installs, executes installed commands/physical exports and
+rolls back on failure. Other agent entry points should link to that directory,
+not the development checkout. Use `PAPERPLOT_PROFILE=full` for developer resources.
 
 Validate the skill locally from the source checkout or a `PAPERPLOT_PROFILE=full`
 install with:
 
 ```bash
-Rscript paperplot-skills/scripts/validate-skill.R
-Rscript paperplot-skills/scripts/smoke-test-templates.R
+paperplot-skills/scripts/paperplot-run paperplot-skills/scripts/validate-skill.R
+paperplot-skills/scripts/paperplot-run paperplot-skills/scripts/formal-render.R
 ```
 
 ## Quick Start

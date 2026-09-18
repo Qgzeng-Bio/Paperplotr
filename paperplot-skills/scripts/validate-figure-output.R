@@ -51,6 +51,9 @@ if (!grepl("overall status", qa_text, fixed = TRUE)) fail("QA report missing ove
 
 production_reports <- find_files("_production_qa\\.json$")
 if (!length(production_reports)) fail("Missing production QA contract.")
+cli_args <- commandArgs(FALSE)
+script_file <- sub('^--file=', '', cli_args[grepl('^--file=', cli_args)])
+source(file.path(dirname(normalizePath(script_file[[1]])),'paperplot_helpers.R'))
 for (path in production_reports) {
   report <- jsonlite::fromJSON(path, simplifyVector = FALSE)
   for (name in names(report$provenance$output_md5)) {
@@ -61,8 +64,9 @@ for (path in production_reports) {
   script_file <- sub("^--file=", "", cli_args[grepl("^--file=", cli_args)])
   detector <- file.path(dirname(script_file), "visual-qa-rendered-image.py")
   if (length(detector) && file.exists(detector) && !identical(unname(tools::md5sum(detector)), report$provenance$detector_md5)) fail("Stale detector QA; rerun production export.")
-  cat("Rendered QA:", report$final$status, "; tier:", report$final$tier, "; mode:", report$final$mode, "\n")
-  if (!smoke_only && !identical(report$final$status, "pass")) fail("Final figure acceptance is not pass: ", path)
+  effective <- if(smoke_only) report$final else pp_effective_export_qa(sub('_production_qa[.]json$','',path))
+  cat("Rendered QA:", effective$status, "; tier:", effective$tier, "; mode:", effective$mode, "\n")
+  if (!smoke_only && !identical(effective$status, "pass")) fail("Final figure acceptance is not pass: ", path)
 }
 
 cat(if (smoke_only) "File generation contract passed; this is NOT visual acceptance.\n" else "Final figure acceptance passed\n")

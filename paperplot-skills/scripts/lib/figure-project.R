@@ -16,33 +16,42 @@ ppp_json <- function(x, path) {
 ppp_read <- function(root) {
   ppp_require()
   x <- jsonlite::fromJSON(file.path(root, "project.json"), simplifyVector = FALSE)
-  if (!identical(x$schema_version, 1L)) stop("Unsupported project schema.")
+  if (!x$schema_version %in% c(1L,2L)) stop("Unsupported project schema.")
   x
 }
 ppp_event <- function(x, action, target = NULL) {
   x$events <- c(x$events, list(list(time = format(Sys.time(), tz = "UTC", usetz = TRUE), action = action, target = target)))
   x
 }
-ppp_locked <- function(project, fun) {
+ppp_locked <- function(project, fun, allow_legacy = FALSE) {
   root <- normalizePath(project, mustWork = TRUE)
   lock <- file.path(root, ".project-lock")
   if (!dir.create(lock, showWarnings = FALSE)) stop("Project is locked by another writer; inspect .project-lock/owner.json before manual recovery.")
   on.exit(unlink(lock, recursive = TRUE))
   ppp_json(list(pid = Sys.getpid(), time = as.character(Sys.time())), file.path(lock, "owner.json"))
-  fun(ppp_read(root), root)
+  state <- ppp_read(root)
+  if(state$schema_version==1L && !isTRUE(allow_legacy)) stop('Schema 1 is read-only. Run pp_project_migrate(project, dry_run=TRUE) before an explicit migration.')
+  fun(state, root)
 }
 ppp_path <- function(path, root) {
   if (grepl("^(/|[A-Za-z]:[/\\\\])", path)) path else file.path(root, path)
+}
+ppp_stored_path <- function(path,root) {
+  absolute <- normalizePath(ppp_path(path,root),mustWork=TRUE)
+  prefix <- paste0(normalizePath(root),.Platform$file.sep)
+  if(startsWith(absolute,prefix)) substring(absolute,nchar(prefix)+1L) else absolute
 }
 ppp_file_hash <- function(path) {
   if (!file.exists(path) || dir.exists(path)) stop("Registered dependency missing: ", path)
   unname(tools::md5sum(path))
 }
 ppp_environment <- function() {
-  pkgs <- c("ggplot2", "patchwork", "jsonlite", "systemfonts", "ragg", "svglite", "ggrepel")
+  pkgs <- unique(c("ggplot2", "patchwork", "jsonlite", "systemfonts", "ragg", "svglite", "ggrepel",'ape','treeio','gridGraphics','igraph',
+    unlist(strsplit(pp_recipe_manifest()$backend,';',fixed=TRUE))))
   list(R = R.version.string, platform = R.version$platform, helper = pp_helper_version,
     helper_hashes = as.list(tools::md5sum(c(file.path(pp_helper_script_dir, "paperplot_helpers.R"),
-      list.files(file.path(pp_helper_script_dir, "lib"), pattern = "\\.R$", full.names = TRUE)))),
+      list.files(file.path(pp_helper_script_dir, "lib"), pattern = "\\.R$", full.names = TRUE),
+      file.path(pp_helper_script_dir,'..','recipes',c('paperplot_code_recipes.R','recipe_manifest.csv'))))),
     packages = as.list(stats::setNames(vapply(pkgs, function(p) if (requireNamespace(p, quietly = TRUE)) as.character(utils::packageVersion(p)) else "unavailable", character(1)), pkgs)))
 }
 ppp_layout <- function(layout, ids, column = "double") {
@@ -155,12 +164,15 @@ ppp_panel_id <- function(x, panel) {
 }
 ppp_fresh <- function(x, root, id) {
   p <- x$panels[[id]]
+  if(isTRUE(p$migration_rebuild_required)) return(list(fresh=FALSE,reason='schema migration requires scientific revalidation'))
   if (is.null(p$script)) return(list(fresh = FALSE, reason = "planned: no script"))
   ctx <- tryCatch(ppp_context(x, root, id), error = identity)
   if (inherits(ctx, "error")) return(list(fresh = FALSE, reason = conditionMessage(ctx)))
   rev <- p$revisions[[p$current %||% ""]]
   cache <- if (!is.null(rev)) file.path(root, rev$dir, "plot.rds") else ""
-  good <- !is.null(rev) && identical(ctx$key, rev$key) && file.exists(cache) && identical(ppp_file_hash(cache), rev$object_md5)
+  evidence <- if(!is.null(rev)) file.path(root,rev$dir,'evidence.rds') else ''
+  good <- !is.null(rev) && identical(ctx$key, rev$key) && file.exists(cache) && identical(ppp_file_hash(cache), rev$object_md5) &&
+    file.exists(evidence) && identical(ppp_file_hash(evidence),rev$evidence_md5)
   list(fresh = good, reason = if (good) "current" else "dependencies or placement changed / not built", key = ctx$key)
 }
 ppp_summary <- function(x, root) {
@@ -248,7 +260,7 @@ pp_project_create <- function(figure_id, message, panels, project = file.path("f
     p$current <- NULL; p$revisions <- list(); p$review <- NULL
     p
   }); names(ps) <- ids
-  x <- list(schema_version = 1L, figure_id = figure_id, message = message, mode = mode, column = column,
+  x <- list(schema_version = 2L, figure_id = figure_id, message = message, mode = mode, column = column,
     panels = ps, layout = layout, layout_version = "r000001", layout_confirmed = NULL,
     layout_history = list(r000001 = layout), shared = shared,
     shared_config = if (!is.null(shared_config)) normalizePath(shared_config, mustWork = TRUE) else NULL,
@@ -261,6 +273,8 @@ pp_project_status <- function(project) {
   root <- normalizePath(project, mustWork = TRUE); x <- ppp_read(root)
   x$panel_status <- lapply(names(x$panels), function(id) ppp_fresh(x, root, id)); names(x$panel_status) <- names(x$panels)
   x$assembly_status <- ppp_assembly_status(x, root)
+  x$build_fresh <- all(vapply(x$panel_status,function(p) isTRUE(p$fresh),logical(1)))
+  x$qa_fresh <- isTRUE(x$assembly_status$qa_fresh)
   x$summary <- ppp_summary(x, root)
   x
 }
@@ -273,10 +287,49 @@ ppp_assembly_status <- function(x, root) {
     f <- ppp_fresh(x, root, id)
     stale <- stale || !f$fresh || !identical(a$panels[[id]]$revision, x$panels[[id]]$current)
   }
-  if (stale) return(list(status = "stale", revision = x$current_assembly))
+  if (stale) return(list(status = "stale", build_fresh=FALSE,qa_fresh=FALSE,revision = x$current_assembly))
+  valid <- ppp_assembly_artifacts(a,root)
+  if(!valid$valid) return(list(status='stale',build_fresh=TRUE,qa_fresh=FALSE,reason=valid$reason,revision=x$current_assembly))
+  if(ppp_failed_panel_review(x)) return(list(status='fail',build_fresh=TRUE,qa_fresh=TRUE,reason='A current panel review failed',revision=x$current_assembly))
   review <- x$assembly_review
-  qa <- if (!is.null(review) && identical(review$revision, x$current_assembly)) review$result else a$qa
-  list(status = qa$status, revision = x$current_assembly, qa = qa)
+  qa <- if (!is.null(review) && identical(review$revision, x$current_assembly) && identical(review$evidence_hash,a$qa$evidence_hash)) review$result else a$qa
+  list(status = qa$status,build_fresh=TRUE,qa_fresh=TRUE,revision = x$current_assembly, qa = qa)
+}
+
+ppp_assembly_artifacts <- function(assembly, root) {
+  provenance <- assembly$provenance
+  if(is.null(provenance$detectors)||!identical(provenance$detectors,pp_detector_fingerprint())) return(list(valid=FALSE,reason='Detector/configuration changed or legacy QA lacks fingerprints; rerun QA.'))
+  hashes <- provenance$output_md5
+  if(!length(hashes)) return(list(valid=FALSE,reason='Missing export hashes.'))
+  for(name in names(hashes)) {
+    path <- file.path(root,assembly$dir,name)
+    if(!file.exists(path)||!identical(unname(tools::md5sum(path)),hashes[[name]])) return(list(valid=FALSE,reason=paste('Export missing or changed:',name)))
+  }
+  list(valid=TRUE)
+}
+
+pp_project_migrate <- function(project,dry_run=TRUE) {
+  root <- normalizePath(project,mustWork=TRUE); state <- ppp_read(root)
+  if(state$schema_version==2L) return(invisible(list(from=2L,to=2L,changed=FALSE)))
+  plan <- list(from=1L,to=2L,changed=TRUE,historical_revisions='preserved',historical_approvals='retained as history, invalid for new acceptance',raw_inputs='unchanged')
+  if(isTRUE(dry_run)) return(plan)
+  ppp_locked(root,function(x,root) {
+    backup <- tempfile('project-schema1-',tmpdir=root,fileext='.json')
+    if(!file.copy(file.path(root,'project.json'),backup)) stop('Cannot back up legacy project; migration stopped.')
+    x$schema_version <- 2L
+    x$legacy_assembly_review <- x$assembly_review; x$assembly_review <- NULL
+    for(id in names(x$panels)) {
+      x$panels[[id]]$legacy_review <- x$panels[[id]]$review; x$panels[[id]]$review <- NULL
+      # Keep the historical pointer, but require an explicit first scientific
+      # rebuild: schema-1 evidence lacks the new scale/statistical contract.
+      x$panels[[id]]$migration_rebuild_required <- !is.null(x$panels[[id]]$current)
+      for(field in c('inputs','sources')) x$panels[[id]][[field]] <- lapply(x$panels[[id]][[field]] %||% list(),function(path) {
+        if(file.exists(ppp_path(path,root))) ppp_stored_path(path,root) else path
+      })
+    }
+    ppp_save(ppp_event(x,'migrate',list(from=1L,to=2L,backup=basename(backup))),root)
+    c(plan,list(backup=backup))
+  },allow_legacy=TRUE)
 }
 pp_project_confirm_layout <- function(project, reviewer) {
   if (!nzchar(reviewer)) stop("Record who confirmed the layout.")
@@ -317,13 +370,13 @@ pp_project_configure <- function(project, settings, panel = NULL) {
   ppp_locked(project, function(x, root) {
     if (is.null(panel)) {
       if (length(setdiff(names(settings), c("style", "shared", "shared_config")))) stop("Only style/shared/shared_config are project settings; use set_layout for canvas changes.")
-      if (!is.null(settings$shared_config)) settings$shared_config <- normalizePath(settings$shared_config, mustWork = TRUE)
+      if (!is.null(settings$shared_config)) settings$shared_config <- ppp_stored_path(settings$shared_config,root)
       for (key in names(settings)) x[[key]] <- settings[[key]]
     } else {
       id <- ppp_panel_id(x, panel)
       allowed <- c("inputs", "sources", "shared_keys", "guide_semantics", "dependencies_declared", "seed", "title", "question", "role", "manual_tag_layers")
       if (length(setdiff(names(settings), allowed))) stop("Unsupported panel setting.")
-      for (field in intersect(names(settings), c("inputs", "sources"))) settings[[field]] <- lapply(settings[[field]], normalizePath, mustWork = TRUE)
+      for (field in intersect(names(settings), c("inputs", "sources"))) settings[[field]] <- lapply(settings[[field]],ppp_stored_path,root=root)
       for (key in names(settings)) x$panels[[id]][[key]] <- settings[[key]]
     }
     ppp_save(ppp_event(x, "configure", list(panel = panel, fields = as.list(names(settings)))), root)

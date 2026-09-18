@@ -32,36 +32,33 @@ missing_cols <- setdiff(required_cols, names(df))
 if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 if (!is.null(error_col) && !error_col %in% names(df)) error_col <- NULL
 
-df[[x_col]] <- as.numeric(df[[x_col]])
-df[[y_col]] <- as.numeric(df[[y_col]])
+df[[x_col]] <- pp_numeric_field(df[[x_col]], x_col)
+df[[y_col]] <- pp_numeric_field(df[[y_col]], y_col)
 df[[group_col]] <- factor(df[[group_col]])
-df <- df[!is.na(df[[x_col]]) & !is.na(df[[y_col]]) & !is.na(df[[group_col]]), , drop = FALSE]
+if (any(!(!is.na(df[[x_col]]) & !is.na(df[[y_col]]) & !is.na(df[[group_col]])))) stop("Incomplete required fields; explicit upstream missing-value handling is required.")
 if (nrow(df) < 4) stop("Model-validation composite needs at least four complete observations.", call. = FALSE)
 
-df$residual <- df[[y_col]] - df[[x_col]]
+df$residual <- df[[x_col]] - df[[y_col]]
 group_levels <- levels(df[[group_col]])
 
 perf_parts <- lapply(seq_along(group_levels), function(i) {
   g <- group_levels[[i]]
   d <- df[df[[group_col]] == g, , drop = FALSE]
-  r2 <- if (nrow(d) >= 3 && stats::sd(d[[x_col]]) > 0 && stats::sd(d[[y_col]]) > 0) {
-    stats::cor(d[[x_col]], d[[y_col]], use = "complete.obs")^2
-  } else {
-    NA_real_
-  }
-  rmse <- sqrt(mean((d[[y_col]] - d[[x_col]])^2, na.rm = TRUE))
-  interval <- if (!is.null(error_col)) {
-    min(0.12, max(0.03, mean(abs(as.numeric(d[[error_col]])), na.rm = TRUE) / 5))
-  } else {
-    0.04
+  metrics <- pp_model_metrics(d[[x_col]],d[[y_col]])
+  r2 <- metrics$r_squared
+  rmse <- metrics$rmse
+  supplied_lower <- supplied_upper <- NA_real_
+  if(all(c('r2_lower','r2_upper')%in%names(d))) {
+    supplied_lower <- unique(d$r2_lower); supplied_upper <- unique(d$r2_upper)
+    if(length(supplied_lower)!=1 || length(supplied_upper)!=1 || supplied_lower>r2 || supplied_upper<r2) stop('Invalid or conflicting upstream R-squared intervals.')
   }
   data.frame(
     panel = "Model performance",
     group = g,
     x_value = i,
     y_value = r2,
-    lower = pmax(0, r2 - interval),
-    upper = pmin(1, r2 + interval),
+    lower = supplied_lower,
+    upper = supplied_upper,
     rmse = rmse,
     stringsAsFactors = FALSE
   )
@@ -157,7 +154,7 @@ qa_results <- pp_qa_summary(
   pp_qa_result("statistical_expression", "warn", "Composite shows fit, residuals, and R-squared; confirm interval definition before final manuscript use.")
 )
 
-outputs <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), width = 18, height = 8.5, overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p), panel_tags = inherits(p, "patchwork"), width_mm = (18) * 10, height_mm = (8.5) * 10), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(outputs, notes_path = notes_path))
