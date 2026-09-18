@@ -36,6 +36,7 @@ jobs:
             local::.
             any::patchwork
             any::jsonlite
+            any::ggridges
 
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
