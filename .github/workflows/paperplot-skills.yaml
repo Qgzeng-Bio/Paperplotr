@@ -37,6 +37,8 @@ jobs:
             any::patchwork
             any::jsonlite
             any::ggridges
+            any::ggrepel
+            any::ggbeeswarm
 
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
