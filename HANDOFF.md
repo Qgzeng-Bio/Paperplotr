@@ -1,7 +1,55 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-09-13 (standalone-0.6.0 figure project mode; see local verification below)
+Last updated: 2026-09-17 (standalone-0.7.0-rc.1; engineering checks passed; private/human acceptance pending)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
+
+---
+
+## 2026-09-17: 0.7.0 RC implementation and acceptance
+
+- Work branch: `codex/standalone-0.7.0`, based on `9ae461e`.
+- Scope approved: all 84 recipes / 36 templates, explicit common statistics,
+  upstream specialized analysis, confirmed main-figure layouts, isolated runtime.
+- Implementation checkpoint: `44f5a76`; work packages and follow-up regressions
+  have separate commits. No push, main merge or stable release tag was made.
+- All 84 stable IDs route through 24 explicit handlers. Real specialized
+  backends run in the full environment, with no substituted chart fallback.
+- Scientific fixes include supplied PCA/NMDS/PERMANOVA results, preserved CI/group
+  keys, explicit normalization/pairing, true R-squared, valid small-sample handling,
+  paired sample counts and standard R exact-test policy. Source results are never
+  silently replaced. Demo plots cannot be promoted by changing export mode.
+- One physical render spec governs actual dimensions and fonts. Required labels
+  are checked; silent overlap-dropping was removed from all templates. Local
+  legend choices survive base themes; marginal plots use aligned measurement
+  ranges and correct labels. Coordinate-window changes cannot masquerade as style.
+- Project schema is 2. Schema 1 stays read-only before backed-up explicit migration.
+  Reviews bind to current revisions/files/detectors; later panel rejection expires
+  overall approval. Native/nested panels retain vector content and one outer tag;
+  unsupported data-region measurements remain explicit, reviewable blind spots.
+- Final full run passed 84/84 recipe physical exports, 36/36 template generation,
+  33 public-data cases spanning 24 handlers, 4/6-panel heterogeneous compositions,
+  nested/native project workflows, review-state tests and six installation safety
+  cases. All 14 formal engineering jobs passed, with zero skips. Exact evidence:
+  `visual-checks/formal-20260917-013852/formal-render.json` and its individual logs.
+- Runtime ready: `~/.local/share/paperplot/runtime-0.7.0`, R 4.6.0 / Python 3.13.15 /
+  Bioconductor 3.23; 125 R packages locked with renv; exact macOS ARM64 system lock.
+  Lock restoration, actual Arial/font paths, PDF/SVG/PNG and outside-repo execution
+  have been tested. Font files are not redistributed.
+- Stable installation: `~/.agents/skills/paperplot-skills`; Codex's configured
+  entry points to it, not the checkout. `installation.json` records exact source
+  commit/environment. Backups live outside discovery in `~/.agents/skill-backups/`
+  and `~/.codex/skill-backups/`. Self-checking does not erase the receipt.
+- The failed 1.7 GB Unicode-path bootstrap was moved recoverably to
+  `~/.Trash/paperplot-failed-runtime-20260917`; original research data were untouched.
+- User's original IGS and independent 4-6-panel scientific acceptance inputs have
+  not been supplied. Do not substitute synthetic results for these acceptance gates.
+- Actual final human approval is also pending. Automated fixture reviewers prove
+  state transitions only; do not count them as manuscript approval. Stay RC.
+- Full explanation: `paperplot-skills/reports/standalone-0.7.0-rc-validation.md`.
+  Run `paperplot-skills/scripts/paperplot-run paperplot-skills/scripts/formal-render.R`
+  from the checkout for a complete no-skip engineering check. GitHub's separate
+  formal job requires a provisioned runner with the locked runtime and licensed Arial;
+  remote CI has not been claimed or verified for these unpushed commits.
 
 ---
 

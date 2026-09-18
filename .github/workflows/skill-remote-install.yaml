@@ -1,76 +1,29 @@
-name: skill-remote-install
-
+name: skill-install-safety
 on:
   push:
-    branches: [main, master]
-    tags: ["v*"]
-    paths:
-      - "install-paperplot-skill.sh"
-      - "paperplot-skills/**"
-      - ".github/workflows/skill-remote-install.yaml"
+    paths: ["install-paperplot-skill.sh", "paperplot-skills/**", ".github/workflows/skill-remote-install.yaml"]
   pull_request:
-    branches: [main, master]
-    paths:
-      - "install-paperplot-skill.sh"
-      - "paperplot-skills/**"
-      - ".github/workflows/skill-remote-install.yaml"
+    paths: ["install-paperplot-skill.sh", "paperplot-skills/**", ".github/workflows/skill-remote-install.yaml"]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  remote-install:
+  missing-runtime-is-safe:
     runs-on: ubuntu-latest
-
-    env:
-      SOURCE_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-      SOURCE_REF: ${{ github.event.pull_request.head.sha || github.sha }}
-
     steps:
-      - name: Install runtime profile from remote script
+      - uses: actions/checkout@v4
+      - name: Refuse incomplete runtime without replacing a working installation
+        shell: bash
         run: |
-          set -eux
-          owner="${SOURCE_REPOSITORY%%/*}"
-          repo="${SOURCE_REPOSITORY#*/}"
-          script_url="https://raw.githubusercontent.com/${SOURCE_REPOSITORY}/${SOURCE_REF}/install-paperplot-skill.sh"
-          dest="${RUNNER_TEMP}/paperplot-runtime"
-
-          wget -qO- "${script_url}" | \
-            PAPERPLOT_OWNER="${owner}" \
-            PAPERPLOT_REPO="${repo}" \
-            PAPERPLOT_REF="${SOURCE_REF}" \
-            PAPERPLOT_DEST="${dest}" \
-            sh
-
-          skill="${dest}/paperplot-skills"
-          test -f "${skill}/SKILL.md"
-          test -f "${skill}/agents/openai.yaml"
-          test -f "${skill}/scripts/paperplot_helpers.R"
-          test -f "${skill}/scripts/visual-qa-rendered-image.py"
-          test -f "${skill}/scripts/compare-old-new-figures.py"
-          test -f "${skill}/scripts/lib/design-brief.R"
-          test -d "${skill}/references"
-          test -d "${skill}/templates"
-          test ! -d "${skill}/reports"
-          test ! -f "${skill}/scripts/run-redraw-benchmark.R"
-          test ! -f "${skill}/scripts/run-pressure-scenarios.R"
-
-      - name: Install full profile from remote script
-        run: |
-          set -eux
-          owner="${SOURCE_REPOSITORY%%/*}"
-          repo="${SOURCE_REPOSITORY#*/}"
-          script_url="https://raw.githubusercontent.com/${SOURCE_REPOSITORY}/${SOURCE_REF}/install-paperplot-skill.sh"
-          dest="${RUNNER_TEMP}/paperplot-full"
-
-          curl -fsSL "${script_url}" | \
-            PAPERPLOT_OWNER="${owner}" \
-            PAPERPLOT_REPO="${repo}" \
-            PAPERPLOT_REF="${SOURCE_REF}" \
-            PAPERPLOT_DEST="${dest}" \
-            PAPERPLOT_PROFILE=full \
-            sh
-
-          skill="${dest}/paperplot-skills"
-          test -f "${skill}/SKILL.md"
-          test -f "${skill}/reports/final-skill-test-report.md"
-          test -f "${skill}/scripts/validate-skill.R"
-          test -f "${skill}/examples/pressure-scenarios.md"
+          destination="$(mktemp -d)"
+          mkdir "$destination/paperplot-skills"
+          echo preserved > "$destination/paperplot-skills/old-marker"
+          if PAPERPLOT_DEST="$destination" PAPERPLOT_SOURCE_DIR="$PWD/paperplot-skills" PAPERPLOT_ENV="$destination/absent-runtime" PAPERPLOT_OVERWRITE=1 sh install-paperplot-skill.sh; then
+            echo 'ERROR: missing runtime was accepted'
+            exit 1
+          fi
+          test "$(cat "$destination/paperplot-skills/old-marker")" = preserved
+      - name: Full installed-runtime acceptance is separate
+        run: echo 'Actual clean/upgrade exports and rollback tests require the locked runtime and run under formal-render; this job tests failure safety only.'

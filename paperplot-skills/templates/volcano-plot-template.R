@@ -21,8 +21,8 @@ if (!file.exists(input_csv)) stop("Input CSV not found: ", input_csv, call. = FA
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 df <- read.csv(input_csv, check.names = FALSE)
 missing_cols <- setdiff(c(gene_col, log2fc_col, padj_col), names(df)); if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
-df[[log2fc_col]] <- as.numeric(df[[log2fc_col]])
-df[[padj_col]] <- pmax(as.numeric(df[[padj_col]]), .Machine$double.xmin)
+df[[log2fc_col]] <- pp_numeric_field(df[[log2fc_col]], log2fc_col)
+df[[padj_col]] <- pp_numeric_field(df[[padj_col]], padj_col, minimum=.Machine$double.xmin, maximum=1)
 df$neg_log10_padj <- -log10(df[[padj_col]])
 df$volcano_class <- ifelse(df[[padj_col]] <= padj_threshold & df[[log2fc_col]] >= log2fc_threshold, "up", ifelse(df[[padj_col]] <= padj_threshold & df[[log2fc_col]] <= -log2fc_threshold, "down", "not_significant"))
 key_idx <- order(df[[padj_col]], -abs(df[[log2fc_col]]))[seq_len(min(8, nrow(df)))]
@@ -50,15 +50,10 @@ design_plan <- pp_design_plan(chart_family = "volcano", figure_role = figure_rol
 
 # Overlap-safe gene labels (WP4): prefer ggrepel when available; the fallback
 # keeps the legacy check_overlap behavior. Seed keeps exports reproducible.
-gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
-    size = pp_text_size("label"), color = "#1D1D1B", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = pp_text_size("label"), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
-}
+gene_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[gene_col]]), data = key_df,
+  color = "#1D1D1B", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 
 plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volcano_class)) +
   geom_point(alpha = 0.54, size = pp_point_size("dense")) +
@@ -72,7 +67,7 @@ plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volc
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_volcano_semantics", "pass", "Effect size and adjusted significance are encoded on separate axes."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("Pattern reference: volcano-ma-enrichment.", "Neutral background points are muted.", "Color encodes differential class.", "Only selected top genes are labeled.", "Threshold lines are shown explicitly."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm fold-change and adjusted p-value thresholds match the analysis plan.", figure_spec = figure_spec, metric_spec = metric_spec, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)
 pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, statistical_plan = design_plan$statistical_plan)

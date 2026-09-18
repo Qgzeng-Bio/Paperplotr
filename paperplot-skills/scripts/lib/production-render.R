@@ -1,23 +1,25 @@
 # Physical production contract. Low-level pp_finalize() remains compatible.
 pp_render_spec <- function(n_panels = 1L, case = NULL, width_mm = NULL, height_mm = NULL,
                            mode = Sys.getenv("PAPERPLOT_MODE", "production"),
-                           text_pt = list(), ocr = "auto", human_review = "pending") {
+                           text_pt = list(), ocr = "auto", human_review = "pending", reviews = list(),
+                           panel_tags = n_panels > 1L, expected_labels = character()) {
   mode <- match.arg(mode, c("production", "preview", "demo"))
-  if (length(n_panels) != 1L || !is.finite(n_panels) || n_panels < 1) stop("Invalid panel count.")
+  if (length(n_panels) != 1L || !is.finite(n_panels) || n_panels < 1 || n_panels!=as.integer(n_panels) || n_panels>26) stop("Invalid panel count (integer 1-26 required).")
   sizes <- list(panel_tag = 12, panel_title = 7, axis_title = 7, species = 6.5,
                 tick = 6, legend = 6, caption = 6, annotation = 6.5, body = 7)
   if (length(setdiff(names(text_pt), names(sizes)))) stop("Unknown text role.")
   sizes <- utils::modifyList(sizes, text_pt)
   if (any(!is.finite(unlist(sizes)) | unlist(sizes) <= 0)) stop("Invalid text sizes.")
-  if (!is.null(case) && !identical(case, "igs")) stop("Unknown render case.")
-  width_mm <- width_mm %||% if (identical(case, "igs")) 183 else if (n_panels > 1) 180 else 89
-  height_mm <- height_mm %||% if (identical(case, "igs")) 105 else if (n_panels > 1) 120 else 62
+  if (!is.null(case) && !case %in% c('igs','manhattan')) stop("Unknown render case.")
+  width_mm <- width_mm %||% if (identical(case, "igs")) 183 else if (identical(case,'manhattan') || n_panels > 1) 180 else 89
+  height_mm <- height_mm %||% if (identical(case, "igs")) 105 else if(identical(case,'manhattan')) 70 else if (n_panels > 1) 120 else 62
   if (any(!is.finite(c(width_mm, height_mm))) || min(width_mm, height_mm) <= 0) stop("Invalid canvas size.")
   if (height_mm > 170) warning("Canvas exceeds 170 mm: consider splitting; text sizes are unchanged.", call. = FALSE)
-  list(version = "1.0", mode = mode, case = case, n_panels = n_panels,
+  list(version = "2.0", mode = mode, case = case, n_panels = n_panels,
        width_mm = width_mm, height_mm = height_mm, dpi = 600, family = "Arial",
        text_pt = sizes, text_overrides = names(text_pt), ocr = match.arg(ocr, c("auto", "off", "required")),
        human_review = match.arg(human_review, c("pending", "pass", "fail")),
+       reviews=reviews, panel_tags=isTRUE(panel_tags), expected_labels=as.list(expected_labels),expected_tags=if(isTRUE(panel_tags)) as.list(LETTERS[seq_len(n_panels)]) else list(),
        stroke_pt = list(axis = 0.6, tick = 0.5, connector = 0.4, threshold = 0.5, separator = 0.25),
        tick_length_pt = 2.2, tolerance = list(page_mm = 0.1, font_pt = 0.2, row_mm = 0.2),
        identity_colors = c(">=0.95" = "#173B73", "0.90-0.95" = "#337FB8", "0.85-0.90" = "#73ADD0",
@@ -36,19 +38,24 @@ pp_arial_faces <- function(fonts = NULL) {
     bold = any(styles == "bold"), italic = any(styles %in% c("italic", "oblique")))
 }
 
-pp_check_environment <- function(composite = FALSE) {
-  packages <- c("ggplot2", "jsonlite", "systemfonts", "ragg", "svglite", if (composite) "patchwork")
+pp_check_environment <- function(composite = FALSE, full = TRUE) {
+  packages <- unique(c("ggplot2", "jsonlite", "systemfonts", "ragg", "svglite", if (composite) "patchwork",
+    if(full) c('ape','treeio','igraph','gridGraphics','ggrepel',unlist(strsplit(pp_recipe_manifest()$backend,';',fixed=TRUE)))))
   available <- vapply(packages, requireNamespace, logical(1), quietly = TRUE)
   faces <- pp_arial_faces()
   commands <- Sys.which(c("pdffonts", "pdftotext", "pdfinfo", "pdftoppm"))
   py <- pp_resolve_qa_python()
   pypdf <- !is.null(py) && identical(as.integer(suppressWarnings(system2(py,
     c("-c", shQuote("import pypdf")), stdout = FALSE, stderr = FALSE))), 0L)
+  fonts <- if(requireNamespace('systemfonts',quietly=TRUE)) systemfonts::system_fonts() else data.frame(family=character(),path=character())
   list(preview_available = isTRUE(available[["ggplot2"]]),
        production_available = all(available) && all(faces) && all(nzchar(commands)) && !is.null(py) && pypdf,
        packages = as.list(available), arial_faces = as.list(faces), commands = as.list(commands),
-       python = py, pypdf = pypdf,
-       instructions = "Install missing R packages in a matching R library; install licensed Arial Regular/Bold/Italic, Poppler, and Python Pillow/pypdf. No installation was performed.")
+       package_versions=as.list(stats::setNames(vapply(packages,function(p) if(requireNamespace(p,quietly=TRUE)) as.character(utils::packageVersion(p)) else 'missing',character(1)),packages)),
+       R=list(version=as.character(getRversion()),home=R.home(),libraries=as.list(.libPaths())),
+       font_sources=as.list(unique(fonts$path[tolower(fonts$family)=='arial'])),
+       python = py, pypdf = pypdf, missing_capabilities=as.list(c(packages[!available],names(faces)[!faces],names(commands)[!nzchar(commands)],if(!pypdf) 'Python pypdf')),
+       instructions = "Restore the isolated runtime from its locks and provide licensed Arial Regular/Bold/Italic. Plotting never installs or upgrades dependencies.")
 }
 
 pp_production_theme <- function(spec) {
@@ -81,11 +88,44 @@ pp_production_theme <- function(spec) {
 }
 
 pp_normalize_production <- function(plot, spec) {
+  require_real_mode <- function(p) {
+    demo <- identical(attr(p,'pp_recipe_evidence')$mode,'demo') || identical(attr(p,'pp_render_spec')$mode,'demo') || isTRUE(attr(p$data,'pp_demo'))
+    if(demo && spec$mode!='demo') stop('A demo drawing cannot be promoted to production/preview; rebuild it from real inputs. Its demo provenance must remain visible.')
+  }
+  require_real_mode(plot)
+  if(grid::is.grob(plot)) {
+    builder <- attr(plot,'pp_vector_builder')
+    if(is.null(builder)) stop('A raw grob needs a backend adapter with pp_vector_builder and source evidence; its font sizes cannot be guessed.')
+    out <- builder(spec)
+    attr(out,'pp_recipe_evidence') <- attr(plot,'pp_recipe_evidence')
+    attr(out,'pp_panel_evidence') <- attr(plot,'pp_panel_evidence')
+    attr(out,'pp_backend_spec') <- spec
+    attr(out,'pp_vector_builder') <- builder
+    return(out)
+  }
   if (!inherits(plot, "ggplot")) stop("Production renderer requires ggplot or patchwork; unsupported objects remain preview-only.")
   out <- unserialize(serialize(plot, NULL))
   changes <- list()
   normalize_one <- function(p) {
-    if (inherits(p, "patchwork")) p$patches$plots <- lapply(p$patches$plots, normalize_one)
+    require_real_mode(p)
+    if(inherits(p,'patchwork')) {
+      patches <- p$patches
+      last <- p;last$patches<-NULL;class(last)<-setdiff(class(last),'patchwork')
+      result <- normalize_one(last)+patchwork::plot_layout()
+      result$patches<-patches
+      result$patches$plots<-lapply(patches$plots,normalize_one)
+      for(name in grep('^pp_',names(attributes(p)),value=TRUE)) attr(result,name)<-attr(p,name)
+      return(result)
+    }
+    if(!is.null(attr(p,'pp_vector_element'))) {
+      element <- attr(p,'pp_vector_element')
+      allocated <- attr(element,'pp_backend_spec')
+      element_spec <- utils::modifyList(spec,allocated[intersect(c('width_mm','height_mm','n_panels','panel_tags','expected_tags'),names(allocated))])
+      grob <- pp_normalize_production(element,element_spec)
+      wrapped <- patchwork::wrap_elements(full=grob)
+      attr(wrapped,'pp_vector_element') <- grob
+      return(wrapped)
+    }
     theme <- p$theme
     changes[[length(changes) + 1L]] <<- lapply(theme[vapply(theme, inherits, logical(1), "element_text")], function(x) list(size = x$size, family = x$family))
     # Remove child size/family/face overrides while preserving blanks, margins and angles.
@@ -93,6 +133,10 @@ pp_normalize_production <- function(plot, spec) {
       theme[[nm]]$size <- NULL; theme[[nm]]$family <- NULL; theme[[nm]]$face <- NULL
     }
     p$theme <- theme + pp_production_theme(spec)
+    if(identical(attr(p,'pp_axes'),'none')) p$theme <- p$theme + ggplot2::theme(
+      axis.title=ggplot2::element_blank(),axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),
+      axis.text=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),
+      axis.ticks=ggplot2::element_blank(),axis.line=ggplot2::element_blank())
     for (nm in names(p$theme)) {
       if (grepl("^axis\\.(line|ticks)\\.", nm) && inherits(p$theme[[nm]], "element_line")) {
         p$theme[[nm]]$linewidth <- NULL; p$theme[[nm]]$colour <- NULL
@@ -101,6 +145,7 @@ pp_normalize_production <- function(plot, spec) {
     }
     for (i in seq_along(p$layers)) {
       lr <- p$layers[[i]]
+      if(isTRUE(lr$geom_params$check_overlap)) stop('Production labels may not use check_overlap=TRUE; use pp_direct_labels() or a reviewed explicit label layout.')
       if (any(class(lr$position) %in% c("PositionJitter", "PositionJitterdodge"))) lr$position$seed <- 104729L
       if (any(class(lr$geom) %in% c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel"))) {
         if (!is.null(lr$mapping$size) || !is.null(p$mapping$size)) stop("Mapped text size needs an explicit semantic design; normalization stopped.")
@@ -128,17 +173,33 @@ pp_normalize_production <- function(plot, spec) {
 }
 
 pp_plot_evidence <- function(plot) {
+  if(!inherits(plot,'patchwork') && !is.null(attr(plot,'pp_vector_element'))) return(pp_plot_evidence(attr(plot,'pp_vector_element')))
+  if(grid::is.grob(plot)) {
+    evidence <- attr(plot,'pp_recipe_evidence')
+    if(is.null(evidence)) stop('Vector backend source evidence is missing.')
+    return(list(recipe=evidence,panel=attr(plot,'pp_panel_evidence')))
+  }
   old <- if (exists(".Random.seed", .GlobalEnv, inherits = FALSE)) get(".Random.seed", .GlobalEnv) else NULL
   on.exit(if (is.null(old)) { if (exists(".Random.seed", .GlobalEnv, inherits = FALSE)) rm(".Random.seed", envir = .GlobalEnv) } else assign(".Random.seed", old, .GlobalEnv))
   set.seed(104729L)
   if (inherits(plot, "patchwork")) {
     last <- plot; last$patches <- NULL; class(last) <- setdiff(class(last), "patchwork")
-    return(lapply(c(plot$patches$plots, list(last)), pp_plot_evidence))
+    return(list(panels=lapply(c(plot$patches$plots, list(last)), pp_plot_evidence),recipe=attr(plot,'pp_recipe_evidence'),panel=attr(plot,'pp_panel_evidence')))
   }
   built <- ggplot2::ggplot_build(plot)
   fields <- c("x", "y", "xmin", "xmax", "ymin", "ymax", "xend", "yend", "PANEL", "group", "count", "density", "value", "label")
+  scale_record <- function(s) {
+    breaks <- s$get_breaks()
+    list(aesthetics=s$aesthetics,limits=s$get_limits(),breaks=breaks,labels=s$get_labels(breaks),
+      encoding=if(any(s$aesthetics %in% c('colour','fill','shape','size'))) s$map(breaks) else NULL)
+  }
+  nonposition <- Filter(function(s) !any(s$aesthetics %in% c('x','y')),built$plot$scales$scales)
+  semantics <- list(mapping=lapply(plot$mapping,rlang::as_label),coordinate_limits=plot$coordinates$limits,
+    labels=lapply(plot$labels[intersect(c('x','y','colour','fill','shape','size'),names(plot$labels))],function(x) paste(deparse(x),collapse='')),
+    scales=lapply(nonposition,scale_record),axes=list(x=lapply(built$layout$panel_scales_x,scale_record),y=lapply(built$layout$panel_scales_y,scale_record)))
   list(input = plot$data, layers = lapply(plot$layers, function(lr) lr$data),
-       coordinates = lapply(built$data, function(d) d[intersect(fields, names(d))]))
+       coordinates = lapply(built$data, function(d) d[intersect(fields, names(d))]),
+       semantics=semantics,recipe=attr(plot,'pp_recipe_evidence'),panel=attr(plot,'pp_panel_evidence'))
 }
 
 pp_assert_data_unchanged <- function(before, after, tolerance = 1e-10) {
@@ -148,12 +209,111 @@ pp_assert_data_unchanged <- function(before, after, tolerance = 1e-10) {
   invisible(TRUE)
 }
 
-pp_final_qa <- function(checks, human_review = "pending", mode = "production") {
+pp_check_plot_glyphs <- function(plot,spec) {
+  if(!requireNamespace('systemfonts',quietly=TRUE)||!requireNamespace('svglite',quietly=TRUE)) return(list(status='unverified',reason='Font measurement unavailable'))
+  labels <- character()
+  collect <- function(x) {
+    if(is.character(x)) labels <<- c(labels,x) else if(is.expression(x)||is.call(x)||is.pairlist(x)) invisible(lapply(as.list(x),collect))
+  }
+  device <- tempfile(fileext='.svg');svglite::svglite(device,width=spec$width_mm/25.4,height=spec$height_mm/25.4)
+  on.exit({grDevices::dev.off();unlink(device)})
+  grob <- if(grid::is.grob(plot)) plot else if(inherits(plot,'patchwork')) patchwork::patchworkGrob(plot) else ggplot2::ggplotGrob(plot)
+  walk <- function(g) {
+    if(inherits(g,'text')) collect(g$label)
+    # Repelled labels are generated lazily by makeContent; inspect their text,
+    # without altering or dropping any label or traversing to rewrite styles.
+    if(is.data.frame(g$data) && 'label'%in%names(g$data)) collect(as.character(g$data$label))
+    if(length(g$grobs)) invisible(lapply(g$grobs,walk))
+    if(length(g$children)) invisible(lapply(g$children,walk))
+  }
+  walk(grob)
+  characters <- unique(unlist(strsplit(labels[!is.na(labels)],'',fixed=TRUE)))
+  characters <- characters[!characters%in%c('\n','\r','\t','')]
+  if(!length(characters)) return(list(status='unverified',reason='No inspectable text; final vector text still requires audit'))
+  info <- systemfonts::glyph_info(characters,family=spec$family)
+  missing <- characters[info$index==0L]
+  if(length(missing)) stop('Font ',spec$family,' lacks requested glyphs: ',paste(missing,collapse=' '),'. Supply an explicit reviewed font/design exception; no substitution or label removal was made.')
+  list(status='pass',font=spec$family,unique_glyphs=length(characters))
+}
+
+pp_final_qa <- function(checks, human_review = "pending", mode = "production",
+                        required = c('data_integrity','physical_export','visual_layout'),
+                        reviews = list(), reviewable = character(), evidence_hash = NULL) {
+  if(is.null(names(checks)) && length(checks)) stop('QA checks must be named.')
+  for(name in setdiff(required,names(checks))) checks[[name]] <- 'unverified'
+  raw_checks <- checks
+  resolved <- character()
+  for(name in intersect(names(reviews),reviewable)) {
+    review <- reviews[[name]]
+    valid <- is.list(review) && identical(review$decision,'pass') && nzchar(review$reviewer %||% '') &&
+      nzchar(review$reason %||% '') && !is.null(evidence_hash) && identical(review$evidence_hash,evidence_hash)
+    if(valid && checks[[name]] %in% c('warn','unverified')) { checks[[name]] <- 'pass'; resolved <- c(resolved,name) }
+  }
   values <- unlist(checks, use.names = FALSE)
-  if (any(!values %in% c("pass", "warn", "fail", "unverified"))) stop("Invalid QA state.")
-  status <- if (any(values == "fail") || human_review == "fail") "fail" else if (any(values != "pass") || human_review != "pass" || mode != "production") "warn" else "pass"
+  if (any(!values %in% c("pass", "warn", "fail", "unverified",'not_applicable'))) stop("Invalid QA state.")
+  # Required checks cannot be excused merely by marking them not applicable.
+  for(name in intersect(required,names(checks))) if(identical(checks[[name]],'not_applicable')) checks[[name]] <- 'unverified'
+  values <- unlist(checks,use.names=FALSE)
+  status <- if (any(values == "fail") || human_review == "fail") "fail" else if (!length(values) || any(!values %in% c('pass','not_applicable')) || human_review != "pass" || mode != "production") "warn" else "pass"
   list(status = status, tier = if (status == "pass") "manuscript-ready" else if (status == "fail") "analysis sketch" else "manuscript candidate",
-       checks = checks, human_review = human_review, mode = mode, score_deprecated = TRUE)
+       checks = checks, raw_checks=raw_checks, required=as.list(required),reviewable=as.list(reviewable),
+       resolved_reviews=as.list(resolved),evidence_hash=evidence_hash,reviews=reviews,
+       human_review = human_review, mode = mode, score_deprecated = TRUE)
+}
+
+pp_content_hash <- function(x) {
+  f <- tempfile(); on.exit(unlink(f)); saveRDS(x,f,version=2)
+  unname(tools::md5sum(f))
+}
+
+pp_detector_fingerprint <- function() {
+  paths <- c(file.path(pp_helper_script_dir,c('visual-qa-rendered-image.py','export-audit.py','family-qa-score.py')),
+    file.path(pp_helper_script_dir,'..','references','gold-human-calibration-rules.json'))
+  values <- tools::md5sum(paths); names(values) <- basename(paths)
+  as.list(values)
+}
+
+pp_verify_export_provenance <- function(report, directory) {
+  if(!identical(report$provenance$detectors,pp_detector_fingerprint())) stop('QA detectors/configuration changed; rerun export QA.')
+  hashes <- report$provenance$output_md5
+  if(!length(hashes) || any(names(hashes)!=basename(names(hashes)))) stop('Missing or invalid output hash manifest.')
+  for(name in names(hashes)) {
+    path <- file.path(directory,name)
+    if(!file.exists(path)||!identical(unname(tools::md5sum(path)),hashes[[name]])) stop('Export changed or missing: ',name)
+  }
+  path <- report$provenance$path
+  if(is.null(path)||!file.exists(path)||!identical(unname(tools::md5sum(path)),report$provenance$md5)) stop('Source evidence changed or missing.')
+  invisible(TRUE)
+}
+
+pp_effective_export_qa <- function(output_stem) {
+  if(!requireNamespace('jsonlite',quietly=TRUE)) stop('jsonlite is required.')
+  report <- jsonlite::fromJSON(paste0(output_stem,'_production_qa.json'),simplifyVector=FALSE)
+  pp_verify_export_provenance(report,dirname(output_stem))
+  review_path <- paste0(output_stem,'_review.json')
+  if(!file.exists(review_path)) return(report$final)
+  review <- jsonlite::fromJSON(review_path,simplifyVector=FALSE)
+  if(!identical(review$evidence_hash,report$final$evidence_hash)) stop('Review does not apply to these artifacts.')
+  pp_final_qa(report$final$raw_checks %||% report$final$checks,review$decision,report$render_spec$mode,
+    required=unlist(report$final$required),reviews=review$checks,reviewable=unlist(report$final$reviewable),evidence_hash=report$final$evidence_hash)
+}
+
+pp_review_export <- function(output_stem,decision=c('pass','fail'),reviewer,checks=character(),reason='') {
+  decision <- match.arg(decision)
+  if(!nzchar(reviewer)) stop('Record the actual reviewer.')
+  report <- jsonlite::fromJSON(paste0(output_stem,'_production_qa.json'),simplifyVector=FALSE)
+  pp_verify_export_provenance(report,dirname(output_stem))
+  if(length(checks) && (!nzchar(reason)||length(setdiff(checks,unlist(report$final$reviewable))))) stop('Only listed reviewable checks can be resolved, with a reason.')
+  items <- stats::setNames(lapply(checks,function(id) list(decision=decision,reviewer=reviewer,reason=reason,evidence_hash=report$final$evidence_hash)),checks)
+  path <- paste0(output_stem,'_review.json')
+  record <- list(decision=decision,reviewer=reviewer,reason=reason,checks=items,
+    evidence_hash=report$final$evidence_hash,time=format(Sys.time(),tz='UTC',usetz=TRUE))
+  if(file.exists(path)) {
+    backup <- tempfile(paste0(basename(output_stem),'_review-history-'),tmpdir=dirname(output_stem),fileext='.json')
+    if(!file.copy(path,backup)) stop('Could not preserve the previous review.')
+  }
+  ppp_json(record,path)
+  pp_effective_export_qa(output_stem)
 }
 
 pp_scientific_labels <- function(genus_species, suffix = rep("", length(genus_species))) {
@@ -171,11 +331,34 @@ pp_compose_manuscript <- function(plots, design = NULL, widths = NULL, heights =
                                   species_order = NULL, species_labels = species_order) {
   if (!requireNamespace("patchwork", quietly = TRUE)) stop("patchwork is required for heterogeneous manuscript panels.")
   if (!is.null(species_order)) plots <- pp_shared_rows(plots, species_order, species_labels)
+  nonstandard <- which(vapply(plots,function(p) grid::is.grob(p)||inherits(p,'patchwork'),logical(1)))
+  plots <- lapply(plots,function(p) {
+    if(!grid::is.grob(p) && !inherits(p,'patchwork')) return(p)
+    if(inherits(p,'patchwork')) {
+      p <- unserialize(serialize(p,NULL))
+      p$patches$annotation$tag_levels <- NULL
+      allocated <- attr(p,'pp_backend_spec') %||% attr(p,'pp_render_spec') %||% list()
+      allocated$panel_tags<-FALSE;allocated$expected_tags<-list()
+      attr(p,'pp_backend_spec')<-allocated
+    }
+    wrapped <- patchwork::wrap_elements(full=p)
+    attr(wrapped,'pp_vector_element') <- p
+    wrapped
+  })
   out <- patchwork::wrap_plots(plots, design = design, widths = widths, heights = heights,
                                 ncol = if (is.null(design)) 2 else NULL, guides = "keep")
   attr(out, "pp_expected_panels") <- length(plots)
+  attr(out,'pp_nonstandard_panels') <- nonstandard
   if (!is.null(species_order) && is.character(species_labels)) attr(out, "pp_shared_row_labels") <- species_labels
   out
+}
+
+pp_guide_signature <- function(plot) {
+  if(!inherits(plot,'ggplot') || inherits(plot,'patchwork') || !is.null(attr(plot,'pp_vector_element'))) stop('Shared guide extraction requires supported ggplot scales; keep independent guides for this backend.')
+  built <- ggplot2::ggplot_build(plot)
+  scales <- Filter(function(s) any(s$aesthetics %in% c('colour','fill','shape','size')),built$plot$scales$scales)
+  lapply(scales,function(s) list(aesthetics=s$aesthetics,name=if(is.character(s$name)) s$name else NULL,
+    limits=s$get_limits(),breaks=s$get_breaks(),labels=s$get_labels(),mapping=s$map(s$get_breaks())))
 }
 
 pp_text_role <- function(layer, role) {
@@ -195,9 +378,12 @@ pp_direct_labels <- function(mapping, data, gap_mm = 0.8, ...) {
     stop("Collision-aware direct labels require ggrepel; otherwise supply a manually reviewed label layout. No labels were silently dropped.")
   }
   if (!is.numeric(gap_mm) || length(gap_mm) != 1L || !is.finite(gap_mm) || gap_mm < 0) stop("Invalid physical label clearance.")
-  ggrepel::geom_text_repel(mapping = mapping, data = data, family = "Arial",
+  layer <- ggrepel::geom_text_repel(mapping = mapping, data = data, family = "Arial",
     size = 6.5 / ggplot2::.pt, seed = 104729L, max.overlaps = Inf,
     point.padding = grid::unit(gap_mm, "mm"), box.padding = grid::unit(gap_mm, "mm"), ...)
+  labels <- tryCatch(rlang::eval_tidy(mapping$label,data=data),error=function(e) NULL)
+  if(is.character(labels)) attr(layer,'pp_required_labels') <- unique(labels[!is.na(labels)&nzchar(labels)])
+  layer
 }
 
 pp_apply_rank_labels <- function(plot, categories, strategy, sidecar) {
@@ -271,9 +457,6 @@ pp_read_recipe_data <- function(input_path, recipe_id, mode = "production") {
   manifest <- utils::read.csv(file.path(pp_helper_script_dir, "..", "recipes", "recipe_manifest.csv"), stringsAsFactors = FALSE)
   row <- manifest[manifest$recipe_id == recipe_id, , drop = FALSE]
   if (nrow(row) != 1L) stop("Unknown recipe id.")
-  if (mode != "demo" && row$status %in% c("specialized_reference", "optional_backend_recipe", "reference_recipe", "benchmark_recipe")) {
-    stop("This reference recipe needs a reviewed data-backed adapter; use demo only for simulated previews.")
-  }
   if (!file.exists(input_path)) {
     if (mode != "demo") stop("Input file missing; synthetic fallback is only allowed in explicit demo mode.")
     return(pp_recipe_mock_data(recipe_id))

@@ -1,129 +1,38 @@
-# Install
+# Locked environment and safe installation
 
-This skill is standalone. It does not require the PaperPlotR R package.
+0.7 is a release candidate. Runtime and skill code are separate; plotting never installs or upgrades dependencies.
 
-## One-line Install
+## Runtime
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+Use an ASCII, space-free prefix. The tested exact system lock is macOS ARM64:
+
+```sh
+conda create --prefix "$HOME/.local/share/paperplot/runtime-0.7.0" --file paperplot-skills/conda-osx-arm64.lock
+"$HOME/.local/share/paperplot/runtime-0.7.0/bin/Rscript" --vanilla paperplot-skills/scripts/bootstrap-environment.R "$HOME/.local/share/paperplot/runtime-0.7.0"
+"$HOME/.local/share/paperplot/runtime-0.7.0/bin/python" -m pip install -r paperplot-skills/requirements.lock
+paperplot-skills/scripts/paperplot-run
 ```
 
-If `curl` is unavailable or broken:
+R 4.6.0 / Python 3.13 / Bioconductor 3.23. The pairing follows the [official release table](https://bioconductor.org/about/release-announcements/). Conda manages system libraries; renv restores the separate R library from renv.lock. No installation into system/user R libraries.
 
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
+For other platforms, `conda env create --prefix <prefix> --file paperplot-skills/environment.yml` is a portable bootstrap, not an exact tested platform lock. Validate and record a platform-specific lock before claiming formal support. Override the runtime path with `PAPERPLOT_ENV`.
+
+Supply legally installed Arial Regular/Bold/Italic. No font files are distributed. Doctor reports package versions, exact font/interpreter paths and missing capabilities. Preview/demo cannot certify production typography.
+
+## Skill installation
+
+After validating the runtime, from a reviewed clean checkout:
+
+```sh
+PAPERPLOT_SOURCE_DIR="$PWD/paperplot-skills" PAPERPLOT_OVERWRITE=1 sh install-paperplot-skill.sh
 ```
 
-Pinned release install:
+Default destination is `~/.agents/skills/paperplot-skills`. Existing directories or broken links are backed up. Validate the staged runtime before switching; then execute installed commands and actual PDF/SVG/PNG exports from outside the checkout. Failed post-switch checks restore the old installation.
 
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
-```
+Backups live in the sibling `~/.agents/skill-backups/`, outside skill discovery, so an old backup cannot be loaded as a duplicate skill. `PAPERPLOT_BACKUP_ROOT` may override this location on the same filesystem.
 
-Restart Codex after installation.
+`installation.json` records version, commit, dirty-source count, environment and code/lock hashes. Remote `PAPERPLOT_REF=<reviewed commit>` is resolved and downloaded to staging. Inspect the installer before execution.
 
-By default this installs the runtime profile: `SKILL.md`, `agents/`,
-`references/`, `templates/`, and core scripts. It omits development reports,
-examples, pressure scenarios, and dev scripts.
+`PAPERPLOT_PROFILE=runtime` includes documented user commands. `full` also includes developer tests/reports. `PAPERPLOT_DEST` changes the skills root; invalid profiles/names fail before replacement.
 
-To replace an existing install:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
-```
-
-To install the full development/validation bundle:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_PROFILE=full sh
-```
-
-Run full validation from a source checkout or a `PAPERPLOT_PROFILE=full`
-install; the default runtime profile is intended for ordinary agent use.
-
-## Skill Links (Codex + Claude Code)
-
-Link this directory into the agent skill directories. Run from inside the
-`paperplot-skills/` directory so the path resolves relative to the repo —
-do not hardcode a machine-specific absolute path.
-
-```bash
-SKILL_DIR="$(pwd)"   # run from the paperplot-skills/ directory
-mkdir -p ~/.codex/skills ~/.claude/skills
-ln -sfn "$SKILL_DIR" ~/.codex/skills/paperplot-skills
-ln -sfn "$SKILL_DIR" ~/.claude/skills/paperplot-skills
-```
-
-## Dependencies
-
-### R (required)
-```r
-install.packages(c("ggplot2", "dplyr", "tidyr", "readr",
-                   "scales", "patchwork", "cowplot", "ggrepel"))
-```
-
-### R (recommended for robust raster/font export)
-`ragg`, `systemfonts`, `textshaping` — used for the `ragg` PNG/TIFF device and
-font resolution. Without them the skill falls back to the default device.
-```r
-install.packages(c("ragg", "systemfonts", "textshaping"))
-```
-
-### Python (required for visual QA)
-```bash
-python3 -m pip install pillow numpy pandas pypdf
-```
-
-### System tools
-- `pdftoppm`, `pdftotext` (poppler) — PDF rasterization / text extraction.
-- `magick` (ImageMagick) — optional; preferred SVG rasterizer. A built-in
-  Pillow fallback runs when it is absent, so SVG QA still works without it.
-- `tesseract` — optional OCR (`--ocr auto` degrades gracefully when missing).
-
-On conda systems (conda-forge):
-```bash
-# Use conda, mamba, or micromamba depending on the local environment.
-micromamba install -c conda-forge \
-  r-ggplot2 r-dplyr r-tidyr r-readr r-scales r-patchwork r-cowplot r-ggrepel \
-  r-ragg r-systemfonts r-textshaping poppler imagemagick
-```
-
-## Fonts
-
-The default theme targets Arial/Helvetica. `pp_resolve_family()` automatically
-falls back to Liberation Sans / DejaVu Sans / generic `sans` when Arial is not
-installed, and PDF export uses `cairo_pdf` on non-macOS so the chosen font
-renders without the PostScript-font-database error. No manual font setup is
-required; installing `msttcorefonts` (real Arial) is optional for exact fidelity.
-
-## Validate
-
-From the repository-local skill parent directory:
-
-```bash
-PAPERPLOT_RSCRIPT=${PAPERPLOT_RSCRIPT:-Rscript}
-PAPERPLOT_PYTHON=${PAPERPLOT_PYTHON:-python3}
-
-"$PAPERPLOT_RSCRIPT" paperplot-skills/scripts/validate-skill.R
-"$PAPERPLOT_RSCRIPT" paperplot-skills/scripts/smoke-test-templates.R
-"$PAPERPLOT_RSCRIPT" paperplot-skills/scripts/run-pressure-scenarios.R
-"$PAPERPLOT_PYTHON" paperplot-skills/scripts/run-visual-pressure-scenarios.py
-"$PAPERPLOT_PYTHON" paperplot-skills/scripts/validate-qa-coverage.py
-```
-
-Before formal plotting run `Rscript paperplot-skills/scripts/check-environment.R`.
-The check reports missing tools without installing them. Formal figures require
-Arial Regular/Bold/Italic, JSON, vector/raster export and Python/PDF inspection.
-Preview remains possible without full QA, but is never certified as a final figure.
-The runtime installer includes the production modules, recipe engine and
-environment/export auditing scripts. See `references/production-render-contract.md`.
-It also installs `figure-project.R`, `create-example-project.R` and the project
-state/build modules. Project mode requires jsonlite and patchwork; it stores
-research projects outside the Skill installation. See `references/figure-project-workflow.md`.
-
-Set `PAPERPLOT_RSCRIPT` or `PAPERPLOT_PYTHON` when the default `Rscript` /
-`python3` on `PATH` is not the environment with the required packages.
-
-`validate-qa-coverage.py` is a self-audit: it fails if any visual-QA risk code
-lacks a remediation entry (or explicit informational exemption) or points at a
-missing reference doc — keeping the audit/how-to-fix mapping from rotting.
+Link other configured agent entry points to the stable .agents installation, not the development checkout. Preserve existing real directories first. Verify installed `scripts/paperplot-run` and `scripts/install-self-test.R` from another directory and restart the agent to refresh discovery.

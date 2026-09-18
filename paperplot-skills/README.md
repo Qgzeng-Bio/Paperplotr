@@ -1,103 +1,13 @@
-# paperplot-skills
+# PaperPlot Skills — standalone 0.7.0 RC
 
-`paperplot-skills` is a standalone Codex skill for publication-ready scientific figures in R/ggplot2.
+Scientific plotting without PaperPlotR: real input contracts, explicit statistics, dedicated vector backends, physical exports and revision-bound QA.
 
-It does not depend on the PaperPlotR R package. The reusable plotting standards live in `scripts/paperplot_helpers.R`.
+[Install](INSTALL.md) · [Usage](USAGE.md) · [Agent instructions](SKILL.md) · [Release acceptance](references/release-acceptance.md)
 
-Production uses final-size Arial typography: 6-8 pt ordinary text and 12 pt bold
-A/B/C/D tags, 180 mm main-composite width or 89 mm single-column width.
-The IGS case uses 183 x 105 mm. Run `scripts/check-environment.R` first;
-see [the production contract](references/production-render-contract.md) for
-data preservation, explicit demo mode, physical export audits and final QA.
-No missing data are synthesized in production. File smoke-test success is
-reported separately from visual acceptance and human review.
+The inventories are [recipe_manifest.csv](recipes/recipe_manifest.csv) and [template_manifest.csv](templates/template_manifest.csv). The generated [recipe catalog](references/code-recipes/recipe-library.md) lists handlers, schemas and backends; historical status labels are not acceptance results.
 
-## Main figure projects
+Workflow: input → explicit analysis/results → confirmed layout → panels → physical export → scientific/visual QA → bound review. A successful build or demo alone is never manuscript-ready.
 
-Use [figure project mode](references/figure-project-workflow.md) to plan a whole
-figure, build panels independently, revise only one panel and assemble objects
-at their final physical allocation. Projects retain immutable revisions and
-track data, code, layout and shared-style changes. Start with a layout sketch,
-confirm it, then work panel by panel. The four operations are available through
-`scripts/figure-project.R`; no UI or PaperPlotR package installation is needed.
+[Production contract](references/production-render-contract.md) · [Figure projects](references/figure-project-workflow.md)
 
-Generate a simulated walkthrough with:
-
-```sh
-Rscript paperplot-skills/scripts/create-example-project.R figures/example --run-demo
-```
-
-The example contains artificial data and scripted test confirmations, not
-scientific results or user approval. Real manuscript acceptance still needs the
-original inputs and review of the assembled figure.
-
-## Install
-
-One-line install into Codex:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
-```
-
-If `curl` is unavailable or broken:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | sh
-```
-
-Pinned release install:
-
-```bash
-wget -qO- https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/v0.1.0/install-paperplot-skill.sh | PAPERPLOT_REF=v0.1.0 sh
-```
-
-Restart Codex after installation.
-
-The one-line installer defaults to the runtime profile: `SKILL.md`, `agents/`,
-`references/`, `templates/`, and core scripts. Use `PAPERPLOT_PROFILE=full` for
-development reports, examples, pressure scenarios, and dev scripts.
-
-If the skill already exists, replace it explicitly:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Qgzeng-Bio/Paperplotr/main/install-paperplot-skill.sh | PAPERPLOT_OVERWRITE=1 sh
-```
-
-## What It Provides
-
-- ggplot2 templates for common scientific plots
-- GraphPad-like palettes
-- clean manuscript theme defaults
-- figure and panel size presets
-- versioned PDF and PNG export
-- output validation
-- sidecar notes
-- visual QA gates
-- pressure scenarios for agent behavior
-
-## Validate
-
-Run from the full source checkout or a `PAPERPLOT_PROFILE=full` install. From
-the directory that contains `paperplot-skills/`:
-
-```bash
-Rscript paperplot-skills/scripts/validate-skill.R
-Rscript paperplot-skills/scripts/smoke-test-templates.R
-```
-
-## Dependency Policy
-
-Required:
-
-- R
-- ggplot2
-
-Not required:
-
-- PaperPlotR
-- patchwork
-- ragg
-- svglite
-- cli
-- rlang
-- scales
+Actual RC test results and remaining gates are recorded in the repository's existing HANDOFF.md. Private IGS/main-figure acceptance requires the user's original material.

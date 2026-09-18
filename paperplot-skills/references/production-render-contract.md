@@ -1,103 +1,35 @@
-# Production render contract (standalone 0.5.0)
+# Production render contract — 0.7 RC
 
-## Start with the final canvas
+## One physical specification
 
-`pp_render_spec()` is the production authority. Main composites use 180 x 120 mm;
-single-column figures use 89 x 62 mm. Height may be explicitly changed; above
-170 mm, consider a split instead of shrinking text. `case = "igs"` uses 183 x
-105 mm. Explicit `render_spec` values override case/default values. When no
-render_spec is provided, legacy save-loop width/height overrides are interpreted
-in cm. Production templates pass an explicit spec and no longer derive final
-size from source image dimensions. Low-level pp_finalize remains compatible.
+`pp_render_spec()` controls layout, label budget, normalization, export and metadata. Defaults: 89×62 mm single; 180×120 mm main; `case="igs"` 183×105 mm; `case="manhattan"` 180×70 mm. An explicit exception belongs in the spec. Legacy width/height in cm must agree with it, otherwise fail.
 
-All production fonts are Arial: body/axis/panel titles 7 pt regular;
-species 6.5 pt (scientific name italic; suffix roman); annotation 6.5 pt;
-ticks, legends, captions 6 pt; final A/B/C/D tags 12 pt bold upright.
-`text_pt = list(axis_title = 8)` records an explicit user override.
-Mapped text size is not silently overwritten: declare its scientific meaning
-and implement an explicit reviewed adapter. `pp_text_role(layer, "species")`
-can identify a text layer. `pp_scientific_labels(names, suffixes)` preserves
-mixed italic/roman species labels. Existing large text is normalized on a copy.
+Arial Regular/Bold/Italic; body/titles 7 pt, species/annotations 6.5 pt, ticks/legend/caption 6 pt, panel tags 12 pt bold. Native vector backends apply these at rendering. `pp_theme()` has no global side effects. Normalization does not change original plots or scientific mappings. Network/tree layout coordinates do not acquire misleading numeric axes.
 
-Canvas/spacing are mm; typography and stroke specifications are pt. The adapter
-converts ggplot text and historical linewidth units. Do not paste matplotlib
-scatter area values into a ggplot size argument. Validate the resulting vector
-dimensions instead of assuming backend numeric values are interchangeable.
+The isolated runtime and locks are described in ../INSTALL.md. A missing dependency or font cannot produce formal success. PDF/SVG stay vector; PNG is 600 dpi. SVG editable text references Arial but does not embed the font.
 
-## Environment and output
+## Source evidence
 
-Run `Rscript paperplot-skills/scripts/check-environment.R` before production.
-It reports capabilities and never installs dependencies. Formal output needs
-Arial Regular/Bold/Italic, ggplot2, systemfonts, jsonlite, ragg, svglite, Python
-Pillow/pypdf and Poppler. Heterogeneous composites additionally need patchwork.
-Missing Arial prevents formal export. `mode = "preview"` may render a fallback
-preview, but cannot certify Arial or manuscript readiness. `mode = "demo"`
-labels simulated tests visibly. Neither mode can become manuscript-ready.
+Input contracts run before drawing. `_data_evidence.rds` preserves original/validated tables, parameters, statistics, coordinates, order, labels and trained encoding scales. Style retries compare evidence. Reversed colour meanings, altered axis units, dropped categories or changed intervals are scientific changes, not cosmetics.
 
-Default production output is white RGB PDF/SVG plus 600 dpi PNG. Inspect PDF
-font embedding; SVG text elements retain an Arial dependency and do not imply
-embedded fonts. Never distribute proprietary font files in this repository.
+`pp_igs_figure()` consumes original species/suffix/n/bin percentages/median/max, preserves row order and validates sums. Synthetic IGS tests do not accept the user's real figure.
 
-## Protect scientific information
+## Candidate history and QA
 
-Missing input/required recipe roles are errors. Only explicit demo mode may
-use mock data. Specialized reference recipes require reviewed adapters and
-cannot fabricate a real network/tree/genome model. Recipe templates build
-their mapped tables from real columns rather than retaining mock columns.
+`pp_save_all_with_qa_loop()` saves each candidate's PDF/SVG/PNG and QA in iteration folders. At most two theme repairs; reject a candidate with no verified improvement and deliver the selected version. Overwrite explicitly archives prior QA; originals are not silently discarded.
 
-The renderer saves `_data_evidence.rds` with source plot tables, layer tables,
-factor attributes and built scientific coordinates, and checks equivalence
-after style changes with numeric tolerance 1e-10. Stochastic jitter is fixed
-on a plot copy. This verifies styling preservation, not the correctness of
-an upstream statistical analysis: compare original scripts/tables as a separate
-scientific review. Do not auto-normalize proportions or truncate intervals.
+Exact checks: actual page size (0.1 mm), typography (0.2 pt), embedded PDF fonts, editable SVG text, tags, pixel dimensions and source/file hashes. Failures block approval.
 
-`pp_igs_figure()` accepts species, suffix, n, p_ge95, p90_95, p85_90, p80_85,
-p_lt80, median, max. Percentages must sum to 100; input row order is preserved.
-It accepts an optional original_annotations table and stops on disagreements.
-Screenshots are not a substitute for the original table. Its species rows,
-single n header, colors, 0.95 threshold and text hierarchy have a synthetic
-contract test; the user's real IGS figure is NOT yet accepted.
+Heuristics: raster density, estimated text boxes and ambiguous marks. These yield located review tasks, not proof of correctness. SVG ancestors, inherited styles and affine transforms are parsed; unsupported geometry/font/transform evidence remains unverified. Scientific interpretation and unsupported geometry need item-level inspection.
 
-## Layout and evidence
+The required-check set is explicit. Empty/missing checks cannot pass. Non-applicable checks need an actual reason. Scores are diagnostic only.
 
-Use facets for homogeneous panels. Use `pp_compose_manuscript(plots, design,
-widths, heights)` for heterogeneous panels; design strings use patchwork areas.
-`pp_shared_rows()` shares a declared discrete species order. Do not force an
-unjustified primary-panel size ratio. Use dedicated guides for different
-semantics. Vertical labels need a height budget; horizontal labels need width.
-`pp_apply_rank_labels()` changes visible tick text and writes a real key without
-changing row values or order. Rebuild nonstandard annotation layers explicitly.
+## Valid review
 
-The export audit checks actual PDF/SVG page size (0.1 mm), font sizes (0.2 pt),
-Arial, embedding and editable text, PNG dimensions and color mode. Declared
-shared species labels are measured in SVG (0.2 mm). It also reports text/circle
-clearance candidates with bounding boxes; arbitrary paths, curved labels and
-complex geometries still need human review. Unknown evidence is never pass.
+Use `pp_effective_export_qa(stem)` or project status; they verify the current detector/config and files. Do not trust cached JSON pass alone.
 
-The existing raster QA is heuristic, even in strict mode. OCR defaults to auto;
-production enables strict Nature/detail requests. Known detector exit 2 means
-a detected failure, not an unavailable engine. Up to two located machine-fix
-attempts are checked and rejected if they worsen the result. Y-axis crowding
-must not trigger an X-axis rotation. Unsupported changes become agent tasks.
+`pp_review_export()` and `pp_project_review()` bind reviewer, reason and named check conclusions to the exact evidence hash and revision. They can resolve listed heuristic/unsupported-geometry/source-review items, never a precise failure. Only actual human review may satisfy the release human-review gate.
 
-## One final decision
+Final states: fail for a precise error; warn/manuscript candidate for missing, stale or unreviewed evidence; pass/manuscript-ready only for valid required checks and bound review. A panel's later rejection immediately invalidates overall approval.
 
-`_production_qa.json`, metadata and `_delivery.md` use `pp_final_qa()`:
-hard failure -> fail/analysis sketch; incomplete or warned evidence/pending
-human review -> manuscript candidate; all required checks and human review
-pass -> manuscript-ready. Legacy scores are deprecated compatibility fields.
-File smoke checks use `validate-figure-output.R <dir> --smoke`; they report
-generation only. Without --smoke, incomplete final QA fails acceptance.
-
-Reports include render configuration, detector hash, output hashes and data
-evidence hash. Run the export loop again after detector/config/input changes;
-do not reuse a historical pass. `_agent_tasks` in metadata lists unresolved
-locations/advice; no automatic score can establish scientific message quality.
-
-## Acceptance still pending
-
-First validate mechanisms with explicitly simulated fixtures. Then use original
-IGS data/scripts and a separate unseen 4-6-panel manuscript figure for review.
-Preserve old outputs and document improvements and regressions. These real
-case inputs are not currently available; synthetic tests do not close that gate.
+Schema-1 approvals require migration and fresh validation. Detector-only changes expire QA, not cached data builds; changed scientific inputs need explicit scientific rebuilding.

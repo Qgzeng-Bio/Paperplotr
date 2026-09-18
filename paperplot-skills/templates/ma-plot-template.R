@@ -21,9 +21,9 @@ if (!file.exists(input_csv)) stop("Input CSV not found: ", input_csv, call. = FA
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 df <- read.csv(input_csv, check.names = FALSE)
 missing_cols <- setdiff(c(gene_col, base_mean_col, log2fc_col, padj_col), names(df)); if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
-df[[base_mean_col]] <- pmax(as.numeric(df[[base_mean_col]]), 0)
-df[[log2fc_col]] <- as.numeric(df[[log2fc_col]])
-df[[padj_col]] <- as.numeric(df[[padj_col]])
+df[[base_mean_col]] <- pp_numeric_field(df[[base_mean_col]], base_mean_col, minimum=0)
+df[[log2fc_col]] <- pp_numeric_field(df[[log2fc_col]], log2fc_col)
+df[[padj_col]] <- pp_numeric_field(df[[padj_col]], padj_col)
 df$log10_base_mean <- log10(df[[base_mean_col]] + 1)
 df$significant <- ifelse(df[[padj_col]] <= padj_threshold, "significant", "not_significant")
 key_idx <- order(df[[padj_col]], -abs(df[[log2fc_col]]))[seq_len(min(8, nrow(df)))]
@@ -50,15 +50,10 @@ design_brief <- pp_design_brief(scientific_message = scientific_message, figure_
 design_plan <- pp_design_plan(chart_family = "ma_plot", figure_role = figure_role, layout_plan = list(type = "single_panel"), label_strategy = label_strategy, palette_plan = list(color_role = "adjusted significance"), statistical_plan = list(padj_threshold = padj_threshold), visible_simplifications = design_brief$acceptable_simplifications, risks = c("low abundance estimates may be noisy"))
 
 # Overlap-safe gene labels (WP4): ggrepel when available, legacy fallback.
-gene_label_layer <- if (requireNamespace("ggrepel", quietly = TRUE)) {
-  ggrepel::geom_text_repel(
-    data = key_df, ggplot2::aes(label = .data[[gene_col]]),
-    size = pp_text_size("label"), color = "#1D1D1B", max.overlaps = Inf,
-    segment.size = pp_line_width("grid_major"), min.segment.length = 0, seed = 42
-  )
-} else {
-  ggplot2::geom_text(data = key_df, ggplot2::aes(label = .data[[gene_col]]), size = pp_text_size("label"), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B")
-}
+gene_label_layer <- pp_direct_labels(
+  ggplot2::aes(label = .data[[gene_col]]), data = key_df,
+  color = "#1D1D1B", segment.size = pp_line_width("grid_major"), min.segment.length = 0
+)
 
 plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = significant)) +
   geom_hline(yintercept = 0, linewidth = pp_line_width("reference"), color = "#4D4D4A") +
@@ -71,7 +66,7 @@ plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = sig
 qa_results <- pp_qa_summary(pp_qa_preflight(figure_spec, metric_spec), pp_qa_design_preflight(design_brief, design_plan, visual_budget), pp_qa_label_strategy(label_strategy, figure_role), pp_qa_result("bio_ma_semantics", "pass", "Abundance and fold change are separated on x/y axes."))
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
-outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot)), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
+outputs <- pp_save_all_with_qa_loop(plot, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(plot), panel_tags = inherits(plot, "patchwork")), preset = figure_spec$output_preset, qa_context = list(family = figure_spec$plot_type), overwrite = FALSE)
 invisible(lapply(outputs, pp_assert_output))
 pp_write_notes(notes_path, figure_id = figure_id, input_path = input_csv, output_files = outputs, preset = figure_spec$output_preset, design_decisions = c("MA plot separates abundance from fold-change.", "Only selected top genes are labeled."), qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "), remaining_issues = "Confirm whether low-count filtering was applied upstream.", figure_spec = figure_spec, metric_spec = metric_spec, layout = design_plan$layout_plan, palette = design_plan$palette_plan, label_strategy = label_strategy, data_summary = data_profile, design_brief = design_brief, design_plan = design_plan)
 pp_write_metadata(metadata_path, figure_spec, metric_spec, outputs, layout = design_plan$layout_plan, palette = design_plan$palette_plan, qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)), data_summary = data_profile, design_brief = design_brief, design_plan = design_plan, data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy, palette_plan = design_plan$palette_plan, statistical_plan = design_plan$statistical_plan)

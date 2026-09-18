@@ -41,6 +41,43 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result["checks"]["svg_text_mark_clearance"], "warn")
         self.assertTrue(result["details"]["svg_text_mark_clearance"]["collisions"])
 
+    def test_required_label_loss_is_a_hard_failure(self):
+        self.config['expected_labels'] = ['Gene42']
+        self.assertEqual(self.svg(text='not Gene42',size=6)['checks']['svg_required_labels'], 'fail')
+        self.assertEqual(self.svg(text='Gene42',size=6)['checks']['svg_required_labels'], 'pass')
+
+    def test_inherited_transform_and_missing_tags(self):
+        self.config['n_panels'] = 4
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'transformed.svg'
+            path.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="180mm" height="120mm" viewBox="0 0 510.236 340.157">'
+                            '<g transform="translate(20,20) scale(4)" font-family="Arial" font-size="6px">'
+                            '<text x="10" y="10" textLength="8">small</text></g></svg>')
+            result = module.audit([path], self.config)
+            self.assertEqual(result['checks']['svg_typography'], 'fail')
+            self.assertEqual(result['checks']['svg_panel_tags'], 'fail')
+
+    def test_inherited_font_and_supported_clearance(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'clean.svg'
+            path.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="180mm" height="120mm" viewBox="0 0 510.236 340.157">'
+                            '<g font-family="Arial" font-size="6px" transform="translate(20,20)">'
+                            '<text x="10" y="10" textLength="8">clean</text></g></svg>')
+            result = module.audit([path], self.config)
+            self.assertEqual(result['checks']['svg_typography'], 'pass')
+            self.assertEqual(result['checks']['svg_text_mark_clearance'], 'pass')
+            self.assertEqual(result['checks']['svg_text_text_clearance'], 'pass')
+
+    def test_inherited_anchor_and_relative_tspan(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'anchor.svg'
+            path.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="180mm" height="120mm" viewBox="0 0 510.236 340.157">'
+                            '<g font-family="Arial" font-size="6px" text-anchor="end"><text x="3" y="10" textLength="10">edge</text></g></svg>')
+            self.assertEqual(module.audit([path], self.config)['checks']['svg_text_bounds'], 'warn')
+            path.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="180mm" height="120mm" viewBox="0 0 510.236 340.157">'
+                            '<text x="50" y="50" font-family="Arial" font-size="6px"><tspan textLength="8">relative</tspan></text></svg>')
+            self.assertEqual(module.audit([path], self.config)['checks']['svg_text_bounds'], 'unverified')
+
     def test_shared_rows_and_repeated_n(self):
         self.config.update(n_panels=2, shared_row_labels=["Species a"], case="igs")
         with tempfile.TemporaryDirectory() as folder:

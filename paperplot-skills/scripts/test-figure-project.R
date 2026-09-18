@@ -54,6 +54,24 @@ for (id in ids[c(1,3,4)]) {
 }
 check(revision$result$geometry$status=="measured",paste("Actual geometry",revision$result$geometry$reason))
 check(length(revision$result$geometry$context_previews)==4,"Context previews from final geometry")
+local({
+  detector <- pp_detector_fingerprint
+  assign('pp_detector_fingerprint',function() c(detector(),list(regression_fixture='new detector')),envir=.GlobalEnv)
+  on.exit(assign('pp_detector_fingerprint',detector,envir=.GlobalEnv))
+  state <- pp_project_status(project)
+  check(isTRUE(state$build_fresh) && !isTRUE(state$qa_fresh),'Detector-only change expires QA, not data builds')
+  fails(pp_project_review(project,'figure','pass','test user'),'Cannot approve stale detector evidence')
+})
+local({
+  state <- pp_project_status(project);assembly<-state$assemblies[[state$current_assembly]]
+  path<-file.path(project,assembly$dir,'figure.svg')
+  original_bytes<-readBin(path,'raw',n=file.info(path)$size)
+  on.exit(writeBin(original_bytes,path))
+  writeBin(c(original_bytes,charToRaw('<!--tampered-->')),path)
+  state <- pp_project_status(project)
+  check(isTRUE(state$build_fresh) && !isTRUE(state$qa_fresh),'Replacing an export expires approval without rebuilding input data')
+  fails(pp_project_review(project,'figure','pass','test user'),'Cannot approve replaced exports')
+})
 pp_project_review(project,"A","fail","test user")
 fails(pp_project_assemble(project,final=TRUE),"Failed panel review blocks final assembly")
 fails(pp_project_review(project,"figure","pass","test user"),"Failed panel review blocks figure approval")
