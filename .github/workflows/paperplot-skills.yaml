@@ -36,11 +36,19 @@ jobs:
             local::.
             any::patchwork
 
+      - name: Install and verify Arial dependencies
+        run: |
+          sudo apt-get update
+          echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | sudo debconf-set-selections
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y poppler-utils fontconfig ttf-mscorefonts-installer
+          sudo fc-cache -f
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Regular')" = 'Arial|Regular'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Bold')" = 'Arial|Bold'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Italic')" = 'Arial|Italic'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Bold Italic')" = 'Arial|Bold Italic'
+
       - name: Validate skill structure
         run: Rscript paperplot-skills/scripts/validate-skill.R
 
       - name: Smoke test R templates
         run: Rscript paperplot-skills/scripts/smoke-test-templates.R
-        env:
-          PAPERPLOTR_SMOKE_BASE_DEVICES: "true"
-          PAPERPLOTR_SMOKE_BASE_FAMILY: "sans"

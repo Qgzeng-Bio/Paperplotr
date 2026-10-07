@@ -77,7 +77,7 @@ design_plan <- pp_design_plan(chart_family = "bio_genome_quality_small_multiples
 color_aes <- if (group_col %in% names(df)) aes(color = .data[[group_col]]) else aes()
 plot <- ggplot(df, aes(x = rank_index, y = .data[[value_col]])) +
   geom_point(color_aes, size = 1.7, alpha = 0.88) +
-  geom_text(data = key_df, aes(label = .data[[sample_col]]), size = pp_text_size_mm(8), vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D") +
+  geom_text(data = key_df, aes(label = .data[[sample_col]]), family = "Arial", size = pp_text_size_mm(8), vjust = -0.75, check_overlap = TRUE, color = "#2F2F2D") +
   facet_wrap(~facet_label, scales = "free_y", nrow = layout$nrow) +
   labs(x = "Sample rank index", y = NULL, color = "Group") +
   pp_theme(base_size = 9) +

@@ -123,12 +123,30 @@ check_notes <- function(notes_path) {
   if (length(missing) > 0) paste("notes missing:", paste(missing, collapse = ", ")) else NA_character_
 }
 
+check_pdf_arial <- function(pdf_path) {
+  pdffonts <- unname(Sys.which("pdffonts"))
+  if (!nzchar(pdffonts)) return("pdffonts is required for Arial smoke validation")
+  output <- suppressWarnings(system2(pdffonts, pdf_path, stdout = TRUE, stderr = TRUE))
+  status <- attr(output, "status"); if (is.null(status)) status <- 0L
+  if (status != 0L) return(paste("pdffonts failed:", paste(tail(output, 4L), collapse = " | ")))
+  separator <- which(grepl("^-{4,}", output))
+  rows <- if (length(separator) > 0L) output[seq.int(separator[[1L]] + 1L, length(output))] else character()
+  rows <- rows[nzchar(trimws(rows))]
+  font_names <- sub("[[:space:]].*$", "", trimws(rows))
+  if (length(font_names) == 0L) return("PDF contains no inspectable fonts")
+  non_arial <- font_names[!grepl("(?:^|\\+)Arial(?:MT|-|$)", font_names, perl = TRUE)]
+  if (length(non_arial) > 0L) return(paste("PDF contains non-Arial fonts:", paste(unique(non_arial), collapse = ", ")))
+  embedded <- grepl("[[:space:]]yes[[:space:]]+(?:yes|no)[[:space:]]+(?:yes|no)[[:space:]]+[0-9]+[[:space:]]+[0-9]+[[:space:]]*$", rows, perl = TRUE)
+  if (any(!embedded)) return(paste("PDF contains non-embedded Arial fonts:", paste(font_names[!embedded], collapse = ", ")))
+  NA_character_
+}
+
 check_metadata_contract <- function(metadata_path, bioinformatics = FALSE) {
   metadata <- paste(readLines(metadata_path, warn = FALSE), collapse = "\n")
   required <- c(
     "\"design_brief\"", "\"design_plan\"", "\"label_strategy\"", "\"visual_budget\"",
     "\"cognitive_load_review\"", "\"journal_profile_snapshot\"", "\"export_geometry\"",
-    "\"target_text_pt\": 9", "\"compact_text_pt\": 8", "\"panel_label_pt\": 12", "\"min_text_pt\": 6"
+    "\"font_family\": \"Arial\"", "\"target_text_pt\": 9", "\"compact_text_pt\": 8", "\"panel_label_pt\": 12", "\"min_text_pt\": 6"
   )
   if (bioinformatics) required <- c(required, "\"bioinformatics_validation\"", "\"status\": \"not_recorded\"", "\"plotting_data_path\"")
   missing <- required[!vapply(required, function(pattern) grepl(pattern, metadata, fixed = TRUE), logical(1))]
@@ -176,6 +194,10 @@ run_template <- function(template_name, work_root) {
 
   for (files in list(pdf_files, png_files, notes_files, metadata_files, qa_files)) {
     if (length(files) > 0 && any(file.info(files)[["size"]] <= 0, na.rm = TRUE)) problems <- c(problems, "empty output file")
+  }
+  if (length(pdf_files) > 0) {
+    font_problem <- check_pdf_arial(pdf_files[[1]])
+    if (!is.na(font_problem)) problems <- c(problems, font_problem)
   }
   if (length(notes_files) > 0) {
     notes_problem <- check_notes(notes_files[[1]])

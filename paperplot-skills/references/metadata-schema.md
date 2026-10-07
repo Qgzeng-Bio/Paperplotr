@@ -34,7 +34,7 @@ Each template writes `*_metadata.json` using `pp_write_metadata()`.
 - `data` records input size and columns.
 - `metrics` records labels, units, directions, transforms, and roles.
 - `ordering` records sample/group/rank order.
-- `style.palette` records palette type and name; style records 9 pt target, 8 pt compact text, 12 pt panel label, and 6 pt absolute floor.
+- `style.font_family` must equal `Arial`; `style.palette` records palette type and name; style records 9 pt target, 8 pt compact text, 12 pt panel label, and 6 pt absolute floor. PaperPlot 0.5.1+ does not permit font substitution.
 - `journal_profile` names a profile from `journal-specs-matrix.md`; `journal_profile_snapshot` records scope, source URL/status, checked date, and width/height envelope. Final submission still verifies the current official guide.
 - `layout` records nrow, ncol, panel spec, width, and height when relevant.
 - Multi-panel work records `panel_hierarchy`, layout budget/shared-guide decisions, and any cognitive-load exception in the design plan or sidecars.

@@ -85,6 +85,7 @@ nlr_plot <- ggplot(nlr, aes(x = High_NLR_total, y = Sample)) +
   geom_text(
     data = nlr[top_label, , drop = FALSE],
     aes(label = High_NLR_total),
+    family = "Arial",
     hjust = -0.2,
     size = pp_text_size_mm(8),
     colour = "#2D2D2D"

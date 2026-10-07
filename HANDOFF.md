@@ -1,11 +1,62 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-08-12 (review-first contract hardening; not installed or published)
+Last updated: 2026-08-13 (Arial-only font contract in source; runtime sync pending)
 Previous release update: 2026-06-11 (v0.1.0 public release + local Codex install)
 Previous major update: 2026-06-10 (Linux server deployment + portability/QA branch)
 Earlier Mac update: 2026-05-19 (pattern-library upgrade — see sections below)
 
 ---
+
+## 2026-08-13 — Arial-only Figure Font Contract (Source Validated; Runtime Sync Pending)
+
+User decision: all PaperPlot figure text must use **Arial**, not an
+Arial/Helvetica-equivalent fallback.
+
+Implementation in the current uncommitted source diff:
+
+- `paperplot_helpers.R` is `standalone-0.5.1`; `pp_resolve_family()` now requires
+  Arial Regular, Bold, Italic, and Bold Italic and fails explicitly when the
+  family is unavailable.
+- `pp_theme()` rejects a non-Arial `base_family`; `pp_save_plot()` enforces Arial
+  across the ggplot theme and text/label layers before export.
+- Metadata records `style.font_family="Arial"`; the output validator requires
+  that contract for 0.5.1+ output and uses Poppler `pdffonts` in manuscript-ready
+  mode to reject non-Arial or non-embedded PDF fonts.
+- Templates with direct `geom_text()` calls explicitly set `family="Arial"`;
+  smoke tests inspect every generated PDF font table.
+- CI installs Microsoft core fonts, confirms `fc-match Arial`, and tests that
+  Helvetica substitution is rejected.
+- This server has the four required Arial faces under
+  `~/.local/share/fonts/msttcorefonts/`; a Cairo probe embedded `ArialMT` and
+  `Arial-BoldMT` successfully.
+
+Validation completed:
+
+- helper resolution and non-Arial rejection: PASS;
+- real Cairo PDF probes, including character-based `shape=95`: embedded Arial
+  only, PASS;
+- contract regression, including forged font metadata and a real Helvetica PDF
+  negative fixture: PASS at
+  `/tmp/paperplot-contract-regressions-20260813-111754`;
+- 20-template smoke: **20/20 PASS**, with each PDF inspected by `pdffonts` and
+  containing only embedded Arial faces, at
+  `/tmp/paperplot-skills-smoke-20260813-111750`;
+- behavior pressure: **5/5 PASS**; available visual-pressure scenarios behaved
+  as expected; quick/standalone validators and runtime-profile strict replay:
+  PASS.
+
+The first Arial smoke run correctly caught `LiberationSans` in the violin
+median `shape=95`; the device family was then fixed to Arial and the complete
+suite passed. A subsequent focused read-only audit found three P1 boundaries:
+`fc-match` did not verify returned styles, global `theme_get()` text elements
+could bypass the plot-local check, and the main `paperplot-skills.yaml` workflow
+lacked Arial/Poppler installation. All three were fixed with exact family/style
+matching, global-plus-local theme inspection, matching Arial setup in both CI
+workflows, and dedicated negative regressions. Post-fix contract regression and
+20-template embedded-Arial smoke both pass. A new bounded read-only audit signed
+off the frozen result: **PASS, no P0/P1, no P2 suggestions**. The active Pi/Codex
+runtime intentionally remains 0.5.0 until a separate post-review sync
+confirmation.
 
 ## 2026-08-12 — Source Contract Optimization (Not Yet Installed or Published)
 
@@ -134,13 +185,28 @@ PaperPlot regression. No package was installed or upgraded; the already-working
 
 ### Current state / next gate
 
-- Source worktree contains this uncommitted optimization batch.
-- `~/.codex/skills/paperplot-skills` (also used by Pi) remains the older runtime
-  copy with an August experiment; it has **not** been overwritten in this batch.
-- Claude still points to the source checkout and therefore sees source edits in a
-  fresh/reloaded session.
-- No commit, tag, push, release, remote download, package install, or runtime sync
-  has been performed.
+- The reviewed optimization batch was committed locally as
+  `40908caae74629af0f0eebf6729ece2ad634cc98` (`Harden paperplot skill
+  contracts`). Before this HANDOFF-only update, the source worktree was clean and
+  local `main` was one commit ahead of `origin/main`.
+- `~/.codex/skills/paperplot-skills` (also used by Pi) was transactionally
+  replaced with the runtime profile built from commit `40908ca`. Post-switch
+  validation passed Agent Skills discovery, helper/runtime assertions, a real
+  template candidate run, and an exact **85/85** runtime manifest/checksum
+  comparison against the committed source profile.
+- The previous runtime was preserved without modification at
+  `~/.codex/skills/.paperplot-skills.backup-before-40908ca` (83 files, about
+  456K). Do not delete it until the new runtime passes a fresh-session real-task
+  acceptance test.
+- The active runtime contains `scripts/lib/contract-parsers.R` and
+  `references/bioinformatics-figure-validation.md`, and excludes development
+  reports, contract regressions, pressure runners, and benchmark scripts as
+  intended.
+- Claude still points to the source checkout. Pi/Codex should be restarted or a
+  new session opened so skill discovery does not reuse an in-memory copy from
+  before the runtime switch.
+- No push, tag, release, remote download, or package install was performed.
+  `origin/main` remains at `94f465db75ab06f2e3aff7faa510df0692a4fa12`.
 - A broad final audit hit its turn limit without producing review evidence and
   is not counted as signoff. Two bounded audits then found the five P1 items
   above; their FAIL verdicts triggered the final hardening batch.
@@ -152,8 +218,11 @@ PaperPlot regression. No package was installed or upgraded; the already-working
   injection for activation-`mv` failure; local failure injection already proved
   restoration and no transaction debris.
 - Test-only Python cache artifacts were removed after explicit confirmation.
-- Next safe step: request separate confirmation before replacing the Codex/Pi
-  runtime copy or committing; push, tag, or release remain separate actions.
+- The expected uncommitted changes after `40908ca` are this HANDOFF update and
+  the user-requested Arial-only 0.5.1 source contract described above.
+- Next safe step: complete Arial contract regressions, then separately confirm a
+  local commit and transactional Pi/Codex runtime resync. Push, tag, and release
+  remain separate actions.
 
 ---
 
@@ -320,7 +389,7 @@ Current release status: superseded. The final state is `main` + `v0.1.0` release
 Two themes, candidate for two commits:
 
 **(a) Portability — make it run unchanged off the author's Mac**
-- `scripts/paperplot_helpers.R`: added `pp_resolve_family()` (Arial→Liberation/DejaVu/sans fallback); `pp_theme` no longer hardcodes `base_family="Arial"`; `pp_default_device()` uses `cairo_pdf` on non-macOS (fixes `font family 'Arial' not found in PostScript font database -> invalid font type`) and prefers `ragg` for raster.
+- Historical 2026-06-10 behavior: `scripts/paperplot_helpers.R` added `pp_resolve_family()` with Arial→Liberation/DejaVu/sans fallback; `pp_default_device()` used `cairo_pdf` on non-macOS. **Superseded on 2026-08-13:** current 0.5.1 source requires real Arial and forbids substitution.
 - `scripts/index-replica-patterns.py`: removed hardcoded `/Users/qingguozeng/...` defaults → `PAPERPLOT_R_ROOT`/`PAPERPLOT_PY_ROOT` env + `--r-root` required; `write_report` no longer assumes a Python root.
 - `scripts/visual-qa-rendered-image.py`: SVG QA falls back to the built-in Pillow rasterizer when ImageMagick is absent (was a hard crash).
 - `scripts/run-visual-pressure-scenarios.py` + `scripts/run-redraw-benchmark.R`: author-private fixture paths now driven by `PAPERPLOT_FIXTURE_DIR` (skip gracefully when unset).
@@ -345,7 +414,7 @@ Indexer re-run on the uploaded library: `indexed 80 cases` (R only). Calibration
 3. **Hand-tuned family overrides still cover only** `rank-lollipop, model-validation, heatmap, manhattan, phylo-annotation-ring`. The other ~7 pattern families fall back to global thresholds. Grow the replica/sample set, then hand-tune from data.
 4. **P2 leftover (doc-only):** `reports/visual-qa-calibration-from-replica-library.md` (committed) still embeds absolute `/Users/qingguozeng/...` paths in its table. Regenerate with relative/sanitized paths.
 5. Carry-over from 2026-05-19 next phase (still open): `manhattan-plot-template.R`, `upset-summary-template.R`, PDF rasterization in calibration, heatmap annotation-strip/dendrogram strategy, more real redraw benchmarks, clearer `improved` old-vs-new verdicts.
-6. **Portability invariant:** keep the repo free of machine-specific absolute paths and `Arial`-hardcoding. A future lint/test could assert no `/Users/` or `/home/<user>/` literals in `scripts/`.
+6. **Portability invariant (updated 2026-08-13):** keep the repo free of machine-specific absolute paths. Arial is now intentionally hard-required by user decision; portability means validating/installing Arial rather than silently substituting another font.
 
 ---
 

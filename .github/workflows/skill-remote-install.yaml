@@ -31,10 +31,16 @@ jobs:
         with:
           packages: any::ggplot2
 
-      - name: Install visual-contract test dependencies
+      - name: Install visual-contract and Arial dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y poppler-utils
+          echo 'ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true' | sudo debconf-set-selections
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y poppler-utils fontconfig ttf-mscorefonts-installer
+          sudo fc-cache -f
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Regular')" = 'Arial|Regular'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Bold')" = 'Arial|Bold'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Italic')" = 'Arial|Italic'
+          test "$(fc-match -f '%{family[0]}|%{style[0]}' 'Arial:style=Bold Italic')" = 'Arial|Bold Italic'
           python3 -m pip install --user pillow
 
       - name: Install runtime profile from remote script
@@ -73,7 +79,9 @@ jobs:
           SKILL="${skill}" Rscript - <<'RS'
           root <- Sys.getenv("SKILL")
           source(file.path(root, "scripts", "paperplot_helpers.R"))
-          stopifnot(pp_helper_version == "standalone-0.5.0")
+          stopifnot(pp_helper_version == "standalone-0.5.1")
+          stopifnot(identical(pp_resolve_family(), "Arial"))
+          stopifnot(inherits(try(pp_theme(base_family = "Helvetica"), silent = TRUE), "try-error"))
           stopifnot(pp_profile_for_preset("ncomms_half") == "nature_communications")
           stopifnot(inherits(try(pp_figure_spec("f", "t", scientific_message = "m", plot_type = "scatter", output_preset = "ncomms", journal_profile = "nature_like"), silent = TRUE), "try-error"))
           stopifnot(inherits(try(pp_figure_spec("f", "t", scientific_message = "m", plot_type = "scatter", output_preset = "double_column", journal_profile = "medical_radiology"), silent = TRUE), "try-error"))

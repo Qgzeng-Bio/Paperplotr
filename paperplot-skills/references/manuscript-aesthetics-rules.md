@@ -21,7 +21,7 @@ These rules translate the replica-library review into stable figure-design decis
 
 ## Text
 
-- Use one sans-serif family, preferably Arial/Helvetica-equivalent.
+- Use Arial exclusively for all figure text; do not substitute another sans-serif family.
 - Ordinary print labels and axes target 9 pt; ticks, legends, and compact annotations target 8 pt.
 - Panel labels target 12 pt bold and are placed consistently.
 - Treat 6 pt as an absolute floor, not a design target. A smaller-than-target exception needs an explicit journal/family justification and final-size visual QA.

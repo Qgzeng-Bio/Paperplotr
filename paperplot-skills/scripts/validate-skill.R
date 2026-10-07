@@ -151,7 +151,9 @@ if (length(missing_helper) > 0) fail("Missing helper patterns: ", paste(missing_
 
 helper_blob <- paste(helper_text, collapse = "\n")
 for (pattern in c(
-  "pp_helper_version <- \"standalone-0.5.0\"",
+  "pp_helper_version <- \"standalone-0.5.1\"",
+  "pp_font_family <- \"Arial\"",
+  "font substitution is not permitted.",
   "pp_profile_last_checked <- \"2026-08-12\"",
   "pp_validate_profile_geometry <- function",
   "pp_write_plotting_data <- function",
@@ -159,7 +161,9 @@ for (pattern in c(
   "pp_write_review_sidecar <- function",
   "pp_figure_spec_schema_version <- 2L",
   "pp_theme <- function(base_size = 9",
+  "pp_enforce_arial_plot <- function",
   "pp_theme base_size must be one numeric value at or above the 6 pt absolute floor",
+  "font_family = pp_resolve_family()",
   "target_text_pt = 9",
   "compact_text_pt = 8",
   "panel_label_pt = 12",
@@ -198,6 +202,9 @@ for (path in template_paths) {
   }
   if (grepl("pp_theme\\(base_size\\s*=\\s*[0-8](?:\\D|$)", text_blob, perl = TRUE)) fail("Template uses below-target pp_theme base size in ", rel_path)
   if (grepl("geom_(text|label)\\s*\\(", text_blob, perl = TRUE) && !grepl("pp_text_size_mm\\(", text_blob, perl = TRUE)) fail("Template text geometry must use explicit pt-to-mm conversion in ", rel_path)
+  text_call_count <- lengths(regmatches(text_blob, gregexpr("geom_(?:text|label)\\s*\\(", text_blob, perl = TRUE)))
+  arial_arg_count <- lengths(regmatches(text_blob, gregexpr('family\\s*=\\s*"Arial"', text_blob, perl = TRUE)))
+  if (text_call_count > arial_arg_count) fail("Every template text geometry must explicitly use Arial in ", rel_path)
   check_forbidden(text, rel_path)
   cat("checked template: ", rel_path, "\n", sep = "")
 }
@@ -215,7 +222,7 @@ for (path in bio_template_files) {
 }
 
 output_validator_text <- paste(readLines(rel("scripts", "validate-figure-output.R"), warn = FALSE), collapse = "\n")
-for (pattern in c("--manuscript-ready", "bioinformatics_validation", "compact_text_pt", "panel_label_pt", "metadata_files <- find_files", "validate_visual_qa", "validate_old_vs_new", "input_md5", "visual_qa_schema_version", "comparison_schema_version", "analysis_fingerprint", "replay_visual_evidence", "replay_comparison_evidence", "required_qa_gates", "journal_profile_snapshot", "crc32_raw", "parse_qa_report")) {
+for (pattern in c("--manuscript-ready", "check_pdf_arial", "font_family", "bioinformatics_validation", "compact_text_pt", "panel_label_pt", "metadata_files <- find_files", "validate_visual_qa", "validate_old_vs_new", "input_md5", "visual_qa_schema_version", "comparison_schema_version", "analysis_fingerprint", "replay_visual_evidence", "replay_comparison_evidence", "required_qa_gates", "journal_profile_snapshot", "crc32_raw", "parse_qa_report")) {
   if (!grepl(pattern, output_validator_text, fixed = TRUE)) fail("Output validator contract missing: ", pattern)
 }
 

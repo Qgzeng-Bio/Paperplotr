@@ -6,7 +6,7 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 
 - Use `pp_theme(show_grid = FALSE)` by default.
 - Turn on gridlines only for quantitative reading tasks where they help.
-- Use Arial or an available Helvetica-equivalent with 9 pt base text; reserve 8 pt for compact ticks, legends, and annotations.
+- Use Arial exclusively, with 9 pt base text; reserve 8 pt for compact ticks, legends, and annotations. Do not substitute another sans-serif family.
 - Use line widths around 0.35-0.4 pt.
 - Use the selected pattern document before changing defaults; style choices should follow figure family, data density, and target size.
 - Avoid large in-panel titles; panel labels and captions carry narrative.

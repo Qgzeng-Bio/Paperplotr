@@ -150,6 +150,24 @@ run_decoder <- function(path, kind) {
   fail("Manuscript-ready validation requires an available decoder for ", kind, ": ", path)
 }
 
+check_pdf_arial <- function(path) {
+  executable <- unname(Sys.which("pdffonts"))
+  if (!nzchar(executable)) fail("Manuscript-ready Arial verification requires pdffonts/Poppler: ", path)
+  output <- suppressWarnings(system2(executable, shQuote(path), stdout = TRUE, stderr = TRUE))
+  status <- attr(output, "status") %||% 0L
+  if (status != 0L) fail("pdffonts could not inspect PDF fonts in ", path, ": ", paste(tail(output, 4L), collapse = " | "))
+  separator <- which(grepl("^-{4,}", output))
+  rows <- if (length(separator) > 0L) output[seq.int(separator[[1L]] + 1L, length(output))] else character()
+  rows <- rows[nzchar(trimws(rows))]
+  font_names <- sub("[[:space:]].*$", "", trimws(rows))
+  if (length(font_names) == 0L) fail("PDF contains no inspectable embedded fonts: ", path)
+  non_arial <- font_names[!grepl("(?:^|\\+)Arial(?:MT|-|$)", font_names, perl = TRUE)]
+  if (length(non_arial) > 0L) fail("PDF contains non-Arial fonts in ", path, ": ", paste(unique(non_arial), collapse = ", "))
+  embedded <- grepl("[[:space:]]yes[[:space:]]+(?:yes|no)[[:space:]]+(?:yes|no)[[:space:]]+[0-9]+[[:space:]]+[0-9]+[[:space:]]*$", rows, perl = TRUE)
+  if (any(!embedded)) fail("PDF contains a non-embedded Arial font in ", path, ": ", paste(font_names[!embedded], collapse = ", "))
+  invisible(font_names)
+}
+
 check_pdf_structure <- function(path) {
   size <- unname(file.info(path)[["size"]])
   con <- file(path, open = "rb")
@@ -585,6 +603,12 @@ for (metadata_path in metadata_files) {
   style <- metadata$style %||% list()
   expected_text <- c(target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6)
   for (key in names(expected_text)) if (is.na(scalar_num(style[[key]])) || scalar_num(style[[key]]) != expected_text[[key]]) fail("Metadata ", key, " must equal ", expected_text[[key]], ": ", metadata_path)
+  helper_version <- scalar_chr(metadata$helper_version)
+  helper_numeric <- suppressWarnings(tryCatch(numeric_version(sub("^standalone-", "", helper_version)), error = function(e) numeric_version("0")))
+  arial_contract <- grepl("^standalone-[0-9]+\\.[0-9]+\\.[0-9]+$", helper_version) && helper_numeric >= numeric_version("0.5.1")
+  if (arial_contract && !identical(scalar_chr(style$font_family), "Arial")) fail("PaperPlot 0.5.1+ metadata must declare style.font_family = Arial: ", metadata_path)
+  if (strict && !arial_contract) fail("Manuscript-ready validation requires the Arial font contract from standalone-0.5.1 or newer: ", metadata_path)
+  if (strict) check_pdf_arial(paths$pdf)
 
   png <- read_png_geometry(paths$png)
   profile <- validate_profile(metadata, metadata_path)

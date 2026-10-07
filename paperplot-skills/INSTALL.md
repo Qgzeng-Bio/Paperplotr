@@ -94,11 +94,13 @@ micromamba install -c conda-forge \
 
 ## Fonts
 
-The default theme targets Arial/Helvetica. `pp_resolve_family()` automatically
-falls back to Liberation Sans / DejaVu Sans / generic `sans` when Arial is not
-installed, and PDF export uses `cairo_pdf` on non-macOS so the chosen font
-renders without the PostScript-font-database error. No manual font setup is
-required; installing `msttcorefonts` (real Arial) is optional for exact fidelity.
+Arial is a required runtime dependency. Install the Regular, Bold, Italic, and
+Bold Italic Arial faces, refresh the font cache, and confirm `fc-match Arial`
+resolves to `"Arial"`. `pp_resolve_family()` fails explicitly when Arial is
+missing and never substitutes Helvetica, Liberation Sans, DejaVu Sans, or
+generic `sans`. PDF export uses `cairo_pdf` on non-macOS so fontconfig supplies and
+embeds Arial without the PostScript-font-database error. Final validation uses
+`pdffonts` to reject PDFs containing non-Arial text.
 
 ## Validate
 

@@ -57,7 +57,7 @@ plot <- ggplot(df, aes(x = .data[[log2fc_col]], y = neg_log10_padj, color = volc
   geom_point(alpha = 0.54, size = 0.85) +
   geom_vline(xintercept = c(-log2fc_threshold, log2fc_threshold), linetype = "dashed", linewidth = 0.28, color = "#888888") +
   geom_hline(yintercept = -log10(padj_threshold), linetype = "dashed", linewidth = 0.28, color = "#888888") +
-  geom_text(data = key_df, aes(label = .data[[gene_col]]), size = pp_text_size_mm(8), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
+  geom_text(data = key_df, aes(label = .data[[gene_col]]), family = "Arial", size = pp_text_size_mm(8), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
   scale_color_manual(values = c(up = "#C95A4E", down = "#4E79A7", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log2 fold change", y = "-log10 adjusted p-value") +
   pp_theme(base_size = 9) + theme(legend.position = "bottom")
