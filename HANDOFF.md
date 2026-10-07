@@ -1,7 +1,28 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-09-17 (standalone-0.7.0-rc.1; engineering checks passed; private/human acceptance pending)
+Last updated: 2026-10-07 (Linux Cairo page-box patch ported to source on `dev/linux-cairo-pagebox`; not merged to main)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
+
+---
+
+## 2026-10-07: Linux Cairo page-box patch ported to source
+
+- Linux R Cairo truncates fractional PDF point sizes. The installed runtime copies
+  (`~/.codex/skills`, `~/.claude/skills`, 2026-09-18) already carried a local fix;
+  the source did not, so `test-production-contract.R` failed the exact
+  `pdf_page_mm` check inside the locked runtime.
+- Branch `dev/linux-cairo-pagebox` ports it: `pp_save_plot()` restores only the PDF
+  MediaBox via the new `scripts/fix-cairo-page.py` (pypdf); content streams are
+  unchanged and no QA threshold was changed. `paperplot_helpers.R` is byte-identical
+  to the installed copy.
+- Validation (SLURM 907540, locked runtime via `scripts/paperplot-run`): the six
+  CI core steps (validate-skill, production-contract, export-audit,
+  check-environment, recipe-contract --core, catalog --check) all PASS, rc=0.
+  Before the patch the same run failed production-contract (job 907538).
+  The 84-recipe / 36-template `formal-render` acceptance was not run.
+- Develop in the source tree and test through `paperplot-skills/scripts/paperplot-run`;
+  sync the runtime copies with `install-paperplot-skill.sh` (with backup) only when
+  needed. Installed copies still carry `linux-compatibility-patch.json`.
 
 ---
 
