@@ -1224,6 +1224,22 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
     bg = "white",
     ...
   )
+  # Local Linux compatibility: Cairo truncates fractional PDF points.
+  # Restore only the page box; never scale text, vectors, or content streams.
+  if (identical(Sys.info()[["sysname"]], "Linux") &&
+      identical(tolower(tools::file_ext(filename)), "pdf") &&
+      identical(device, grDevices::cairo_pdf)) {
+    factor <- switch(units, cm = 72 / 2.54, mm = 72 / 25.4,
+                     `in` = 72, px = 72 / (dpi %||% preset_values$dpi))
+    if (is.null(factor)) stop("Unsupported PDF dimension unit: ", units)
+    py <- pp_resolve_qa_python()
+    if (is.null(py)) stop("Python/pypdf is required for exact Linux Cairo PDF pages.")
+    repair <- file.path(pp_helper_script_dir, "fix-cairo-page.py")
+    status <- system2(py, c(shQuote(repair), shQuote(filename),
+      format((width %||% preset_values$width_cm) * factor, digits = 15),
+      format((height %||% preset_values$height_cm) * factor, digits = 15)))
+    if (!identical(as.integer(status), 0L)) stop("Linux Cairo page correction failed.")
+  }
   if (isTRUE(validate_output)) pp_assert_output(filename)
   invisible(filename)
 }
