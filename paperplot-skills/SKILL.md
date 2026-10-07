@@ -59,7 +59,7 @@ Do not call a figure manuscript-ready just because the code runs.
 Choose and record a target profile from `references/journal-specs-matrix.md` before composing; verify the current journal guide at final submission. Use `references/publication-visual-standards.md` as the baseline. Key defaults:
 
 - Width: 89 mm single column, 180-183 mm double column, max height about 170 mm for Nature-like layouts.
-- Font: Arial or Helvetica-equivalent sans serif; keep text editable in vector output.
+- Font: **Arial is required** for all figure text. Do not substitute Helvetica, Liberation Sans, DejaVu Sans, or generic `sans`; keep Arial text editable in vector output.
 - Text: target 9 pt for ordinary print labels and axes; 8 pt for ticks, legends, and compact annotations; 12 pt bold panel labels. Never go below the 6 pt absolute floor, and document any dense-family exception.
 - Lines: 0.25-0.6 pt for axes, intervals, and borders; avoid thick strokes.
 - Points: usually 1.2-2.2 mm depending on density; use alpha for overplotting.

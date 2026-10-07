@@ -134,6 +134,7 @@ if (nrow(key_label_df) > 0 && identical(label_strategy$direct_label_mode, "selec
   p <- p + geom_text(
     data = key_label_df,
     aes(label = .data[[sample_col]]),
+    family = "Arial",
     size = pp_text_size_mm(8),
     hjust = -0.12,
     vjust = 0.45,

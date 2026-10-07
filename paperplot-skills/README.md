@@ -105,8 +105,10 @@ Required:
 
 - R
 - ggplot2
+- Arial Regular, Bold, Italic, and Bold Italic; font substitution is not permitted
+- Fontconfig for Arial resolution
 
-Manuscript-ready validation also needs an available PDF/image decoder (`pdfinfo`/Poppler and ImageMagick `identify`, or configured Python/Pillow fallback). Candidate integrity validation remains dependency-free beyond R.
+Manuscript-ready validation also requires Poppler `pdffonts` to verify that the PDF contains only embedded Arial faces, plus an available PDF/image decoder (`pdfinfo`/Poppler and ImageMagick `identify`, or configured Python/Pillow fallback). Candidate integrity validation remains dependency-free beyond R and font resolution.
 
 Not required:
 

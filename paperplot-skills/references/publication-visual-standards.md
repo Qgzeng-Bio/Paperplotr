@@ -22,7 +22,7 @@ For Nature-like manuscript work, choose size from information burden:
 
 ## Typography
 
-- Use Arial, Helvetica, or a close sans-serif fallback.
+- Use Arial for all figure text. Font substitution is not permitted; install the Regular, Bold, Italic, and Bold Italic Arial faces before plotting.
 - Keep vector text editable; do not outline or rasterize text.
 - Ordinary print axis labels and main text target 9 pt at final size.
 - Tick labels, legends, compact annotations, and table-like inset text target 8 pt.

@@ -9,7 +9,7 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
   if (is.null(x)) y else x
 }
 
-pp_helper_version <- "standalone-0.5.0"
+pp_helper_version <- "standalone-0.5.1"
 pp_figure_spec_schema_version <- 2L
 pp_profile_last_checked <- "2026-08-12"
 
@@ -442,16 +442,43 @@ pp_format_percent <- function(x, digits = 1, input_scale = c("fraction", "percen
   paste0(formatC(value, format = "f", digits = digits), "%")
 }
 
-pp_resolve_family <- function(preferred = "Arial") {
-  # Resolve a manuscript sans-serif that actually exists on this machine.
-  # Avoids hard "invalid font type" failures when Arial is absent (e.g. Linux).
-  fallbacks <- c(preferred, "Helvetica", "Liberation Sans", "DejaVu Sans", "sans")
+pp_font_family <- "Arial"
+
+pp_fc_has_arial_styles <- function(fc_match = unname(Sys.which("fc-match"))) {
+  if (!nzchar(fc_match)) return(FALSE)
+  required <- c(Regular = "Regular", Bold = "Bold", Italic = "Italic", `Bold Italic` = "Bold Italic")
+  matched <- vapply(names(required), function(style) {
+    pattern <- paste0("Arial:style=", style)
+    result <- suppressWarnings(system2(fc_match, c("-f", shQuote("%{family[0]}\\t%{style[0]}\\n"), shQuote(pattern)), stdout = TRUE, stderr = TRUE))
+    status <- attr(result, "status") %||% 0L
+    if (status != 0L || length(result) != 1L) return(FALSE)
+    fields <- strsplit(result[[1L]], "\t", fixed = TRUE)[[1L]]
+    length(fields) == 2L && identical(tolower(trimws(fields[[1L]])), "arial") && identical(tolower(trimws(fields[[2L]])), tolower(required[[style]]))
+  }, logical(1))
+  all(matched)
+}
+
+pp_has_arial <- function() {
   if (requireNamespace("systemfonts", quietly = TRUE)) {
-    families <- tryCatch(unique(systemfonts::system_fonts()$family), error = function(e) character(0))
-    hit <- fallbacks[fallbacks %in% families]
-    if (length(hit)) return(hit[[1]])
+    fonts <- tryCatch(systemfonts::system_fonts(), error = function(e) NULL)
+    if (!is.null(fonts)) {
+      arial <- fonts[tolower(fonts$family) == "arial", , drop = FALSE]
+      styles <- tolower(arial$style)
+      required <- c("regular", "bold", "italic", "bold italic")
+      if (all(required %in% styles)) return(TRUE)
+    }
   }
-  "sans"
+  pp_fc_has_arial_styles()
+}
+
+pp_resolve_family <- function(preferred = pp_font_family) {
+  if (length(preferred) != 1L || is.na(preferred) || !identical(as.character(preferred), pp_font_family)) {
+    stop("PaperPlot requires base_family = \"Arial\"; font substitution is not permitted.", call. = FALSE)
+  }
+  if (!pp_has_arial()) {
+    stop("PaperPlot requires the Arial font family. Install Arial (Regular, Bold, Italic, and Bold Italic) and refresh the font cache before plotting.", call. = FALSE)
+  }
+  pp_font_family
 }
 
 pp_theme <- function(base_size = 9, base_family = pp_resolve_family(), line_width = 0.35,
@@ -459,6 +486,7 @@ pp_theme <- function(base_size = 9, base_family = pp_resolve_family(), line_widt
   if (!is.numeric(base_size) || length(base_size) != 1 || is.na(base_size) || base_size < 6) {
     stop("pp_theme base_size must be one numeric value at or above the 6 pt absolute floor.", call. = FALSE)
   }
+  base_family <- pp_resolve_family(base_family)
   grid_major <- if (isTRUE(show_grid)) {
     ggplot2::element_line(linewidth = 0.25, colour = "#D9D9D9")
   } else {
@@ -829,13 +857,15 @@ pp_default_device <- function(filename) {
   if (identical(ext, "pdf")) {
     if (identical(Sys.info()[["sysname"]], "Darwin")) {
       return(function(filename, width, height, bg = "white", ...) {
-        grDevices::quartz(type = "pdf", file = filename, width = width, height = height, bg = bg, ...)
+        grDevices::quartz(type = "pdf", file = filename, width = width, height = height, bg = bg, family = pp_resolve_family(), ...)
       })
     }
-    # Non-macOS: prefer cairo_pdf so PDF text honors fontconfig (real Arial when
-    # installed) instead of the PostScript font DB that errors on "Arial".
+    # Non-macOS: use cairo_pdf with Arial as the device family so theme text,
+    # text layers, and character-based point symbols all use the same font.
     if (isTRUE(capabilities("cairo"))) {
-      return(grDevices::cairo_pdf)
+      return(function(filename, width, height, bg = "white", ...) {
+        grDevices::cairo_pdf(filename = filename, width = width, height = height, bg = bg, family = pp_resolve_family(), ...)
+      })
     }
   }
   # Raster: prefer ragg when available; it resolves fonts via fontconfig and is
@@ -852,12 +882,37 @@ pp_default_device <- function(filename) {
   NULL
 }
 
+pp_enforce_arial_plot <- function(plot) {
+  if (!inherits(plot, "ggplot")) stop("PaperPlot export requires a ggplot object.", call. = FALSE)
+  family <- pp_resolve_family()
+  theme_items <- c(ggplot2::theme_get(), plot$theme %||% list())
+  explicit_theme_families <- vapply(theme_items, function(item) {
+    if (!inherits(item, "element_text") || is.null(item$family) || length(item$family) == 0L || is.na(item$family[[1L]])) return("")
+    as.character(item$family[[1L]])
+  }, character(1))
+  bad_theme <- unique(explicit_theme_families[nzchar(explicit_theme_families) & explicit_theme_families != family])
+  if (length(bad_theme) > 0L) stop("PaperPlot export rejects non-Arial theme fonts: ", paste(bad_theme, collapse = ", "), call. = FALSE)
+  for (i in seq_along(plot$layers)) {
+    layer <- plot$layers[[i]]
+    geom_class <- class(layer$geom)[[1L]]
+    if (!grepl("^Geom(?:Text|Label)", geom_class, perl = TRUE)) next
+    if (!is.null(layer$mapping$family)) stop("PaperPlot text layers may not map the font family aesthetic; use Arial for all text.", call. = FALSE)
+    layer_family <- layer$aes_params$family %||% ""
+    if (length(layer_family) != 1L || is.na(layer_family) || (nzchar(layer_family) && !identical(as.character(layer_family), family))) {
+      stop("PaperPlot export rejects a non-Arial font in text layer ", i, ".", call. = FALSE)
+    }
+    plot$layers[[i]]$aes_params$family <- family
+  }
+  plot + ggplot2::theme(text = ggplot2::element_text(family = family))
+}
+
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
                          dpi = NULL, units = "cm", overwrite = FALSE, validate_output = TRUE, ...) {
   if (!isTRUE(overwrite) && file.exists(filename)) {
     stop("Refusing to overwrite existing output file: ", filename, call. = FALSE)
   }
   dir.create(dirname(filename), recursive = TRUE, showWarnings = FALSE)
+  plot <- pp_enforce_arial_plot(plot)
   preset_values <- pp_output_preset(preset)
   device <- pp_default_device(filename)
   ggplot2::ggsave(
@@ -1042,7 +1097,7 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     data = data_summary,
     metrics = metric_spec,
     ordering = ordering,
-    style = list(theme = "pp_theme", palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
+    style = list(theme = "pp_theme", font_family = pp_resolve_family(), palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
     layout = layout,
     export = as.list(output_files),
     qa = qa
@@ -1341,7 +1396,7 @@ pp_write_metadata <- function(path, figure_spec, metric_spec = NULL, output_file
     old_vs_new_review = old_vs_new_review,
     label_strategy = label_strategy,
     palette_plan = palette_plan %||% palette,
-    style = list(theme = "pp_theme", palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
+    style = list(theme = "pp_theme", font_family = pp_resolve_family(), palette = palette, target_text_pt = 9, compact_text_pt = 8, panel_label_pt = 12, min_text_pt = 6),
     panel_hierarchy = panel_hierarchy,
     redraw_strategy = redraw_strategy,
     statistical_plan = statistical_plan,

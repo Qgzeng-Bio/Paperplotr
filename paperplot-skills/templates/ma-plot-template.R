@@ -57,7 +57,7 @@ design_plan <- pp_design_plan(chart_family = "ma_plot", figure_role = figure_rol
 plot <- ggplot(df, aes(x = log10_base_mean, y = .data[[log2fc_col]], color = significant)) +
   geom_hline(yintercept = 0, linewidth = 0.35, color = "#4D4D4A") +
   geom_point(alpha = 0.72, size = 1.25) +
-  geom_text(data = key_df, aes(label = .data[[gene_col]]), size = pp_text_size_mm(8), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
+  geom_text(data = key_df, aes(label = .data[[gene_col]]), family = "Arial", size = pp_text_size_mm(8), vjust = -0.7, check_overlap = TRUE, color = "#1D1D1B") +
   scale_color_manual(values = c(significant = "#D9342B", not_significant = "#B8B8B2"), name = "Class") +
   labs(x = "log10(base mean + 1)", y = "log2 fold change") +
   pp_theme(base_size = 9) + theme(legend.position = "bottom")
