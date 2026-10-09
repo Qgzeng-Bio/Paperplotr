@@ -105,7 +105,7 @@ pp_recipe_core <- function(entry, d, params) {
       q
     },
     scatter = {
-      q <- ggplot2::ggplot(d,ggplot2::aes(x,y,colour=group))+ggplot2::scale_colour_manual(values=pp_group_colors(d$group))+
+      q <- ggplot2::ggplot(d,ggplot2::aes(x,y,colour=group))+ggplot2::scale_colour_manual(values=pp_recipe_group_colors(d$group,params,role='group'))+
         ggplot2::labs(x=params$x_label %||% 'x',y=params$y_label %||% 'y')
       q <- q + if(variant=='bubble') ggplot2::geom_point(ggplot2::aes(size=count),alpha=.7) else ggplot2::geom_point(size=pp_point_size('normal'),alpha=.7)
       if(!is.null(params$fit)) {
@@ -123,10 +123,10 @@ pp_recipe_core <- function(entry, d, params) {
         pp_require_backend('patchwork')
         ranges<-ggplot2::ggplot_build(q)$layout$panel_params[[1]]
         q<-q+ggplot2::coord_cartesian(xlim=ranges$x.range,ylim=ranges$y.range,expand=FALSE)
-        top <- ggplot2::ggplot(d,ggplot2::aes(x,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_group_colors(d$group))+
+        top <- ggplot2::ggplot(d,ggplot2::aes(x,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_recipe_group_colors(d$group,params,role='group'))+
           pp_theme()+ggplot2::theme(legend.position='none',axis.text.x=ggplot2::element_blank(),axis.ticks.x=ggplot2::element_blank())+ggplot2::labs(x=NULL,y='Density')+
           ggplot2::coord_cartesian(xlim=ranges$x.range,expand=FALSE)
-        right <- ggplot2::ggplot(d,ggplot2::aes(y,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_group_colors(d$group))+
+        right <- ggplot2::ggplot(d,ggplot2::aes(y,fill=group))+ggplot2::geom_density(alpha=.3)+ggplot2::scale_fill_manual(values=pp_recipe_group_colors(d$group,params,role='group'))+
           ggplot2::coord_flip(xlim=ranges$y.range,expand=FALSE)+pp_theme()+ggplot2::theme(legend.position='none',axis.text.y=ggplot2::element_blank(),axis.ticks.y=ggplot2::element_blank())+ggplot2::labs(x=NULL,y='Density')
         q <- patchwork::wrap_plots(list(top,q,right),design='A#\nBC',widths=c(4,1),heights=c(1,4))
       }
@@ -148,9 +148,21 @@ pp_recipe_core <- function(entry, d, params) {
       q <- ggplot2::ggplot(d,ggplot2::aes(category,metric))
       if(variant=='dots') q <- q + ggplot2::geom_point(ggplot2::aes(size=count,colour=value)) + ggplot2::scale_colour_gradientn(colours=pp_gradient_palette()) else
         q <- q + ggplot2::geom_tile(ggplot2::aes(fill=value)) + ggplot2::scale_fill_gradientn(colours=pp_gradient_palette(),na.value='#DDDDDD')
-      if(variant=='labels') q <- q + ggplot2::geom_text(ggplot2::aes(label=ifelse(is.na(value),'NA',signif(value,3))),size=pp_text_size('minimum'))
-      if(nlevels(d$group)>1) q <- q + ggplot2::facet_wrap(~group)
-      q + ggplot2::labs(x=NULL,y=NULL)
+      label_policy <- pp_heatmap_value_labels(
+        d, x = 'category', y = 'metric', value = 'value',
+        show_values = params$show_values %||% 'auto',
+        facet = if (length(unique(d$group)) > 1L) d$group else NULL,
+        required = identical(variant, 'labels'))
+      if (variant != 'dots' && isTRUE(label_policy$show_values)) {
+        q <- q + ggplot2::geom_text(
+          data = label_policy$data,
+          ggplot2::aes(category, metric, label = .data$.pp_heatmap_label),
+          inherit.aes = FALSE, size = pp_text_size('minimum'))
+      }
+      if(length(unique(d$group)) > 1L) q <- q + ggplot2::facet_wrap(~group)
+      q <- q + ggplot2::labs(x=NULL,y=NULL)
+      attr(q, 'pp_heatmap_value_label_policy') <- label_policy
+      q
     },
     ordination = {
       if(entry$recipe_id=='pca_pcoa_ordination' && (is.null(params$variant)||!params$variant%in%c('pca','pcoa'))) stop('This legacy mixed-method recipe requires variant=pca or pcoa; method is never guessed.')
@@ -260,7 +272,7 @@ pp_recipe_core <- function(entry, d, params) {
       } else {
         parts <- split(d,d$metric)
         plots <- lapply(parts,function(z) ggplot2::ggplot(z,ggplot2::aes(x,y,colour=group))+ggplot2::geom_point()+
-          ggplot2::scale_colour_manual(values=pp_group_colors(d$group),limits=levels(d$group),drop=FALSE)+pp_theme()+ggplot2::labs(title=as.character(z$metric[1])))
+          ggplot2::scale_colour_manual(values=pp_recipe_group_colors(d$group,params,role='group'),limits=levels(d$group),drop=FALSE)+pp_theme()+ggplot2::labs(title=as.character(z$metric[1])))
         patchwork::wrap_plots(plots,guides='collect')
       }
     },
@@ -270,7 +282,7 @@ pp_recipe_core <- function(entry, d, params) {
       mapped <- c(list(p$mapping[[aesthetic]]),lapply(p$layers,function(l) l$mapping[[aesthetic]]))
       fields <- unique(vapply(Filter(Negate(is.null),mapped),rlang::as_label,character(1)))
       if(length(fields)==1 && fields%in%c('group','category') && fields%in%names(d) && !p$scales$has_scale(aesthetic)) {
-        colors<-pp_group_colors(d[[fields]])
+        colors<-pp_recipe_group_colors(d[[fields]],params,role=fields)
         p<-p+if(aesthetic=='colour') ggplot2::scale_colour_manual(values=colors) else ggplot2::scale_fill_manual(values=colors)
       }
     }

@@ -66,7 +66,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path))
 
 figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "bio-duplication-mode-comparison-template", figure_role = figure_role, scientific_message = scientific_message, plot_type = "bio_duplication_mode_four_panel", sample_id = sample_col, group_var = group_col, output_preset = "double_column")
 metric_spec <- pp_metric_spec(metric = mode_levels, label = mode_levels, unit = "duplication metric", direction = "neutral", transform = "none", role = "duplication_mode")

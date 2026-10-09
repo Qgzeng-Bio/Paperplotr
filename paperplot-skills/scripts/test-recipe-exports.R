@@ -17,20 +17,20 @@ results <- lapply(catalog$recipe_id,function(id) {
     spec <- attr(p,'pp_render_spec')
     spec$n_panels <- pp_infer_panel_count(p)
     spec$panel_tags <- inherits(p,'patchwork') && pp_recipe_entry(id)$handler %in% c('layout','model')
-    spec$expected_tags <- if(spec$panel_tags) as.list(LETTERS[seq_len(spec$n_panels)]) else list()
+    spec$expected_tags <- if(spec$panel_tags) as.list(pp_panel_tag_texts(spec)) else list()
     spec$ocr <- 'off'
     stem <- file.path(out,id,id)
     files <- pp_save_all_with_qa_loop(p,stem,render_spec=spec,max_iterations=0,overwrite=TRUE,
       qa_context=list(family=pp_recipe_entry(id)$figure_family,layout_profile=if(inherits(p,'patchwork')) 'hierarchical' else 'auto'))
     audit <- attr(files,'qa_export_audit')
-    exact <- c('pdf_page_mm','svg_page_mm','png_pixels','pdf_typography','svg_typography','pdf_font_embedding','svg_editable_text','svg_panel_tags')
-    required <- setdiff(exact,if(!spec$panel_tags) 'svg_panel_tags' else character())
+    exact <- c('pdf_page_mm','jpg_pixels','jpg_dpi','jpg_encoding','jpg_rgb','pdf_typography','pdf_font_embedding','pdf_panel_tags')
+    required <- setdiff(exact,if(!spec$panel_tags) 'pdf_panel_tags' else character())
     bad <- required[!vapply(required,function(k) identical(audit$checks[[k]],'pass'),logical(1))]
     bad <- unique(c(bad,names(audit$checks)[vapply(audit$checks,identical,logical(1),'fail')]))
     data.frame(recipe=id,generated=TRUE,physical_pass=!length(bad),mode='demo',
       detail=if(length(bad)) paste(bad,collapse=',') else 'physical checks passed; not scientific acceptance',
-      png=files[['png']],stringsAsFactors=FALSE)
-  },error=function(e) data.frame(recipe=id,generated=FALSE,physical_pass=FALSE,mode='demo',detail=conditionMessage(e),png='',stringsAsFactors=FALSE))
+      jpg=files[['jpg']],stringsAsFactors=FALSE)
+  },error=function(e) data.frame(recipe=id,generated=FALSE,physical_pass=FALSE,mode='demo',detail=conditionMessage(e),jpg='',stringsAsFactors=FALSE))
 })
 results <- do.call(rbind,results)
 utils::write.csv(results,file.path(out,'validation.csv'),row.names=FALSE)

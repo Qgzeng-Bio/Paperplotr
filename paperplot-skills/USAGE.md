@@ -1,5 +1,17 @@
 # Use the installed skill
 
+For a normal interactive draft from a research workspace:
+
+```bash
+PAPERPLOT_MODE=preview ~/.agents/skills/paperplot-skills/scripts/paperplot-run plot.R
+```
+
+After design feedback is settled, use the original strict production chain:
+
+```bash
+PAPERPLOT_MODE=production ~/.agents/skills/paperplot-skills/scripts/paperplot-run plot.R
+```
+
 Run scripts through `~/.agents/skills/paperplot-skills/scripts/paperplot-run`. With no argument it diagnoses the isolated runtime; no activation or global R changes are needed.
 
 ## One real plot
@@ -17,7 +29,7 @@ files <- pp_save_all_with_qa_loop(p, "outputs/effects",
 print(attr(files, "qa_contract"))
 ```
 
-Use “95% CI” only when the supplied bounds really are CIs. Outputs include PDF/SVG/600-dpi PNG, source evidence, candidate history and production QA. Existing files are protected unless overwrite is explicit.
+Use “95% CI” only when the supplied bounds really are CIs. Default outputs include PDF and RGB JPG at 300 dpi (white background, JPEG quality 95), source evidence and QA metadata; production also retains candidate history. JPG is lossy; PDF retains precise vector text. SVG/PNG are explicit legacy formats only, never hidden audit exports. Existing files are protected unless overwrite is explicit.
 
 Inspect the final-size image and unresolved checks, then inspect `pp_effective_export_qa("outputs/effects")`. After an actual review:
 

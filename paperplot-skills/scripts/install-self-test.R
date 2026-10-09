@@ -8,7 +8,9 @@ output <- tempfile('paperplot-install-');dir.create(output)
 p <- pp_recipe_plot('lollipop_ranked',data.frame(category=c('fixture-a','fixture-b'),value=c(1,2)),mode='demo')
 files <- pp_save_all_with_qa_loop(p,file.path(output,'install-fixture'),max_iterations=0)
 checks <- attr(files,'qa_export_audit')$checks
-required <- c('pdf_page_mm','svg_page_mm','png_pixels','pdf_typography','svg_typography','pdf_font_embedding')
+required <- c('.pdf_present','.jpg_present','pdf_page_mm','jpg_pixels','jpg_dpi','jpg_encoding','jpg_rgb','pdf_typography','pdf_font_embedding')
+if(!identical(names(files),c('pdf','jpg')) || attr(files,'qa_render_spec')$dpi != 300 ||
+   any(file.exists(file.path(output,paste0('install-fixture.',c('svg','png')))))) stop('Installed default format contract failed.')
 if(!all(vapply(required,function(k) identical(checks[[k]],'pass'),logical(1)))) stop('Installed export test failed: ',output)
 for(name in c('family-qa-score.py','vision-review-adapter.py','export-audit.py','visual-qa-rendered-image.py')) {
   if(system2(pp_resolve_qa_python(),c(shQuote(file.path(root,'scripts',name)),'--help'),stdout=FALSE,stderr=FALSE)!=0) stop('Installed command is not runnable: ',name)
@@ -21,7 +23,7 @@ receipt <- list(skill_version=pp_helper_version,commit=Sys.getenv('PAPERPLOT_INS
   dirty_source=Sys.getenv('PAPERPLOT_INSTALL_DIRTY','unknown'),
   environment=Sys.getenv('PAPERPLOT_ENV',path.expand('~/.local/share/paperplot/runtime-0.7.0')),
   R=as.character(getRversion()),installed_at=format(Sys.time(),tz='UTC',usetz=TRUE),
-  acceptance='actual demo PDF/SVG/PNG physical export; not manuscript approval',
+  acceptance='actual demo PDF + RGB JPEG 300-dpi physical export with embedded PDF fonts; no SVG/PNG deliveries; not manuscript approval',
   hashes=as.list(tools::md5sum(file.path(root,c('renv.lock','requirements.lock','scripts/paperplot_helpers.R','recipes/recipe_manifest.csv')))))
 if(nzchar(Sys.getenv('PAPERPLOT_INSTALL_COMMIT'))) writeLines(pp_to_json(receipt),file.path(root,'installation.json'))
 cat('Installed commands and physical exports passed outside the project. Receipt:',file.path(root,'installation.json'),'\n')

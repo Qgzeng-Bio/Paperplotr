@@ -17,7 +17,7 @@ Use these gates before and after rendering. QA should protect manuscript quality
 
 ## Hard Gates
 
-- PDF, PNG, notes, metadata JSON, and QA report exist.
+- PDF, JPG (RGB, 300 dpi), notes, metadata JSON, and QA report exist; compare against requested formats, never infer the contract from surviving files.
 - Metadata contains `design_brief`, `design_plan`, and `label_strategy`.
 - Rank-index or abbreviated label strategies preserve full mappings in metadata or sidecars.
 - Same group uses consistent color across panels.

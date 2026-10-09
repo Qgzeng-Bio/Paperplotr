@@ -27,7 +27,7 @@ invisible(pp_project_create('nested-real-fixture','Test nested/native object ass
 pp_project_confirm_layout(project,'AUTOMATED LAYOUT FIXTURE')
 for(id in c('nested','native')) {b<-pp_project_build_panel(project,id);check(b$success,paste(id,b$error))}
 a<-pp_project_assemble(project);check(a$success,paste('Nested assembly',a$result$error))
-check(a$result$qa$checks$export_svg_panel_tags=='pass','Exactly two outer tags, not one tag per nested subchart')
+check(a$result$qa$checks$export_pdf_panel_tags=='pass','Exactly two outer tags, not one tag per nested subchart')
 check(a$result$qa$checks$project_geometry=='unverified','Opaque data regions are not incorrectly measured as empty ggplot scaffolds')
 check('project_geometry'%in%unlist(a$result$qa$reviewable),'Specific geometry blind spot is reviewable')
 pp_project_review(project,'figure','pass','AUTOMATED REVIEW FIXTURE - NOT HUMAN APPROVAL',checks=unlist(a$result$qa$reviewable),reason='Mechanism test only; not a publication or human-science approval.')

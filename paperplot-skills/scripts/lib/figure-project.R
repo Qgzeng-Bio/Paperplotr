@@ -54,13 +54,15 @@ ppp_environment <- function() {
       file.path(pp_helper_script_dir,'..','recipes',c('paperplot_code_recipes.R','recipe_manifest.csv'))))),
     packages = as.list(stats::setNames(vapply(pkgs, function(p) if (requireNamespace(p, quietly = TRUE)) as.character(utils::packageVersion(p)) else "unavailable", character(1)), pkgs)))
 }
-ppp_layout <- function(layout, ids, column = "double") {
-  limit <- if (column == "single") 89 else 180
+ppp_layout <- function(layout, ids, column = "double", journal = NULL) {
+  profile <- pp_journal_profile(journal)
+  limit <- profile$width_mm[[if (column %in% c("single", "mid")) column else "double"]]
+  if (is.na(limit)) stop(profile$label, " has no published 1.5-column width; use column = 'single' or 'double'.")
   layout$width_mm <- layout$width_mm %||% limit
   layout$height_mm <- layout$height_mm %||% 120
   if (layout$width_mm > limit && !nzchar(layout$width_exception %||% "")) stop("Canvas exceeds column limit; record width_exception explicitly.")
   if (any(!is.finite(c(layout$width_mm, layout$height_mm))) || min(layout$width_mm, layout$height_mm) <= 0) stop("Invalid canvas dimensions.")
-  if (layout$height_mm > 170) warning("Height exceeds 170 mm; consider splitting without shrinking text.")
+  if (layout$height_mm > profile$max_height_mm) warning(sprintf("Height exceeds %g mm; consider splitting without shrinking text.", profile$max_height_mm))
   if (length(ids) > 26) stop("Version 1 supports up to 26 labelled panels.")
   order <- unlist(layout$order %||% ids, use.names = FALSE)
   if (!setequal(order, ids) || anyDuplicated(order)) stop("Layout order must contain every panel ID exactly once.")
@@ -116,7 +118,7 @@ ppp_context <- function(x, root, id) {
   # Position/label changes invalidate assembly review, not unrelated panel code.
   placement <- slot[c("width_mm", "height_mm")]
   spec <- pp_render_spec(width_mm = slot$width_mm, height_mm = slot$height_mm,
-                         mode = x$mode, text_pt = x$style$text_pt %||% list())
+                         mode = x$mode, text_pt = x$style$text_pt %||% list(), journal = x$style$journal)
   spec$panel_tags <- FALSE
   shared <- ppp_shared(x, root, p)
   links <- c(x$layout$shared_rows, x$layout$shared_axes)
@@ -178,7 +180,7 @@ ppp_fresh <- function(x, root, id) {
 ppp_summary <- function(x, root) {
   lines <- c(paste0("# ", x$figure_id), "", x$message, "",
     paste("Layout:", x$layout_version, if (identical(x$layout_confirmed, x$layout_version)) "confirmed" else "pending confirmation"),
-    paste("Canvas:", x$layout$width_mm, "x", x$layout$height_mm, "mm; Arial; ordinary text 6-8 pt; tags 12 pt"), "",
+    paste0("Canvas: ", x$layout$width_mm, " x ", x$layout$height_mm, " mm; journal profile: ", pp_journal_profile(x$style$journal)$label, "; Arial; text ", paste(pp_journal_profile(x$style$journal)$text_range_pt, collapse = "-"), " pt; tags ", pp_journal_profile(x$style$journal)$text_pt$panel_tag, " pt"), "",
     "| Label | Stable ID | Revision | State | Review |", "|---|---|---|---|---|")
   for (id in unlist(x$layout$order)) {
     p <- x$panels[[id]]; f <- ppp_fresh(x, root, id)
@@ -216,8 +218,9 @@ ppp_sketch <- function(x, root) {
     ggplot2::geom_text(ggplot2::aes(x = x + width / 2, y = y + height / 2, label = label), size = 2.5) +
     ggplot2::scale_y_reverse(limits = c(x$layout$height_mm, 0)) + ggplot2::scale_x_continuous(limits = c(0, x$layout$width_mm)) +
     ggplot2::coord_fixed(expand = FALSE) + ggplot2::theme_void() + ggplot2::labs(caption = "LAYOUT DRAFT: no scientific data or figure approval")
-  ggplot2::ggsave(file.path(root, "layouts", x$layout_version, "sketch.png"), p,
-    width = x$layout$width_mm, height = x$layout$height_mm, units = "mm", dpi = 150, bg = "white")
+  ggplot2::ggsave(file.path(root, "layouts", x$layout_version, "sketch.jpg"), p,
+    width = x$layout$width_mm, height = x$layout$height_mm, units = "mm", dpi = 300, bg = "white", device = ragg::agg_jpeg, quality = 95)
+  pp_set_jpeg_dpi(file.path(root, "layouts", x$layout_version, "sketch.jpg"), 300)
 }
 
 pp_project_create <- function(figure_id, message, panels, project = file.path("figures", figure_id),
@@ -226,7 +229,7 @@ pp_project_create <- function(figure_id, message, panels, project = file.path("f
   ppp_require()
   if (file.exists(file.path(project, "project.json"))) return(pp_project_status(project))
   if (!grepl("^[A-Za-z0-9_-]+$", figure_id) || !nzchar(trimws(message)) || grepl("TODO", message)) stop("Provide a stable figure ID and actual scientific message.")
-  column <- match.arg(column, c("single", "double")); mode <- match.arg(mode, c("production", "preview", "demo"))
+  column <- match.arg(column, c("single", "mid", "double")); mode <- match.arg(mode, c("production", "preview", "demo"))
   ids <- vapply(panels, function(p) p$id, character(1))
   if (!length(ids) || anyDuplicated(ids) || any(!grepl("^[a-z][a-z0-9_-]*$", ids))) stop("Panel IDs must be unique lowercase identifiers.")
   layout <- ppp_layout(layout, ids, column)
@@ -340,7 +343,7 @@ pp_project_confirm_layout <- function(project, reviewer) {
 }
 pp_project_set_layout <- function(project, layout) {
   ppp_locked(project, function(x, root) {
-    value <- ppp_layout(layout, names(x$panels), x$column)
+    value <- ppp_layout(layout, names(x$panels), x$column, x$style$journal)
     rev <- ppp_next_revision(root, "layouts")
     ppp_json(value, file.path(rev$path, "layout.json"))
     x$layout <- value; x$layout_version <- rev$id; x$layout_confirmed <- NULL

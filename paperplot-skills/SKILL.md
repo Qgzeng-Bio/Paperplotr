@@ -9,11 +9,19 @@ Create scientifically faithful figures with reproducible revisions. Standalone: 
 
 ## Start here
 
-1. Run `scripts/paperplot-run`: diagnose the locked runtime, actual interpreters, dependencies and licensed Arial. Missing capabilities block formal work. Plotting never installs packages.
-2. Read `references/code-recipe-contract.md` and `references/production-render-contract.md`, then only the relevant pattern-library document.
-3. Inspect supplied data, units, observation IDs, groups, intervals and upstream results. Do not scan unrelated private directories. An image alone permits diagnosis, not a claimed faithful reconstruction.
-4. Select the recipe from `recipes/recipe_manifest.csv` and a template from `templates/template_manifest.csv`. Handler/variant/backend are executable routing. Legacy status labels are historical classifications, not acceptance claims.
-5. Resolve one `pp_render_spec()` before building. Export through `pp_save_all_with_qa_loop()`. Low-level save helpers are compatibility utilities, not acceptance gates.
+1. For ordinary agent-led plotting, inspect the existing runtime/environment first and run explicitly in draft mode: `PAPERPLOT_MODE=preview scripts/paperplot-run <plot.R>`. Preview preserves journal-profiled dimensions, Arial roles, PDF + 300-dpi JPG output, data/glyph/file checks and provenance, but defers external visual QA, repair retries and export audit; it is an `interactive draft`, never manuscript-ready.
+2. Only when the run reports a missing capability, use targeted environment diagnosis. Do not run an unconditional developer `doctor` or install packages; plotting never installs dependencies.
+3. Read the selected journal profile, supplied data contract and executable recipe/template route. Read `references/color-and-style-policy.md` when choosing or revising style. Read `references/production-render-contract.md` only for finalization or export-logic changes, not on every ordinary draft.
+4. Inspect supplied data, units, observation IDs, groups, intervals and upstream results. Do not scan unrelated private directories. An image alone permits diagnosis, not a claimed faithful reconstruction.
+5. Select the recipe from `recipes/recipe_manifest.csv` and a template from `templates/template_manifest.csv`. Handler/variant/backend are executable routing. Resolve one `pp_render_spec()` before building and export through `pp_save_all_with_qa_loop()`.
+6. For several plots, generate the set before presenting it for consolidated feedback; do not wait for per-plot approval or launch reviewer agents during ordinary iteration. Revise only the requested plots, and do not recompute statistics for purely cosmetic changes. Only when the user explicitly requests finalization (e.g. “定稿” or “正式导出”), rerun in production: `PAPERPLOT_MODE=production scripts/paperplot-run <plot.R>`. Do not keep polishing beyond the requested revision; show remaining issues. Preview is not an automatic project cache or promotion path.
+
+## Interactive style defaults
+
+- Use `wong` for generic categorical groups, keep mappings stable across panels, and stop at eight colors unless facets or an explicit alternative/named mapping is supplied.
+- When useful, directly label a few key values or curve endpoints; never invent statistics and keep legends for dense panels rather than labeling every curve.
+- Keep real observations in box/violin distributions. Heatmap `show_values="auto"` is conservative for small matrices; explicit required labels are not silently hidden.
+- Give each figure one main message, preserve whitespace, and avoid decoration. Read the color/style policy only when the task needs a style decision.
 
 ## Main figures and revisions
 
@@ -39,13 +47,16 @@ Schema 1 is read-only. Inspect `pp_project_migrate(project)` before an explicitl
 
 ## Physical output and QA
 
-Render spec is authoritative: single column 89 mm; main composite 180 mm; IGS 183 × 105 mm; Manhattan 180 × 70 mm. Legacy dimensions must agree or fail.
+Default deliveries are PDF and RGB JPG at 300 dpi (white background, JPEG quality 95); no SVG or PNG is generated for delivery or hidden export audit. JPG is lossy; PDF preserves precise vector text and lines. Explicit legacy `formats` can still request PNG/SVG/TIFF. Keep journal requirements distinct: flag stricter submission requirements rather than silently changing output, physical dimensions, fonts or scientific values.
 
-Arial: ordinary roles 6–8 pt, final tags 12 pt bold. `pp_theme()` is pure. Normalize copies; native backends set fonts during drawing. Do not resize exports or blindly traverse raw grobs to change text.
+Render spec is authoritative and journal-profiled (`journal="nature"` default, or `"cell"`; also `options(paperplot.journal=)` / `PAPERPLOT_JOURNAL`). Nature: single 89 mm, double 183 mm, max height 170 mm. Cell: single 85, 1.5-column 114, double 174 mm. IGS = profile double width × 105 mm; Manhattan = profile double width × 70 mm. Legacy dimensions must agree or fail. See `references/journal-profiles.md`.
 
-Export retains each candidate and its QA, attempts at most two repairs, and keeps the previous candidate when no improvement is verified. Evidence includes source data, statistics, mappings, labels, file hashes and detector fingerprints.
+Arial: ordinary roles stay inside the profile range (Nature 5–7 pt, Cell 6–8 pt; out-of-range overrides fail); final tags 8 pt bold, lowercase a/b/c for Nature, uppercase A/B/C for Cell. `pp_theme()` is pure. Normalize copies; native backends set fonts during drawing. Do not resize exports or blindly traverse raw grobs to change text.
+
+Production/demo export retains each candidate and its QA, attempts at most two repairs, and keeps the previous candidate when no improvement is verified. Preview intentionally skips candidate copies, external visual QA/repair and export audit while retaining evidence/provenance; its unperformed checks remain `unverified`/`not_run`. Evidence includes source data, statistics, mappings, labels, file hashes and detector fingerprints.
 
 - `fail`: precise error; no human override.
+- `warn / interactive draft`: preview mode or deferred checks; never a final approval.
 - `warn / manuscript candidate`: missing evidence, heuristic risk, incomplete environment or pending review.
 - `pass / manuscript-ready`: every required check valid and an actual review bound to the exact evidence.
 

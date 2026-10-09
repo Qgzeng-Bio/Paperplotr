@@ -32,7 +32,7 @@ Do not call external package-specific helper APIs beyond ggplot2.
 - Do not overwrite old output files by default.
 - Use a timestamped or versioned output stem.
 - Export at least one vector format.
-- Export PNG for preview.
+- Export JPG at 300 dpi for preview; default delivery is PDF/JPG, not SVG/PNG.
 - Write notes with design decisions and QA results.
 
 ## Iteration Discipline

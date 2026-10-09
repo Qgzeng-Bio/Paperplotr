@@ -37,7 +37,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path))
 
 figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "upset-summary-template", task_type = "new", figure_role = figure_role, scientific_message = scientific_message, plot_type = "upset_set_summary", output_preset = "nature_half")
 metric_spec <- pp_metric_spec(metric = "set_size", label = "Set size", unit = "count", direction = "neutral", transform = "none", role = "primary")

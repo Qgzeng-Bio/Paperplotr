@@ -24,7 +24,7 @@ for(n in c(4L,6L)) {
   spec<-pp_render_spec(n,width_mm=180,height_mm=150,ocr='off')
   files<-pp_save_all_with_qa_loop(combined,file.path(out,paste0('public-',n,'-panel')),render_spec=spec,max_iterations=0,overwrite=TRUE)
   audit<-attr(files,'qa_export_audit')
-  keys<-c('pdf_page_mm','svg_page_mm','png_pixels','svg_typography','pdf_typography','svg_panel_tags')
+  keys<-c('pdf_page_mm','jpg_pixels','jpg_dpi','jpg_encoding','jpg_rgb','pdf_typography','pdf_panel_tags')
   if(!all(vapply(keys,function(k) identical(audit$checks[[k]],'pass'),logical(1)))) stop('Heterogeneous physical regression: ',n)
   if(attr(files,'qa_contract')$status=='pass') stop('A public fixture without actual review cannot self-approve.')
   cat(n,'-panel ggplot / ComplexHeatmap / circlize object assembly passed physical checks; human review pending.\n')

@@ -4,31 +4,27 @@ args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 1) stop("Usage: Rscript visual-qa-report.R <output_dir>", call. = FALSE)
 output_dir <- normalizePath(args[[1]], mustWork = TRUE)
 
-read_png_dims <- function(path) {
-  con <- file(path, "rb")
-  on.exit(close(con), add = TRUE)
-  sig <- readBin(con, "raw", n = 8)
-  if (length(sig) != 8 || !identical(as.integer(sig), c(137, 80, 78, 71, 13, 10, 26, 10))) return(c(width = NA_integer_, height = NA_integer_))
-  readBin(con, "integer", n = 1, size = 4, endian = "big")
-  chunk <- rawToChar(readBin(con, "raw", n = 4))
-  if (!identical(chunk, "IHDR")) return(c(width = NA_integer_, height = NA_integer_))
-  width <- readBin(con, "integer", n = 1, size = 4, endian = "big")
-  height <- readBin(con, "integer", n = 1, size = 4, endian = "big")
-  c(width = width, height = height)
+read_raster_dims <- function(path) {
+  py <- Sys.getenv("PAPERPLOT_PYTHON", unname(Sys.which("python3")))
+  values <- tryCatch(suppressWarnings(system2(py, c("-c", shQuote("from PIL import Image; import sys; print(*Image.open(sys.argv[1]).size)"),
+    shQuote(path)), stdout = TRUE, stderr = FALSE)), error = function(e) character())
+  dims <- suppressWarnings(as.integer(strsplit(paste(values, collapse = " "), " +")[[1]]))
+  if (length(dims) != 2L || anyNA(dims)) dims <- c(NA_integer_, NA_integer_)
+  stats::setNames(dims, c("width", "height"))
 }
 
 pdf_files <- list.files(output_dir, pattern = "\\.pdf$", full.names = TRUE)
-png_files <- list.files(output_dir, pattern = "\\.png$", full.names = TRUE)
+raster_files <- list.files(output_dir, pattern = "\\.(jpg|jpeg|png)$", full.names = TRUE)
 metadata_files <- list.files(output_dir, pattern = "_metadata\\.json$", full.names = TRUE)
 qa_files <- list.files(output_dir, pattern = "_qa\\.md$", full.names = TRUE)
 visual_qa_files <- list.files(output_dir, pattern = "^visual_qa\\.json$", full.names = TRUE)
 
 if (length(pdf_files) < 1) warning("No PDF found in output directory.")
-if (length(png_files) < 1) warning("No PNG found in output directory.")
+if (length(raster_files) < 1) warning("No JPG/PNG found in output directory.")
 
-png_lines <- if (length(png_files) > 0) {
-  unlist(lapply(png_files, function(path) {
-    dims <- read_png_dims(path)
+raster_lines <- if (length(raster_files) > 0) {
+  unlist(lapply(raster_files, function(path) {
+    dims <- read_raster_dims(path)
     size <- file.info(path)$size
     c(
       paste0("- file: ", basename(path)),
@@ -37,7 +33,7 @@ png_lines <- if (length(png_files) > 0) {
     )
   }))
 } else {
-  "- No PNG preview found."
+  "- No JPG/PNG preview found."
 }
 
 pdf_lines <- if (length(pdf_files) > 0) {
@@ -56,8 +52,8 @@ lines <- c(
   "## PDF files",
   pdf_lines,
   "",
-  "## PNG preview dimensions",
-  png_lines,
+  "## Raster preview dimensions (JPG default; PNG legacy)",
+  raster_lines,
   "",
   "## Sidecar contract",
   paste0("- metadata files: ", length(metadata_files)),
@@ -81,7 +77,7 @@ lines <- c(
   "",
   "## Manual image-level QA checklist",
   "",
-  "Mark each item after inspecting the actual rendered PNG/PDF preview:",
+  "Mark each item after inspecting the actual rendered JPG/PDF preview (or explicitly requested legacy PNG):",
   "",
   "- [ ] Text remains readable at final target width.",
   "- [ ] No axis text, facet strips, labels, or legends overlap.",

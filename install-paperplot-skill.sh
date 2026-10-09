@@ -81,7 +81,7 @@ else
     [ -e "$SOURCE/$item" ] && cp -R "$SOURCE/$item" "$STAGE/candidate/"
   done
   mkdir "$STAGE/candidate/scripts"
-  for script in paperplot-run paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py family-qa-score.py vision-review-adapter.py run-template-recipe.R check-environment.R export-audit.py figure-project.R create-example-project.R bootstrap-environment.R install-self-test.R; do
+  for script in paperplot-run paperplot_helpers.R validate-figure-output.R visual-qa-report.R visual-qa-rendered-image.py compare-old-new-figures.py family-qa-score.py vision-review-adapter.py fix-cairo-page.py run-template-recipe.R check-environment.R export-audit.py figure-project.R create-example-project.R bootstrap-environment.R install-self-test.R; do
     [ -f "$SOURCE/scripts/$script" ] || { echo "Missing runtime script: $script" >&2; exit 1; }
     cp "$SOURCE/scripts/$script" "$STAGE/candidate/scripts/"
   done

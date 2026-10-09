@@ -107,7 +107,7 @@ manifest <- data.frame(
   old_figure = c(old_fig4, old_nlr),
   data_path = c(fig4_data, nlr_data),
   new_pdf = c(fig4_outputs[["pdf"]], nlr_outputs[["pdf"]]),
-  new_png = c(fig4_outputs[["png"]], nlr_outputs[["png"]]),
+  new_jpg = c(fig4_outputs[["jpg"]], nlr_outputs[["jpg"]]),
   pattern = c(
     "references/pattern-library/model-validation-figures.md + grouped-bar-errorbar.md",
     "references/pattern-library/grouped-bar-errorbar.md"

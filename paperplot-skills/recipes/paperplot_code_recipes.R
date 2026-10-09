@@ -25,8 +25,11 @@ pp_recipe_plot <- function(recipe_id, df, params = list(), mode = Sys.getenv("PA
   attr(plot,"pp_render_spec") <- spec
   if(entry$variant=='labels' && 'label'%in%names(df)) attr(plot,'pp_expected_labels') <- as.character(df$label[!is.na(df$label)&nzchar(as.character(df$label))])
   if(entry$handler %in% c('network','tree')) attr(plot,'pp_axes') <- 'none'
+  label_policy <- pp_heatmap_label_policy_summary(attr(plot, 'pp_heatmap_value_label_policy'))
+  if (!is.null(label_policy)) attr(plot, 'pp_heatmap_value_label_policy_summary') <- label_policy
   attr(plot,"pp_recipe_evidence") <- list(recipe_id=recipe_id,source=original,
-    validated=df,policy=attr(df,"pp_input_policy"),params=params,backend=entry$backend,mode=mode)
+    validated=df,policy=attr(df,"pp_input_policy"),params=params,backend=entry$backend,mode=mode,
+    label_policy=label_policy)
   if(!is.null(params$statistics) || !is.null(params$statistical_result)) {
     statistics <- params$statistical_result
     if(!is.null(statistics) && (!is.list(statistics)||is.null(statistics$method)||is.null(statistics$n))) stop('Supplied statistical_result requires method and n with its actual statistics.')

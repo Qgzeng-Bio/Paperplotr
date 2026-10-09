@@ -57,10 +57,16 @@ PaperPlotR also hosts an independent AI scientific plotting skill:
 [`paperplot-skills/`](paperplot-skills/). The skill uses ggplot2 and its own
 helpers, without installing or calling the PaperPlotR package. It provides
 template selection, semantic colors, panel sizing, no-overwrite versioned
-exports, sidecar notes, and output QA.
+exports, sidecar notes, and output QA. The standalone Skill now defaults to PDF
+and RGB JPG at 300 dpi (white background, JPEG quality 95), not SVG/PNG.
+JPG is lossy; PDF preserves vector text. Preview remains an interactive draft;
+production finalization and review gates are unchanged. These defaults describe
+the Skill, not the separate package API examples below.
 
-Production figures use Arial, 6-8 pt role-based text and 12 pt bold panel tags
-at their final physical size (180 mm main composites, 89 mm single column).
+Production figures use Arial and the selected journal profile's role-based text
+sizes at final physical size: Nature 183 mm double / 89 mm single column, or
+Cell 174 mm double / 114 mm mid / 85 mm single column; panel tags are 8 pt bold
+with journal-specific case. See the journal profiles rather than a fixed legacy size.
 See the [production contract](paperplot-skills/references/production-render-contract.md)
 for environment checks, data preservation, and evidence-based acceptance.
 

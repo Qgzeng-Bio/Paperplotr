@@ -29,7 +29,7 @@ pp_style_registry <- function() {
       legend_title = -0.2,
       legend_text = -0.5,
       strip_text = 0,
-      plot_title = 1,
+      plot_title = 0,
       plot_subtitle = 0,
       plot_caption = -1
     ),
@@ -37,7 +37,7 @@ pp_style_registry <- function() {
       body = 7,
       label = 6.5,
       minimum = 6,
-      panel_tag = 12
+      panel_tag = 8
     ),
     line_widths = list(
       axis_line = 0.35,
@@ -120,6 +120,10 @@ pp_spacing_mm <- function(role = c("tick_length", "legend_key", "legend_spacing_
 }
 
 pp_discrete_palettes <- list(
+  wong = c(
+    "#0072B2", "#E69F00", "#009E73", "#CC79A7",
+    "#56B4E9", "#D55E00", "#F0E442", "#000000"
+  ),
   graphpad_discrete = c(
     "#4E79A7", "#F28E2B", "#59A14F", "#E15759",
     "#B07AA1", "#76B7B2", "#EDC948", "#79706E",
@@ -144,15 +148,16 @@ pp_gradient_palettes <- list(
 )
 
 pp_output_presets <- list(
-  cell = list(width_cm = 17.4, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  cell_half = list(width_cm = 8.7, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  nature = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  nature_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  ncomms = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  ncomms_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 600, min_text_pt = 6),
-  single_column = list(width_cm = 8.9, height_cm = 6.2, dpi = 600, min_text_pt = 6),
-  double_column = list(width_cm = 18.0, height_cm = 12.0, dpi = 600, min_text_pt = 6),
-  square = list(width_cm = 8.9, height_cm = 8.9, dpi = 600, min_text_pt = 6)
+  cell = list(width_cm = 17.4, height_cm = 12.0, dpi = 300, min_text_pt = 6),
+  cell_mid = list(width_cm = 11.4, height_cm = 8.0, dpi = 300, min_text_pt = 6),
+  cell_half = list(width_cm = 8.5, height_cm = 6.0, dpi = 300, min_text_pt = 6),
+  nature = list(width_cm = 18.3, height_cm = 12.0, dpi = 300, min_text_pt = 5),
+  nature_half = list(width_cm = 8.9, height_cm = 6.0, dpi = 300, min_text_pt = 5),
+  ncomms = list(width_cm = 18.0, height_cm = 12.0, dpi = 300, min_text_pt = 6),
+  ncomms_half = list(width_cm = 9.0, height_cm = 6.0, dpi = 300, min_text_pt = 6),
+  single_column = list(width_cm = 8.9, height_cm = 6.2, dpi = 300, min_text_pt = 6),
+  double_column = list(width_cm = 18.0, height_cm = 12.0, dpi = 300, min_text_pt = 6),
+  square = list(width_cm = 8.9, height_cm = 8.9, dpi = 300, min_text_pt = 6)
 )
 
 pp_fig_specs <- data.frame(
@@ -426,7 +431,7 @@ pp_finalize <- function(plot, base_size = pp_style_number("base_size"),
   out
 }
 
-pp_palette <- function(n, palette = "graphpad_discrete", reverse = FALSE, alpha = 1) {
+pp_palette <- function(n, palette = "wong", reverse = FALSE, alpha = 1) {
   if (!is.numeric(n) || length(n) != 1 || is.na(n) || n < 1) {
     stop("n must be a positive number.", call. = FALSE)
   }
@@ -435,6 +440,9 @@ pp_palette <- function(n, palette = "graphpad_discrete", reverse = FALSE, alpha 
     stop("Unknown discrete palette: ", palette, call. = FALSE)
   }
   if (isTRUE(reverse)) values <- rev(values)
+  if (n > length(values) && identical(palette, "wong")) {
+    stop("The Wong palette supports at most 8 groups; use facets or an explicit alternative palette.", call. = FALSE)
+  }
   if (n > length(values)) {
     values <- grDevices::colorRampPalette(unname(values))(n)
   } else {
@@ -453,7 +461,7 @@ pp_gradient_palette <- function(n = 256, palette = "graphpad_heatmap", reverse =
   grDevices::colorRampPalette(unname(values))(n)
 }
 
-pp_group_colors <- function(groups, values = NULL, palette = "graphpad_discrete") {
+pp_group_colors <- function(groups, values = NULL, palette = "wong") {
   groups <- unique(as.character(groups))
   groups <- groups[!is.na(groups) & nzchar(groups)]
   if (!is.null(values)) {
@@ -477,7 +485,98 @@ pp_group_colors <- function(groups, values = NULL, palette = "graphpad_discrete"
   colors
 }
 
-pp_scale_color <- function(groups = NULL, values = NULL, palette = "graphpad_discrete",
+# Resolve recipe-level categorical colors without weakening palette contracts.
+pp_recipe_group_colors <- function(groups, params = list(), role = "group") {
+  groups <- unique(as.character(groups))
+  groups <- groups[!is.na(groups) & nzchar(groups)]
+  palette <- params$palette %||% "wong"
+  if (length(palette) != 1L || is.na(palette) || is.null(pp_discrete_palettes[[palette]])) {
+    stop("Unknown discrete palette: ", paste(palette, collapse = ", "), call. = FALSE)
+  }
+  color_key <- paste0(role, "_colors")
+  values <- params[[color_key]] %||% params$colors
+  if (!is.null(values)) {
+    if (is.null(names(values)) || length(values) != length(unique(names(values))) || any(!nzchar(names(values))))
+      stop("Named colors for ", role, " must have unique non-empty names.", call. = FALSE)
+    missing <- setdiff(groups, names(values))
+    if (length(missing)) stop("Named colors for ", role, " are missing groups: ", paste(missing, collapse = ", "), call. = FALSE)
+    tryCatch(grDevices::col2rgb(unname(values[groups])), error = function(e)
+      stop("Named colors for ", role, " contain an invalid color.", call. = FALSE))
+    return(values[groups])
+  }
+  pp_group_colors(groups, palette = palette)
+}
+
+# Store only the label-policy decision, never the copied cell table.
+pp_heatmap_label_policy_summary <- function(policy) {
+  if (is.null(policy)) return(NULL)
+  list(mode = policy$mode, show_values = isTRUE(policy$show_values),
+       counts = list(cells = policy$n_cells, x = policy$x_n, y = policy$y_n,
+                     facets = policy$facet_n, max_facet_cells = policy$max_facet_cells),
+       reason = policy$reason %||% policy$note %||% "density policy applied",
+       auto = isTRUE(policy$auto), required = isTRUE(policy$required),
+       physical_slot = policy$physical_slot %||% NULL)
+}
+
+# Decide whether compact heatmap values are legible enough for an initial draft.
+# This is a conservative density screen, not a physical collision proof.
+pp_heatmap_value_labels <- function(data, x, y, value, show_values = "auto",
+                                    facet = NULL, physical_slot = NULL, required = FALSE) {
+  if (!is.data.frame(data) || length(x) != 1L || length(y) != 1L || length(value) != 1L ||
+      !all(c(x, y, value) %in% names(data))) {
+    stop("Heatmap label policy needs a data frame and valid x, y, and value columns.", call. = FALSE)
+  }
+  if (is.logical(show_values) && length(show_values) == 1L && !is.na(show_values)) {
+    mode <- if (show_values) "TRUE" else "FALSE"
+  } else if (is.character(show_values) && length(show_values) == 1L && show_values %in% c("auto", "TRUE", "FALSE")) {
+    mode <- show_values
+  } else {
+    stop("show_values must be exactly auto, TRUE, or FALSE.", call. = FALSE)
+  }
+  if (!is.numeric(data[[value]]) || any(!is.na(data[[value]]) & !is.finite(data[[value]]))) {
+    stop("Heatmap values must be numeric and finite except for explicit NA cells.", call. = FALSE)
+  }
+  if (!is.null(facet) && length(facet) != nrow(data)) stop("Heatmap facet labels must match the data rows.", call. = FALSE)
+  if (!is.null(physical_slot)) {
+    if (is.numeric(physical_slot) && length(physical_slot) == 2L) {
+      physical_slot <- list(width_mm = physical_slot[[1]], height_mm = physical_slot[[2]])
+    }
+    if (!is.list(physical_slot) || any(!c("width_mm", "height_mm") %in% names(physical_slot)) ||
+        length(physical_slot$width_mm) != 1L || length(physical_slot$height_mm) != 1L ||
+        !is.numeric(physical_slot$width_mm) || !is.numeric(physical_slot$height_mm) ||
+        any(!is.finite(c(physical_slot$width_mm, physical_slot$height_mm))) ||
+        any(c(physical_slot$width_mm, physical_slot$height_mm) <= 0)) {
+      stop("physical_slot width_mm and height_mm must be scalar positive finite numbers.", call. = FALSE)
+    }
+  }
+  x_n <- length(unique(data[[x]][!is.na(data[[x]])]))
+  y_n <- length(unique(data[[y]][!is.na(data[[y]])]))
+  cells <- unique(data[c(x, y)])
+  n_cells <- nrow(cells)
+  facet_n <- if (is.null(facet)) 1L else length(unique(facet[!is.na(facet)]))
+  max_facet_cells <- if (is.null(facet)) n_cells else max(table(factor(facet, exclude = NULL)))
+  auto <- n_cells <= 100L && x_n <= 10L && y_n <= 10L
+  if (facet_n > 1L) auto <- auto && x_n <= 8L && y_n <= 8L && max_facet_cells <= floor(100 / facet_n)
+  if (!is.null(physical_slot)) auto <- auto && physical_slot$width_mm / max(1, x_n) >= 4 && physical_slot$height_mm / max(1, y_n) >= 4
+  show <- switch(mode, auto = auto, `TRUE` = TRUE, `FALSE` = FALSE)
+  if (isTRUE(required) && identical(mode, "auto") && !show) show <- TRUE
+  if (isTRUE(required) && identical(mode, "FALSE")) stop("This heatmap variant requires value labels; use show_values=TRUE or auto.", call. = FALSE)
+  # Format each cell independently: one tiny value must not pad every other
+  # label with trailing zeroes or imply more precision than the source supports.
+  labels <- vapply(data[[value]], function(v) {
+    if (is.na(v)) "NA" else format(signif(v, 3), trim = TRUE)
+  }, character(1), USE.NAMES = FALSE)
+  labelled <- data
+  labelled$.pp_heatmap_label <- labels
+  reason <- if (identical(mode, "auto") && isTRUE(required) && !auto) "required labels retained despite dense auto screen" else if (identical(mode, "auto")) "conservative density screen" else "explicit user setting"
+  list(show_values = isTRUE(show), data = labelled, mode = mode, auto = auto,
+       required = isTRUE(required), n_cells = n_cells, x_n = x_n, y_n = y_n,
+       facet_n = facet_n, max_facet_cells = max_facet_cells,
+       physical_slot = physical_slot, reason = reason,
+       note = "auto is a conservative density screen; inspect the rendered figure for actual label collisions.")
+}
+
+pp_scale_color <- function(groups = NULL, values = NULL, palette = "wong",
                            na.value = "#BFBFBF", guide = ggplot2::guide_legend(), ...) {
   if (!is.null(groups) || !is.null(values)) {
     return(ggplot2::scale_colour_manual(
@@ -496,7 +595,7 @@ pp_scale_color <- function(groups = NULL, values = NULL, palette = "graphpad_dis
   )
 }
 
-pp_scale_fill <- function(groups = NULL, values = NULL, palette = "graphpad_discrete",
+pp_scale_fill <- function(groups = NULL, values = NULL, palette = "wong",
                           na.value = "#BFBFBF", guide = ggplot2::guide_legend(), ...) {
   if (!is.null(groups) || !is.null(values)) {
     return(ggplot2::scale_fill_manual(
@@ -516,7 +615,7 @@ pp_scale_fill <- function(groups = NULL, values = NULL, palette = "graphpad_disc
 }
 
 pp_validate_palette <- function(groups = NULL, variable_type = c("discrete", "continuous"),
-                                palette = "graphpad_discrete") {
+                                palette = "wong") {
   variable_type <- match.arg(variable_type)
   if (identical(variable_type, "continuous")) {
     if (is.null(pp_gradient_palettes[[palette]])) {
@@ -529,6 +628,9 @@ pp_validate_palette <- function(groups = NULL, variable_type = c("discrete", "co
   }
   n_groups <- length(unique(as.character(groups %||% character())))
   capacity <- length(pp_discrete_palettes[[palette]])
+  if (n_groups > capacity && identical(palette, "wong")) {
+    stop("The Wong palette supports at most 8 groups; use facets or an explicit alternative palette.", call. = FALSE)
+  }
   if (n_groups > capacity) {
     return(pp_qa_result("palette", "warn", paste("group count", n_groups, "exceeds base palette capacity", capacity, "and will be interpolated")))
   }
@@ -1041,10 +1143,11 @@ pp_qa_candidate_improved <- function(initial, candidate) {
 }
 
 # Save final-size files, retaining only verified improvements across retries.
-pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "svg", "png"),
+pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "jpg"),
                                      max_iterations = 2L, overwrite = FALSE, width = NULL, height = NULL,
                                      dpi = NULL, qa_context = list(), qa_out_dir = paste0(output_stem, "_visual_qa"),
                                      render_spec = NULL, project_context = NULL, ...) {
+  formats <- pp_validate_export_formats(formats)
   if (!isTRUE(overwrite) && dir.exists(qa_out_dir)) stop("Refusing to overwrite existing QA directory: ", qa_out_dir, call. = FALSE)
   if(isTRUE(overwrite) && dir.exists(qa_out_dir)) {
     backup <- tempfile(paste0(basename(qa_out_dir),'-history-'),tmpdir=dirname(qa_out_dir))
@@ -1059,7 +1162,9 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
       (!is.null(height) && abs(height*10-declared_spec$height_mm)>.001))) stop('Conflicting canvas dimensions: render_spec and legacy width/height must agree.')
   render_spec <- declared_spec %||% pp_render_spec(n_panels = pp_infer_panel_count(plot),
     width_mm = if (!is.null(width)) width * 10, height_mm = if (!is.null(height)) height * 10)
+  render_spec$export_formats <- as.list(formats)
   render_spec$shared_row_labels <- attr(plot, "pp_shared_row_labels")
+  preview <- identical(render_spec$mode, "preview")
   direct_labels <- function(p) {
     if(inherits(p,'patchwork')) {
       last<-p;last$patches<-NULL;class(last)<-setdiff(class(last),'patchwork')
@@ -1104,21 +1209,27 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     if(!all(file.copy(unname(files),directory,overwrite=FALSE))) stop('Could not preserve immutable QA candidate files.')
     writeLines(pp_to_json(list(iteration=iteration,files=as.list(stats::setNames(unname(tools::md5sum(unname(files))),basename(files))))),file.path(directory,'manifest.json'))
   }
-  # Each attempted export is kept with its own QA. The top-level files are the
-  # selected candidate; rejected candidates remain inspectable, not deliverable.
-  keep_candidate(output_files,0L)
+  # Production/demo retain immutable candidate history and the existing retry path.
+  if (!preview) keep_candidate(output_files, 0L)
   iterations <- 0L
   all_fixes <- character()
-  png_file <- if ("png" %in% names(output_files)) output_files[["png"]]
+  raster_file <- function(files) {
+    keys <- intersect(c("jpg", "jpeg", "png"), names(files))
+    if (length(keys)) files[[keys[[1]]]] else NULL
+  }
+  qa_raster <- raster_file(output_files)
   qa_args <- pp_qa_context_args(context)
-  qa <- if (!is.null(png_file)) {
-    pp_run_visual_qa(png_file, out_dir = file.path(qa_out_dir, "iteration-0"), extra_args = qa_args)
+  qa <- if (preview) {
+    list(available = FALSE, status = "not_run", qa_dir = qa_out_dir,
+         deferred = TRUE, error = "Visual QA and repair loop deferred in preview mode")
+  } else if (!is.null(qa_raster)) {
+    pp_run_visual_qa(qa_raster, out_dir = file.path(qa_out_dir, "iteration-0"), extra_args = qa_args)
   } else {
-    list(available = FALSE, status = "unavailable", qa_dir = qa_out_dir, error = "PNG preview was not requested")
+    list(available = FALSE, status = "unavailable", qa_dir = qa_out_dir, error = "JPG/PNG raster preview was not requested")
   }
   initial_status <- qa$status %||% "unavailable"
   rejected_fixes <- character()
-  while (iterations < max_iterations && isTRUE(qa$available) && qa$status %in% c("warn", "fail")) {
+  if (!preview) while (iterations < max_iterations && isTRUE(qa$available) && qa$status %in% c("warn", "fail")) {
     previous_plot <- plot; previous_qa <- qa; previous_fixes <- all_fixes
     fixed <- pp_apply_machine_fixes(plot, qa)
     new_fixes <- attr(fixed, "pp_machine_fixes_applied")
@@ -1131,8 +1242,8 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     output_files <- pp_save_all(plot, output_stem, preset = preset, formats = formats,
                                 overwrite = TRUE, width = width, height = height, dpi = dpi,
                                 finalize_plot = FALSE, ...)
-    keep_candidate(output_files,iterations)
-    qa <- pp_run_visual_qa(png_file, out_dir = file.path(qa_out_dir, paste0("iteration-", iterations)), extra_args = qa_args)
+    keep_candidate(output_files, iterations)
+    qa <- pp_run_visual_qa(raster_file(output_files), out_dir = file.path(qa_out_dir, paste0("iteration-", iterations)), extra_args = qa_args)
     if (!pp_qa_candidate_improved(previous_qa, qa)) {
       rejected_fixes <- c(rejected_fixes, theme_fixes)
       all_fixes <- previous_fixes; plot <- previous_plot; qa <- previous_qa
@@ -1150,10 +1261,13 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   attr(output_files, "qa_error") <- qa$error %||% NULL
   attr(output_files, "qa_context") <- context
   attr(output_files, "qa_final_dir") <- qa$qa_dir %||% qa_out_dir
-  export_audit <- pp_run_export_audit(output_files, render_spec, output_stem)
+  export_audit <- if (preview) {
+    list(status = "unverified", reason = "Export audit deferred in preview mode",
+         checks = list(engine = "unverified"), reviewable_checks = character())
+  } else pp_run_export_audit(output_files, render_spec, output_stem)
   # Raster layout detectors are heuristics. Precise export/data failures remain
   # hard checks; a located heuristic can be resolved by bound human review.
-  visual_status <- if (!isTRUE(qa$available)) 'unverified' else if(identical(qa$status,'pass')) 'pass' else 'warn'
+  visual_status <- if (preview || !isTRUE(qa$available)) 'unverified' else if(identical(qa$status,'pass')) 'pass' else 'warn'
   export_checks <- export_audit$checks %||% list(engine='unverified')
   checks <- c(list(data_integrity='pass',font_glyphs=glyph_check$status,source_semantics='unverified',visual_layout=visual_status),
               stats::setNames(export_checks,paste0('export_',names(export_checks))))
@@ -1162,7 +1276,9 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   qa_provenance <- list(detectors=pp_detector_fingerprint(),render_spec=render_spec[setdiff(names(render_spec),c('reviews','human_review'))],
     inputs=unname(tools::md5sum(evidence_path)),outputs=as.list(stats::setNames(unname(tools::md5sum(unname(output_files))),basename(output_files))))
   evidence_hash <- pp_content_hash(qa_provenance)
-  reviewable <- c('source_semantics',if(isTRUE(qa$available)) 'visual_layout',paste0('export_',unlist(export_audit$reviewable_checks)),
+  audit_reviewable <- unlist(export_audit$reviewable_checks, use.names = FALSE)
+  audit_reviewable <- if (length(audit_reviewable)) paste0('export_', audit_reviewable) else character()
+  reviewable <- c('source_semantics',if(isTRUE(qa$available)) 'visual_layout',audit_reviewable,
     intersect(c('project_geometry','project_shared_rows'),names(checks)[vapply(checks,identical,logical(1),'unverified')]))
   required <- setdiff(names(checks),names(checks)[vapply(checks,identical,logical(1),'not_applicable')])
   final <- pp_final_qa(checks,render_spec$human_review,render_spec$mode,required=required,
@@ -1186,6 +1302,34 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
     paste("Final checks:", paste(names(final$checks), unlist(final$checks), sep = "=", collapse = "; ")),
     unname(output_files)), paste0(output_stem, "_delivery.md"))
   output_files
+}
+
+# Some ragg/libjpeg builds omit density metadata. Set JFIF density without
+# recompressing pixels or altering any drawing instruction/backend.
+pp_set_jpeg_dpi <- function(filename, dpi) {
+  dpi <- round(dpi)
+  if (length(dpi) != 1L || !is.finite(dpi) || dpi < 1 || dpi > 65535) stop("JPEG DPI must fit JFIF density fields.")
+  bytes <- readBin(filename, "raw", n = file.info(filename)$size)
+  if (length(bytes) < 4L || !identical(as.integer(bytes[1:2]), c(255L, 216L))) stop("JPEG device did not produce JPEG encoding.")
+  density <- as.raw(c(1L, dpi %/% 256L, dpi %% 256L, dpi %/% 256L, dpi %% 256L))
+  i <- 3L; found <- FALSE
+  while (i + 3L <= length(bytes)) {
+    marker <- as.integer(bytes[i + 1L])
+    if (as.integer(bytes[i]) != 255L || marker %in% c(218L, 217L)) break
+    size <- as.integer(bytes[i + 2L]) * 256L + as.integer(bytes[i + 3L])
+    if (size < 2L || i + size + 1L > length(bytes)) stop("Invalid JPEG marker length.")
+    if (marker == 224L && size >= 16L && identical(bytes[(i + 4L):(i + 8L)], c(charToRaw("JFIF"), as.raw(0)))) {
+      bytes[(i + 11L):(i + 15L)] <- density
+      found <- TRUE; break
+    }
+    i <- i + size + 2L
+  }
+  if (!found) {
+    app0 <- c(as.raw(c(255, 224, 0, 16)), charToRaw("JFIF"), as.raw(c(0, 1, 2)), density, as.raw(c(0, 0)))
+    bytes <- c(bytes[1:2], app0, bytes[-(1:2)])
+  }
+  writeBin(bytes, filename)
+  invisible(filename)
 }
 
 pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, height = NULL,
@@ -1213,7 +1357,11 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
     if (identical(text_floor_action, "error")) stop(message, call. = FALSE) else warning(message, call. = FALSE)
   }
   device <- pp_default_device(filename)
-  ggplot2::ggsave(
+  device_args <- list(...)
+  if (tolower(tools::file_ext(filename)) %in% c("jpg", "jpeg")) {
+    device_args$quality <- device_args$quality %||% 95
+  } else device_args$quality <- NULL  # JPEG-only parameter must never reach PDF/SVG.
+  do.call(ggplot2::ggsave, c(list(
     filename = filename,
     plot = plot,
     width = width %||% preset_values$width_cm,
@@ -1221,9 +1369,9 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
     units = units,
     dpi = dpi %||% preset_values$dpi,
     device = device,
-    bg = "white",
-    ...
-  )
+    bg = "white"
+  ), device_args))
+  if (tolower(tools::file_ext(filename)) %in% c("jpg", "jpeg")) pp_set_jpeg_dpi(filename, dpi %||% preset_values$dpi)
   # Local Linux compatibility: Cairo truncates fractional PDF points.
   # Restore only the page box; never scale text, vectors, or content streams.
   if (identical(Sys.info()[["sysname"]], "Linux") &&
@@ -1244,10 +1392,18 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
   invisible(filename)
 }
 
-pp_save_all <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "png"),
+pp_validate_export_formats <- function(formats) {
+  if (!is.character(formats) || !length(formats) || anyNA(formats)) stop("Export formats must be a nonempty character vector.")
+  formats <- tolower(formats)
+  if (any(!formats %in% c("pdf", "jpg", "jpeg", "png", "svg", "tif", "tiff")) || anyDuplicated(formats))
+    stop("Export formats must be unique supported extensions: pdf, jpg, jpeg, png, svg, tif, tiff.")
+  formats
+}
+
+pp_save_all <- function(plot, output_stem, preset = "nature_half", formats = c("pdf", "jpg"),
                         overwrite = FALSE, width = NULL, height = NULL, dpi = NULL,
                         finalize_plot = TRUE, ...) {
-  formats <- unique(tolower(formats))
+  formats <- pp_validate_export_formats(formats)
   output_files <- stats::setNames(paste0(output_stem, ".", formats), formats)
   if (!isTRUE(overwrite)) pp_stop_if_outputs_exist(output_files)
   if (isTRUE(finalize_plot)) plot <- pp_finalize(plot)

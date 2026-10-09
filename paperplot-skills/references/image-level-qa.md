@@ -4,7 +4,7 @@ Use this after rendering a figure. Code-level validation is not enough.
 
 ## Required visual checks
 
-Inspect the actual PNG/PDF preview at:
+Inspect the actual JPG/PDF preview at:
 
 1. full size,
 2. target publication width,
@@ -14,7 +14,7 @@ Inspect the actual PNG/PDF preview at:
 Run deterministic QA with the most specific family profile that is justified by the figure type:
 
 ```bash
-python3 scripts/visual-qa-rendered-image.py <figure.png> --out <qa_dir> --family <family>
+python3 scripts/visual-qa-rendered-image.py <figure.jpg> --out <qa_dir> --family <family>
 ```
 
 Use global thresholds when the family is unclear. Use family profiles only for expected scientific structure such as lollipop stems, model-validation sparsity, heatmap matrices, Manhattan point clouds, or phylogenetic annotation rings.
@@ -37,7 +37,7 @@ python3 scripts/visual-qa-rendered-image.py <figure.pdf-or-png> --out <qa_dir> -
 | color | meaning is accessible and consistent | red/green dependence, rainbow, ambiguous classes |
 | black-white robustness | groups still partly distinguishable by position/shape/labels | color is the only encoding for critical classes |
 | statistics | uncertainty and n/test semantics visible or documented | p-values or stars appear without context |
-| export | PDF vector and PNG preview are crisp | rasterized text, fuzzy lines, tiny file, wrong aspect |
+| export | PDF vector and JPG 300-dpi preview are crisp | rasterized text, fuzzy lines, tiny file, wrong aspect |
 | Nature guardrails | `nature_guardrails.status` is pass, or warn with a documented reason | strict mode returns fail for overlap, blank space, unreadable preview, or panel imbalance |
 
 ## Old-vs-new visual comparison

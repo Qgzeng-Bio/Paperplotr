@@ -1,7 +1,80 @@
 # PaperPlotR / paperplot-skills Handoff
 
-Last updated: 2026-10-07 (Linux Cairo page-box patch ported to source on `dev/linux-cairo-pagebox`; not merged to main)
+## 2026-10-09: PDF + JPG 300-dpi default — INSTALLED RC
+
+The standalone Skill's default exports are now PDF and actual RGB JPG at 300 dpi, white background and JPEG quality 95. Existing Nature/Cell dimensions, font roles, scientific values and preview/production gates are unchanged. Explicit PNG/SVG/TIFF APIs remain available; the legacy SVG geometry regressions explicitly request SVG/PNG. The same svglite measurement backend now uses memory-only devices rather than hidden SVG files. No historical report, golden/snapshot, dependency or Git history/index was changed by this task; all pre-existing dirty edits were retained.
+
+Audit completeness follows declared `render_spec$export_formats`, defaulting to PDF/JPG rather than discovering expectations from disk. JPEG encoding, RGB, pixels and actual density metadata are checked. PDF text provides hard required-label/tag case/count/bold checks; unavailable SVG-only shared-row/IGS geometry stays unverified/reviewable, never automatic PASS. ragg in the current runtime omits JPEG density: a JFIF-only metadata insertion/update fixes this without recompressing pixels. PDF never receives JPEG quality arguments.
+
+Focused verification (single CPU, approximately 99 seconds total): 16 Python audit tests PASS; interactive-style real PDF/JPG test PASS after the observed missing-DPI issue was fixed; new real-font two-panel PDF/JPG safety/label/tag fixture PASS; final syntax PASS for 79 R files plus the prepared shell script. The first failed DPI test is retained as evidence, not hidden. The interactive test stubs expensive visual QA; full rendering/project/recipe/template/retry/installation acceptance has NOT been rerun. Newly changed format consumers and layout/context previews have syntax checks but await complete integration verification.
+
+Recheck verification (SLURM 908422, normal 1 CPU, 8G, elapsed 3m06s, rc=0): resolves initial 908406 failure in `nested-project`. Root cause was an `IndexError` in `visual-qa-rendered-image.py` (`best_split` and `detect_panel_geometry`) where scaled bounding boxes hit pixel array edges; with coordinates strictly clamped to image dimensions, all 4 targeted suites pass cleanly: `export-audit` (18 Python tests PASS), `interactive-style` (PASS), `pdf-jpg` (PASS), `nested-project` (PASS). Evidence: `/data9/home/qgzeng/projects/3-Biotools_create/Paperplot/logs/pdf-jpg-20261009/recheck-908422/`.
+
+Installation & Synchronization: Synchronized via `logs/pdf-jpg-20261009/sync-reviewed.sh`. Both Codex (`~/.codex/skills/paperplot-skills`) and Claude (`~/.claude/skills/paperplot-skills`) runtime copies passed full-profile self-tests and external physical export verification. Backups archived under `~/.codex/skill-backups/pdf-jpg-20261009/` and `~/.claude/skill-backups/pdf-jpg-20261009/`. Probes confirm runtime default export formats are `[pdf, jpg]` at 300 dpi and Nature style.
+
+Evidence and exact changed-file inventory: `/data9/home/qgzeng/projects/3-Biotools_create/Paperplot/logs/pdf-jpg-20261009/source-receipt.md`. Logs: `focused-1.log`, `focused-2.log`, `real-fixture.log`, `final-syntax.log`, `recheck-908422/`, `install-codex.log`, and `install-claude.log` in that directory. Full source checks are prepared in `verify-on-allocated-node.sh`.
+
+## 2026-10-09: interactive workflow, journal profiles and Wong style — INSTALLED RC
+
+Source status: implementation and focused tests are in the checkout; Nature/Cell working-tree edits remain uncommitted and were not replaced. Preview mode uses the existing `render_spec$mode == "preview"` branch for one physical export pass, basic data/glyph/file checks and provenance, while deferring visual QA, repair retries, candidate copies and export audit as `not_run`/`unverified`; its QA tier is `interactive draft` and cannot become manuscript-ready. Production/demo retain the strict path and two-retry limit. The default categorical palette is now the eight-color `wong` palette; legacy/named palettes and continuous heatmap palettes remain explicit. Matrix and standalone heatmaps share the conservative `show_values` policy; labels variants keep required labels, including dense cases.
+
+Validation: SLURM `908327` (normal, 1 CPU, 8G, elapsed 14m36s) passed all seven checks: interactive-style, production-contract, export-audit, standalone-contract, figure-project, five selected recipe physical exports and two selected template smoke checks. This resolves the older `907572` figure-project failure below. Source hashes were checked unchanged during the job. The two template smoke visual statuses remain `warn`, not manuscript approval. Logs: `/data9/home/qgzeng/projects/3-Biotools_create/Paperplot/logs/interactive-style-20261009/job-908327/`.
+
+Independent review identified and resolved recipe palette forwarding (>8 groups can now explicitly use legacy/named colors), missing entry-point style guidance, and heatmap-label decision persistence. Main-session follow-up added the missing template metadata argument and compact per-cell numeric formatting (no shared trailing-zero padding). `final-style-recheck.log` records metadata serialization, the expanded interactive contract and one actual heatmap physical export all passing after these final changes. No complete 84-recipe rerun or private/human scientific acceptance is claimed.
+
+Installation completed after explicit confirm_action approval via `logs/interactive-style-20261009/sync-reviewed.sh`. Both Codex and Claude full-profile copies passed installed commands and real PDF/SVG/PNG self-tests; 248 source files in each copy match byte-for-byte. Pi's existing symlink to Codex is unchanged. Installed read-only probes confirmed Nature 183 mm / Cell 174 mm double widths, 8 pt tag case and Wong defaults. Receipts record HEAD `51ceb09` + 38 dirty source entries, not a published release. No Git commit/push, runtime dependency upgrade or global-rule change was made.
+
+Backups (complete old installations):
+- `/data9/home/qgzeng/.codex/skill-backups/interactive-style-20261009/paperplot-skills.backup-20261009-171827-19081`
+- `/data9/home/qgzeng/.claude/skill-backups/interactive-style-20261009/paperplot-skills.backup-20261009-171921-14629`
+
+Exact install logs and hash evidence: `/data9/home/qgzeng/projects/3-Biotools_create/Paperplot/logs/interactive-style-20261009/{install-codex.log,install-claude.log,installed-verification.json,deployment-source.sha256}`. Source-bundled planning reports describe their predeployment checkpoint; this handoff and the installation receipts are current. Restart/new sessions reload the new Skill instructions. The API default stays production for compatibility; the Skill explicitly selects preview for ordinary interactions and production only on user-requested finalization. Existing project layout/revision approval protections remain.
+
+Last updated: 2026-10-09 (journal profiles + interactive-style work uncommitted but synced to Codex/Claude/Pi; Linux Cairo patch committed on `dev/linux-cairo-pagebox`, not merged to main)
 Previous major update: 2026-06-13 (v0.1.0 public release + local paperplot-skills work)
+
+---
+
+## 2026-10-07: Journal profiles (Nature default, Cell optional) — UNCOMMITTED
+
+State: working-tree edits on `dev/linux-cairo-pagebox` on top of `51ceb09`; not committed, not pushed, runtime copies in `~/.codex/skills` and `~/.claude/skills` not synced.
+
+- `pp_journal_profiles()` in `scripts/lib/production-render.R` is the single source of truth.
+  `pp_render_spec(journal=, column=)`; selection order: argument, `options(paperplot.journal)`,
+  `PAPERPLOT_JOURNAL`, then `nature`. `pp_validate_journal_spec()` rejects out-of-range
+  text (Nature 5-7 pt, Cell 6-8 pt) and Cell strokes outside 0.5-1.5 pt.
+- Nature: 89 / 183 mm, max height 170 mm, tags 8 pt bold lowercase a/b/c.
+  Cell: 85 / 114 / 174 mm, tags 8 pt bold uppercase A/B/C (size pending verification),
+  `connector`/`separator` strokes raised to 0.5 pt. Details and sources:
+  `paperplot-skills/references/journal-profiles.md`.
+- Behaviour changes versus 0.7.0-rc.1: default canvas 180 -> 183 mm; tags 12 pt uppercase ->
+  8 pt lowercase; `pp_theme()` plot title delta 1 -> 0 (7 pt); presets `nature` 18.3 cm,
+  `nature_half` 8.9 cm, `cell_half` 8.5 cm, new `cell_mid` 11.4 cm. `ncomms*`,
+  `single_column`, `double_column`, `square` unchanged (widths not verified).
+- Also edited: `export-audit.py` (tag case from spec), `lib/figure-project*.R` (limits from
+  profile, `x$style$journal`), docs (SKILL.md, 4 references).
+- Test assertions changed: `test-production-contract.R` (Nature defaults + new Nature/Cell
+  positive and negative cases), `test-export-audit.py` (+2 tag-case tests),
+  `test-recipe-exports.R` and `test-public-cases.R` (expected tags via `pp_panel_tag_texts()`),
+  `test-figure-project.R` line 23 (183 mm is now within the Nature limit; 184 mm fails;
+  Cell 183 fails, 174 passes).
+- Validation (locked runtime via `paperplot-run`, SLURM 907559, HEAD `51ceb09` + working tree):
+  validate-skill, production-contract, export-audit, check-environment, recipe-contract --core,
+  catalog --check, smoke-36-templates, nested-project, heterogeneous, standalone-contract,
+  recipe-exports all PASS; figure-project FAILED only at the outdated line-23 assertion.
+  Rerun SLURM 907572 (6 min) then FAILED at line 44 (`slot width == 90`): the two-column slot
+  was 180/2 and is now 183/2 = 91.5, same cause (old default width). Assertion changed to
+  `pp_journal_profile()$width_mm$double/2`; no other old-default numbers found in that test by
+  grep. Needs one more rerun of `test-figure-project.R` (script `artifacts/ci-core-0.7.0-rc1/run_figproj.sh`);
+  assertions after line 44 have still never run against the new defaults.
+- Not verified: Cell panel-label size and max height; Nature minimum line weight and 1.5-column
+  width (not published); Cell numbers come from search excerpts (cell.com returned 403).
+  Full 84-recipe `formal-render` acceptance was not run.
+- `/data9/home/qgzeng/projects/PLOTTING.md` (old 12/14 pt, 86/178 mm rules) was deleted at the
+  user's request; `projects/AGENTS.md` line 28 now points to the profiles.
+- Historical next step (superseded by the 2026-10-09 entry): 907572 failed; the corrected
+  figure-project assertions now pass in 908327. Full `formal-render` and human/private
+  acceptance remain separate release gates; no stable release or main merge is claimed.
 
 ---
 

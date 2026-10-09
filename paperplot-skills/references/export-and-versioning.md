@@ -6,8 +6,8 @@ Use versioned exports so figure iterations remain auditable.
 
 - Timestamped output stem: `figure_id_YYYYMMDD-HHMMSS`.
 - PDF for vector editing.
-- PNG for preview.
-- 600 dpi for raster output.
+- JPG for preview and QA: actual RGB JPEG, 300 dpi, white background, quality 95.
+- PDF + JPG only by default; PNG/SVG/TIFF require explicit legacy formats. JPG is lossy; PDF retains precise vector text.
 - Refuse to overwrite old outputs.
 - Write sidecar notes next to outputs.
 - Write machine-readable metadata JSON.
@@ -30,7 +30,7 @@ Each template should generate:
 
 ```text
 *.pdf
-*.png
+*.jpg
 *_notes.md
 *_metadata.json
 *_qa.md

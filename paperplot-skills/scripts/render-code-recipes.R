@@ -18,10 +18,10 @@ rows<-lapply(seq_len(nrow(catalog)),function(i) {
   tryCatch({
     files<-pp_run_recipe_template(id,id,entry$figure_family,input_path='explicit-demo-constructor',output_dir=folder,mode='demo')
     stem<-file.path(folder,id)
-    data.frame(recipe_id=id,family=entry$figure_family,status='demo only',pdf=files[['pdf']],png=files[['png']],
+    data.frame(recipe_id=id,family=entry$figure_family,status='demo only',pdf=files[['pdf']],jpg=files[['jpg']],
       notes=paste0(stem,'_notes.md'),metadata=paste0(stem,'_metadata.json'),qa=paste0(stem,'_qa.md'),
       visual_qa=attr(files,'qa_contract')$status)
-  },error=function(e) data.frame(recipe_id=id,family=entry$figure_family,status='demo error',pdf=NA,png=NA,notes=NA,metadata=NA,qa=NA,visual_qa=paste('error:',conditionMessage(e))))
+  },error=function(e) data.frame(recipe_id=id,family=entry$figure_family,status='demo error',pdf=NA,jpg=NA,notes=NA,metadata=NA,qa=NA,visual_qa=paste('error:',conditionMessage(e))))
 })
 dir.create(output,recursive=TRUE,showWarnings=FALSE)
 result<-do.call(rbind,rows);write.csv(result,file.path(output,'recipe-gallery-index.csv'),row.names=FALSE)

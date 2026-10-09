@@ -12,7 +12,7 @@ if (!dir.exists(output_dir)) fail("Output directory not found: ", output_dir)
 find_files <- function(pattern) list.files(output_dir, pattern = pattern, full.names = TRUE, recursive = TRUE)
 
 pdf_files <- find_files("\\.pdf$")
-png_files <- find_files("\\.png$")
+jpg_files <- find_files("\\.jpg$")
 notes_files <- find_files("_notes\\.md$")
 metadata_files <- find_files("_metadata\\.json$")
 qa_files <- find_files("_qa\\.md$")
@@ -25,7 +25,7 @@ check_nonempty <- function(files, label) {
 }
 
 check_nonempty(pdf_files, "PDF")
-check_nonempty(png_files, "PNG")
+check_nonempty(jpg_files, "JPG")
 check_nonempty(notes_files, "notes")
 check_nonempty(metadata_files, "metadata JSON")
 check_nonempty(qa_files, "QA report")
@@ -71,4 +71,4 @@ for (path in production_reports) {
 
 cat(if (smoke_only) "File generation contract passed; this is NOT visual acceptance.\n" else "Final figure acceptance passed\n")
 cat("output directory: ", output_dir, "\n", sep = "")
-cat("pdf: ", length(pdf_files), ", png: ", length(png_files), ", notes: ", length(notes_files), ", metadata: ", length(metadata_files), ", qa: ", length(qa_files), ", label_key: ", length(label_key_files), "\n", sep = "")
+cat("pdf: ", length(pdf_files), ", jpg: ", length(jpg_files), ", notes: ", length(notes_files), ", metadata: ", length(metadata_files), ", qa: ", length(qa_files), ", label_key: ", length(label_key_files), "\n", sep = "")

@@ -4,11 +4,11 @@ The core implementation is R/ggplot2, but users may ask for Python or editing wo
 
 ## R / ggplot2
 
-Default backend. Use `scripts/paperplot_helpers.R`, specs, metadata, notes, QA, PDF and PNG export.
+Default backend. Use `scripts/paperplot_helpers.R`, specs, metadata, notes, QA, PDF and JPG (300 dpi) export.
 
 ## Python / matplotlib / seaborn
 
-Use only when the user explicitly asks for Python or the analysis pipeline is already Python-native. Preserve the same design contract: design brief, metric semantics, visible-vs-metadata split, PDF/PNG, notes, metadata, QA.
+Use only when the user explicitly asks for Python or the analysis pipeline is already Python-native. Preserve the same design contract: design brief, metric semantics, visible-vs-metadata split, PDF/JPG (300 dpi), notes, metadata, QA.
 
 Recommended matplotlib settings:
 

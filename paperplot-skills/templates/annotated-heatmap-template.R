@@ -42,7 +42,7 @@ notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
 label_key_path <- paste0(output_stem, "_label_key.csv")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path, label_key_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path, label_key_path))
 
 figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "annotated-heatmap-template", task_type = "new", figure_role = figure_role, scientific_message = scientific_message, plot_type = "annotated_heatmap", output_preset = "nature_half")
 metric_spec <- pp_metric_spec(metric = value_col, label = "Matrix value", unit = "a.u.", direction = "neutral", transform = "none", role = "primary")

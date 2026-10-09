@@ -11,7 +11,7 @@ Use `paperplot-skills` for standalone R/ggplot2 scientific plotting tasks that n
 - Use `scripts/paperplot_helpers.R`; do not load PaperPlotR.
 - Start from a template in `templates/`.
 - Preserve old outputs and create timestamped new outputs.
-- Export PDF and PNG.
+- Export PDF and JPG (RGB, 300 dpi, white background, JPEG quality 95). No default SVG; explicit legacy formats remain available. JPG is lossy; PDF preserves vector text.
 - Write notes with design decisions and QA results.
 - Use small multiples by default for 5-8 heterogeneous metrics.
 
