@@ -18,6 +18,7 @@ x_col <- "TODO_x"
 y_col <- "TODO_y"
 value_col <- "TODO_value"
 value_label <- "TODO value"
+show_values <- "auto" # one of "auto", TRUE, or FALSE; auto is a conservative first-pass screen
 
 figure_spec <- pp_figure_spec(
   figure_id = figure_id,
@@ -34,7 +35,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".jpg")), notes_path, metadata_path, qa_path))
 
 if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
@@ -47,6 +48,10 @@ label_strategy <- pp_label_strategy(unique(df[[x_col]]), available_width_cm = pr
 palette_check <- pp_validate_palette(variable_type = "continuous", palette = "graphpad_heatmap")
 layout <- pp_estimate_canvas_size(1, plot_type = "heatmap", complex = TRUE, preset = preset)
 layout_check <- pp_assess_layout_risk(1, plot_type = "heatmap", label_strategy = label_strategy)
+value_label_policy <- pp_heatmap_value_labels(
+  df, x = x_col, y = y_col, value = value_col, show_values = show_values,
+  physical_slot = list(width_mm = preset_values$width_cm * 10, height_mm = preset_values$height_cm * 10))
+label_strategy$value_labels <- pp_heatmap_label_policy_summary(value_label_policy)
 
 p <- ggplot(df, aes(x = .data[[x_col]], y = .data[[y_col]], fill = .data[[value_col]])) +
   geom_tile(colour = NA, linewidth = 0) +
@@ -58,6 +63,12 @@ p <- ggplot(df, aes(x = .data[[x_col]], y = .data[[y_col]], fill = .data[[value_
   pp_theme(show_grid = FALSE) +
   theme(axis.ticks = element_blank(), axis.line = element_blank()) +
   labs(x = NULL, y = NULL)
+if (isTRUE(value_label_policy$show_values)) {
+  p <- p + geom_text(
+    data = value_label_policy$data,
+    aes(x = .data[[x_col]], y = .data[[y_col]], label = .data$.pp_heatmap_label),
+    inherit.aes = FALSE, size = pp_text_size("minimum"))
+}
 p <- pp_adjust_margins_for_labels(p, label_strategy)
 
 output_files <- pp_save_all_with_qa_loop(p, output_stem, render_spec = pp_render_spec(n_panels = pp_infer_panel_count(p), panel_tags = inherits(p, "patchwork")), preset = preset, qa_context = list(family = figure_spec$plot_type))
@@ -65,7 +76,7 @@ invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
-  design_decisions = c("pattern: correlation-heatmap", "GraphPad-like continuous heatmap palette", "single color scale", "cell borders suppressed to avoid gridline burden", "no per-cell labels by default"),
+  design_decisions = c("pattern: correlation-heatmap", "restrained continuous heatmap palette", "single color scale", "cell borders suppressed to avoid gridline burden", paste0("value labels use ", value_label_policy$mode, " policy; auto is a conservative screen, not collision proof")),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "Use small multiples if original metric units matter more than relative pattern",
   figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
@@ -74,6 +85,7 @@ pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
   palette = list(type = "continuous", name = "graphpad_heatmap"), ordering = list(rule = "input order"),
-  qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
+  qa = list(status = pp_qa_status(qa_results)), label_strategy = label_strategy,
+  data_summary = pp_data_summary(df))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

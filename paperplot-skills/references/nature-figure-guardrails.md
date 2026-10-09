@@ -19,7 +19,7 @@ python3 scripts/visual-qa-rendered-image.py <figure.pdf-or-png> --out <qa_dir> \
 
 ## Ten guardrails
 
-1. **Export floor**: PDF/SVG vector artwork and PNG preview must be large
+1. **Export floor**: PDF vector artwork and JPG 300-dpi preview must be large
    enough for target-size reading; extreme aspect ratios require redesign.
 2. **Readable typography**: text should remain readable at publication width;
    dense tick labels, tiny OCR boxes, and oversized presentation titles trigger

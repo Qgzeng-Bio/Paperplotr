@@ -36,7 +36,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".jpg")), notes_path, metadata_path, qa_path))
 
 if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
@@ -73,11 +73,11 @@ pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "Add reported correlation statistics if required by the manuscript",
   figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
-  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"),
+  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "wong"),
   ordering = list(rule = "input order"), label_strategy = label_strategy, data_summary = pp_data_summary(df))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
-  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "graphpad_discrete"), ordering = list(rule = "input order"),
+  palette = list(type = if (!is.null(group_col)) "discrete" else "none", name = "wong"), ordering = list(rule = "input order"),
   qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

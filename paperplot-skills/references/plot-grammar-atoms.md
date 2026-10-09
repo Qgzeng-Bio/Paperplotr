@@ -65,7 +65,7 @@ code structure, expected data roles, and manuscript QA focus.
 - Stroke: 0.25-0.6 pt for axes, intervals, borders; >1.2 pt is a warning.
 - Grid: off by default; light grid only for quantitative scatter/line reading.
 - Palette: restrained discrete colors, semantic continuous gradients, no rainbow default.
-- Export: vector PDF plus PNG preview; notes, metadata, QA, and family QA sidecars.
+- Export: vector PDF plus JPG 300-dpi preview; notes, metadata, QA, and family QA sidecars.
 
 ## Promotion To Recipe
 

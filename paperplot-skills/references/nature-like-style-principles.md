@@ -8,7 +8,7 @@ Nature-like means restrained scientific hierarchy, not copying Nature figures. T
 - Hierarchy over decoration: size, position, and contrast show importance.
 - Typography discipline: small but readable text, consistent panel labels, no presentation-scale titles.
 - Palette economy: few stable colors; neutral background marks; continuous scales with interpretable direction.
-- Export fidelity: vector PDF plus rendered PNG QA.
+- Export fidelity: vector PDF plus rendered JPG 300-dpi QA.
 
 ## Common Positive Patterns From The Replica Libraries
 

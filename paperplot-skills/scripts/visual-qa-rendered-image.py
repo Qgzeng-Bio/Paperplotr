@@ -1012,7 +1012,12 @@ def find_segments(values: list[int], threshold: int, min_len: int, lo: int, hi: 
 
 
 def best_split(mask: Image.Image, box: tuple[int, int, int, int]) -> tuple[str, int, int, float] | None:
+    mw, mh = mask.size
     x0, y0, x1, y1 = box
+    x0 = max(0, min(mw, x0))
+    x1 = max(0, min(mw, x1))
+    y0 = max(0, min(mh, y0))
+    y1 = max(0, min(mh, y1))
     bw = x1 - x0
     bh = y1 - y0
     if bw < 100 or bh < 100:
@@ -1095,9 +1100,16 @@ def detect_panel_geometry(mask: Image.Image, expected_panels: int | None, layout
 
     max_dim = 1200
     scale = min(1.0, max_dim / max(w, h))
-    small = mask.resize((max(1, int(w * scale)), max(1, int(h * scale))), Image.Resampling.NEAREST) if scale < 1 else mask.copy()
+    small_w = max(1, int(w * scale))
+    small_h = max(1, int(h * scale))
+    small = mask.resize((small_w, small_h), Image.Resampling.NEAREST) if scale < 1 else mask.copy()
     inv_scale = 1 / scale if scale else 1
-    small_bbox = tuple(max(0, int(round(v * scale))) for v in bbox)
+    small_bbox = (
+        max(0, min(small_w, int(round(bbox[0] * scale)))),
+        max(0, min(small_h, int(round(bbox[1] * scale)))),
+        max(0, min(small_w, int(round(bbox[2] * scale)))),
+        max(0, min(small_h, int(round(bbox[3] * scale)))),
+    )
     boxes = [small_bbox]  # type: ignore[list-item]
     target = expected_panels if expected_panels and expected_panels > 1 else 1
     if layout_profile == "auto" and not expected_panels:

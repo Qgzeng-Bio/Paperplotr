@@ -34,7 +34,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".jpg")), notes_path, metadata_path, qa_path))
 
 if (!file.exists(input_path)) stop("Set input_path to an existing CSV file.", call. = FALSE)
 df <- read.csv(input_path, check.names = FALSE)
@@ -62,15 +62,15 @@ invisible(lapply(output_files, pp_assert_output))
 
 qa_results <- pp_qa_preflight(figure_spec, metric_spec, label_strategy, palette_check, layout_check)
 pp_write_notes(notes_path, figure_id, input_path, output_files, preset,
-  design_decisions = c("boxplot plus jitter shows distribution and individual observations", "GraphPad-like group colors", "no default gridlines"),
+  design_decisions = c("boxplot plus jitter shows distribution and individual observations", "Wong-accessible group colors", "no default gridlines"),
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "Add statistical annotations only when comparisons are specified",
   figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
-  palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input group order"),
+  palette = list(type = "discrete", name = "wong"), ordering = list(rule = "input group order"),
   label_strategy = label_strategy, data_summary = pp_data_summary(df))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path))
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
-  palette = list(type = "discrete", name = "graphpad_discrete"), ordering = list(rule = "input group order"),
+  palette = list(type = "discrete", name = "wong"), ordering = list(rule = "input group order"),
   qa = list(status = pp_qa_status(qa_results)), data_summary = pp_data_summary(df))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

@@ -1,31 +1,108 @@
 # Physical production contract. Low-level pp_finalize() remains compatible.
+
+# ---- Journal profiles: single source of truth for journal-specific numbers ----
+# Sources (checked 2026-10-07): Nature https://research-figure-guide.nature.com/figures/
+# (preparing-figures-our-specifications, building-and-exporting-figure-panels);
+# Cell Press https://www.cell.com/information-for-authors/figure-guidelines.
+# Fields marked pending_verification could not be confirmed from an official page.
+pp_journal_profiles <- function() {
+  role_pt <- list(panel_title = 7, axis_title = 7, species = 6.5, tick = 6, legend = 6,
+                  caption = 6, annotation = 6.5, body = 7)
+  list(
+    nature = list(
+      journal = "nature", label = "Nature",
+      width_mm = list(single = 89, mid = NA_real_, double = 183), max_height_mm = 170,
+      text_pt = c(role_pt, list(panel_tag = 8)), text_range_pt = c(5, 7),
+      tag_case = "lowercase", stroke_range_pt = NULL, stroke_pt = list(),
+      pending_verification = c("1.5-column width (not stated by the guide)", "minimum line weight (not stated by the guide)")),
+    cell = list(
+      journal = "cell", label = "Cell Press",
+      width_mm = list(single = 85, mid = 114, double = 174), max_height_mm = 170,
+      text_pt = c(role_pt, list(panel_tag = 8)), text_range_pt = c(6, 8),
+      tag_case = "uppercase", stroke_range_pt = c(0.5, 1.5),
+      stroke_pt = list(connector = 0.5, separator = 0.5),
+      pending_verification = c("panel-label size (8 pt chosen inside the 6-8 pt text range)",
+                               "maximum figure height (170 mm is the skill's generic guard)"))
+  )
+}
+
+pp_journal_profile <- function(journal = NULL) {
+  journal <- journal %||% getOption("paperplot.journal") %||% {
+    env <- Sys.getenv("PAPERPLOT_JOURNAL", "")
+    if (nzchar(env)) env else NULL
+  } %||% "nature"
+  journal <- tolower(journal)
+  profiles <- pp_journal_profiles()
+  if (length(journal) != 1L || !journal %in% names(profiles))
+    stop("Unknown journal profile '", paste(journal, collapse = ","), "'. Available: ", paste(names(profiles), collapse = ", "), ".", call. = FALSE)
+  profiles[[journal]]
+}
+
+# Fail when a spec leaves the journal's published text or stroke envelope.
+# Panel tags have their own size; every other text role must sit in text_range_pt.
+pp_validate_journal_spec <- function(spec) {
+  profile <- pp_journal_profile(spec$journal)
+  sizes <- unlist(spec$text_pt[setdiff(names(spec$text_pt), "panel_tag")])
+  bad <- names(sizes)[sizes < profile$text_range_pt[[1]] | sizes > profile$text_range_pt[[2]]]
+  if (length(bad)) stop(sprintf("%s text must be %g-%g pt; out of range: %s.", profile$label,
+    profile$text_range_pt[[1]], profile$text_range_pt[[2]],
+    paste0(bad, "=", sizes[bad], collapse = ", ")), call. = FALSE)
+  if (!is.finite(spec$text_pt$panel_tag) || spec$text_pt$panel_tag <= 0) stop("Invalid panel tag size.", call. = FALSE)
+  if (!is.null(profile$stroke_range_pt)) {
+    strokes <- unlist(spec$stroke_pt)
+    badk <- names(strokes)[strokes < profile$stroke_range_pt[[1]] | strokes > profile$stroke_range_pt[[2]]]
+    if (length(badk)) stop(sprintf("%s strokes must be %g-%g pt; out of range: %s.", profile$label,
+      profile$stroke_range_pt[[1]], profile$stroke_range_pt[[2]],
+      paste0(badk, "=", strokes[badk], collapse = ", ")), call. = FALSE)
+  }
+  invisible(TRUE)
+}
+
+pp_panel_tag_levels <- function(spec) if (identical(spec$tag_case, "lowercase")) "a" else "A"
+pp_panel_tag_texts <- function(spec, n = spec$n_panels) {
+  tags <- if (identical(spec$tag_case, "lowercase")) letters else LETTERS
+  tags[seq_len(n)]
+}
+
 pp_render_spec <- function(n_panels = 1L, case = NULL, width_mm = NULL, height_mm = NULL,
                            mode = Sys.getenv("PAPERPLOT_MODE", "production"),
                            text_pt = list(), ocr = "auto", human_review = "pending", reviews = list(),
-                           panel_tags = n_panels > 1L, expected_labels = character()) {
+                           panel_tags = n_panels > 1L, expected_labels = character(),
+                           journal = NULL, column = c("auto", "single", "mid", "double")) {
+  profile <- pp_journal_profile(journal)
+  column <- match.arg(column)
   mode <- match.arg(mode, c("production", "preview", "demo"))
   if (length(n_panels) != 1L || !is.finite(n_panels) || n_panels < 1 || n_panels!=as.integer(n_panels) || n_panels>26) stop("Invalid panel count (integer 1-26 required).")
-  sizes <- list(panel_tag = 12, panel_title = 7, axis_title = 7, species = 6.5,
-                tick = 6, legend = 6, caption = 6, annotation = 6.5, body = 7)
+  sizes <- profile$text_pt
   if (length(setdiff(names(text_pt), names(sizes)))) stop("Unknown text role.")
   sizes <- utils::modifyList(sizes, text_pt)
   if (any(!is.finite(unlist(sizes)) | unlist(sizes) <= 0)) stop("Invalid text sizes.")
   if (!is.null(case) && !case %in% c('igs','manhattan')) stop("Unknown render case.")
-  width_mm <- width_mm %||% if (identical(case, "igs")) 183 else if (identical(case,'manhattan') || n_panels > 1) 180 else 89
+  col_mm <- profile$width_mm
+  if (identical(column, "mid") && is.na(col_mm$mid))
+    stop(profile$label, " has no published 1.5-column width; pass width_mm explicitly.", call. = FALSE)
+  auto_col <- if (identical(case, "igs") || identical(case, "manhattan") || n_panels > 1) "double" else "single"
+  width_mm <- width_mm %||% col_mm[[if (identical(column, "auto")) auto_col else column]]
   height_mm <- height_mm %||% if (identical(case, "igs")) 105 else if(identical(case,'manhattan')) 70 else if (n_panels > 1) 120 else 62
   if (any(!is.finite(c(width_mm, height_mm))) || min(width_mm, height_mm) <= 0) stop("Invalid canvas size.")
-  if (height_mm > 170) warning("Canvas exceeds 170 mm: consider splitting; text sizes are unchanged.", call. = FALSE)
-  list(version = "2.0", mode = mode, case = case, n_panels = n_panels,
-       width_mm = width_mm, height_mm = height_mm, dpi = 600, family = "Arial",
+  if (height_mm > profile$max_height_mm) warning(sprintf("Canvas exceeds %g mm: consider splitting; text sizes are unchanged.", profile$max_height_mm), call. = FALSE)
+  stroke_pt <- utils::modifyList(list(axis = 0.6, tick = 0.5, connector = 0.4, threshold = 0.5, separator = 0.25), profile$stroke_pt)
+  spec <- local({
+  list(version = "2.0", journal = profile$journal, tag_case = profile$tag_case, mode = mode, case = case, n_panels = n_panels,
+       width_mm = width_mm, height_mm = height_mm, dpi = 300, family = "Arial",
+       export_formats = list("pdf", "jpg"),
        text_pt = sizes, text_overrides = names(text_pt), ocr = match.arg(ocr, c("auto", "off", "required")),
        human_review = match.arg(human_review, c("pending", "pass", "fail")),
-       reviews=reviews, panel_tags=isTRUE(panel_tags), expected_labels=as.list(expected_labels),expected_tags=if(isTRUE(panel_tags)) as.list(LETTERS[seq_len(n_panels)]) else list(),
-       stroke_pt = list(axis = 0.6, tick = 0.5, connector = 0.4, threshold = 0.5, separator = 0.25),
+       reviews=reviews, panel_tags=isTRUE(panel_tags), expected_labels=as.list(expected_labels),expected_tags=if(isTRUE(panel_tags)) as.list((if (identical(profile$tag_case, 'lowercase')) letters else LETTERS)[seq_len(n_panels)]) else list(),
+       stroke_pt = stroke_pt,
        tick_length_pt = 2.2, tolerance = list(page_mm = 0.1, font_pt = 0.2, row_mm = 0.2),
        identity_colors = c(">=0.95" = "#173B73", "0.90-0.95" = "#337FB8", "0.85-0.90" = "#73ADD0",
                            "0.80-0.85" = "#C2D7EA", "<0.80" = "#ECECEC"),
        markers = list(median = list(shape = 16, color = "#173B73", diameter_pt = 4.5),
                       max = list(shape = 17, color = "#D55E00", diameter_pt = 5)))
+  })
+  pp_validate_journal_spec(spec)
+  spec
 }
 
 pp_arial_faces <- function(fonts = NULL) {
@@ -164,7 +241,7 @@ pp_normalize_production <- function(plot, spec) {
   }
   out <- normalize_one(out)
   if (inherits(out, "patchwork") && !identical(spec$panel_tags, FALSE)) {
-    out <- out + patchwork::plot_annotation(tag_levels = "A", theme = pp_production_theme(spec))
+    out <- out + patchwork::plot_annotation(tag_levels = pp_panel_tag_levels(spec), theme = pp_production_theme(spec))
     out <- out & ggplot2::theme(plot.tag = ggplot2::element_text(family = "Arial", size = spec$text_pt$panel_tag, face = "bold"))
   }
   if (spec$mode == "demo") out <- out + ggplot2::labs(caption = "DEMO / simulated test data")
@@ -199,7 +276,8 @@ pp_plot_evidence <- function(plot) {
     scales=lapply(nonposition,scale_record),axes=list(x=lapply(built$layout$panel_scales_x,scale_record),y=lapply(built$layout$panel_scales_y,scale_record)))
   list(input = plot$data, layers = lapply(plot$layers, function(lr) lr$data),
        coordinates = lapply(built$data, function(d) d[intersect(fields, names(d))]),
-       semantics=semantics,recipe=attr(plot,'pp_recipe_evidence'),panel=attr(plot,'pp_panel_evidence'))
+       semantics=semantics,recipe=attr(plot,'pp_recipe_evidence'),
+       label_policy=attr(plot,'pp_heatmap_value_label_policy_summary'),panel=attr(plot,'pp_panel_evidence'))
 }
 
 pp_assert_data_unchanged <- function(before, after, tolerance = 1e-10) {
@@ -215,8 +293,9 @@ pp_check_plot_glyphs <- function(plot,spec) {
   collect <- function(x) {
     if(is.character(x)) labels <<- c(labels,x) else if(is.expression(x)||is.call(x)||is.pairlist(x)) invisible(lapply(as.list(x),collect))
   }
-  device <- tempfile(fileext='.svg');svglite::svglite(device,width=spec$width_mm/25.4,height=spec$height_mm/25.4)
-  on.exit({grDevices::dev.off();unlink(device)})
+  # Keep the existing svglite measurement backend, but never export a hidden SVG.
+  svglite::svgstring(width=spec$width_mm/25.4,height=spec$height_mm/25.4)
+  on.exit(grDevices::dev.off())
   grob <- if(grid::is.grob(plot)) plot else if(inherits(plot,'patchwork')) patchwork::patchworkGrob(plot) else ggplot2::ggplotGrob(plot)
   walk <- function(g) {
     if(inherits(g,'text')) collect(g$label)
@@ -242,12 +321,14 @@ pp_final_qa <- function(checks, human_review = "pending", mode = "production",
   if(is.null(names(checks)) && length(checks)) stop('QA checks must be named.')
   for(name in setdiff(required,names(checks))) checks[[name]] <- 'unverified'
   raw_checks <- checks
+  # Old/partial reports must not expose an absent check as reviewable.
+  reviewable <- intersect(reviewable, names(checks))
   resolved <- character()
   for(name in intersect(names(reviews),reviewable)) {
     review <- reviews[[name]]
     valid <- is.list(review) && identical(review$decision,'pass') && nzchar(review$reviewer %||% '') &&
       nzchar(review$reason %||% '') && !is.null(evidence_hash) && identical(review$evidence_hash,evidence_hash)
-    if(valid && checks[[name]] %in% c('warn','unverified')) { checks[[name]] <- 'pass'; resolved <- c(resolved,name) }
+    if(isTRUE(valid) && isTRUE(checks[[name]] %in% c('warn','unverified'))) { checks[[name]] <- 'pass'; resolved <- c(resolved,name) }
   }
   values <- unlist(checks, use.names = FALSE)
   if (any(!values %in% c("pass", "warn", "fail", "unverified",'not_applicable'))) stop("Invalid QA state.")
@@ -255,7 +336,8 @@ pp_final_qa <- function(checks, human_review = "pending", mode = "production",
   for(name in intersect(required,names(checks))) if(identical(checks[[name]],'not_applicable')) checks[[name]] <- 'unverified'
   values <- unlist(checks,use.names=FALSE)
   status <- if (any(values == "fail") || human_review == "fail") "fail" else if (!length(values) || any(!values %in% c('pass','not_applicable')) || human_review != "pass" || mode != "production") "warn" else "pass"
-  list(status = status, tier = if (status == "pass") "manuscript-ready" else if (status == "fail") "analysis sketch" else "manuscript candidate",
+  tier <- if (status == "pass") "manuscript-ready" else if (status == "fail") "analysis sketch" else if (identical(mode, "preview")) "interactive draft" else "manuscript candidate"
+  list(status = status, tier = tier,
        checks = checks, raw_checks=raw_checks, required=as.list(required),reviewable=as.list(reviewable),
        resolved_reviews=as.list(resolved),evidence_hash=evidence_hash,reviews=reviews,
        human_review = human_review, mode = mode, score_deprecated = TRUE)
@@ -474,11 +556,12 @@ pp_run_export_audit <- function(outputs, spec, output_stem) {
   py <- pp_resolve_qa_python()
   report <- paste0(output_stem, "_export_audit.json")
   if (is.null(py)) return(list(status = "unverified", reason = "Python/Pillow unavailable"))
+  spec$export_formats <- as.list(pp_validate_export_formats(unlist(spec$export_formats %||% c("pdf", "jpg"))))
   config <- paste0(output_stem, "_render_spec.json")
   writeLines(pp_to_json(spec), config)
   script <- file.path(pp_helper_script_dir, "export-audit.py")
   result <- suppressWarnings(system2(py, c(shQuote(script), "--spec", shQuote(config), "--out", shQuote(report),
-    shQuote(unname(outputs[names(outputs) %in% c("pdf", "svg", "png")]))), stdout = TRUE, stderr = TRUE))
+    shQuote(unname(outputs[names(outputs) %in% c("pdf", "jpg", "jpeg", "svg", "png", "tif", "tiff")]))), stdout = TRUE, stderr = TRUE))
   if (!file.exists(report) || !requireNamespace("jsonlite", quietly = TRUE)) return(list(status = "unverified", reason = paste(result, collapse = "\n")))
   jsonlite::fromJSON(report, simplifyVector = FALSE)
 }

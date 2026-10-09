@@ -17,9 +17,9 @@ if(resolved$status!='pass') stop('The complete review state is not reachable: ',
 report<-jsonlite::fromJSON(paste0(stem,'_production_qa.json'),simplifyVector=FALSE)
 bad_spec<-attr(files,'qa_render_spec');bad_spec$width_mm<-100
 bad<-pp_run_export_audit(files,bad_spec,file.path(out,'intentional-size-error'))
-if(bad$checks$svg_page_mm!='fail') stop('Actual size error was missed.')
-report$final$raw_checks$export_svg_page_mm<-'fail'
-report$final$checks$export_svg_page_mm<-'fail'
+if(bad$checks$pdf_page_mm!='fail') stop('Actual PDF size error was missed.')
+report$final$raw_checks$export_pdf_page_mm<-'fail'
+report$final$checks$export_pdf_page_mm<-'fail'
 report$final$evidence_hash<-pp_content_hash(list(intentional_size_failure=TRUE,original=report$final$evidence_hash))
 ppp_json(report,paste0(stem,'_production_qa.json'))
 failed<-pp_review_export(stem,'pass',reviewer='AUTOMATED NEGATIVE FIXTURE',checks=unlist(pending$reviewable),reason='Deliberately attempt to approve an exact size failure; it must stay fail.')

@@ -125,8 +125,8 @@ ppp_row_alignment <- function(geometry, groups) {
 
 ppp_measure <- function(plot, spec, root) {
   if (!requireNamespace("svglite", quietly = TRUE)) return(list(status = "unverified", reason = "svglite unavailable"))
-  filename <- tempfile(fileext = ".svg"); on.exit(unlink(filename))
-  svglite::svglite(filename, width = spec$width_mm / 25.4, height = spec$height_mm / 25.4)
+  # Same measurement backend, in memory only; SVG is not a default audit artifact.
+  svglite::svgstring(width = spec$width_mm / 25.4, height = spec$height_mm / 25.4)
   on.exit(grDevices::dev.off(), add = TRUE)
   normalized <- pp_normalize_production(plot, spec)
   gt <- patchwork::patchworkGrob(normalized)
@@ -157,8 +157,9 @@ ppp_measure <- function(plot, spec, root) {
     allocation <- outer[[as.character(i)]]
     if (is.null(allocation)) next
     cell <- gtable::gtable_filter(gt, paste0("-", i, "$"), trim = TRUE)
-    path <- file.path(root, paste0("context-", LETTERS[i], ".png"))
-    ggplot2::ggsave(path, cell, width = allocation$width_mm, height = allocation$height_mm, units = "mm", dpi = 300, bg = "white")
+    path <- file.path(root, paste0("context-", LETTERS[i], ".jpg"))
+    ggplot2::ggsave(path, cell, width = allocation$width_mm, height = allocation$height_mm, units = "mm", dpi = 300, bg = "white", device = ragg::agg_jpeg, quality = 95)
+    pp_set_jpeg_dpi(path, 300)
     previews[[as.character(i)]] <- basename(path)
   }
   list(status = if (length(regions) == spec$n_panels) "measured" else "unverified",
@@ -221,7 +222,7 @@ ppp_assemble <- function(x, root, final = FALSE) {
     }
   }
   spec <- pp_render_spec(length(ids), width_mm = x$layout$width_mm, height_mm = x$layout$height_mm,
-    mode = x$mode, text_pt = x$style$text_pt %||% list())
+    mode = x$mode, text_pt = x$style$text_pt %||% list(), journal = x$style$journal)
   combined <- pp_compose_manuscript(plots, design = x$layout$design,
     widths = as.numeric(unlist(x$layout$widths)), heights = as.numeric(unlist(x$layout$heights)))
   combined <- combined + patchwork::plot_layout(guides = x$layout$guides)

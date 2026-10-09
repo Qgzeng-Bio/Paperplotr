@@ -27,7 +27,7 @@ notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
 label_key_path <- paste0(output_stem, "_label_key.csv")
-pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".png")), notes_path, metadata_path, qa_path, label_key_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, c(".pdf", ".jpg")), notes_path, metadata_path, qa_path, label_key_path))
 
 figure_spec <- pp_figure_spec(
   figure_id = figure_id,
@@ -89,7 +89,7 @@ design_plan <- pp_design_plan(
   figure_role = figure_role,
   layout_plan = layout,
   label_strategy = label_strategy,
-  palette_plan = list(type = if (!is.null(group_col)) "group" else "metric", name = "graphpad_discrete"),
+  palette_plan = list(type = if (!is.null(group_col)) "group" else "metric", name = "wong"),
   visible_simplifications = design_brief$acceptable_simplifications,
   risks = c("dense sample labels", "heterogeneous units", "avoid false connecting-line trends")
 )
@@ -141,7 +141,7 @@ pp_write_notes(
   qa_checks = paste(qa_results$gate, qa_results$status, qa_results$note, sep = ": "),
   remaining_issues = "Confirm whether sample order should be biologically ranked or user-defined before manuscript use",
   figure_spec = figure_spec, metric_spec = metric_spec, layout = layout,
-  palette = list(type = if (!is.null(group_col)) "discrete" else "metric-discrete", name = "graphpad_discrete"),
+  palette = list(type = if (!is.null(group_col)) "discrete" else "metric-discrete", name = "wong"),
   ordering = list(rule = "input sample order converted to rank index", sample_order = paste(sample_levels, collapse = ", ")),
   label_strategy = label_strategy, data_summary = pp_data_summary(df)
 )
@@ -149,12 +149,12 @@ qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_pat
 readiness <- pp_qa_manuscript_readiness(qa_results, design_brief, design_plan)
 qa_results <- pp_qa_summary(qa_results, readiness)
 pp_write_metadata(metadata_path, figure_spec, metric_spec, output_files, layout = layout,
-  palette = list(type = if (!is.null(group_col)) "discrete" else "metric-discrete", name = "graphpad_discrete"),
+  palette = list(type = if (!is.null(group_col)) "discrete" else "metric-discrete", name = "wong"),
   ordering = list(rule = "input sample order converted to rank index", sample_order = sample_levels),
   qa = list(status = pp_qa_status(qa_results), readiness_score = pp_manuscript_readiness_score(qa_results)),
   data_summary = pp_data_summary(df), design_brief = design_brief, design_plan = design_plan,
   data_profile = data_profile, visual_budget = visual_budget, label_strategy = label_strategy,
-  palette_plan = list(type = if (!is.null(group_col)) "group" else "metric", name = "graphpad_discrete"),
+  palette_plan = list(type = if (!is.null(group_col)) "group" else "metric", name = "wong"),
   sidecars = list(label_key = if (file.exists(label_key_path)) label_key_path else NULL))
 qa_results <- pp_qa_summary(qa_results, pp_qa_postflight(output_files, notes_path = notes_path, metadata_path = metadata_path))
 pp_write_qa_report(qa_path, qa_results)

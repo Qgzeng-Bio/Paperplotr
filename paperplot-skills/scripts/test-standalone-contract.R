@@ -69,9 +69,11 @@ assert_true(!exists("applied", envir = .GlobalEnv, inherits = FALSE),
 assert_true(any(grepl("manual:", attr(manual_fix_plot, "pp_machine_fixes_applied"), fixed = TRUE)),
             "Manual-only label advice was not recorded")
 
-# A one-retry loop means QA runs once before and once after the retry.
+# Default PDF/JPG: QA runs on JPG once before and once after the retry.
 qa_calls <- 0L
-pp_run_visual_qa <- function(...) {
+qa_paths <- character()
+pp_run_visual_qa <- function(path, ...) {
+  qa_paths <<- c(qa_paths, path)
   qa_calls <<- qa_calls + 1L
   if (qa_calls == 1L) {
     list(
@@ -86,14 +88,16 @@ pp_run_visual_qa <- function(...) {
 }
 loop_plot <- ggplot(data.frame(x = 1:3, y = 1:3), aes(x, y)) + geom_point() + pp_theme()
 loop_stem <- tempfile("paperplot-contract-loop-")
-loop_outputs <- pp_save_all_with_qa_loop(loop_plot, loop_stem, formats = "png", max_iterations = 1L)
+loop_outputs <- pp_save_all_with_qa_loop(loop_plot, loop_stem, max_iterations = 1L)
 assert_equal(qa_calls, 2L, "QA was not rerun after the auto-fix render")
+assert_equal(qa_paths, rep(unname(loop_outputs[['jpg']]), 2), "Initial and retry QA must inspect JPG")
+assert_equal(names(loop_outputs), c('pdf','jpg'), "Retry preserves default export formats")
 assert_equal(attr(loop_outputs, "qa_iterations"), 1L, "QA retry count was not recorded")
 assert_equal(attr(loop_outputs, "qa_initial_status"), "warn", "Initial QA status was not recorded")
 assert_equal(attr(loop_outputs, "qa_final_status"), "pass", "Final QA status did not come from the post-fix render")
 
 # A retry that does not improve status/score must be rejected and the initial
-# deterministic render restored.
+# deterministic render restored. Explicit PNG retains legacy-format coverage.
 qa_calls <- 0L
 pp_run_visual_qa <- function(...) {
   qa_calls <<- qa_calls + 1L

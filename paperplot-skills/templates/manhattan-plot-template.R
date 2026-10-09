@@ -43,7 +43,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path))
 
 figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "manhattan-plot-template", task_type = "new", figure_role = figure_role, scientific_message = scientific_message, plot_type = "manhattan_genomewide", output_preset = "nature")
 metric_spec <- pp_metric_spec(metric = c(pvalue_col, position_col), label = c("p-value", "Genomic position"), unit = c("unitless", "bp"), direction = c("lower_better", "neutral"), transform = c("log10", "none"), role = c("significance", "coordinate"))

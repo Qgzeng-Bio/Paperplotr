@@ -67,6 +67,21 @@ def svg_nodes(root):
     yield from walk(root,IDENTITY,{})
 
 
+def pdf_label_present(label, texts):
+    """Exact extracted text presence, not visibility or clipping acceptance."""
+    normalize = lambda x: re.sub(r'\s+', ' ', x).strip()
+    spans = [normalize(text) for text, _, _ in texts if text.strip()]
+    lines = [normalize(line) for text, _, _ in texts for line in text.splitlines() if line.strip()]
+    if normalize(label) in spans or normalize(label) in lines:
+        return True
+    expected_lines = [normalize(line) for line in label.splitlines() if line.strip()]
+    # A declared multi-line label may arrive in separate visitor calls. Match
+    # complete consecutive lines, never substrings or arbitrarily joined words.
+    return len(expected_lines) > 1 and any(
+        lines[i:i + len(expected_lines)] == expected_lines
+        for i in range(len(lines) - len(expected_lines) + 1))
+
+
 def audit(paths, spec):
     checks, details = {}, {}
     expected = (spec["width_mm"], spec["height_mm"])
@@ -84,7 +99,7 @@ def audit(paths, spec):
                 continue
             valid_size = any(abs(size - value) <= tol["font_pt"] for value in allowed)
             if abs(size - spec["text_pt"]["panel_tag"]) <= tol["font_pt"]:
-                valid_size = bool(re.fullmatch(r"[A-Z]", text.strip()))
+                valid_size = bool(re.fullmatch(r"[a-z]" if spec.get("tag_case") == "lowercase" else r"[A-Z]", text.strip()))
             font_name = family.split(",")[0].split("+")[-1]
             font_name = re.sub(r"[^a-z]", "", font_name.lower())
             arial = font_name in {"arial", "arialmt", "arialbold", "arialboldmt", "arialitalic", "arialitalicmt", "arialbolditalic", "arialbolditalicmt"}
@@ -93,9 +108,33 @@ def audit(paths, spec):
         checks[key] = "fail" if bad else "pass" if texts else "unverified"
         details[key] = {"text_count": len(texts), "violations": bad}
 
-    found = {p.suffix.lower() for p in paths}
-    for ext in (".pdf", ".svg", ".png"):
-        checks[ext + "_present"] = "pass" if ext in found else "unverified"
+    requested = spec.get("export_formats", ["pdf", "jpg"])
+    if (not isinstance(requested, list) or not requested
+            or any(not isinstance(x, str) or x not in ("pdf", "jpg", "jpeg", "png", "svg", "tif", "tiff") for x in requested)
+            or len(set(requested)) != len(requested)):
+        return {"version": "2.1", "status": "fail", "checks": {"export_formats": "fail"},
+                "details": {"export_formats": "Expected unique supported extensions"}, "reviewable_checks": []}
+    # The declared contract, not whatever happens to be on disk, defines completeness.
+    paths = [Path(p) for p in paths if Path(p).suffix.lower().lstrip('.') in requested]
+    found = {p.suffix.lower() for p in paths if p.is_file()}
+    for fmt in requested:
+        checks['.' + fmt + '_present'] = "pass" if '.' + fmt in found else "fail"
+    details['export_formats'] = requested
+    geometry_reviewable = []
+    if 'svg' not in requested:
+        if 'pdf' in requested:
+            checks['pdf_text_visibility'] = 'unverified'
+            details['pdf_text_visibility'] = {'reason': 'Extracted text proves presence, not visible bounds, clipping or overlap; inspect the final PDF'}
+            geometry_reviewable.append('pdf_text_visibility')
+        for key, required in (("shared_row_alignment", bool(spec.get('shared_row_labels'))),
+                              ("scientific_name_italic", bool(spec.get('shared_row_labels'))),
+                              ("marker_dimensions", spec.get('case') == 'igs'),
+                              ("axis_tick_strokes", bool(spec.get('shared_row_labels')) or spec.get('case') == 'igs')):
+            checks[key] = 'unverified' if required else 'not_applicable'
+            details[key] = {'reason': 'PDF text extraction does not verify this geometry; inspect the PDF at final size' if required
+                            else 'No shared-row or IGS geometry requirement declared'}
+            if required:
+                geometry_reviewable.append(key)
     for path in paths:
         if not path.exists():
             checks[str(path)] = "fail"
@@ -103,11 +142,18 @@ def audit(paths, spec):
         ext = path.suffix.lower()
         details[path.name] = {"sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
         try:
-            if ext == ".png":
+            if ext in (".jpg", ".jpeg", ".png", ".tif", ".tiff"):
                 from PIL import Image
+                key = ext.lstrip('.')
                 with Image.open(path) as im:
-                    checks["png_pixels"] = "pass" if all(abs(a - b / 25.4 * spec["dpi"]) <= 1 for a, b in zip(im.size, expected)) else "fail"
-                    checks["png_rgb"] = "pass" if im.mode in ("RGB", "RGBA") else "fail"
+                    im.load()
+                    encoding = {'.jpg': 'JPEG', '.jpeg': 'JPEG', '.png': 'PNG', '.tif': 'TIFF', '.tiff': 'TIFF'}[ext]
+                    checks[key + '_encoding'] = 'pass' if im.format == encoding else 'fail'
+                    checks[key + '_pixels'] = "pass" if all(abs(a - b / 25.4 * spec["dpi"]) <= 1 for a, b in zip(im.size, expected)) else "fail"
+                    checks[key + '_rgb'] = "pass" if im.mode in (("RGB",) if encoding == 'JPEG' else ("RGB", "RGBA")) else "fail"
+                    dpi = im.info.get('dpi', ())
+                    checks[key + '_dpi'] = 'pass' if len(dpi) == 2 and all(abs(float(x) - spec['dpi']) <= 1 for x in dpi) else 'fail'
+                    details[key + '_raster'] = dict(size=im.size, mode=im.mode, encoding=im.format, dpi=dpi)
             elif ext == ".pdf":
                 from pypdf import PdfReader
                 reader = PdfReader(path)
@@ -125,6 +171,25 @@ def audit(paths, spec):
 
                 page.extract_text(visitor_text=visitor)
                 typography("pdf_typography", texts)
+                normalize_text = lambda x: re.sub(r'\s+', ' ', x).strip()
+                # Presence and final-size visibility are separate checks.
+                expected_labels = spec.get('expected_labels') or []
+                missing_labels = [t for t in expected_labels if not pdf_label_present(t, texts)]
+                checks['pdf_required_labels'] = ('fail' if missing_labels else 'pass') if expected_labels else 'not_applicable'
+                details['pdf_required_labels'] = {'missing': missing_labels, 'expected': expected_labels,
+                    'reason': 'Exact extracted text presence; visibility is checked separately' if expected_labels else 'No direct-label requirement declared'}
+                expected_tags = spec.get('expected_tags')
+                if expected_tags is None:
+                    expected_tags = list(('abcdefghijklmnopqrstuvwxyz' if spec.get('tag_case') == 'lowercase' else 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:spec.get('n_panels', 1)]) if spec.get('panel_tags', spec.get('n_panels', 1) > 1) else []
+                tags = [(t.strip(), 'bold' in f.lower()) for t, size, f in texts
+                        if t.strip() and abs(size - spec['text_pt']['panel_tag']) <= tol['font_pt']]
+                checks['pdf_panel_tags'] = ('pass' if all(bold for _, bold in tags) and sorted(t for t, _ in tags) == sorted(expected_tags)
+                                            else 'fail') if expected_tags or tags else 'not_applicable'
+                details['pdf_panel_tags'] = {'expected': expected_tags, 'actual': tags,
+                    'reason': 'Tag-sized text must match case, count and bold font' if expected_tags or tags else 'Panel tags not requested'}
+                if spec.get('case') == 'igs':
+                    strings = [t.strip() for t, _, _ in texts if t.strip()]
+                    checks['count_column_header'] = 'pass' if strings.count('n') == 1 and not any(re.match(r'n\s*=', t) for t in strings) else 'fail'
                 if shutil.which("pdffonts"):
                     rows = subprocess.check_output(["pdffonts", str(path)], text=True).splitlines()[2:]
                     checks["pdf_font_embedding"] = "pass" if rows and all(len(r.split()) >= 6 and r.split()[-5] == "yes" for r in rows) else "fail"
@@ -219,7 +284,7 @@ def audit(paths, spec):
                     details["axis_tick_strokes_pt"] = sorted(set(axis_strokes + tick_strokes))
                 expected_tags = spec.get('expected_tags')
                 if expected_tags is None:
-                    expected_tags = list('ABCDEFGHIJKLMNOPQRSTUVWXYZ'[:spec.get('n_panels',1)]) if spec.get('panel_tags',spec.get('n_panels',1)>1) else []
+                    expected_tags = list(('abcdefghijklmnopqrstuvwxyz' if spec.get('tag_case') == 'lowercase' else 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:spec.get('n_panels',1)]) if spec.get('panel_tags',spec.get('n_panels',1)>1) else []
                 checks['svg_panel_tags'] = ('pass' if all(bold for _,bold in tags) and sorted(t.strip() for t,_ in tags)==sorted(expected_tags)
                                             else 'fail') if expected_tags or tags else 'not_applicable'
                 details['expected_panel_tags'] = expected_tags
@@ -258,11 +323,11 @@ def audit(paths, spec):
                 details['svg_text_bounds'] = outside
                 details['unsupported_geometry'] = sorted(set(unsupported_geometry))
         except (ImportError, ValueError, OSError, subprocess.SubprocessError, ET.ParseError,TypeError,IndexError,ZeroDivisionError) as exc:
-            checks[ext + "_audit"] = "unverified"
+            checks[ext + "_audit"] = "fail" if ext in ('.jpg', '.jpeg', '.png', '.tif', '.tiff') and isinstance(exc, (ValueError, OSError)) else "unverified"
             details[ext + "_error"] = str(exc)
     status = "fail" if "fail" in checks.values() else "warn" if "warn" in checks.values() else "unverified" if "unverified" in checks.values() else "pass"
-    reviewable = ['svg_text_mark_clearance','svg_text_text_clearance','svg_text_bounds']
-    return {"version": "2.0", "status": status, "checks": checks, "details": details,
+    reviewable = ['svg_text_mark_clearance','svg_text_text_clearance','svg_text_bounds'] + geometry_reviewable
+    return {"version": "2.1", "status": status, "checks": checks, "details": details,
             'reviewable_checks':[k for k in reviewable if checks.get(k) in ('warn','unverified')]}
 
 

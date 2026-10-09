@@ -34,7 +34,7 @@ class InstallTests(unittest.TestCase):
             self.assertEqual(len(backups), 1)
             self.assertEqual((backups[0] / 'old-marker').read_text(), 'recoverable')
             for name in ('family-qa-score.py', 'vision-review-adapter.py', 'figure-project.R',
-                         'export-audit.py', 'check-environment.R'):
+                         'export-audit.py', 'fix-cairo-page.py', 'check-environment.R'):
                 self.assertTrue((destination / 'scripts' / name).is_file(), name)
             self.assertFalse((destination / 'reports').exists())
             receipt = json.loads((destination / 'installation.json').read_text())

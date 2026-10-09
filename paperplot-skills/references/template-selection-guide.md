@@ -37,7 +37,7 @@ Choose a template before writing code. Adapt the selected template rather than s
 - Every template must define `figure_spec` before reading or plotting data.
 - Every template must define `metric_spec`; multi-metric templates must define one row per metric.
 - Every template must run `pp_label_strategy()` for dense sample/category axes.
-- Every template must write PDF, PNG, notes, metadata JSON, and QA report.
+- Every template must write PDF, JPG (RGB, 300 dpi), notes, metadata JSON, and QA report; no default SVG/PNG.
 - Every template must refuse overwrites.
 
 ## Selection Rules

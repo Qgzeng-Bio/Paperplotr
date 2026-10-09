@@ -188,7 +188,7 @@ run_template <- function(template_name, work_root) {
   if (is.null(status)) status <- 0L
 
   pdf_files <- list.files(output_dir, pattern = "\\.pdf$", full.names = TRUE)
-  png_files <- list.files(output_dir, pattern = "\\.png$", full.names = TRUE)
+  jpg_files <- list.files(output_dir, pattern = "\\.jpg$", full.names = TRUE)
   notes_files <- list.files(output_dir, pattern = "_notes\\.md$", full.names = TRUE)
   metadata_files <- list.files(output_dir, pattern = "_metadata\\.json$", full.names = TRUE)
   qa_files <- list.files(output_dir, pattern = "_qa\\.md$", full.names = TRUE)
@@ -196,12 +196,13 @@ run_template <- function(template_name, work_root) {
   problems <- character()
   if (!identical(status, 0L)) problems <- c(problems, paste("Rscript status", status))
   if (length(pdf_files) < 1) problems <- c(problems, "missing PDF")
-  if (length(png_files) < 1) problems <- c(problems, "missing PNG")
+  if (length(jpg_files) < 1) problems <- c(problems, "missing JPG")
+  if (length(list.files(output_dir, pattern = "\\.(svg|png)$"))) problems <- c(problems, "unexpected legacy delivery format")
   if (length(notes_files) < 1) problems <- c(problems, "missing notes")
   if (length(metadata_files) < 1) problems <- c(problems, "missing metadata")
   if (length(qa_files) < 1) problems <- c(problems, "missing QA")
 
-  for (files in list(pdf_files, png_files, notes_files, metadata_files, qa_files)) {
+  for (files in list(pdf_files, jpg_files, notes_files, metadata_files, qa_files)) {
     if (length(files) > 0 && any(file.info(files)[["size"]] <= 0, na.rm = TRUE)) problems <- c(problems, "empty output file")
   }
   if (length(notes_files) > 0) {
@@ -229,7 +230,7 @@ run_template <- function(template_name, work_root) {
     pass = length(problems) == 0,
     visual_acceptance = visual_acceptance,
     pdf = length(pdf_files),
-    png = length(png_files),
+    jpg = length(jpg_files),
     notes = length(notes_files),
     metadata = length(metadata_files),
     qa = length(qa_files),
@@ -239,12 +240,12 @@ run_template <- function(template_name, work_root) {
   )
 }
 
-work_root <- file.path("/tmp", paste0("paperplot-skills-smoke-", format(Sys.time(), "%Y%m%d-%H%M%S")))
+work_root <- tempfile("paperplot-skills-smoke-", tmpdir = tempdir())
 dir.create(work_root, recursive = TRUE, showWarnings = FALSE)
 
 results <- do.call(rbind, lapply(template_files, function(template_name) {
   tryCatch(run_template(template_name, work_root), error = function(e) {
-    data.frame(template = template_name, pass = FALSE, visual_acceptance = "not_run", pdf = 0L, png = 0L, notes = 0L, metadata = 0L, qa = 0L, detail = conditionMessage(e), output_dir = NA_character_, stringsAsFactors = FALSE)
+    data.frame(template = template_name, pass = FALSE, visual_acceptance = "not_run", pdf = 0L, jpg = 0L, notes = 0L, metadata = 0L, qa = 0L, detail = conditionMessage(e), output_dir = NA_character_, stringsAsFactors = FALSE)
   })
 }))
 

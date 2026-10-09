@@ -25,7 +25,7 @@ For Nature-like manuscript work, choose size from information burden:
 - Production uses Arial Regular/Bold/Italic only. Missing Arial blocks formal export; fallback preview is never manuscript-ready.
 - Keep vector text editable; do not outline or rasterize text.
 - Most text: 6-8 pt at final size, using the roles in `production-render-contract.md`.
-- Panel labels: A/B/C/D, 12 pt Arial Bold, upright, once on the final composite.
+- Panel labels: 8 pt Arial Bold, upright, once on the final composite; lowercase a/b/c for Nature, uppercase A/B/C for Cell (see `journal-profiles.md`).
 - Axis titles should be concise and include units in parentheses.
 - Avoid plot titles inside manuscript panels unless the title carries scientific meaning; prefer panel labels and caption text.
 - Tick labels and legends are 6 pt; change layout rather than silently shrinking fonts.
@@ -93,8 +93,8 @@ For common pattern families:
 ## Export
 
 - Export PDF for editable vector artwork.
-- Export PNG for preview and QA.
+- Export JPG at 300 dpi for preview and QA (RGB, white background, JPEG quality 95; lossy).
 - Use RGB color.
-- Keep text and lines vector in PDF/SVG.
-- Use at least 300 dpi for raster images and 600 dpi for line-heavy previews when possible.
+- Keep text and lines vector in PDF; SVG is explicit legacy output only.
+- Default user delivery is PDF + JPG 300 dpi. Flag journal-specific higher-resolution/lossless requirements explicitly; never silently change this default.
 - Do not artificially upscale low-resolution images.

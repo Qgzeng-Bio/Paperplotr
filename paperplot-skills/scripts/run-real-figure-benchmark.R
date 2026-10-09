@@ -66,7 +66,7 @@ render_case <- function(row) {
     family = row[["figure_family"]],
     status = row[["status"]],
     pdf = outputs[["pdf"]],
-    png = outputs[["png"]],
+    jpg = outputs[["jpg"]],
     rendered = TRUE,
     stringsAsFactors = FALSE
   )
@@ -79,7 +79,7 @@ results <- do.call(rbind, lapply(seq_len(nrow(renderable)), function(i) {
       family = renderable$figure_family[[i]],
       status = renderable$status[[i]],
       pdf = NA_character_,
-      png = NA_character_,
+      jpg = NA_character_,
       rendered = FALSE,
       stringsAsFactors = FALSE
     )

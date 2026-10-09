@@ -34,7 +34,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path))
 
 figure_spec <- pp_figure_spec(figure_id = figure_id, template_id = "ma-plot-template", figure_role = figure_role, scientific_message = scientific_message, plot_type = "ma_plot", output_preset = "nature_half")
 metric_spec <- pp_metric_spec(metric = c(base_mean_col, log2fc_col, padj_col), label = c("base mean", "log2 fold change", "adjusted p-value"), unit = c("count", "log2 ratio", "unitless"), direction = c("neutral", "neutral", "lower_better"), transform = c("log10", "none", "none"), role = c("abundance", "effect_size", "significance"))

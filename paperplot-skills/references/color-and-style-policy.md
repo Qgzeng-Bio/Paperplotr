@@ -1,24 +1,24 @@
 # Color And Style Policy
 
-The default look is restrained GraphPad-like scientific plotting: clean axes, no decorative effects, no default gridlines, readable labels, and clear legends.
+The default look is restrained, Wong-accessible scientific plotting: clean axes, no decorative effects, no default gridlines, readable labels, and clear legends.
 
 ## Theme
 
 - Use `pp_theme(show_grid = FALSE)` by default.
 - Turn on gridlines only for quantitative reading tasks where they help.
-- Use Arial with 7-8 pt base text for manuscript-scale figures.
-- Use line widths around 0.35-0.4 pt.
+- Use Arial and the selected journal profile's role sizes; do not carry a fixed 7-8 pt rule across journals.
+- Use line widths from the selected journal profile and figure family, typically around 0.35-0.4 pt.
 - Use the selected pattern document before changing defaults; style choices should follow figure family, data density, and target size.
 - Avoid large in-panel titles; panel labels and captions carry narrative.
 
 ## Discrete Color
 
-- Use `graphpad_discrete` for generic categorical groups.
+- Use `wong` for generic categorical groups (up to eight groups).
 - Use a user-provided named color vector when group colors have semantic meaning.
 - Keep group colors stable across panels.
 - Use gray for reference or background groups when contrast should be reduced.
 - For differential plots, use neutral background points and at most two accent directions/classes.
-- For ordination/group comparisons, keep primary group colors under 8 classes in main figures.
+- For ordination/group comparisons, keep primary group colors at or below eight classes; `wong` errors above eight rather than interpolating a purported colorblind-safe palette. Use facets or an explicit alternative palette.
 - For set/network/circos plots, color groups rather than every edge/link.
 
 ## Continuous Color
@@ -30,6 +30,7 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 - Use diverging color only with a meaningful center, such as zero correlation or log fold-change.
 - Sequential quality scales should state whether higher is better.
 - Family-specific dense displays may need a calmer continuous palette than ordinary presentation plots.
+- Keep one visual message per panel, reserve whitespace, and remove decorative encodings before shrinking labels.
 
 ## Avoid
 
@@ -73,5 +74,5 @@ Export gates in `pp_save_plot()`:
 - Geom-level text with no explicit/mapped size inherits `base_size`/family on
   the finalized plot copy. Use `pp_text_size()` for deliberate label roles.
 - Production templates export through `pp_save_all_with_qa_loop()`, which runs
-  QA before and after at most one whitelisted visual retry and records both
-  statuses. QA-runtime unavailability is metadata, not a silent pass.
+  QA before and after at most two whitelisted visual retries and records both
+  statuses. Preview deliberately defers visual/export checks; QA-runtime unavailability is metadata, not a silent pass.

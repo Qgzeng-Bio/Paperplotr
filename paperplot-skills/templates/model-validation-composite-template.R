@@ -80,7 +80,7 @@ output_stem <- file.path(output_dir, paste0(figure_id, "_", timestamp))
 notes_path <- paste0(output_stem, "_notes.md")
 metadata_path <- paste0(output_stem, "_metadata.json")
 qa_path <- paste0(output_stem, "_qa.md")
-pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".png"), notes_path, metadata_path, qa_path))
+pp_stop_if_outputs_exist(c(paste0(output_stem, ".pdf"), paste0(output_stem, ".jpg"), notes_path, metadata_path, qa_path))
 
 figure_spec <- pp_figure_spec(
   figure_id = figure_id,
@@ -129,7 +129,7 @@ design_plan <- pp_design_plan(
   figure_role = figure_role,
   layout_plan = list(type = "three_panel_validation_composite", nrow = 1, ncol = 3, width_cm = 18, height_cm = 8.5),
   label_strategy = label_strategy,
-  palette_plan = list(type = "model_or_split", name = "graphpad_discrete", max_groups = length(group_levels)),
+  palette_plan = list(type = "model_or_split", name = "wong", max_groups = length(group_levels)),
   statistical_plan = statistical_plan,
   visible_simplifications = design_brief$acceptable_simplifications,
   risks = c("summary intervals are approximate unless the input provides resampling uncertainty"),

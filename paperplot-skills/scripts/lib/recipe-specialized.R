@@ -3,7 +3,7 @@ pp_demo_vector <- function(grob,spec) grid::grobTree(grob,grid::textGrob('DEMO /
   gp=grid::gpar(fontfamily=spec$family,fontsize=spec$text_pt$caption,col='#555555')))
 pp_capture_vector <- function(draw, spec) {
   pp_require_backend('svglite')
-  device <- function(width,height) svglite::svglite(file=tempfile(fileext='.svg'),width=width,height=height)
+  device <- function(width,height) svglite::svgstring(width=width,height=height)
   # grid.grabExpr opens an isolated device: dimensions belong to this render.
   grid::grid.grabExpr(draw(),wrap=FALSE,width=spec$width_mm/25.4,height=spec$height_mm/25.4,device=device)
 }
@@ -34,7 +34,7 @@ pp_recipe_specialized <- function(entry,d,params,spec) {
           bounds<-range(values,na.rm=TRUE);if(any(!is.finite(bounds))) stop('Annotation values need a finite scale.')
           if(diff(bounds)==0) bounds<-bounds+c(-.5,.5)
           circlize::colorRamp2(seq(bounds[1],bounds[2],length.out=5),pp_gradient_palette(5))
-        } else pp_group_colors(sort(unique(as.character(values[!is.na(values)]))))
+        } else pp_recipe_group_colors(sort(unique(as.character(values[!is.na(values)]))), params, role = 'annotation')
       }) else NULL
       bounds <- params$value_limits %||% range(mat,na.rm=TRUE)
       if(any(!is.finite(bounds))) stop('Heatmap needs at least one finite value.')
@@ -125,7 +125,7 @@ pp_recipe_specialized <- function(entry,d,params,spec) {
         pp_capture_vector(function() gridGraphics::grid.echo(function() {
           old <- graphics::par(family=spec$family,ps=12,mar=c(1,1,1,1)); on.exit(graphics::par(old))
           circlize::circos.clear(); on.exit(circlize::circos.clear(),add=TRUE)
-          circlize::chordDiagram(edges,directional=as.integer(isTRUE(params$directed)),annotationTrack='grid',grid.col=pp_group_colors(unique(c(edges$source,edges$target))),
+          circlize::chordDiagram(edges,directional=as.integer(isTRUE(params$directed)),annotationTrack='grid',grid.col=pp_recipe_group_colors(unique(c(edges$source,edges$target)), params, role = 'flow'),
             preAllocateTracks=list(track.height=.12))
           circlize::circos.trackPlotRegion(track.index=1,panel.fun=function(x,y) {
             sector <- circlize::get.cell.meta.data('sector.index'); xl <- circlize::get.cell.meta.data('xlim')

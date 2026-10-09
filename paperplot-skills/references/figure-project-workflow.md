@@ -30,7 +30,7 @@ being overwritten. Each panel has an id, title, scientific question, role,
 optional script, named inputs, named extra source scripts, and dependency
 declaration. A missing script means a planned placeholder, not invented data.
 
-Default double-column budget is 180 mm, single-column 89 mm. Width defaults to
+Default double-column budget is 183 mm (Nature) or 174 mm (Cell), single-column 89 mm (Nature) or 85 mm (Cell); `column="mid"` is Cell-only (114 mm). Width defaults to
 the budget, but may be smaller. Height starts at 120 mm; above 170 mm produces
 a split/reflow recommendation. `width_exception` records a specific exception.
 Font sizes do not scale with canvas size. Layout changes require confirmation.

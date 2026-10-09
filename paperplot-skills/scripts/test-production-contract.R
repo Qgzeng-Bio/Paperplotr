@@ -3,10 +3,33 @@ source("paperplot-skills/scripts/paperplot_helpers.R")
 check <- function(value, message) if (!isTRUE(value)) stop(message)
 fails <- function(expr) check(inherits(tryCatch(force(expr), error = identity), "error"), "Expected an error")
 s <- pp_render_spec(4)
-check(s$width_mm == 180 && s$height_mm == 120 && s$text_pt$panel_tag == 12, "Main canvas/tag defaults")
+# Default profile is Nature: 183 mm double column, 89 mm single, 8 pt bold lowercase tags, text 5-7 pt.
+check(s$journal == "nature" && s$width_mm == 183 && s$height_mm == 120 && s$text_pt$panel_tag == 8, "Nature main canvas/tag defaults")
+check(identical(unlist(s$expected_tags), c("a", "b", "c", "d")) && identical(pp_panel_tag_levels(s), "a"), "Nature lowercase tags")
+check(all(unlist(s$text_pt[setdiff(names(s$text_pt), "panel_tag")]) <= 7), "Nature text <= 7 pt outside tags")
 check(pp_render_spec()$width_mm == 89, "Single-column width")
 check(pp_render_spec(2, case = "igs")$width_mm == 183, "IGS canvas")
-check(pp_render_spec(text_pt = list(axis_title = 8))$text_pt$axis_title == 8, "Explicit role override")
+check(pp_render_spec(2, case = "manhattan")$width_mm == 183, "Manhattan canvas follows double column")
+check(pp_render_spec(text_pt = list(axis_title = 6))$text_pt$axis_title == 6, "Explicit role override inside the journal range")
+fails(pp_render_spec(text_pt = list(axis_title = 7.5)))   # Nature caps ordinary text at 7 pt
+fails(pp_render_spec(text_pt = list(caption = 4.5)))      # ... and floors it at 5 pt
+fails(pp_render_spec(column = "mid"))                     # Nature publishes no 1.5-column width
+fails(pp_render_spec(journal = "science"))                # unknown profile
+check(suppressWarnings(pp_render_spec(height_mm = 171)$height_mm) == 171 && inherits(tryCatch(pp_render_spec(height_mm = 171), warning = identity), "warning"), "Nature 170 mm height guard warns")
+# Cell profile: 85/114/174 mm, uppercase tags, text 6-8 pt, strokes 0.5-1.5 pt.
+cs <- pp_render_spec(4, journal = "cell")
+check(cs$journal == "cell" && cs$width_mm == 174 && identical(unlist(cs$expected_tags), c("A", "B", "C", "D")) && identical(pp_panel_tag_levels(cs), "A"), "Cell main canvas/tags")
+check(pp_render_spec(journal = "cell")$width_mm == 85 && pp_render_spec(journal = "cell", column = "mid")$width_mm == 114, "Cell single / 1.5 column")
+check(all(unlist(cs$stroke_pt) >= 0.5 & unlist(cs$stroke_pt) <= 1.5), "Cell strokes within 0.5-1.5 pt")
+check(pp_render_spec(text_pt = list(axis_title = 8), journal = "cell")$text_pt$axis_title == 8, "Cell allows 8 pt text")
+fails(pp_render_spec(text_pt = list(caption = 5.5), journal = "cell"))  # below Cell's 6 pt floor
+bad_stroke <- cs; bad_stroke$stroke_pt$separator <- 0.25
+fails(pp_validate_journal_spec(bad_stroke))
+# Legacy cm presets must agree with the journal profiles.
+check(isTRUE(all.equal(c(pp_output_preset("nature")$width_cm, pp_output_preset("nature_half")$width_cm) * 10, c(183, 89))), "Nature presets agree with the profile")
+check(isTRUE(all.equal(c(pp_output_preset("cell")$width_cm, pp_output_preset("cell_mid")$width_cm, pp_output_preset("cell_half")$width_cm) * 10, c(174, 114, 85))), "Cell presets agree with the profile")
+old <- options(paperplot.journal = "cell"); check(pp_render_spec()$width_mm == 85, "Journal option selects the profile"); options(old)
+Sys.setenv(PAPERPLOT_JOURNAL = "cell"); check(pp_render_spec()$journal == "cell", "Journal env selects the profile"); Sys.unsetenv("PAPERPLOT_JOURNAL")
 check(!all(pp_arial_faces(data.frame(family = "Helvetica", style = "Regular"))), "No silent font substitution")
 args <- pp_qa_context_args(list(ocr = "required", strict_nature = TRUE, strict_detail_qa = TRUE))
 check(all(c("required", "--strict-nature", "--strict-detail-qa") %in% args), "QA options propagated")
@@ -75,7 +98,8 @@ if (isTRUE(pp_check_environment(TRUE)$production_available)) {
   invalid <- d; invalid$p_ge95[1] <- 90; fails(pp_igs_figure(invalid))
   igs <- pp_igs_figure(d)
   spec <- pp_render_spec(2, case = "igs", mode = "demo")
-  files <- pp_save_all_with_qa_loop(igs, file.path(out, "synthetic-igs"), render_spec = spec, max_iterations = 0)
+  # Explicit legacy export: retain SVG geometry/parser regression coverage.
+  files <- pp_save_all_with_qa_loop(igs, file.path(out, "synthetic-igs"), formats = c("pdf", "svg", "png"), render_spec = spec, max_iterations = 0)
   audit <- attr(files, "qa_export_audit")
   check(audit$checks$pdf_page_mm == "pass", "Actual PDF page dimensions")
   check(audit$checks$pdf_font_embedding == "pass", "Embedded Arial")
@@ -85,7 +109,7 @@ if (isTRUE(pp_check_environment(TRUE)$production_available)) {
   check(audit$checks$count_column_header == "pass", "One n header")
   check(audit$checks$axis_tick_strokes == "pass", "Actual axis and tick stroke units")
   check(audit$checks$marker_dimensions == "pass", "Actual marker dimensions")
-  check(audit$checks$png_pixels == "pass", "600 dpi dimensions")
+  check(audit$checks$png_pixels == "pass", "300 dpi legacy PNG dimensions")
   check(attr(files, "qa_contract")$tier != "manuscript-ready", "Synthetic fixture cannot certify real figure")
   panels <- list(
     ggplot2::ggplot(d, ggplot2::aes(median, max)) + ggplot2::geom_point(colour = "#173B73") + ggplot2::labs(title = "Summary association"),
@@ -97,8 +121,12 @@ if (isTRUE(pp_check_environment(TRUE)$production_available)) {
       ggplot2::geom_point(colour = "#173B73") + ggplot2::labs(title = "Within-row summary", y = NULL))
   four <- pp_compose_manuscript(panels, design = "AB\nCD", widths = c(1.15, 1), heights = c(1, 1))
   main <- pp_save_all_with_qa_loop(four, file.path(out, "synthetic-main"), render_spec = pp_render_spec(4, mode = "demo"), max_iterations = 0)
-  check(attr(main, "qa_export_audit")$checks$pdf_page_mm == "pass", "180 x 120 mm main canvas")
-  check(attr(main, "qa_export_audit")$checks$svg_panel_tags == "pass", "Unique bold ABCD tags")
+  check(attr(main, "qa_export_audit")$checks$pdf_page_mm == "pass", "183 x 120 mm main canvas")
+  check(attr(main, "qa_export_audit")$checks$pdf_panel_tags == "pass", "Unique bold abcd PDF tags")
+  main_audit <- attr(main, "qa_export_audit")
+  check(identical(names(main), c("pdf", "jpg")), "Default PDF/JPG only")
+  check(all(vapply(main_audit$checks[c("jpg_pixels", "jpg_dpi", "jpg_encoding", "jpg_rgb")], identical, logical(1), "pass")), "Actual 300-dpi RGB JPEG")
+  check(!any(file.exists(paste0(file.path(out, "synthetic-main"), c(".png", ".svg")))), "No legacy default deliveries")
   cat("Synthetic export artifacts:", out, "\n")
 } else if('--require-production' %in% commandArgs(TRUE)) stop('Formal render check requires the complete environment; skipping is not success.') else cat("SKIP physical exports: formal environment unavailable; no acceptance claimed.\n")
 cat("Production contract tests passed.\n")

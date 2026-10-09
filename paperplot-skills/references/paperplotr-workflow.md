@@ -39,7 +39,7 @@ p <- ggplot(df, aes(x, y)) +
   geom_point(size = 1.8, alpha = 0.85) +
   pp_theme(show_grid = FALSE)
 
-output_files <- c(pdf = paste0(output_stem, ".pdf"), png = paste0(output_stem, ".png"))
+output_files <- c(pdf = paste0(output_stem, ".pdf"), jpg = paste0(output_stem, ".jpg"))
 pp_stop_if_outputs_exist(c(output_files, notes_path))
 pp_save_plot(p, output_files[["pdf"]], preset = "nature_half")
 pp_save_plot(p, output_files[["png"]], preset = "nature_half")

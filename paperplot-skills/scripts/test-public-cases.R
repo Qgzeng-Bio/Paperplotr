@@ -100,9 +100,9 @@ results <- lapply(names(cases),function(id) {
     plot<-pp_recipe_plot(case$recipe,case$data,case$params)
     spec<-attr(plot,'pp_render_spec');spec$ocr<-'off';spec$n_panels<-pp_infer_panel_count(plot)
     spec$panel_tags<-inherits(plot,'patchwork') && pp_recipe_entry(case$recipe)$handler%in%c('model','layout')
-    spec$expected_tags<-if(spec$panel_tags) as.list(LETTERS[seq_len(spec$n_panels)]) else list()
+    spec$expected_tags<-if(spec$panel_tags) as.list(pp_panel_tag_texts(spec)) else list()
     files<-pp_save_all_with_qa_loop(plot,file.path(folder,id),render_spec=spec,max_iterations=0,overwrite=TRUE)
-    exact<-c('pdf_page_mm','svg_page_mm','png_pixels','pdf_typography','svg_typography','pdf_font_embedding','svg_editable_text')
+    exact<-c('pdf_page_mm','jpg_pixels','jpg_dpi','jpg_encoding','jpg_rgb','pdf_typography','pdf_font_embedding')
     audit<-attr(files,'qa_export_audit')
     bad<-exact[!vapply(exact,function(k) identical(audit$checks[[k]],'pass'),logical(1))]
     bad<-unique(c(bad,names(audit$checks)[vapply(audit$checks,identical,logical(1),'fail')]))
