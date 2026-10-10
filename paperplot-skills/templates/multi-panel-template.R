@@ -48,7 +48,7 @@ missing_cols <- setdiff(required_cols, names(df))
 if (length(missing_cols) > 0) stop("Missing required columns: ", paste(missing_cols, collapse = ", "), call. = FALSE)
 
 n_panels <- length(unique(df[[panel_col]]))
-layout <- pp_recommend_facet_grid(n_panels, plot_type = "small_multiples", complex = TRUE)
+layout <- pp_recommend_facet_grid(n_panels, plot_type = "small_multiples", complex = TRUE, preset = preset)
 label_strategy <- pp_label_strategy(unique(df[[x_col]]), available_width_cm = layout$width_cm / max(1, layout$ncol))
 palette_check <- if (!is.null(group_col)) pp_validate_palette(df[[group_col]], "discrete") else pp_qa_result("palette", "pass", "no group colors")
 layout_check <- pp_assess_layout_risk(n_panels, plot_type = "small_multiples", label_strategy = label_strategy)

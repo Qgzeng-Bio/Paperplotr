@@ -94,12 +94,15 @@ def audit(paths, spec):
 
     def typography(key, texts):
         bad = []
+        non_tag_allowed = [v for k, v in spec["text_pt"].items() if k != "panel_tag"]
+        tag_pattern = r"[a-z]" if spec.get("tag_case") == "lowercase" else r"[A-Z]"
+        panel_tag_pt = spec.get("text_pt", {}).get("panel_tag")
         for text, size, family in texts:
             if not text.strip():
                 continue
-            valid_size = any(abs(size - value) <= tol["font_pt"] for value in allowed)
-            if abs(size - spec["text_pt"]["panel_tag"]) <= tol["font_pt"]:
-                valid_size = bool(re.fullmatch(r"[a-z]" if spec.get("tag_case") == "lowercase" else r"[A-Z]", text.strip()))
+            valid_size = any(abs(size - value) <= tol["font_pt"] for value in non_tag_allowed)
+            if not valid_size and panel_tag_pt is not None and abs(size - panel_tag_pt) <= tol["font_pt"]:
+                valid_size = bool(re.fullmatch(tag_pattern, text.strip()))
             font_name = family.split(",")[0].split("+")[-1]
             font_name = re.sub(r"[^a-z]", "", font_name.lower())
             arial = font_name in {"arial", "arialmt", "arialbold", "arialboldmt", "arialitalic", "arialitalicmt", "arialbolditalic", "arialbolditalicmt"}
@@ -182,7 +185,8 @@ def audit(paths, spec):
                 if expected_tags is None:
                     expected_tags = list(('abcdefghijklmnopqrstuvwxyz' if spec.get('tag_case') == 'lowercase' else 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')[:spec.get('n_panels', 1)]) if spec.get('panel_tags', spec.get('n_panels', 1) > 1) else []
                 tags = [(t.strip(), 'bold' in f.lower()) for t, size, f in texts
-                        if t.strip() and abs(size - spec['text_pt']['panel_tag']) <= tol['font_pt']]
+                        if t.strip() and abs(size - spec['text_pt']['panel_tag']) <= tol['font_pt']
+                        and re.fullmatch(r"[a-zA-Z]", t.strip())]
                 checks['pdf_panel_tags'] = ('pass' if all(bold for _, bold in tags) and sorted(t for t, _ in tags) == sorted(expected_tags)
                                             else 'fail') if expected_tags or tags else 'not_applicable'
                 details['pdf_panel_tags'] = {'expected': expected_tags, 'actual': tags,
@@ -246,7 +250,7 @@ def audit(paths, spec):
                         if text in shared_rows:
                             row_positions.setdefault(text, []).append(point(matrix,float(node.get('x',0)),float(node.get('y',0)))[1] * scale_pt * 25.4 / 72)
                             italic_rows.append(style.get("font-style") == "italic")
-                        if abs(size - spec["text_pt"]["panel_tag"]) <= tol["font_pt"]:
+                        if abs(size - spec["text_pt"]["panel_tag"]) <= tol["font_pt"] and re.fullmatch(r"[a-zA-Z]", text.strip()):
                             tags.append((text, style.get("font-weight") in ("bold", "700")))
                         if tag == 'tspan' and (node.get('x') is None or node.get('y') is None):
                             unsupported_geometry.append('relative tspan positioning')

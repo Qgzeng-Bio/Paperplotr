@@ -52,7 +52,7 @@ ppp_environment <- function() {
     helper_hashes = as.list(tools::md5sum(c(file.path(pp_helper_script_dir, "paperplot_helpers.R"),
       list.files(file.path(pp_helper_script_dir, "lib"), pattern = "\\.R$", full.names = TRUE),
       file.path(pp_helper_script_dir,'..','recipes',c('paperplot_code_recipes.R','recipe_manifest.csv'))))),
-    packages = as.list(stats::setNames(vapply(pkgs, function(p) if (requireNamespace(p, quietly = TRUE)) as.character(utils::packageVersion(p)) else "unavailable", character(1)), pkgs)))
+    packages = as.list(stats::setNames(vapply(pkgs, function(p) tryCatch(as.character(utils::packageVersion(p)), error = function(e) "unavailable"), character(1)), pkgs)))
 }
 ppp_layout <- function(layout, ids, column = "double", journal = NULL) {
   profile <- pp_journal_profile(journal)

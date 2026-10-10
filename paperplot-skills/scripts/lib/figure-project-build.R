@@ -112,11 +112,19 @@ ppp_row_alignment <- function(geometry, groups) {
     regions <- geometry$data_regions[members]
     if (any(vapply(regions, is.null, logical(1)))) {
       checks <- c(checks, list(list(status = "unverified", panels = as.list(members))))
+    } else if (n == 0) {
+      checks <- c(checks, list(list(status = "unverified", panels = as.list(members),
+        maximum_difference_mm = NA_real_, reason = "No shared row items to evaluate")))
     } else {
       positions <- lapply(regions, function(r) r$top_mm + r$height_mm * (1 - (seq_len(n) - .4)/(n + .2)))
       differences <- apply(do.call(cbind, positions), 1, function(y) max(y)-min(y))
-      checks <- c(checks, list(list(status = if (all(differences <= .2)) "pass" else "fail",
-        panels = as.list(members), maximum_difference_mm = max(differences), positions_mm = positions)))
+      if (length(differences) == 0) {
+        checks <- c(checks, list(list(status = "unverified", panels = as.list(members),
+          maximum_difference_mm = NA_real_, reason = "No differences computed")))
+      } else {
+        checks <- c(checks, list(list(status = if (all(differences <= .2)) "pass" else "fail",
+          panels = as.list(members), maximum_difference_mm = max(differences), positions_mm = positions)))
+      }
     }
   }
   list(status = if (any(vapply(checks, function(x) x$status == "fail", logical(1)))) "fail" else
@@ -217,8 +225,20 @@ ppp_assemble <- function(x, root, final = FALSE) {
     if (!all(members %in% ids) || !group$axis %in% c("x", "y") || length(limits) != 2 || any(!is.finite(limits))) stop("Invalid shared-axis declaration.")
     for (id in setdiff(members, incomplete)) {
       if (!inherits(plots[[id]]$coordinates, "CoordCartesian")) stop("Shared limits require Cartesian panels.")
+      old_coord <- plots[[id]]$coordinates
       args <- stats::setNames(list(limits), paste0(group$axis, "lim"))
-      plots[[id]] <- plots[[id]] + do.call(ggplot2::coord_cartesian, args)
+      if (!is.null(old_coord$expand)) args$expand <- old_coord$expand
+      if (!is.null(old_coord$default)) args$default <- old_coord$default
+      if (!is.null(old_coord$clip)) args$clip <- old_coord$clip
+      other_axis <- if (identical(group$axis, "x")) "y" else "x"
+      other_lim <- old_coord$limits[[other_axis]]
+      if (!is.null(other_lim)) args[[paste0(other_axis, "lim")]] <- other_lim
+      if (inherits(old_coord, "CoordFixed")) {
+        if (!is.null(old_coord$ratio)) args$ratio <- old_coord$ratio
+        plots[[id]] <- plots[[id]] + do.call(ggplot2::coord_fixed, args)
+      } else {
+        plots[[id]] <- plots[[id]] + do.call(ggplot2::coord_cartesian, args)
+      }
     }
   }
   spec <- pp_render_spec(length(ids), width_mm = x$layout$width_mm, height_mm = x$layout$height_mm,

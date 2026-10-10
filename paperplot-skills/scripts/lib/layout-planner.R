@@ -39,10 +39,22 @@ pp_layout_budget <- function(panel_hierarchy, figure_role = "main") {
   )
 }
 
-pp_recommend_manuscript_layout <- function(panel_hierarchy, available_width_cm, available_height_cm) {
+pp_recommend_manuscript_layout <- function(panel_hierarchy, available_width_cm = NULL, available_height_cm = NULL,
+                                  journal = NULL, column = c("auto", "single", "mid", "double")) {
   pp_validate_panel_hierarchy(panel_hierarchy)
+  column <- match.arg(column)
   n <- panel_hierarchy$n_panels
   dims <- if (n <= 1) c(1, 1) else if (n == 2) c(2, 1) else if (n <= 4) c(2, 2) else if (n <= 6) c(3, 2) else c(4, ceiling(n / 4))
+  if (is.null(available_width_cm) || is.null(available_height_cm)) {
+    profile <- pp_journal_profile(journal)
+    col_choice <- if (identical(column, "auto")) {
+      if (dims[[1]] == 1) "single" else "double"
+    } else column
+    width_mm <- profile$width_mm[[col_choice]]
+    if (is.na(width_mm)) width_mm <- profile$width_mm$double
+    available_width_cm <- available_width_cm %||% (width_mm / 10)
+    available_height_cm <- available_height_cm %||% (if (dims[[2]] == 1) 6.2 else 12.0)
+  }
   list(
     type = "manuscript_grid",
     ncol = dims[[1]],
@@ -144,9 +156,12 @@ pp_legend_plan <- function(entries, labels = NULL, canvas_width_cm = NULL, canva
   )
 }
 
-pp_panel_tag_labels <- function(n, style = "uppercase") {
-  labels <- LETTERS[seq_len(n)]
-  if (identical(style, "lowercase")) labels <- letters[seq_len(n)]
+pp_panel_tag_labels <- function(n, style = NULL, journal = NULL) {
+  if (is.null(style)) {
+    profile <- tryCatch(pp_journal_profile(journal), error = function(e) list(tag_case = "uppercase"))
+    style <- profile$tag_case %||% "uppercase"
+  }
+  labels <- if (identical(tolower(style), "lowercase")) letters[seq_len(n)] else LETTERS[seq_len(n)]
   labels
 }
 

@@ -65,7 +65,7 @@ panel_specs <- lapply(seq_along(panel_ids), function(i) {
 })
 panel_hierarchy <- pp_panel_hierarchy(panel_specs)
 layout_budget <- pp_layout_budget(panel_hierarchy, figure_role = figure_role)
-layout <- pp_recommend_manuscript_layout(panel_hierarchy, available_width_cm = 18, available_height_cm = 12)
+layout <- pp_recommend_manuscript_layout(panel_hierarchy, journal = preset)
 shared_guide_plan <- pp_shared_guide_plan(panel_specs, palette_plan = list(type = if (!is.null(group_col)) "group" else "none"))
 # Pre-render legend placement: estimate physical footprint from group entries
 # and canvas dims instead of hardcoding a position (WP3 legend coordinator).
