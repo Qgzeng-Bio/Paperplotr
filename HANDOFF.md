@@ -1,5 +1,30 @@
 # PaperPlotR / paperplot-skills Handoff
 
+## 2026-10-10: JPEG Exif DPI & Theme element_blank Preservation Fixes — COMMITTED & SYNCED
+
+State: branch `dev/linux-cairo-pagebox`.
+Synchronized to:
+- Codex: `~/.codex/skills/paperplot-skills`
+- Claude Code: `~/.claude/skills/paperplot-skills`
+- Pi: `~/.pi/agent/skills/paperplot-skills` (Symlink to Codex)
+- Kimi-code: `~/.kimi-code/skills/paperplot-skills` (Symlink to Pi)
+
+Changes & Fixes implemented:
+1. JPEG direct RGB / Exif APP1 DPI injection (`scripts/paperplot_helpers.R`):
+   - Fixed `pp_set_jpeg_dpi()` to inject standard Exif APP1 (`0xFF 0xE1`) resolution tags instead of prepending JFIF APP0 when dealing with direct-RGB JPEGs produced by `ragg::agg_jpeg` (Adobe APP14 transform = 0).
+   - Eliminated erroneous $YC_bC_r \to RGB$ inverse transformation in modern decoders (libjpeg-turbo 3.x / Pillow 12), completely resolving the magenta `(255, 121, 255)` background distortion on pure white `(255, 255, 255)`.
+   - Updated `scripts/export-audit.py` to cast DPI values to float for valid JSON serialization of Exif `IFDRational` objects.
+2. Preservation of child theme `element_blank` (`scripts/lib/production-render.R`):
+   - Fixed `pp_normalize_production()` to record explicit `element_blank()` elements defined in subpanels (e.g. `axis.line`, `axis.title.x`, `axis.ticks`) prior to applying `pp_production_theme(spec)`.
+   - Restores explicit blanks after theme addition, ensuring that strips, heatmaps, and custom minimalist panels do not have unwanted axis lines or generic labels resurrected during production assembly.
+
+Verification Status (via `./paperplot-skills/scripts/paperplot-run`):
+- `test-pdf-jpg.R`: PASS (Lossless Exif density injection, idempotency, pure white RGB verification)
+- `test-export-audit.py`: PASS (18 tests OK under runtime Python)
+- `test-interactive-style.R`: PASS (Interactive preview / production styles)
+- `test-production-contract.R`: PASS (Production layout, tag coverage, bounds)
+- `test-figure-project.R`: PASS (Full figure project pipeline, assembly & validation)
+
 ## 2026-10-10: Review fixes (P0 bugs, startup optimization, compact layout & guides) — COMMITTED & SYNCED
 
 Commit: `31a614b` on branch `dev/linux-cairo-pagebox`.
