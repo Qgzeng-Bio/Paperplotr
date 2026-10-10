@@ -143,8 +143,6 @@ pp_production_theme <- function(spec) {
   ggplot2::theme(
     text = ggplot2::element_text(family = "Arial", size = s$body, face = "plain", colour = "#222222"),
     axis.title = ggplot2::element_text(family = "Arial", size = s$axis_title, face = "plain"),
-    axis.title.x = ggplot2::element_text(family = "Arial", size = s$axis_title, face = "plain"),
-    axis.title.y = ggplot2::element_text(family = "Arial", size = s$axis_title, face = "plain"),
     axis.text = ggplot2::element_text(family = "Arial", size = s$tick, face = "plain"),
     legend.text = ggplot2::element_text(family = "Arial", size = s$legend, face = "plain"),
     legend.title = ggplot2::element_text(family = "Arial", size = s$legend, face = "plain"),
@@ -204,16 +202,26 @@ pp_normalize_production <- function(plot, spec) {
       return(wrapped)
     }
     theme <- p$theme
-    # Record explicit element_blank overrides from child panels (e.g. axis.title.x, axis.line for heatmaps/strips)
+    # Record explicit element_blank and non-blank overrides from child panels (e.g. axis.title.x, axis.line for heatmaps/strips)
     # so pp_production_theme does not accidentally resurrect unwanted axis lines or labels.
     explicit_blanks <- names(theme)[vapply(theme, inherits, logical(1), "element_blank")]
+    explicit_nonblanks <- names(theme)[!vapply(theme, inherits, logical(1), "element_blank")]
     changes[[length(changes) + 1L]] <<- lapply(theme[vapply(theme, inherits, logical(1), "element_text")], function(x) list(size = x$size, family = x$family))
     # Remove child size/family/face overrides while preserving blanks, margins and angles.
     for (nm in names(theme)) if (inherits(theme[[nm]], "element_text")) {
       theme[[nm]]$size <- NULL; theme[[nm]]$family <- NULL; theme[[nm]]$face <- NULL
     }
     p$theme <- theme + pp_production_theme(spec)
-    for (nm in explicit_blanks) p$theme[[nm]] <- ggplot2::element_blank()
+    for (nm in explicit_blanks) {
+      p$theme[[nm]] <- ggplot2::element_blank()
+      pattern <- paste0("^", gsub("\\.", "\\\\.", nm), "\\.")
+      matching_children <- grep(pattern, names(p$theme), value = TRUE)
+      for (child in matching_children) {
+        if (!child %in% explicit_nonblanks) {
+          p$theme[[child]] <- ggplot2::element_blank()
+        }
+      }
+    }
     if(identical(attr(p,'pp_axes'),'none')) p$theme <- p$theme + ggplot2::theme(
       axis.title=ggplot2::element_blank(),axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),
       axis.text=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),

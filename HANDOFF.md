@@ -14,9 +14,11 @@ Changes & Fixes implemented:
    - Fixed `pp_set_jpeg_dpi()` to inject standard Exif APP1 (`0xFF 0xE1`) resolution tags instead of prepending JFIF APP0 when dealing with direct-RGB JPEGs produced by `ragg::agg_jpeg` (Adobe APP14 transform = 0).
    - Eliminated erroneous $YC_bC_r \to RGB$ inverse transformation in modern decoders (libjpeg-turbo 3.x / Pillow 12), completely resolving the magenta `(255, 121, 255)` background distortion on pure white `(255, 255, 255)`.
    - Updated `scripts/export-audit.py` to cast DPI values to float for valid JSON serialization of Exif `IFDRational` objects.
-2. Preservation of child theme `element_blank` (`scripts/lib/production-render.R`):
-   - Fixed `pp_normalize_production()` to record explicit `element_blank()` elements defined in subpanels (e.g. `axis.line`, `axis.title.x`, `axis.ticks`) prior to applying `pp_production_theme(spec)`.
-   - Restores explicit blanks after theme addition, ensuring that strips, heatmaps, and custom minimalist panels do not have unwanted axis lines or generic labels resurrected during production assembly.
+2. Preservation of child theme `element_blank` with cascading inheritance (`scripts/lib/production-render.R`):
+   - Removed redundant `axis.title.x` and `axis.title.y` from `pp_production_theme(spec)`, allowing x/y axis titles to inherit directly from `axis.title` without blocking top-level blank settings.
+   - Enhanced `pp_normalize_production()` to record both `explicit_blanks` and `explicit_nonblanks`.
+   - Restores explicit blanks and cascades blank settings down to sub-elements (e.g. `axis.title = element_blank()` cascades down to `axis.title.x`, `axis.title.y`, `axis.title.x.bottom`; `axis.line = element_blank()` cascades to `axis.line.x`, `axis.line.bottom`, etc.) unless the child panel explicitly declared a non-blank override.
+   - Eliminates the need for callers to manually write low-level `.bottom`/`.left` blanks to evade production theme overwriting. Strip charts and heatmaps cleanly retain hidden axis titles and lines.
 
 Verification Status (via `./paperplot-skills/scripts/paperplot-run`):
 - `test-pdf-jpg.R`: PASS (Lossless Exif density injection, idempotency, pure white RGB verification)
