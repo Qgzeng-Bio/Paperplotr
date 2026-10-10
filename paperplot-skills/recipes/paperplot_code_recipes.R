@@ -1,7 +1,7 @@
 # PaperPlot recipe entrypoint: manifest-directed dispatch, mandatory real input.
 # Simulation is reachable only through the explicitly named demo constructor.
 for (.module in c("recipe-handlers.R", "recipe-specialized.R")) {
-  source(file.path(pp_helper_script_dir, "lib", .module), local = FALSE)
+  source(file.path(pp_helper_script_dir, "lib", .module), local = environment())
 }
 
 pp_recipe_family_kind <- function(recipe_id) pp_recipe_entry(recipe_id)$handler
@@ -15,8 +15,16 @@ pp_recipe_plot <- function(recipe_id, df, params = list(), mode = Sys.getenv("PA
   original <- df
   entry <- pp_recipe_entry(recipe_id)
   df <- pp_validate_recipe_input(recipe_id,df,params,mode)
-  spec <- params$render_spec %||% pp_render_spec(width_mm=entry$default_width_cm*10,
-    height_mm=entry$default_height_cm*10,mode=mode)
+  target_journal <- params$journal %||% getOption("paperplot.journal") %||% Sys.getenv("PAPERPLOT_JOURNAL", "nature")
+  col_type <- if (isTRUE(entry$default_width_cm > 12)) "double" else "single"
+  profile <- tryCatch(pp_journal_profile(target_journal), error = function(e) list(width_mm = list(single = 89, double = 183)))
+  auto_width_mm <- profile$width_mm[[col_type]] %||% (entry$default_width_cm * 10)
+  spec <- params$render_spec %||% pp_render_spec(
+    width_mm = params$width_mm %||% auto_width_mm,
+    height_mm = params$height_mm %||% (entry$default_height_cm * 10),
+    journal = target_journal,
+    mode = mode
+  )
   if (entry$handler %in% c("complex_heatmap","sets","network","flow","circos","spatial","tree")) {
     plot <- pp_recipe_specialized(entry,df,params,spec)
   } else plot <- pp_recipe_core(entry,df,params)

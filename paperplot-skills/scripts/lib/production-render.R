@@ -232,7 +232,8 @@ pp_normalize_production <- function(plot, spec) {
         lr$aes_params$family <- "Arial"
         lr$aes_params$size <- spec$text_pt[[role]] / ggplot2::.pt
         if (!is.null(lr$geom_params$size.unit)) lr$geom_params$size.unit <- "mm"
-        lr$aes_params$fontface <- if (role == "panel_tag") "bold" else "plain"
+        existing_face <- lr$aes_params$fontface %||% "plain"
+        lr$aes_params$fontface <- if (role == "panel_tag") "bold" else existing_face
       }
       p$layers[[i]] <- lr
     }
@@ -410,8 +411,18 @@ pp_shared_rows <- function(plots, species_order, labels = species_order) {
 }
 
 pp_compose_manuscript <- function(plots, design = NULL, widths = NULL, heights = NULL,
-                                  species_order = NULL, species_labels = species_order) {
+                                  species_order = NULL, species_labels = species_order,
+                                  guides = c("keep", "collect", "auto")) {
   if (!requireNamespace("patchwork", quietly = TRUE)) stop("patchwork is required for heterogeneous manuscript panels.")
+  guides_choice <- if (is.character(guides) && length(guides) >= 1L) guides[[1]] else "keep"
+  if (identical(guides_choice, "auto")) {
+    std_plots <- Filter(function(p) inherits(p, "ggplot") && !inherits(p, "patchwork") && is.null(attr(p, "pp_vector_element")), plots)
+    guides_choice <- if (length(std_plots) >= 2L) {
+      sigs <- lapply(std_plots, function(p) tryCatch(pp_guide_signature(p), error = function(e) NULL))
+      valid <- !vapply(sigs, is.null, logical(1)) && vapply(sigs, function(s) length(s) > 0L, logical(1))
+      if (all(valid) && length(unique(vapply(sigs, pp_content_hash, character(1)))) == 1L) "collect" else "keep"
+    } else "keep"
+  }
   if (!is.null(species_order)) plots <- pp_shared_rows(plots, species_order, species_labels)
   nonstandard <- which(vapply(plots,function(p) grid::is.grob(p)||inherits(p,'patchwork'),logical(1)))
   plots <- lapply(plots,function(p) {
@@ -428,7 +439,7 @@ pp_compose_manuscript <- function(plots, design = NULL, widths = NULL, heights =
     wrapped
   })
   out <- patchwork::wrap_plots(plots, design = design, widths = widths, heights = heights,
-                                ncol = if (is.null(design)) 2 else NULL, guides = "keep")
+                                ncol = if (is.null(design)) 2 else NULL, guides = if (guides_choice == "collect") "collect" else "keep")
   attr(out, "pp_expected_panels") <- length(plots)
   attr(out,'pp_nonstandard_panels') <- nonstandard
   if (!is.null(species_order) && is.character(species_labels)) attr(out, "pp_shared_row_labels") <- species_labels

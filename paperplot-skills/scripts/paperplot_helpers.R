@@ -358,14 +358,37 @@ pp_resolve_family <- function(preferred = "Arial") {
 pp_theme <- function(base_size = pp_style_number("base_size"),
                      base_family = pp_resolve_family(pp_style_registry()$family_fallbacks[[1]]),
                      line_width = pp_line_width("axis_line"),
-                     axis_title_margin = pp_spacing_mm("axis_title_margin"),
-                     show_grid = FALSE) {
+                     axis_title_margin = NULL,
+                     plot_margin = NULL,
+                     show_grid = FALSE,
+                     compact = FALSE) {
   hier <- pp_style_registry()$font_hierarchy
   grid_major <- if (isTRUE(show_grid)) {
     ggplot2::element_line(linewidth = pp_line_width("grid_major"), colour = "#D9D9D9")
   } else {
     ggplot2::element_blank()
   }
+
+  if (is.null(axis_title_margin)) {
+    axis_title_margin <- if (isTRUE(compact)) 1.0 else pp_spacing_mm("axis_title_margin")
+  }
+  if (is.null(plot_margin)) {
+    plot_margin <- if (isTRUE(compact)) 1.8 else pp_spacing_mm("plot_margin")
+  }
+
+  margin_obj <- if (inherits(plot_margin, "margin")) {
+    plot_margin
+  } else if (is.numeric(plot_margin) && length(plot_margin) == 1L) {
+    ggplot2::margin(plot_margin, plot_margin, plot_margin, plot_margin, unit = "mm")
+  } else if (is.numeric(plot_margin) && length(plot_margin) == 4L) {
+    ggplot2::margin(plot_margin[1], plot_margin[2], plot_margin[3], plot_margin[4], unit = "mm")
+  } else {
+    ggplot2::margin(pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"),
+                    pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"), unit = "mm")
+  }
+
+  tick_len <- if (isTRUE(compact)) 1.0 else pp_spacing_mm("tick_length")
+  leg_spacing <- if (isTRUE(compact)) 0.6 else pp_spacing_mm("legend_spacing_x")
 
   out <- ggplot2::theme_classic(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
@@ -381,12 +404,12 @@ pp_theme <- function(base_size = pp_style_number("base_size"),
       axis.text = ggplot2::element_text(size = base_size + hier$axis_text, colour = "#303030"),
       axis.line = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
       axis.ticks = ggplot2::element_line(linewidth = line_width, colour = "#1F1F1F"),
-      axis.ticks.length = grid::unit(pp_spacing_mm("tick_length"), "mm"),
+      axis.ticks.length = grid::unit(tick_len, "mm"),
       legend.title = ggplot2::element_text(size = base_size + hier$legend_title),
       legend.text = ggplot2::element_text(size = base_size + hier$legend_text),
       legend.key = ggplot2::element_blank(),
       legend.key.size = grid::unit(pp_spacing_mm("legend_key"), "mm"),
-      legend.spacing.x = grid::unit(pp_spacing_mm("legend_spacing_x"), "mm"),
+      legend.spacing.x = grid::unit(leg_spacing, "mm"),
       panel.grid.major = grid_major,
       panel.grid.minor = ggplot2::element_blank(),
       panel.border = ggplot2::element_blank(),
@@ -396,11 +419,7 @@ pp_theme <- function(base_size = pp_style_number("base_size"),
       plot.subtitle = ggplot2::element_text(size = base_size + hier$plot_subtitle),
       plot.caption = ggplot2::element_text(size = base_size + hier$plot_caption, colour = "#6A6A6A"),
       plot.title.position = "plot",
-      plot.margin = ggplot2::margin(
-        pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"),
-        pp_spacing_mm("plot_margin"), pp_spacing_mm("plot_margin"),
-        unit = "mm"
-      )
+      plot.margin = margin_obj
     )
   attr(out, "paperplot_theme") <- TRUE
   out
@@ -671,7 +690,7 @@ pp_fig_size_cm <- function(spec = "4.9x4.9", ncol = 1, nrow = 1) {
   )
 }
 
-pp_recommend_layout <- function(n_panels, plot_type = "general", complex = FALSE) {
+pp_recommend_layout <- function(n_panels, plot_type = "general", complex = FALSE, preset = NULL) {
   if (!is.numeric(n_panels) || length(n_panels) != 1 || is.na(n_panels) || n_panels < 1) {
     stop("n_panels must be a positive integer.", call. = FALSE)
   }
@@ -701,19 +720,31 @@ pp_recommend_layout <- function(n_panels, plot_type = "general", complex = FALSE
     "2.58x2"
   }
   size <- pp_fig_size_cm(spec, ncol = dims[[1]], nrow = dims[[2]])
-  list(ncol = dims[[1]], nrow = dims[[2]], spec = spec, width_cm = size$width_cm, height_cm = size$height_cm)
+  width_cm <- size$width_cm
+  height_cm <- size$height_cm
+  if (!is.null(preset)) {
+    preset_values <- pp_output_preset(preset)
+    if (width_cm > preset_values$width_cm) width_cm <- preset_values$width_cm
+    if (height_cm > preset_values$height_cm) height_cm <- preset_values$height_cm
+  }
+  list(ncol = dims[[1]], nrow = dims[[2]], spec = spec, width_cm = width_cm, height_cm = height_cm)
 }
 
-pp_recommend_facet_grid <- function(n_panels, plot_type = "small_multiples", complex = TRUE) {
-  pp_recommend_layout(n_panels, plot_type = plot_type, complex = complex)
+pp_recommend_facet_grid <- function(n_panels, plot_type = "small_multiples", complex = TRUE, preset = NULL) {
+  pp_recommend_layout(n_panels, plot_type = plot_type, complex = complex, preset = preset)
 }
 
 pp_estimate_canvas_size <- function(n_panels, plot_type = "general", complex = FALSE, preset = NULL) {
   layout <- pp_recommend_layout(n_panels, plot_type = plot_type, complex = complex)
-  if (!is.null(preset) && n_panels == 1) {
+  if (!is.null(preset)) {
     preset_values <- pp_output_preset(preset)
-    layout$width_cm <- preset_values$width_cm
-    layout$height_cm <- preset_values$height_cm
+    if (n_panels == 1) {
+      layout$width_cm <- preset_values$width_cm
+      layout$height_cm <- preset_values$height_cm
+    } else {
+      if (layout$width_cm > preset_values$width_cm) layout$width_cm <- preset_values$width_cm
+      if (layout$height_cm > preset_values$height_cm) layout$height_cm <- preset_values$height_cm
+    }
   }
   layout
 }
@@ -976,14 +1007,15 @@ pp_resolve_qa_context <- function(plot, preset, width = NULL, context = list()) 
   merged$expected_panels <- expected_panels
   merged$layout_profile <- merged$layout_profile %||% if (!is.null(expected_panels)) "equal" else "auto"
   merged$target_width_mm <- merged$target_width_mm %||% ((width %||% preset_values$width_cm) * 10)
-  merged$journal_profile <- merged$journal_profile %||% if (grepl("nature", preset, fixed = TRUE)) "nature" else "generic"
+  merged$journal_profile <- merged$journal %||% merged$journal_profile %||%
+    (if (grepl("cell", preset, fixed = TRUE)) "cell" else if (grepl("nature", preset, fixed = TRUE)) "nature" else "generic")
   merged$allow_grid <- merged$allow_grid %||% "auto"
   merged
 }
 
 pp_qa_context_args <- function(context) {
   args <- c("--ocr", context$ocr %||% "auto")
-  if (isTRUE(context$strict_nature)) args <- c(args, "--strict-nature")
+  if (isTRUE(context$strict_nature) && identical(context$journal_profile %||% "nature", "nature")) args <- c(args, "--strict-nature")
   if (isTRUE(context$strict_detail_qa)) args <- c(args, "--strict-detail-qa")
   if (!is.null(context$family) && nzchar(context$family)) args <- c(args, "--family", shQuote(context$family))
   if (!is.null(context$expected_panels)) args <- c(args, "--expected-panels", as.character(context$expected_panels))
@@ -1016,26 +1048,36 @@ pp_locate_qa_script <- function() {
   NULL
 }
 
-pp_python_supports_visual_qa <- function(python) {
+pp_python_supports_visual_qa <- function(python, require_pypdf = FALSE) {
   if (is.null(python) || !nzchar(python)) return(FALSE)
+  code <- if (isTRUE(require_pypdf)) "import PIL, pypdf" else "import PIL"
   status <- tryCatch(
-    suppressWarnings(system2(python, c("-c", shQuote("import PIL")), stdout = FALSE, stderr = FALSE)),
+    suppressWarnings(system2(python, c("-c", shQuote(code)), stdout = FALSE, stderr = FALSE)),
     error = function(e) 127L
   )
   identical(as.integer(status), 0L)
 }
 
-pp_resolve_qa_python <- function() {
+pp_resolve_qa_python <- function(require_pypdf = FALSE) {
   configured <- Sys.getenv("PAPERPLOT_PYTHON", unset = "")
-  if (nzchar(configured)) return(configured)
+  if (nzchar(configured) && pp_python_supports_visual_qa(configured, require_pypdf = require_pypdf)) return(configured)
+  home_runtime <- file.path(Sys.getenv("HOME"), ".local", "share", "paperplot", "runtime-0.7.0", "bin")
   candidates <- unique(c(
+    file.path(home_runtime, "python3"),
+    file.path(home_runtime, "python"),
+    Sys.getenv("CONDA_PYTHON_EXE", unset = ""),
     unname(Sys.which("python3")),
-    unname(Sys.which("python")),
-    Sys.getenv("CONDA_PYTHON_EXE", unset = "")
+    unname(Sys.which("python"))
   ))
   candidates <- candidates[nzchar(candidates)]
-  hit <- candidates[vapply(candidates, pp_python_supports_visual_qa, logical(1))]
-  if (length(hit)) hit[[1]] else NULL
+  # Priority: candidate supporting both PIL and pypdf
+  hit <- candidates[vapply(candidates, function(p) pp_python_supports_visual_qa(p, require_pypdf = TRUE), logical(1))]
+  if (length(hit)) return(hit[[1]])
+  if (!isTRUE(require_pypdf)) {
+    hit <- candidates[vapply(candidates, function(p) pp_python_supports_visual_qa(p, require_pypdf = FALSE), logical(1))]
+    if (length(hit)) return(hit[[1]])
+  }
+  NULL
 }
 
 # Run rendered-image QA and always return an auditable availability result.
@@ -1191,8 +1233,11 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   pp_assert_data_unchanged(evidence, pp_plot_evidence(normalized))
   plot <- normalized
   width <- render_spec$width_mm / 10; height <- render_spec$height_mm / 10; dpi <- render_spec$dpi
+  target_journal <- render_spec$journal %||% "nature"
   qa_context <- utils::modifyList(qa_context, list(ocr = render_spec$ocr,
-    strict_nature = render_spec$mode == "production", strict_detail_qa = render_spec$mode == "production"))
+    journal_profile = target_journal,
+    strict_nature = render_spec$mode == "production" && identical(target_journal, "nature"),
+    strict_detail_qa = render_spec$mode == "production"))
   evidence_path <- paste0(output_stem, "_data_evidence.rds")
   if (!overwrite && file.exists(evidence_path)) stop("Refusing to overwrite data evidence.")
   dir.create(dirname(output_stem), recursive = TRUE, showWarnings = FALSE)
@@ -1380,7 +1425,7 @@ pp_save_plot <- function(plot, filename, preset = "nature_half", width = NULL, h
     factor <- switch(units, cm = 72 / 2.54, mm = 72 / 25.4,
                      `in` = 72, px = 72 / (dpi %||% preset_values$dpi))
     if (is.null(factor)) stop("Unsupported PDF dimension unit: ", units)
-    py <- pp_resolve_qa_python()
+    py <- pp_resolve_qa_python(require_pypdf = TRUE)
     if (is.null(py)) stop("Python/pypdf is required for exact Linux Cairo PDF pages.")
     repair <- file.path(pp_helper_script_dir, "fix-cairo-page.py")
     status <- system2(py, c(shQuote(repair), shQuote(filename),
