@@ -1,5 +1,34 @@
 # PaperPlotR / paperplot-skills Handoff
 
+## 2026-10-10: Review fixes (P0 bugs, startup optimization, compact layout & guides) — COMMITTED & SYNCED
+
+Commit: `31a614b` on branch `dev/linux-cairo-pagebox`.
+Synchronized to:
+- Codex: `~/.codex/skills/paperplot-skills` (Receipt commit: `31a614b`, `install-self-test.R`: PASS)
+- Claude Code: `~/.claude/skills/paperplot-skills` (Receipt commit: `31a614b`, `install-self-test.R`: PASS)
+- Pi: `~/.pi/agent/skills/paperplot-skills` (Symlinked to Codex, verified)
+- Kimi-code: `~/.kimi-code/skills/paperplot-skills` (Symlinked to Pi, verified)
+
+Changes & Fixes implemented:
+1. Italic fontface preservation: Fixed `pp_normalize_production()` in `scripts/lib/production-render.R` to preserve existing layer `fontface` (e.g. latin species names in italic like *A. thaliana*) instead of coercing all text to plain. Resolved subsequent `Data integrity` check in `test-interactive-style.R`.
+2. Cell 8 pt typography audit: Fixed `scripts/export-audit.py` to recognize that Cell allows 6-8 pt for body/axis text; prevented normal text from being falsely flagged as failing panel tag regex. 18/18 audit tests PASS.
+3. Empty row alignment guard: Fixed `ppp_row_alignment()` in `scripts/lib/figure-project-build.R` against empty vector `-Inf` warning and false PASS. Returns `unverified` safely when no comparable rows exist.
+4. Startup acceleration: Replaced bulky `requireNamespace()` deep loads with lightweight `utils::packageVersion()` checks in `ppp_environment()` in `scripts/lib/figure-project.R`, reducing project startup overhead by ~200x (5.56s -> 0.028s).
+5. Compact layout & Auto guides:
+   - Added `compact = TRUE` option in `pp_theme()` with tightened margins (1.8mm panel margin, 1.0mm axis margins) for dense multi-panel figures.
+   - Enhanced `pp_compose_manuscript()` with `guides = c("keep", "collect", "auto")`. When set to `auto`, matching scales are automatically consolidated into an outer collected legend.
+   - Updated layout recommendation planner in `scripts/lib/layout-planner.R` with journal profile column widths and case styling.
+
+Verification Status (via `./paperplot-skills/scripts/paperplot-run`):
+- `test-export-audit.py`: PASS (18 tests OK)
+- `test-pdf-jpg.R`: PASS (Real font embedding, physical 300-dpi JPG, PDF export)
+- `test-figure-project.R`: PASS (State machine, fresh tracking, row alignment guard)
+- `test-interactive-style.R`: PASS (Data integrity invariant, preview mode, font preservation)
+- `test-production-contract.R`: PASS (Production layout, tag coverage, physical bounds)
+- `test-nested-project.R`: PASS (Nested project assembly, binding review, reviewable handoff)
+- `test-heterogeneous.R`: PASS (ggplot2 + ComplexHeatmap + circlize composite figures)
+- `install-self-test.R`: PASS in both Codex and Claude skill installations outside repo.
+
 ## 2026-10-09: PDF + JPG 300-dpi default — INSTALLED RC
 
 The standalone Skill's default exports are now PDF and actual RGB JPG at 300 dpi, white background and JPEG quality 95. Existing Nature/Cell dimensions, font roles, scientific values and preview/production gates are unchanged. Explicit PNG/SVG/TIFF APIs remain available; the legacy SVG geometry regressions explicitly request SVG/PNG. The same svglite measurement backend now uses memory-only devices rather than hidden SVG files. No historical report, golden/snapshot, dependency or Git history/index was changed by this task; all pre-existing dirty edits were retained.
