@@ -154,7 +154,7 @@ def audit(paths, spec):
                     checks[key + '_encoding'] = 'pass' if im.format == encoding else 'fail'
                     checks[key + '_pixels'] = "pass" if all(abs(a - b / 25.4 * spec["dpi"]) <= 1 for a, b in zip(im.size, expected)) else "fail"
                     checks[key + '_rgb'] = "pass" if im.mode in (("RGB",) if encoding == 'JPEG' else ("RGB", "RGBA")) else "fail"
-                    dpi = im.info.get('dpi', ())
+                    dpi = tuple(float(x) for x in im.info.get('dpi', ()))
                     checks[key + '_dpi'] = 'pass' if len(dpi) == 2 and all(abs(float(x) - spec['dpi']) <= 1 for x in dpi) else 'fail'
                     details[key + '_raster'] = dict(size=im.size, mode=im.mode, encoding=im.format, dpi=dpi)
             elif ext == ".pdf":

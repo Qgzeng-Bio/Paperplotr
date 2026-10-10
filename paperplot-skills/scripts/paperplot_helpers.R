@@ -1349,29 +1349,47 @@ pp_save_all_with_qa_loop <- function(plot, output_stem, preset = "nature_half", 
   output_files
 }
 
-# Some ragg/libjpeg builds omit density metadata. Set JFIF density without
+# Some ragg/libjpeg builds omit density metadata. Set resolution metadata without
 # recompressing pixels or altering any drawing instruction/backend.
+# Note: ragg writes direct RGB JPEGs (with Adobe APP14 transform=0). Inserting a
+# JFIF APP0 forces decoders (e.g. libjpeg-turbo 3.x / Pillow 12) into YCbCr conversion,
+# corrupting white background into magenta (255, 121, 255). We therefore use Exif APP1
+# to specify DPI without conflicting with the RGB colorspace.
 pp_set_jpeg_dpi <- function(filename, dpi) {
   dpi <- round(dpi)
-  if (length(dpi) != 1L || !is.finite(dpi) || dpi < 1 || dpi > 65535) stop("JPEG DPI must fit JFIF density fields.")
+  if (length(dpi) != 1L || !is.finite(dpi) || dpi < 1 || dpi > 65535) stop("JPEG DPI must fit Exif/JFIF density fields.")
   bytes <- readBin(filename, "raw", n = file.info(filename)$size)
   if (length(bytes) < 4L || !identical(as.integer(bytes[1:2]), c(255L, 216L))) stop("JPEG device did not produce JPEG encoding.")
   density <- as.raw(c(1L, dpi %/% 256L, dpi %% 256L, dpi %/% 256L, dpi %% 256L))
-  i <- 3L; found <- FALSE
+  i <- 3L; found_jfif <- FALSE; found_exif <- FALSE
   while (i + 3L <= length(bytes)) {
     marker <- as.integer(bytes[i + 1L])
     if (as.integer(bytes[i]) != 255L || marker %in% c(218L, 217L)) break
     size <- as.integer(bytes[i + 2L]) * 256L + as.integer(bytes[i + 3L])
     if (size < 2L || i + size + 1L > length(bytes)) stop("Invalid JPEG marker length.")
+    if (marker == 225L && size >= 14L && identical(bytes[(i + 4L):(i + 9L)], c(charToRaw("Exif"), as.raw(c(0, 0))))) {
+      found_exif <- TRUE; break
+    }
     if (marker == 224L && size >= 16L && identical(bytes[(i + 4L):(i + 8L)], c(charToRaw("JFIF"), as.raw(0)))) {
       bytes[(i + 11L):(i + 15L)] <- density
-      found <- TRUE; break
+      found_jfif <- TRUE; break
     }
     i <- i + size + 2L
   }
-  if (!found) {
-    app0 <- c(as.raw(c(255, 224, 0, 16)), charToRaw("JFIF"), as.raw(c(0, 1, 2)), density, as.raw(c(0, 0)))
-    bytes <- c(bytes[1:2], app0, bytes[-(1:2)])
+  if (!found_jfif && !found_exif) {
+    tiff <- c(
+      as.raw(c(0x49, 0x49, 0x2A, 0x00, 0x08, 0x00, 0x00, 0x00)),
+      as.raw(c(0x03, 0x00)),
+      as.raw(c(0x1A, 0x01, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00, 50, 0, 0, 0)),
+      as.raw(c(0x1B, 0x01, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00, 58, 0, 0, 0)),
+      as.raw(c(0x28, 0x01, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00)),
+      as.raw(c(0, 0, 0, 0)),
+      as.raw(c(dpi %% 256L, dpi %/% 256L, 0, 0, 1, 0, 0, 0)),
+      as.raw(c(dpi %% 256L, dpi %/% 256L, 0, 0, 1, 0, 0, 0))
+    )
+    payload <- c(charToRaw("Exif"), as.raw(c(0, 0)), tiff)
+    exif_marker <- c(as.raw(c(0xFF, 0xE1)), as.raw(c((length(payload) + 2L) %/% 256L, (length(payload) + 2L) %% 256L)), payload)
+    bytes <- c(bytes[1:2], exif_marker, bytes[-(1:2)])
   }
   writeBin(bytes, filename)
   invisible(filename)
