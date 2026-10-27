@@ -22,6 +22,7 @@ These rules translate the replica-library review into stable figure-design decis
 ## Text
 
 - Use one sans-serif family, preferably Arial/Helvetica-equivalent.
+- Arial covers Latin, Greek and Cyrillic only. Labels in CJK, Arabic, Devanagari or other scripts stop the export with the missing characters listed; supply an explicitly reviewed font instead of letting a fallback substitute silently.
 - Most manuscript text: 5-7 pt at final size.
 - Panel labels: about 8 pt bold, placed consistently.
 - In-panel titles are usually removed; use axis labels, panel labels, and caption/notes instead.
