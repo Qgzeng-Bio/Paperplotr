@@ -214,7 +214,7 @@ because the earlier PATH-first `python3` lacks Pillow. `PAPERPLOT_PYTHON`
 remains the portable explicit override.
 
 The verified tree was synchronized to
-`/Users/qingguozeng/.codex/skills/paperplot-skills`. A directory diff excluding
+`~/.codex/skills/paperplot-skills`. A directory diff excluding
 Python bytecode caches is empty, and the installed contract/standalone
 validation passes when invoked outside the repository working directory.
 
@@ -484,7 +484,7 @@ Two themes, candidate for two commits:
 
 **(a) Portability — make it run unchanged off the author's Mac**
 - `scripts/paperplot_helpers.R`: added `pp_resolve_family()` (Arial→Liberation/DejaVu/sans fallback); `pp_theme` no longer hardcodes `base_family="Arial"`; `pp_default_device()` uses `cairo_pdf` on non-macOS (fixes `font family 'Arial' not found in PostScript font database -> invalid font type`) and prefers `ragg` for raster.
-- `scripts/index-replica-patterns.py`: removed hardcoded `/Users/qingguozeng/...` defaults → `PAPERPLOT_R_ROOT`/`PAPERPLOT_PY_ROOT` env + `--r-root` required; `write_report` no longer assumes a Python root.
+- `scripts/index-replica-patterns.py`: removed hardcoded `~/...` defaults → `PAPERPLOT_R_ROOT`/`PAPERPLOT_PY_ROOT` env + `--r-root` required; `write_report` no longer assumes a Python root.
 - `scripts/visual-qa-rendered-image.py`: SVG QA falls back to the built-in Pillow rasterizer when ImageMagick is absent (was a hard crash).
 - `scripts/run-visual-pressure-scenarios.py` + `scripts/run-redraw-benchmark.R`: author-private fixture paths now driven by `PAPERPLOT_FIXTURE_DIR` (skip gracefully when unset).
 - `INSTALL.md`: relative symlink command, corrected layout, full dependency list.
@@ -506,7 +506,7 @@ Indexer re-run on the uploaded library: `indexed 80 cases` (R only). Calibration
 1. **Commit & push branch `portability-linux-fixes`** — recommended as two commits (portability / QA). Push + PR pending owner decision.
 2. **Data-driven QA thresholds — intentionally NOT auto-adopted.** Per-family calibration has only **1–3 positive samples** each (39 total). Auto-deriving thresholds from so few good samples can only *loosen* them, which for a review tool risks false negatives (missing real problems). Decision left to a human. The refreshed per-family metric distributions are in `artifacts/.../visual-qa-calibration-fulllib.json` for manual tuning of gap families.
 3. **Hand-tuned family overrides still cover only** `rank-lollipop, model-validation, heatmap, manhattan, phylo-annotation-ring`. The other ~7 pattern families fall back to global thresholds. Grow the replica/sample set, then hand-tune from data.
-4. **P2 leftover (doc-only):** `reports/visual-qa-calibration-from-replica-library.md` (committed) still embeds absolute `/Users/qingguozeng/...` paths in its table. Regenerate with relative/sanitized paths.
+4. **P2 leftover (doc-only):** `reports/visual-qa-calibration-from-replica-library.md` (committed) still embeds absolute `~/...` paths in its table. Regenerate with relative/sanitized paths.
 5. Carry-over from 2026-05-19 next phase (still open): `manhattan-plot-template.R`, `upset-summary-template.R`, PDF rasterization in calibration, heatmap annotation-strip/dendrogram strategy, more real redraw benchmarks, clearer `improved` old-vs-new verdicts.
 6. **Portability invariant:** keep the repo free of machine-specific absolute paths and `Arial`-hardcoding. A future lint/test could assert no `/Users/` or `/home/<user>/` literals in `scripts/`.
 
@@ -514,11 +514,11 @@ Indexer re-run on the uploaded library: `indexed 80 cases` (R only). Calibration
 
 ## Repository
 
-- Workspace: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR`
-- R package root: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr`
-- Skill root: `/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr/paperplot-skills`
-- Replica R library: `/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集`
-- Replica Python library: `/Users/qingguozeng/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/Python科研绘图合集`
+- Workspace: `<redacted-project-path>/PaperPlotR`
+- R package root: `<redacted-project-path>/paperplotr`
+- Skill root: `<redacted-project-path>/paperplot-skills`
+- Replica R library: `<replica-library>`
+- Replica Python library: `<redacted-project-path>/Python科研绘图合集`
 
 ## Current State
 
@@ -559,7 +559,7 @@ The active recent task is an FAD2 pangenome graph/tube-map style figure from the
 
 Input data directory:
 
-- `/Users/qingguozeng/Documents/1-博士课题/2-油棕基因组/Manuscripts/Review-6.2/Nature稿件修改/第二轮/Pangenome_viz`
+- `<redacted-project-path>/Pangenome_viz`
 
 Important input files:
 
@@ -945,11 +945,11 @@ Generated:
 
 Old figure:
 
-- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png`
+- `<redacted-project-path>/fig4_quality_traits.png`
 
 Data:
 
-- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/tables/quality_nonlinear_summary.tsv`
+- `<redacted-project-path>/quality_nonlinear_summary.tsv`
 
 New outputs:
 
@@ -968,15 +968,15 @@ Interpretation: visually and manuscript-style improved, but deterministic blank-
 
 Old SVG:
 
-- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg`
+- `<redacted-project-path>/high_nlr_count_by_sample.svg`
 
 Comparable old PNG:
 
-- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png`
+- `<redacted-project-path>/high_nlr_count_by_sample.final.png`
 
 Data:
 
-- `/Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/data/high_nlr_sample_counts_for_plot.tsv`
+- `<redacted-project-path>/high_nlr_sample_counts_for_plot.tsv`
 
 New outputs:
 
@@ -1015,7 +1015,7 @@ Corrections applied after review:
 All required verification commands were run successfully from:
 
 ```text
-/Users/qingguozeng/Documents/1-博士课题/8-Code/Codex/PaperPlotR/paperplotr
+<redacted-project-path>/paperplotr
 ```
 
 Commands and results:
@@ -1094,19 +1094,19 @@ python3 paperplot-skills/scripts/visual-qa-rendered-image.py \
   --family lollipop
 
 python3 paperplot-skills/scripts/compare-old-new-figures.py \
-  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/10-GS/final_results/figures/fig4_quality_traits.png \
+  <redacted-project-path>/fig4_quality_traits.png \
   paperplot-skills/reports/redraw-benchmark/fig4_quality_traits_pattern_redraw.png \
   --out paperplot-skills/reports/redraw-benchmark/compare_fig4 \
   --new-family model-validation
 
 python3 paperplot-skills/scripts/compare-old-new-figures.py \
-  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/03_pangenome_results/plots/figures/high_nlr_count_by_sample.svg \
+  <redacted-project-path>/high_nlr_count_by_sample.svg \
   paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png \
   --out paperplot-skills/reports/redraw-benchmark/compare_nlr_svg_old \
   --new-family lollipop
 
 python3 paperplot-skills/scripts/compare-old-new-figures.py \
-  /Users/qingguozeng/Documents/1-博士课题/1-藜麦泛基因组/7-Pangenome/3-Structure/NLR/FINAL_NLR_ANALYSIS_RELEASE/06_supplementary_qc_figures/final_figures/png_600dpi/high_nlr_count_by_sample.final.png \
+  <redacted-project-path>/high_nlr_count_by_sample.final.png \
   paperplot-skills/reports/redraw-benchmark/high_nlr_count_by_sample_pattern_redraw.png \
   --out paperplot-skills/reports/redraw-benchmark/compare_nlr_png_old \
   --new-family lollipop

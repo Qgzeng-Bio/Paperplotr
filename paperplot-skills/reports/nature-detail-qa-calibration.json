@@ -1,19 +1,19 @@
 {
-  "library": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集",
+  "library": "<replica-library>",
   "sample_count": 79,
   "samples": [
     {
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "input_path": "<replica-library>/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "analysis_image_path": "<replica-library>/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+        "source_path": "<replica-library>/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+        "raster_path": "<replica-library>/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
         "dpi": null,
         "page": null
       },
@@ -356,7 +356,7 @@
         }
       ],
       "case_dir": "1.柱状图-散点图-误差线-p值显著性",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
+      "image": "<replica-library>/1.柱状图-散点图-误差线-p值显著性/bar_dot_error_sig.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -364,14 +364,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "input_path": "<replica-library>/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "analysis_image_path": "<replica-library>/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+        "source_path": "<replica-library>/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+        "raster_path": "<replica-library>/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
         "dpi": null,
         "page": null
       },
@@ -671,7 +671,7 @@
         }
       ],
       "case_dir": "10.Nature复现-添加显著性星号标记的热图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
+      "image": "<replica-library>/10.Nature复现-添加显著性星号标记的热图/heatmap-significant-facet.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -679,13 +679,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+      "input_path": "<replica-library>/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_003/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+        "source_path": "<replica-library>/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_003/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -699,7 +699,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+          "<replica-library>/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_003/rasterized_input"
         ]
       },
@@ -1040,7 +1040,7 @@
         }
       ],
       "case_dir": "11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
+      "image": "<replica-library>/11.Nature复现-散点图+边缘直方图+拟合曲线+残差箱式图/comprehensive_correlation.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -1048,13 +1048,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+      "input_path": "<replica-library>/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_004/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+        "source_path": "<replica-library>/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_004/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -1068,7 +1068,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+          "<replica-library>/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_004/rasterized_input"
         ]
       },
@@ -1405,7 +1405,7 @@
         }
       ],
       "case_dir": "12.Nature复现-相关性热图+边缘条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
+      "image": "<replica-library>/12.Nature复现-相关性热图+边缘条形图/correlation_heatmap.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -1413,13 +1413,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+      "input_path": "<replica-library>/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_005/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+        "source_path": "<replica-library>/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_005/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -1433,7 +1433,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+          "<replica-library>/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_005/rasterized_input"
         ]
       },
@@ -1732,7 +1732,7 @@
         }
       ],
       "case_dir": "13.Nature复现-倒三角相关性热图+层次聚类树",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
+      "image": "<replica-library>/13.Nature复现-倒三角相关性热图+层次聚类树/correlation_heatmap_hcluster.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -1740,14 +1740,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "input_path": "<replica-library>/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "analysis_image_path": "<replica-library>/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+        "source_path": "<replica-library>/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+        "raster_path": "<replica-library>/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
         "dpi": null,
         "page": null
       },
@@ -2082,7 +2082,7 @@
         }
       ],
       "case_dir": "14.Nature复现-折线图和箱式图+误差线+显著性检验",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
+      "image": "<replica-library>/14.Nature复现-折线图和箱式图+误差线+显著性检验/groups_bar_line.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -2090,14 +2090,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "input_path": "<replica-library>/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "analysis_image_path": "<replica-library>/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+        "source_path": "<replica-library>/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+        "raster_path": "<replica-library>/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
         "dpi": null,
         "page": null
       },
@@ -2475,7 +2475,7 @@
         }
       ],
       "case_dir": "15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
+      "image": "<replica-library>/15.Nature复现-小提琴图+箱式图+蜂窝图（云雨图）/raincloud.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -2483,14 +2483,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "input_path": "<replica-library>/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "analysis_image_path": "<replica-library>/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+        "source_path": "<replica-library>/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+        "raster_path": "<replica-library>/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
         "dpi": null,
         "page": null
       },
@@ -2824,7 +2824,7 @@
         }
       ],
       "case_dir": "16.Nature复现-散点图+拟合曲线+均值+双向误差线",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
+      "image": "<replica-library>/16.Nature复现-散点图+拟合曲线+均值+双向误差线/dot_group_bierrorbar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -2832,13 +2832,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+      "input_path": "<replica-library>/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_009/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+        "source_path": "<replica-library>/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_009/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -2852,7 +2852,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+          "<replica-library>/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_009/rasterized_input"
         ]
       },
@@ -3214,7 +3214,7 @@
         }
       ],
       "case_dir": "17.Nature复现-分组和弦图+外围条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
+      "image": "<replica-library>/17.Nature复现-分组和弦图+外围条形图/group_chord_bar.pdf",
       "source_type": "pdf",
       "sample_class": "specialized_positive"
     },
@@ -3222,14 +3222,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "input_path": "<replica-library>/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "analysis_image_path": "<replica-library>/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+        "source_path": "<replica-library>/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+        "raster_path": "<replica-library>/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
         "dpi": null,
         "page": null
       },
@@ -3556,7 +3556,7 @@
         }
       ],
       "case_dir": "18.Science复现-火山图+GSEA_MSigDB富集得分",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
+      "image": "<replica-library>/18.Science复现-火山图+GSEA_MSigDB富集得分/volcano_ES.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -3564,14 +3564,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "input_path": "<replica-library>/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "analysis_image_path": "<replica-library>/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+        "source_path": "<replica-library>/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+        "raster_path": "<replica-library>/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
         "dpi": null,
         "page": null
       },
@@ -3945,7 +3945,7 @@
         }
       ],
       "case_dir": "19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
+      "image": "<replica-library>/19.Cell复现-渐变色背景+分组小提琴图-箱式图+显著性P/gradient_grob_box.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -3953,14 +3953,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "input_path": "<replica-library>/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "analysis_image_path": "<replica-library>/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+        "source_path": "<replica-library>/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+        "raster_path": "<replica-library>/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
         "dpi": null,
         "page": null
       },
@@ -4265,7 +4265,7 @@
         }
       ],
       "case_dir": "2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
+      "image": "<replica-library>/2.SCI复现-PCoA可视化+边缘箱式图+PERMANOVA/results/NMDS.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -4273,14 +4273,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "input_path": "<replica-library>/20.Nature复现-表格形式的热图/images/embedding.png",
+      "analysis_image_path": "<replica-library>/20.Nature复现-表格形式的热图/images/embedding.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+        "source_path": "<replica-library>/20.Nature复现-表格形式的热图/images/embedding.png",
+        "raster_path": "<replica-library>/20.Nature复现-表格形式的热图/images/embedding.png",
         "dpi": null,
         "page": null
       },
@@ -4601,7 +4601,7 @@
         }
       ],
       "case_dir": "20.Nature复现-表格形式的热图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/20.Nature复现-表格形式的热图/images/embedding.png",
+      "image": "<replica-library>/20.Nature复现-表格形式的热图/images/embedding.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -4609,14 +4609,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "input_path": "<replica-library>/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "analysis_image_path": "<replica-library>/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+        "source_path": "<replica-library>/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+        "raster_path": "<replica-library>/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
         "dpi": null,
         "page": null
       },
@@ -5021,7 +5021,7 @@
         }
       ],
       "case_dir": "21.Nature复现-渐变色山脊图+双向柱形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
+      "image": "<replica-library>/21.Nature复现-渐变色山脊图+双向柱形图/bidirect_ridge_bar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -5029,14 +5029,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "input_path": "<replica-library>/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "analysis_image_path": "<replica-library>/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+        "source_path": "<replica-library>/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+        "raster_path": "<replica-library>/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
         "dpi": null,
         "page": null
       },
@@ -5394,7 +5394,7 @@
         }
       ],
       "case_dir": "22.Nature复现-堆积柱形图+哑铃图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
+      "image": "<replica-library>/22.Nature复现-堆积柱形图+哑铃图/dumbbell_stacked_bar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -5402,14 +5402,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "input_path": "<replica-library>/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "analysis_image_path": "<replica-library>/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+        "source_path": "<replica-library>/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+        "raster_path": "<replica-library>/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
         "dpi": null,
         "page": null
       },
@@ -5750,7 +5750,7 @@
         }
       ],
       "case_dir": "23.Nature复现-火山图+EnrichmentMap-GSEA",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
+      "image": "<replica-library>/23.Nature复现-火山图+EnrichmentMap-GSEA/volcano.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -5758,13 +5758,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+      "input_path": "<replica-library>/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_017/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+        "source_path": "<replica-library>/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_017/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -5778,7 +5778,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+          "<replica-library>/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_017/rasterized_input"
         ]
       },
@@ -6102,7 +6102,7 @@
         }
       ],
       "case_dir": "24.Nature复现-Circos+EnrichNetwork",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
+      "image": "<replica-library>/24.Nature复现-Circos+EnrichNetwork/result_network.pdf",
       "source_type": "pdf",
       "sample_class": "specialized_positive"
     },
@@ -6110,14 +6110,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "input_path": "<replica-library>/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "analysis_image_path": "<replica-library>/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+        "source_path": "<replica-library>/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+        "raster_path": "<replica-library>/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
         "dpi": null,
         "page": null
       },
@@ -6501,7 +6501,7 @@
         }
       ],
       "case_dir": "25.Science+Cell复现-差异基因FC-FC散点图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
+      "image": "<replica-library>/25.Science+Cell复现-差异基因FC-FC散点图/FC_FC_cell.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -6509,14 +6509,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "input_path": "<replica-library>/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "analysis_image_path": "<replica-library>/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+        "source_path": "<replica-library>/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+        "raster_path": "<replica-library>/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
         "dpi": null,
         "page": null
       },
@@ -6908,7 +6908,7 @@
         }
       ],
       "case_dir": "26.SCI复现-核密度图+箱线图+蜂群图-模型验证",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
+      "image": "<replica-library>/26.SCI复现-核密度图+箱线图+蜂群图-模型验证/Model_Recovery.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -6916,14 +6916,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+      "input_path": "<replica-library>/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+      "analysis_image_path": "<replica-library>/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+        "source_path": "<replica-library>/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+        "raster_path": "<replica-library>/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
         "dpi": null,
         "page": null
       },
@@ -7260,7 +7260,7 @@
         }
       ],
       "case_dir": "27.Cell复现-堆积柱形图+散点图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
+      "image": "<replica-library>/27.Cell复现-堆积柱形图+散点图/stacked_bar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -7268,14 +7268,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
+      "input_path": "<replica-library>/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
+      "analysis_image_path": "<replica-library>/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
+        "source_path": "<replica-library>/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
+        "raster_path": "<replica-library>/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
         "dpi": null,
         "page": null
       },
@@ -7671,7 +7671,7 @@
         }
       ],
       "case_dir": "28.Nature复现-小提琴图+四分位线+抖动散点+显著性P",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
+      "image": "<replica-library>/28.Nature复现-小提琴图+四分位线+抖动散点+显著性P/violin_facet_sig.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -7679,13 +7679,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
+      "input_path": "<replica-library>/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_023/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
+        "source_path": "<replica-library>/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_023/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -7699,7 +7699,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
+          "<replica-library>/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_023/rasterized_input"
         ]
       },
@@ -8090,7 +8090,7 @@
         }
       ],
       "case_dir": "3.Nature复现-折线图+柱状图+误差线+多重比较",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
+      "image": "<replica-library>/3.Nature复现-折线图+柱状图+误差线+多重比较/line_bar_errorbar_significant.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -8098,14 +8098,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "input_path": "<replica-library>/30.Nature复现-分面散点饼图/scatterpie.png",
+      "analysis_image_path": "<replica-library>/30.Nature复现-分面散点饼图/scatterpie.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+        "source_path": "<replica-library>/30.Nature复现-分面散点饼图/scatterpie.png",
+        "raster_path": "<replica-library>/30.Nature复现-分面散点饼图/scatterpie.png",
         "dpi": null,
         "page": null
       },
@@ -8481,7 +8481,7 @@
         }
       ],
       "case_dir": "30.Nature复现-分面散点饼图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/30.Nature复现-分面散点饼图/scatterpie.png",
+      "image": "<replica-library>/30.Nature复现-分面散点饼图/scatterpie.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -8489,13 +8489,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+      "input_path": "<replica-library>/31.Nature复现-绝美环形图/plot_age.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_025/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+        "source_path": "<replica-library>/31.Nature复现-绝美环形图/plot_age.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_025/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -8509,7 +8509,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+          "<replica-library>/31.Nature复现-绝美环形图/plot_age.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_025/rasterized_input"
         ]
       },
@@ -8862,7 +8862,7 @@
         }
       ],
       "case_dir": "31.Nature复现-绝美环形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/31.Nature复现-绝美环形图/plot_age.pdf",
+      "image": "<replica-library>/31.Nature复现-绝美环形图/plot_age.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -8870,13 +8870,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
+      "input_path": "<replica-library>/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_026/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
+        "source_path": "<replica-library>/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_026/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -8890,7 +8890,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
+          "<replica-library>/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_026/rasterized_input"
         ]
       },
@@ -9264,7 +9264,7 @@
         }
       ],
       "case_dir": "32.SCI复现-绝美极坐标条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
+      "image": "<replica-library>/32.SCI复现-绝美极坐标条形图/circlize_bar_with_errorbar.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -9272,14 +9272,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "input_path": "<replica-library>/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "analysis_image_path": "<replica-library>/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+        "source_path": "<replica-library>/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+        "raster_path": "<replica-library>/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
         "dpi": null,
         "page": null
       },
@@ -9687,7 +9687,7 @@
         }
       ],
       "case_dir": "33.顶刊复现-样本地理分布图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
+      "image": "<replica-library>/33.顶刊复现-样本地理分布图/sampling_map_scatterpie_v1.png",
       "source_type": "png",
       "sample_class": "specialized_positive"
     },
@@ -9695,13 +9695,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+      "input_path": "<replica-library>/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_028/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+        "source_path": "<replica-library>/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_028/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -9715,7 +9715,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+          "<replica-library>/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_028/rasterized_input"
         ]
       },
@@ -10037,7 +10037,7 @@
         }
       ],
       "case_dir": "34.Lancet复现-绝美极坐标棒棒糖图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
+      "image": "<replica-library>/34.Lancet复现-绝美极坐标棒棒糖图/plot_circos.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -10045,13 +10045,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/35.Cell复现-环形热图/circos_heatmap.pdf",
+      "input_path": "<replica-library>/35.Cell复现-环形热图/circos_heatmap.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_029/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/35.Cell复现-环形热图/circos_heatmap.pdf",
+        "source_path": "<replica-library>/35.Cell复现-环形热图/circos_heatmap.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_029/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -10065,7 +10065,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/35.Cell复现-环形热图/circos_heatmap.pdf",
+          "<replica-library>/35.Cell复现-环形热图/circos_heatmap.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_029/rasterized_input"
         ]
       },
@@ -10396,7 +10396,7 @@
         }
       ],
       "case_dir": "35.Cell复现-环形热图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/35.Cell复现-环形热图/circos_heatmap.pdf",
+      "image": "<replica-library>/35.Cell复现-环形热图/circos_heatmap.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -10404,14 +10404,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
+      "input_path": "<replica-library>/36.Nature复现-配对散点图/paired_scatter.png",
+      "analysis_image_path": "<replica-library>/36.Nature复现-配对散点图/paired_scatter.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
+        "source_path": "<replica-library>/36.Nature复现-配对散点图/paired_scatter.png",
+        "raster_path": "<replica-library>/36.Nature复现-配对散点图/paired_scatter.png",
         "dpi": null,
         "page": null
       },
@@ -10763,7 +10763,7 @@
         }
       ],
       "case_dir": "36.Nature复现-配对散点图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/36.Nature复现-配对散点图/paired_scatter.png",
+      "image": "<replica-library>/36.Nature复现-配对散点图/paired_scatter.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -10771,13 +10771,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+      "input_path": "<replica-library>/37.Nature复现-网络条形图/network_bar.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_031/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+        "source_path": "<replica-library>/37.Nature复现-网络条形图/network_bar.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_031/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -10791,7 +10791,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+          "<replica-library>/37.Nature复现-网络条形图/network_bar.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_031/rasterized_input"
         ]
       },
@@ -11115,7 +11115,7 @@
         }
       ],
       "case_dir": "37.Nature复现-网络条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/37.Nature复现-网络条形图/network_bar.pdf",
+      "image": "<replica-library>/37.Nature复现-网络条形图/network_bar.pdf",
       "source_type": "pdf",
       "sample_class": "specialized_positive"
     },
@@ -11123,13 +11123,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
+      "input_path": "<replica-library>/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_032/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
+        "source_path": "<replica-library>/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_032/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -11143,7 +11143,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
+          "<replica-library>/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_032/rasterized_input"
         ]
       },
@@ -11436,7 +11436,7 @@
         }
       ],
       "case_dir": "38.顶刊复现-相关性热图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
+      "image": "<replica-library>/38.顶刊复现-相关性热图/corrplot/corrplot.correlation_heatmap.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -11444,14 +11444,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+      "input_path": "<replica-library>/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+      "analysis_image_path": "<replica-library>/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+        "source_path": "<replica-library>/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+        "raster_path": "<replica-library>/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
         "dpi": null,
         "page": null
       },
@@ -11831,7 +11831,7 @@
         }
       ],
       "case_dir": "39.Nature复现-分组柱状图+ANOVA+事后多重比较",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
+      "image": "<replica-library>/39.Nature复现-分组柱状图+ANOVA+事后多重比较/groups-bar-dot-errorbar-break-LSD.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -11839,14 +11839,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
+      "input_path": "<replica-library>/4.Nature复现-绝美云雨图/box-violin-dot.png",
+      "analysis_image_path": "<replica-library>/4.Nature复现-绝美云雨图/box-violin-dot.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
+        "source_path": "<replica-library>/4.Nature复现-绝美云雨图/box-violin-dot.png",
+        "raster_path": "<replica-library>/4.Nature复现-绝美云雨图/box-violin-dot.png",
         "dpi": null,
         "page": null
       },
@@ -12180,7 +12180,7 @@
         }
       ],
       "case_dir": "4.Nature复现-绝美云雨图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/4.Nature复现-绝美云雨图/box-violin-dot.png",
+      "image": "<replica-library>/4.Nature复现-绝美云雨图/box-violin-dot.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -12188,14 +12188,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+      "input_path": "<replica-library>/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+      "analysis_image_path": "<replica-library>/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+        "source_path": "<replica-library>/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+        "raster_path": "<replica-library>/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
         "dpi": null,
         "page": null
       },
@@ -12505,7 +12505,7 @@
         }
       ],
       "case_dir": "40.Nature复现-平滑曲线-3种方法",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
+      "image": "<replica-library>/40.Nature复现-平滑曲线-3种方法/smooth_line1.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -12513,14 +12513,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "input_path": "<replica-library>/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "analysis_image_path": "<replica-library>/41.顶刊复现-分面山脊图/ridges_facet1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+        "source_path": "<replica-library>/41.顶刊复现-分面山脊图/ridges_facet1.png",
+        "raster_path": "<replica-library>/41.顶刊复现-分面山脊图/ridges_facet1.png",
         "dpi": null,
         "page": null
       },
@@ -12906,7 +12906,7 @@
         }
       ],
       "case_dir": "41.顶刊复现-分面山脊图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/41.顶刊复现-分面山脊图/ridges_facet1.png",
+      "image": "<replica-library>/41.顶刊复现-分面山脊图/ridges_facet1.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -12914,13 +12914,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
+      "input_path": "<replica-library>/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_037/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
+        "source_path": "<replica-library>/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_037/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -12934,7 +12934,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
+          "<replica-library>/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_037/rasterized_input"
         ]
       },
@@ -13337,7 +13337,7 @@
         }
       ],
       "case_dir": "42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
+      "image": "<replica-library>/42.顶刊复现-蝴蝶图+小提琴图-堆积柱形图/butterfly_bar.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -13345,13 +13345,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/scatter1.pdf",
+      "input_path": "<replica-library>/43.顶刊复现-散点图+线性回归/scatter1.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_038/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/scatter1.pdf",
+        "source_path": "<replica-library>/43.顶刊复现-散点图+线性回归/scatter1.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_038/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -13365,7 +13365,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/scatter1.pdf",
+          "<replica-library>/43.顶刊复现-散点图+线性回归/scatter1.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_038/rasterized_input"
         ]
       },
@@ -13699,7 +13699,7 @@
         }
       ],
       "case_dir": "43.顶刊复现-散点图+线性回归",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/43.顶刊复现-散点图+线性回归/scatter1.pdf",
+      "image": "<replica-library>/43.顶刊复现-散点图+线性回归/scatter1.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -13707,13 +13707,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/RCS.pdf",
+      "input_path": "<replica-library>/44.Nature复现-RCS/RCS.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_039/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/RCS.pdf",
+        "source_path": "<replica-library>/44.Nature复现-RCS/RCS.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_039/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -13727,7 +13727,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/RCS.pdf",
+          "<replica-library>/44.Nature复现-RCS/RCS.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_039/rasterized_input"
         ]
       },
@@ -14111,7 +14111,7 @@
         }
       ],
       "case_dir": "44.Nature复现-RCS",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/44.Nature复现-RCS/RCS.pdf",
+      "image": "<replica-library>/44.Nature复现-RCS/RCS.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -14119,14 +14119,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
+      "input_path": "<replica-library>/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
+      "analysis_image_path": "<replica-library>/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
+        "source_path": "<replica-library>/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
+        "raster_path": "<replica-library>/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
         "dpi": null,
         "page": null
       },
@@ -14498,7 +14498,7 @@
         }
       ],
       "case_dir": "45.Nature复现-分面堆积柱形图+误差线+显著性",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
+      "image": "<replica-library>/45.Nature复现-分面堆积柱形图+误差线+显著性/stacked_bar_1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -14506,14 +14506,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+      "input_path": "<replica-library>/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+      "analysis_image_path": "<replica-library>/46.SCI复现-相关矩阵图/correlation_ggpair.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+        "source_path": "<replica-library>/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+        "raster_path": "<replica-library>/46.SCI复现-相关矩阵图/correlation_ggpair.png",
         "dpi": null,
         "page": null
       },
@@ -14891,7 +14891,7 @@
         }
       ],
       "case_dir": "46.SCI复现-相关矩阵图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/46.SCI复现-相关矩阵图/correlation_ggpair.png",
+      "image": "<replica-library>/46.SCI复现-相关矩阵图/correlation_ggpair.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -14899,13 +14899,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+      "input_path": "<replica-library>/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_042/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+        "source_path": "<replica-library>/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_042/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -14919,7 +14919,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+          "<replica-library>/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_042/rasterized_input"
         ]
       },
@@ -15266,7 +15266,7 @@
         }
       ],
       "case_dir": "47.Nature复现-绝美雷达图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
+      "image": "<replica-library>/47.Nature复现-绝美雷达图/1_radar_fmsb.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -15274,13 +15274,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
+      "input_path": "<replica-library>/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_043/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
+        "source_path": "<replica-library>/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_043/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -15294,7 +15294,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
+          "<replica-library>/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_043/rasterized_input"
         ]
       },
@@ -15629,7 +15629,7 @@
         }
       ],
       "case_dir": "48.Nature复现-差异云雨图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
+      "image": "<replica-library>/48.Nature复现-差异云雨图/diff_raincloud_1.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -15637,14 +15637,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+      "input_path": "<replica-library>/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+      "analysis_image_path": "<replica-library>/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+        "source_path": "<replica-library>/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+        "raster_path": "<replica-library>/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
         "dpi": null,
         "page": null
       },
@@ -15975,7 +15975,7 @@
         }
       ],
       "case_dir": "49.顶刊复现-双Y轴+GO富集-嵌套柱形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
+      "image": "<replica-library>/49.顶刊复现-双Y轴+GO富集-嵌套柱形图/doubleY_GO-enrich.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -15983,14 +15983,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+      "input_path": "<replica-library>/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+      "analysis_image_path": "<replica-library>/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+        "source_path": "<replica-library>/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+        "raster_path": "<replica-library>/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
         "dpi": null,
         "page": null
       },
@@ -16350,7 +16350,7 @@
         }
       ],
       "case_dir": "5.Nature复现-分组柱状图+误差线+抖点图+t检验",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
+      "image": "<replica-library>/5.Nature复现-分组柱状图+误差线+抖点图+t检验/bar-groups-error-dot.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -16358,13 +16358,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/50.Nature复现-绝美时序图/time_series_1.pdf",
+      "input_path": "<replica-library>/50.Nature复现-绝美时序图/time_series_1.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_046/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/50.Nature复现-绝美时序图/time_series_1.pdf",
+        "source_path": "<replica-library>/50.Nature复现-绝美时序图/time_series_1.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_046/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -16378,7 +16378,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/50.Nature复现-绝美时序图/time_series_1.pdf",
+          "<replica-library>/50.Nature复现-绝美时序图/time_series_1.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_046/rasterized_input"
         ]
       },
@@ -16722,7 +16722,7 @@
         }
       ],
       "case_dir": "50.Nature复现-绝美时序图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/50.Nature复现-绝美时序图/time_series_1.pdf",
+      "image": "<replica-library>/50.Nature复现-绝美时序图/time_series_1.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -16730,13 +16730,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
+      "input_path": "<replica-library>/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_047/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
+        "source_path": "<replica-library>/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_047/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -16750,7 +16750,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
+          "<replica-library>/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_047/rasterized_input"
         ]
       },
@@ -17109,7 +17109,7 @@
         }
       ],
       "case_dir": "51.Nature复现-小提琴图+NMDS分析",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
+      "image": "<replica-library>/51.Nature复现-小提琴图+NMDS分析/violin_NMDS.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -17117,13 +17117,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
+      "input_path": "<replica-library>/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_048/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
+        "source_path": "<replica-library>/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_048/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -17137,7 +17137,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
+          "<replica-library>/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_048/rasterized_input"
         ]
       },
@@ -17515,7 +17515,7 @@
         }
       ],
       "case_dir": "52.Nature复现-FC-FC散点+象限图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
+      "image": "<replica-library>/52.Nature复现-FC-FC散点+象限图/FC-FC_grid_1.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -17523,14 +17523,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "input_path": "<replica-library>/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "analysis_image_path": "<replica-library>/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+        "source_path": "<replica-library>/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+        "raster_path": "<replica-library>/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
         "dpi": null,
         "page": null
       },
@@ -17895,7 +17895,7 @@
         }
       ],
       "case_dir": "53.Nature复现-PCoA+多分组边缘图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
+      "image": "<replica-library>/53.Nature复现-PCoA+多分组边缘图/pcoa_with_marginal_boxplots.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -17903,13 +17903,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
+      "input_path": "<replica-library>/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_050/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
+        "source_path": "<replica-library>/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_050/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -17923,7 +17923,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
+          "<replica-library>/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_050/rasterized_input"
         ]
       },
@@ -18241,7 +18241,7 @@
         }
       ],
       "case_dir": "54.SCI复现-分组散点矩阵图+相关性网络图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
+      "image": "<replica-library>/54.SCI复现-分组散点矩阵图+相关性网络图/p1_ggpair.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -18249,14 +18249,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
+      "input_path": "<replica-library>/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
+      "analysis_image_path": "<replica-library>/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
+        "source_path": "<replica-library>/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
+        "raster_path": "<replica-library>/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
         "dpi": null,
         "page": null
       },
@@ -18603,7 +18603,7 @@
         }
       ],
       "case_dir": "55.Nature复现-细胞丰度差异蜂群图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
+      "image": "<replica-library>/55.Nature复现-细胞丰度差异蜂群图/logFC_beeswarm_1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -18611,14 +18611,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
+      "input_path": "<replica-library>/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
+      "analysis_image_path": "<replica-library>/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
+        "source_path": "<replica-library>/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
+        "raster_path": "<replica-library>/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
         "dpi": null,
         "page": null
       },
@@ -18926,7 +18926,7 @@
         }
       ],
       "case_dir": "56.Nature复现-散点图+线性和对数拟合线",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
+      "image": "<replica-library>/56.Nature复现-散点图+线性和对数拟合线/scatter_fits_line_1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -18934,14 +18934,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
+      "input_path": "<replica-library>/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
+      "analysis_image_path": "<replica-library>/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
+        "source_path": "<replica-library>/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
+        "raster_path": "<replica-library>/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
         "dpi": null,
         "page": null
       },
@@ -19301,7 +19301,7 @@
         }
       ],
       "case_dir": "57.Cell复现-冲击图+背靠背堆积柱形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
+      "image": "<replica-library>/57.Cell复现-冲击图+背靠背堆积柱形图/butterfly_stacked_bar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -19309,14 +19309,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+      "input_path": "<replica-library>/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+      "analysis_image_path": "<replica-library>/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+        "source_path": "<replica-library>/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+        "raster_path": "<replica-library>/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
         "dpi": null,
         "page": null
       },
@@ -19690,7 +19690,7 @@
         }
       ],
       "case_dir": "58.Nature复现-环状渐变柱形图+环状分组折线图+显著性",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
+      "image": "<replica-library>/58.Nature复现-环状渐变柱形图+环状分组折线图+显著性/circlize_bar.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -19698,14 +19698,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
+      "input_path": "<replica-library>/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
+      "analysis_image_path": "<replica-library>/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
+        "source_path": "<replica-library>/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
+        "raster_path": "<replica-library>/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
         "dpi": null,
         "page": null
       },
@@ -20033,7 +20033,7 @@
         }
       ],
       "case_dir": "59.Nature复现-箱线图+扇形+半圆形",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
+      "image": "<replica-library>/59.Nature复现-箱线图+扇形+半圆形/boxplot_point.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -20041,14 +20041,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "input_path": "<replica-library>/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "analysis_image_path": "<replica-library>/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+        "source_path": "<replica-library>/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+        "raster_path": "<replica-library>/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
         "dpi": null,
         "page": null
       },
@@ -20389,7 +20389,7 @@
         }
       ],
       "case_dir": "6.Cell复现-双Y轴+富集条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
+      "image": "<replica-library>/6.Cell复现-双Y轴+富集条形图/doubleY-enrih-bar.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -20397,14 +20397,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
+      "input_path": "<replica-library>/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
+      "analysis_image_path": "<replica-library>/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
+        "source_path": "<replica-library>/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
+        "raster_path": "<replica-library>/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
         "dpi": null,
         "page": null
       },
@@ -20712,7 +20712,7 @@
         }
       ],
       "case_dir": "60.Nature复现-相关性矩阵Dotplot+显著性",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
+      "image": "<replica-library>/60.Nature复现-相关性矩阵Dotplot+显著性/corr_Dotplot_sig1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -20720,14 +20720,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "input_path": "<replica-library>/61.Nature复现-差异雷达图/radar1.png",
+      "analysis_image_path": "<replica-library>/61.Nature复现-差异雷达图/radar1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+        "source_path": "<replica-library>/61.Nature复现-差异雷达图/radar1.png",
+        "raster_path": "<replica-library>/61.Nature复现-差异雷达图/radar1.png",
         "dpi": null,
         "page": null
       },
@@ -21043,7 +21043,7 @@
         }
       ],
       "case_dir": "61.Nature复现-差异雷达图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/61.Nature复现-差异雷达图/radar1.png",
+      "image": "<replica-library>/61.Nature复现-差异雷达图/radar1.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -21051,13 +21051,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+      "input_path": "<replica-library>/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_059/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+        "source_path": "<replica-library>/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_059/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -21071,7 +21071,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+          "<replica-library>/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_059/rasterized_input"
         ]
       },
@@ -21420,7 +21420,7 @@
         }
       ],
       "case_dir": "62.Nature复现-分组型和单组型环状条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
+      "image": "<replica-library>/62.Nature复现-分组型和单组型环状条形图/circlize_gradient_bar.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -21428,14 +21428,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "input_path": "<replica-library>/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "analysis_image_path": "<replica-library>/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+        "source_path": "<replica-library>/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+        "raster_path": "<replica-library>/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
         "dpi": null,
         "page": null
       },
@@ -21759,7 +21759,7 @@
         }
       ],
       "case_dir": "63.Nature复现-填充型和渐变型等高线图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
+      "image": "<replica-library>/63.Nature复现-填充型和渐变型等高线图/contour_filled.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -21767,13 +21767,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
+      "input_path": "<replica-library>/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_061/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
+        "source_path": "<replica-library>/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_061/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -21787,7 +21787,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
+          "<replica-library>/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_061/rasterized_input"
         ]
       },
@@ -22105,7 +22105,7 @@
         }
       ],
       "case_dir": "64.Nature复现-深度美化散点气泡图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
+      "image": "<replica-library>/64.Nature复现-深度美化散点气泡图/group_bubble.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -22113,14 +22113,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+      "input_path": "<replica-library>/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+      "analysis_image_path": "<replica-library>/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+        "source_path": "<replica-library>/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+        "raster_path": "<replica-library>/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
         "dpi": null,
         "page": null
       },
@@ -22522,7 +22522,7 @@
         }
       ],
       "case_dir": "65.Cell复现-基础热图-分面和对称风格",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
+      "image": "<replica-library>/65.Cell复现-基础热图-分面和对称风格/facet_tiles.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -22530,14 +22530,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
+      "input_path": "<replica-library>/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
+      "analysis_image_path": "<replica-library>/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
+        "source_path": "<replica-library>/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
+        "raster_path": "<replica-library>/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
         "dpi": null,
         "page": null
       },
@@ -22903,7 +22903,7 @@
         }
       ],
       "case_dir": "66.iMeta-Nature-多分组火山图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
+      "image": "<replica-library>/66.iMeta-Nature-多分组火山图/volcano_facet1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -22911,14 +22911,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
+      "input_path": "<replica-library>/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
+      "analysis_image_path": "<replica-library>/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
+        "source_path": "<replica-library>/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
+        "raster_path": "<replica-library>/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
         "dpi": null,
         "page": null
       },
@@ -23271,7 +23271,7 @@
         }
       ],
       "case_dir": "67.iMeta-Nature-火山图+富集图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
+      "image": "<replica-library>/67.iMeta-Nature-火山图+富集图/volcano_enrich1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -23279,14 +23279,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "input_path": "<replica-library>/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "analysis_image_path": "<replica-library>/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+        "source_path": "<replica-library>/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+        "raster_path": "<replica-library>/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
         "dpi": null,
         "page": null
       },
@@ -23666,7 +23666,7 @@
         }
       ],
       "case_dir": "68.顶刊复现-upset图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
+      "image": "<replica-library>/68.顶刊复现-upset图/ComplexUpset_plot/ComplexUpset_plot.png",
       "source_type": "png",
       "sample_class": "specialized_positive"
     },
@@ -23674,14 +23674,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "input_path": "<replica-library>/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "analysis_image_path": "<replica-library>/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+        "source_path": "<replica-library>/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+        "raster_path": "<replica-library>/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
         "dpi": null,
         "page": null
       },
@@ -23979,7 +23979,7 @@
         }
       ],
       "case_dir": "69.SciAdv复现-差异OTU曼哈顿图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
+      "image": "<replica-library>/69.SciAdv复现-差异OTU曼哈顿图/beautiful_bubble.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -23987,14 +23987,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+      "input_path": "<replica-library>/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+      "analysis_image_path": "<replica-library>/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+        "source_path": "<replica-library>/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+        "raster_path": "<replica-library>/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
         "dpi": null,
         "page": null
       },
@@ -24304,7 +24304,7 @@
         }
       ],
       "case_dir": "7.Nature复现-气泡热图（绿色系）",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
+      "image": "<replica-library>/7.Nature复现-气泡热图（绿色系）/bubble-heatmap-nature.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -24312,14 +24312,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "input_path": "<replica-library>/70.Nature-PNAS-中国地图/map1.png",
+      "analysis_image_path": "<replica-library>/70.Nature-PNAS-中国地图/map1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+        "source_path": "<replica-library>/70.Nature-PNAS-中国地图/map1.png",
+        "raster_path": "<replica-library>/70.Nature-PNAS-中国地图/map1.png",
         "dpi": null,
         "page": null
       },
@@ -24666,7 +24666,7 @@
         }
       ],
       "case_dir": "70.Nature-PNAS-中国地图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/70.Nature-PNAS-中国地图/map1.png",
+      "image": "<replica-library>/70.Nature-PNAS-中国地图/map1.png",
       "source_type": "png",
       "sample_class": "specialized_positive"
     },
@@ -24674,13 +24674,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
+      "input_path": "<replica-library>/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_069/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
+        "source_path": "<replica-library>/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_069/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -24694,7 +24694,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
+          "<replica-library>/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_069/rasterized_input"
         ]
       },
@@ -25002,7 +25002,7 @@
         }
       ],
       "case_dir": "71.Cell-上下三角双热图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
+      "image": "<replica-library>/71.Cell-上下三角双热图/double_heatmap_1color.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -25010,14 +25010,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
+      "input_path": "<replica-library>/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
+      "analysis_image_path": "<replica-library>/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
+        "source_path": "<replica-library>/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
+        "raster_path": "<replica-library>/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
         "dpi": null,
         "page": null
       },
@@ -25404,7 +25404,7 @@
         }
       ],
       "case_dir": "72.Cell-Nature-带显著性的小提琴图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
+      "image": "<replica-library>/72.Cell-Nature-带显著性的小提琴图/compare_violin_1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -25412,14 +25412,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+      "input_path": "<replica-library>/73.Cell-Nature-三元图/ternary_plot1.png",
+      "analysis_image_path": "<replica-library>/73.Cell-Nature-三元图/ternary_plot1.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+        "source_path": "<replica-library>/73.Cell-Nature-三元图/ternary_plot1.png",
+        "raster_path": "<replica-library>/73.Cell-Nature-三元图/ternary_plot1.png",
         "dpi": null,
         "page": null
       },
@@ -25793,7 +25793,7 @@
         }
       ],
       "case_dir": "73.Cell-Nature-三元图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/73.Cell-Nature-三元图/ternary_plot1.png",
+      "image": "<replica-library>/73.Cell-Nature-三元图/ternary_plot1.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -25801,14 +25801,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
+      "input_path": "<replica-library>/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
+      "analysis_image_path": "<replica-library>/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
+        "source_path": "<replica-library>/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
+        "raster_path": "<replica-library>/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
         "dpi": null,
         "page": null
       },
@@ -26198,7 +26198,7 @@
         }
       ],
       "case_dir": "74.Nature-密度+相关性矩阵",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
+      "image": "<replica-library>/74.Nature-密度+相关性矩阵/density_corr_matrix.rainbow.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -26206,14 +26206,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "input_path": "<replica-library>/75.Nature-绝美点线图/line_dot.png",
+      "analysis_image_path": "<replica-library>/75.Nature-绝美点线图/line_dot.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+        "source_path": "<replica-library>/75.Nature-绝美点线图/line_dot.png",
+        "raster_path": "<replica-library>/75.Nature-绝美点线图/line_dot.png",
         "dpi": null,
         "page": null
       },
@@ -26525,7 +26525,7 @@
         }
       ],
       "case_dir": "75.Nature-绝美点线图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/75.Nature-绝美点线图/line_dot.png",
+      "image": "<replica-library>/75.Nature-绝美点线图/line_dot.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -26533,13 +26533,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
+      "input_path": "<replica-library>/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_074/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
+        "source_path": "<replica-library>/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_074/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -26553,7 +26553,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
+          "<replica-library>/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_074/rasterized_input"
         ]
       },
@@ -26902,7 +26902,7 @@
         }
       ],
       "case_dir": "76.Cell-环形热图+upset图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
+      "image": "<replica-library>/76.Cell-环形热图+upset图/circos_heatmap_upset.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -26910,14 +26910,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/scatter_histogram.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/scatter_histogram.png",
+      "input_path": "<replica-library>/77.Nature-对角线散点图+直方图/scatter_histogram.png",
+      "analysis_image_path": "<replica-library>/77.Nature-对角线散点图+直方图/scatter_histogram.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/scatter_histogram.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/scatter_histogram.png",
+        "source_path": "<replica-library>/77.Nature-对角线散点图+直方图/scatter_histogram.png",
+        "raster_path": "<replica-library>/77.Nature-对角线散点图+直方图/scatter_histogram.png",
         "dpi": null,
         "page": null
       },
@@ -27251,7 +27251,7 @@
         }
       ],
       "case_dir": "77.Nature-对角线散点图+直方图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/77.Nature-对角线散点图+直方图/scatter_histogram.png",
+      "image": "<replica-library>/77.Nature-对角线散点图+直方图/scatter_histogram.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     },
@@ -27259,13 +27259,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+      "input_path": "<replica-library>/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_076/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+        "source_path": "<replica-library>/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_076/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -27279,7 +27279,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+          "<replica-library>/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_076/rasterized_input"
         ]
       },
@@ -27609,7 +27609,7 @@
         }
       ],
       "case_dir": "78.Cell-umap+环形分组信息",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
+      "image": "<replica-library>/78.Cell-umap+环形分组信息/Circos_UMAP.pdf",
       "source_type": "pdf",
       "sample_class": "generalizable_positive"
     },
@@ -27617,13 +27617,13 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "pdf",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+      "input_path": "<replica-library>/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
       "analysis_image_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_077/rasterized_input.png",
       "rasterization": {
         "performed": true,
         "engine": "pdftoppm",
         "source_type": "pdf",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+        "source_path": "<replica-library>/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
         "raster_path": "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_077/rasterized_input.png",
         "dpi": 300,
         "page": 1,
@@ -27637,7 +27637,7 @@
           "-r",
           "300",
           "-png",
-          "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+          "<replica-library>/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
           "/var/folders/kc/rr52srw52416fq61khd_s_9r0000gn/T/paperplot-nature-detail-s1z4t8vo/case_077/rasterized_input"
         ]
       },
@@ -28011,7 +28011,7 @@
         }
       ],
       "case_dir": "79.Nature-环状条形图+饼图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
+      "image": "<replica-library>/79.Nature-环状条形图+饼图/circos_bar_pie.pdf",
       "source_type": "pdf",
       "sample_class": "decorative_or_caution"
     },
@@ -28019,14 +28019,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "input_path": "<replica-library>/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "analysis_image_path": "<replica-library>/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+        "source_path": "<replica-library>/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+        "raster_path": "<replica-library>/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
         "dpi": null,
         "page": null
       },
@@ -28367,7 +28367,7 @@
         }
       ],
       "case_dir": "8.顶刊复现-系统发育树+外圈热图-条形图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
+      "image": "<replica-library>/8.顶刊复现-系统发育树+外圈热图-条形图/figure/example3.png",
       "source_type": "png",
       "sample_class": "specialized_positive"
     },
@@ -28375,14 +28375,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+      "input_path": "<replica-library>/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+      "analysis_image_path": "<replica-library>/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+        "source_path": "<replica-library>/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+        "raster_path": "<replica-library>/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
         "dpi": null,
         "page": null
       },
@@ -28781,7 +28781,7 @@
         }
       ],
       "case_dir": "80.Nature-分面山脊图+垂直刻度",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
+      "image": "<replica-library>/80.Nature-分面山脊图+垂直刻度/ridge_plot.png",
       "source_type": "png",
       "sample_class": "decorative_or_caution"
     },
@@ -28789,14 +28789,14 @@
       "checked": true,
       "engine": "pillow-raster",
       "input_type": "raster",
-      "input_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
-      "analysis_image_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "input_path": "<replica-library>/9.Nature复现-山脊图/ridges.png",
+      "analysis_image_path": "<replica-library>/9.Nature复现-山脊图/ridges.png",
       "rasterization": {
         "performed": false,
         "engine": "native",
         "source_type": "raster",
-        "source_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
-        "raster_path": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+        "source_path": "<replica-library>/9.Nature复现-山脊图/ridges.png",
+        "raster_path": "<replica-library>/9.Nature复现-山脊图/ridges.png",
         "dpi": null,
         "page": null
       },
@@ -29092,7 +29092,7 @@
         }
       ],
       "case_dir": "9.Nature复现-山脊图",
-      "image": "~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集/9.Nature复现-山脊图/ridges.png",
+      "image": "<replica-library>/9.Nature复现-山脊图/ridges.png",
       "source_type": "png",
       "sample_class": "generalizable_positive"
     }

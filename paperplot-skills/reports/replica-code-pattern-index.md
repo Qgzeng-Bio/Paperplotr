@@ -1,6 +1,6 @@
 # Replica Code Pattern Index
 
-Library: `~/Documents/1-博士课题/3-科研资料/MsTt笔记100+绘图合集/R科研绘图合集`
+Library: `<replica-library>`
 Scripts indexed: 142
 
 ## Suitability Summary
