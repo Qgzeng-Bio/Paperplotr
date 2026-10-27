@@ -120,10 +120,16 @@ pp_spacing_mm <- function(role = c("tick_length", "legend_key", "legend_spacing_
 }
 
 pp_discrete_palettes <- list(
+  # Order chosen for deuteranopia separation (Vienot 1999 simulation, CIELAB
+  # dE). Minimum pairwise dE: n=2 87.0, n=3 28.1, n=4 28.1, n=5 20.9,
+  # n=6 19.2. The previous order placed green (#59A14F) next to red (#E15759)
+  # as colours 3-4, which collapse to dE 0.7 under deuteranopia.
+  # Groups beyond six should not rely on colour alone: use direct labels,
+  # facets or small multiples.
   graphpad_discrete = c(
-    "#4E79A7", "#F28E2B", "#59A14F", "#E15759",
-    "#B07AA1", "#76B7B2", "#EDC948", "#79706E",
-    "#9C755F", "#BAB0AC", "#A0CBE8", "#FFBE7D"
+    "#4E79A7", "#F28E2B", "#59A14F", "#79706E",
+    "#A0CBE8", "#FFBE7D", "#BAB0AC", "#E15759",
+    "#EDC948", "#B07AA1", "#9C755F", "#76B7B2"
   ),
   graphpad_muted = c(
     "#6F8DBD", "#E6A157", "#7CB77D", "#D47474",
@@ -442,6 +448,46 @@ pp_palette <- function(n, palette = "graphpad_discrete", reverse = FALSE, alpha 
   }
   if (!identical(alpha, 1)) values <- grDevices::adjustcolor(values, alpha.f = alpha)
   unname(values)
+}
+
+# Minimum pairwise CIELAB separation of the first `n` palette colours after a
+# deuteranopia simulation (Vienot 1999 linear-RGB transform). Values below
+# about 15 mean two groups become hard to tell apart for red-green colour
+# blindness, so the figure needs direct labels instead of colour alone.
+pp_palette_cvd_min_delta_e <- function(n = 4, palette = "graphpad_discrete") {
+  values <- pp_palette(n = n, palette = palette)
+  simulate <- function(hex) {
+    rgb <- grDevices::col2rgb(hex) / 255
+    linear <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
+    transform <- matrix(
+      c(0.05059983, 0.08585369, 0.00952420,
+        0.01893033, 0.08984782, 0.00880780,
+        0.00000000, 0.00000000, 1.00000000),
+      nrow = 3, byrow = TRUE
+    )
+    converted <- transform %*% linear
+    converted <- pmin(pmax(converted, 0), 1)
+    ifelse(converted <= 0.0031308, 12.92 * converted, 1.055 * converted^(1 / 2.4) - 0.055)
+  }
+  to_lab <- function(rgb) {
+    linear <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
+    xyz <- matrix(
+      c(0.4124, 0.3576, 0.1805,
+        0.2126, 0.7152, 0.0722,
+        0.0193, 0.1192, 0.9505),
+      nrow = 3, byrow = TRUE
+    ) %*% linear
+    xyz <- as.vector(xyz) / c(0.95047, 1, 1.08883)
+    f <- ifelse(xyz > 0.008856, xyz^(1 / 3), 7.787 * xyz + 16 / 116)
+    c(116 * f[2] - 16, 500 * (f[1] - f[2]), 200 * (f[2] - f[3]))
+  }
+  simulated <- lapply(values, function(hex) to_lab(simulate(hex)))
+  pairs <- utils::combn(seq_along(simulated), 2)
+  distances <- apply(pairs, 2, function(idx) {
+    stats::dist(rbind(simulated[[idx[1]]], simulated[[idx[2]]]))
+  })
+  if (length(distances) == 0) return(Inf)
+  round(min(distances), 2)
 }
 
 pp_gradient_palette <- function(n = 256, palette = "graphpad_heatmap", reverse = FALSE) {

@@ -1,5 +1,15 @@
 # PaperPlotR (development version)
 
+* The default discrete palette (`graphpad_discrete`) is re-ordered for
+  deuteranopia separation: the old order placed green and red at positions
+  3-4, which collapse to CIELAB dE 0.7 under the Viénot 1999 simulation.
+  Minimum pairwise dE is now 87.0 (2 groups), 28.1 (3-4), 20.9 (5) and
+  19.2 (6). Figures made with the previous order will change colour; the
+  scientific content is unaffected. `pp_palette_cvd_min_delta_e()` reports
+  the value and `scripts/test-palette-cvd.R` guards it in CI.
+* `License: MIT` now ships a single full-text `LICENSE` file so hosting
+  services and R both recognise the license.
+
 * `scale_fill_lab()` and `scale_color_lab()` now expose `guide`, allowing
   callers to suppress or customize legends without duplicate-argument errors.
 * `layout_lab()` can now add publication-style panel tags directly via

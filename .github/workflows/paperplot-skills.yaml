@@ -53,6 +53,18 @@ jobs:
           Rscript paperplot-skills/scripts/test-production-contract.R
           python3 paperplot-skills/scripts/test-export-audit.py
 
+      - name: Colour-blind separation of the default palette
+        run: Rscript paperplot-skills/scripts/test-palette-cvd.R
+
+      - name: Reject personal paths in committed text
+        run: |
+          if grep -rIl -e '/Users/' -e 'Documents/1-' \
+              --include='*.md' --include='*.json' --include='*.csv' --include='*.R' \
+              paperplot-skills README.md; then
+            echo 'Committed files must not embed personal or project paths.' >&2
+            exit 1
+          fi
+
       - name: Report formal environment capabilities
         run: Rscript paperplot-skills/scripts/check-environment.R
         continue-on-error: true
