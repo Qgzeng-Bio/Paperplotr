@@ -13,7 +13,7 @@ Description: A companion package for scientific figure workflows built on
 URL: https://github.com/Qgzeng-Bio/Paperplotr,
     https://qgzeng-bio.github.io/Paperplotr/
 BugReports: https://github.com/Qgzeng-Bio/Paperplotr/issues
-License: MIT + file LICENSE
+License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

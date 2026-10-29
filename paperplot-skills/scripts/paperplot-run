@@ -10,7 +10,9 @@ export R_LIBS_USER="$library" R_LIBS_SITE="" R_PROFILE_USER=/dev/null R_ENVIRON_
 export PAPERPLOT_RSCRIPT="$prefix/bin/Rscript" PAPERPLOT_PYTHON="$prefix/bin/python"
 export PYTHONNOUSERSITE=1 PYTHONPATH=""
 script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
-export PAPERPLOT_HELPER="$script_dir/paperplot_helpers.R"
+# Respect an explicit PAPERPLOT_HELPER: running a repository script through an
+# installed wrapper must not silently load the installed helpers instead.
+export PAPERPLOT_HELPER="${PAPERPLOT_HELPER:-$script_dir/paperplot_helpers.R}"
 if [ "$#" -eq 0 ]; then set -- "$script_dir/check-environment.R"; fi
 case "$1" in
   python) shift; exec "$prefix/bin/python" -I "$@" ;;

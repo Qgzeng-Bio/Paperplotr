@@ -14,6 +14,8 @@ The default look is restrained GraphPad-like scientific plotting: clean axes, no
 ## Discrete Color
 
 - Use `graphpad_discrete` for generic categorical groups.
+- The default order is checked for deuteranopia separation (minimum CIELAB dE 28.1 at 3-4 groups). Report it with `pp_palette_cvd_min_delta_e(n)`; below about 15 the groups need direct labels rather than colour alone.
+- Beyond six groups colour stops being a reliable channel: use direct labels, facets or small multiples.
 - Use a user-provided named color vector when group colors have semantic meaning.
 - Keep group colors stable across panels.
 - Use gray for reference or background groups when contrast should be reduced.

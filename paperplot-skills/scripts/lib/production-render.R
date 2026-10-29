@@ -227,7 +227,20 @@ pp_check_plot_glyphs <- function(plot,spec) {
     if(length(g$children)) invisible(lapply(g$children,walk))
   }
   walk(grob)
-  characters <- unique(unlist(strsplit(labels[!is.na(labels)],'',fixed=TRUE)))
+  labels <- labels[!is.na(labels)]
+  # A UTF-8 literal read from a source file without a declared encoding reaches
+  # R as a byte string with Encoding() == "unknown". systemfonts then looks up
+  # each byte (0xE8 becomes "<"), so the glyph is never reported missing and
+  # the label silently draws as .notdef boxes. Mark such strings as UTF-8
+  # before splitting, and refuse bytes that are not valid UTF-8 at all.
+  labels <- vapply(labels, function(x) {
+    if (Encoding(x) == "unknown" && validUTF8(x) && grepl("[^ -~]", x, useBytes = TRUE)) Encoding(x) <- "UTF-8"
+    x
+  }, character(1), USE.NAMES = FALSE)
+  invalid <- labels[!validUTF8(labels)]
+  if (length(invalid)) stop('Labels are not valid UTF-8 (', paste(utils::head(invalid, 3), collapse = ', '),
+    '). Store the script as UTF-8 or use \\uXXXX escapes; no label was substituted or removed.')
+  characters <- unique(unlist(strsplit(labels,'',fixed=TRUE)))
   characters <- characters[!characters%in%c('\n','\r','\t','')]
   if(!length(characters)) return(list(status='unverified',reason='No inspectable text; final vector text still requires audit'))
   info <- systemfonts::glyph_info(characters,family=spec$family)
